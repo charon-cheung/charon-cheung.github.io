@@ -71,134 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/TEB算法/4. configureBackupModes1： goal_idx和transformed_plan的处理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/" class="article-date">
-  <time class="dt-published" datetime="2020-11-18T12:41:40.000Z" itemprop="datePublished">2020-11-18</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/">(四)configureBackupModes 1： 处理 goal_idx 和 transformed_plan</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebLocalPlannerROS::configureBackupModes</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    std::vector&lt;geometry_msgs::PoseStamped&gt;&amp; transformed_plan,  </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span>&amp; goal_idx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::Time current_time = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// reduced horizon backup mode  上篇博客所列的第四种情况下</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// we do not reduce if the goal is already selected , because the orientation </span></span><br><span class="line">    <span class="comment">// might change -&gt; can introduce oscillations</span></span><br><span class="line">    <span class="comment">// no_infeasible_plans_  改成 no_feasible_plans_ 比较合适</span></span><br><span class="line">    <span class="keyword">if</span> (cfg_.recovery.shrink_horizon_backup &amp;&amp; </span><br><span class="line">        goal_idx &lt; (<span class="keyword">int</span>)transformed_plan.<span class="built_in">size</span>()<span class="number">-1</span> &amp;&amp; </span><br><span class="line">       (no_infeasible_plans_&gt;<span class="number">0</span> || (current_time - time_last_infeasible_plan_).<span class="built_in">toSec</span>() &lt; </span><br><span class="line">         <span class="comment">// keep short horizon for at least a few seconds</span></span><br><span class="line">         cfg_.recovery.shrink_horizon_min_duration )  ) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ROS_INFO_COND</span>(no_infeasible_plans_==<span class="number">1</span>, </span><br><span class="line">        <span class="string">&quot;Activating reduced horizon backup mode for at least %.2f sec (infeasible </span></span><br><span class="line"><span class="string">        trajectory detected).&quot;</span>, </span><br><span class="line">        cfg_.recovery.shrink_horizon_min_duration);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Shorten horizon if requested     reduce to 50 percent:</span></span><br><span class="line">        <span class="keyword">int</span> horizon_reduction = goal_idx/<span class="number">2</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (no_infeasible_plans_ &gt; <span class="number">9</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">ROS_INFO_COND</span>(no_infeasible_plans_==<span class="number">10</span>, <span class="string">&quot;Infeasible trajectory detected </span></span><br><span class="line"><span class="string">                10 times in a row: further reducing horizon...&quot;</span>);</span><br><span class="line">            horizon_reduction /= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// we have a small overhead (过头) here, since we already transformed 50% </span></span><br><span class="line">        <span class="comment">// more of the trajectory.  But that&#x27;s ok for now, since we do not </span></span><br><span class="line">        <span class="comment">// need to make   transformGlobalPlan   more complex</span></span><br><span class="line">        <span class="comment">// reduced horizon 应当很少发生</span></span><br><span class="line">        <span class="keyword">int</span> new_goal_idx_transformed_plan = <span class="built_in"><span class="keyword">int</span></span>(transformed_plan.<span class="built_in">size</span>()) - horizon_reduction - <span class="number">1</span>;</span><br><span class="line">        goal_idx -= horizon_reduction;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从 transformed_plan 的 new_goal_idx 开始，一直删除到尾部</span></span><br><span class="line">        <span class="keyword">if</span> (new_goal_idx_transformed_plan &gt;<span class="number">0</span>  &amp;&amp;  goal_idx &gt;= <span class="number">0</span>)</span><br><span class="line">            transformed_plan.<span class="built_in">erase</span>(transformed_plan.<span class="built_in">begin</span>() + new_goal_idx_transformed_plan, transformed_plan.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            goal_idx += horizon_reduction; <span class="comment">// this should not happen, but safety first</span></span><br><span class="line">    &#125;</span><br><span class="line">                <span class="comment">// ......第二部分......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>shrink_horizon_backup</code>: true.  在自动检测到问题(plan not feasible)的情况下，允许planner临时缩小范围(50%). TEB将以更近的点作为规划目标，尝试重新规划出可行路径。调试时可关闭，以在可视化界面上观察原出错路径。另请参阅参数<code>shrink_horizo​​n_min_duration</code></p>
-</li>
-<li><p><code>shrink_horizon_min_duration</code>: 10，单位秒。 如果检测到不可行的轨迹，激活缩小的水平线后备模式，本参数为其最短持续时间。个人怀疑这个参数无意义，因为它更新值的地方也都有<code>no_infeasible_plans_</code>变量的更新，判断时，只根据<code>no_infeasible_plans_</code>即可，详见代码<code>configureBackupModes</code></p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/" data-id="ckr28w9zi00i94clm729c971i" data-title="(四)configureBackupModes 1： 处理 goal_idx 和 transformed_plan" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/QueueFollow模块" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/" class="article-date">
-  <time class="dt-published" datetime="2020-11-16T13:28:44.000Z" itemprop="datePublished">2020-11-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/">多机器人队列</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="话题"><a href="#话题" class="headerlink" title="话题"></a>话题</h2><p><code>/queue_up/status</code>，类型<code>actionlib_msgs/GoalStatusArray</code>，不在排队时的消息如下</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">header:</span><br><span class="line">  seq: 678</span><br><span class="line">  stamp:</span><br><span class="line">    secs: 1610014977</span><br><span class="line">    nsecs: 494630237</span><br><span class="line">  frame_id: <span class="string">&#x27;&#x27;</span></span><br><span class="line">status_list: []</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2021/01/07/OXw2FYVUmrlDszj.png" alt="在排队的状态"></p>
-<br>
-
-<p>在rviz上指定导航的目标点，三个话题可获得目标点信息</p>
-<ul>
-<li><p>话题<code>move_base/current_goal</code>类型<code>geometry_msgs/PoseStamped</code>, 发布者是move_base，无订阅者</p>
-</li>
-<li><p>话题<code>move_base/goal</code>类型<code>move_base_msgs/MoveBaseActionGoal</code>, 发布者和订阅者都是move_base</p>
-</li>
-<li><p>话题<code>move_base_simple/goal</code>类型<code>geometry_msgs/PoseStamped</code>, 发布者是rviz，订阅者是move_base</p>
-</li>
-</ul>
-<p>queue_follow的情况类似：</p>
-<p><code>/robot_0/queue_follow_node/queue_current_goal</code>，类型<code>geometry_msgs/PoseStamped</code>，发布者<code>/robot_0/queue_follow_node</code>，无订阅者</p>
-<p><code>/robot_0/queue_up/goal</code>，类型<code>move_base_msgs/MoveBaseActionGoal</code>，发布者和订阅者都是<code>/robot_0/queue_follow_node</code></p>
-<p><code>/robot_0/queue_follow_node/goal</code>，类型<code>geometry_msgs/PoseStamped</code>，无发布者，订阅者<code>/robot_0/queue_follow_node</code></p>
-<p><code>MoveBaseActionClient</code>在节点<code>tm_node</code>，发布<code>queue_up/goal</code></p>
-<p>queue_follow链接<code>libcostmap_2d.so</code>，后者由<code>observation_buffer.cpp</code>编译，用到了点云库</p>
-<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><ul>
-<li><p>QueueFollow::isAngleReached()      机器人距离目标的角度差在阈值内，且速度也在阈值内，则达到目标角度</p>
-</li>
-<li><p>QueueFollow::pointToGoal()  状态是stopped，则一直旋转到目标角度，但还未达到目标，保证返回值是true</p>
-</li>
-<li><p>QueueFollow::rotateToGoal()   类似pointToGoal()，不过前提是状态为rotate，最终达到目标</p>
-</li>
-</ul>
-<p><code>queue_follow</code>中对两个话题的回调，处理 <code>rectangle_width_</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::footprintRadiusCB</span><span class="params">(<span class="keyword">const</span> std_msgs::Float32::ConstPtr&amp; footprint_radius)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    rectangle_width_ = <span class="number">2.0</span> * (footprint_radius-&gt;data);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::footprintPolygonCB</span><span class="params">(<span class="keyword">const</span> geometry_msgs::Polygon::ConstPtr&amp; footprint_polygon)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> robot_inscribed_radius;</span><br><span class="line">    <span class="keyword">double</span> robot_circumscribed_radius;</span><br><span class="line">    costmap_2d::<span class="built_in">calculateMinAndMaxDistances</span>(costmap_2d::<span class="built_in">toPointVector</span>(*footprint_polygon), robot_inscribed_radius, robot_circumscribed_radius);</span><br><span class="line">    rectangle_width_ = <span class="number">2.0</span> * robot_inscribed_radius;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">QueueFollow::doneFollow</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (state_ == stopped &amp;&amp; <span class="built_in">isCloseEnough</span>(target_pose, robot_pose))</span><br><span class="line">        state_ = rotate; </span><br><span class="line"></span><br><span class="line">    <span class="built_in"><span class="keyword">switch</span></span>(state_)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 状态stopped，但没有closeEnough，若角度未达到阈值则旋转</span></span><br><span class="line">        <span class="comment">// 若角度在阈值内，更新状态为following</span></span><br><span class="line">        <span class="keyword">case</span> stopped:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> p_goal = <span class="built_in">pointToGoal</span>();</span><br><span class="line">            <span class="keyword">if</span>(p_goal)</span><br><span class="line">                state_ = following;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> following:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">double</span> current_robot_linear_x, current_robot_angular_z;</span><br><span class="line">            <span class="built_in">getCurrentVelocity</span>(current_robot_linear_x, current_robot_angular_z);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;min_dist_from_robot = &quot;</span> &lt;&lt; min_dist_from_robot &lt;&lt; std::endl;</span><br><span class="line">            <span class="keyword">bool</span> result_follow = <span class="built_in">actionFollow</span>(target_pose, robot_pose, current_robot_linear_x, min_dist_from_robot, target_linear_vel, target_angular_vel);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;done: target_linear_vel = &quot;</span> &lt;&lt; target_linear_vel &lt;&lt; std::endl;</span><br><span class="line">            <span class="built_in">publishVelocity</span>(target_linear_vel, target_angular_vel);</span><br><span class="line">            <span class="keyword">if</span>(result_follow)</span><br><span class="line">                state_ = rotate;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 状态是stopped且closeEnough，判断是否达到目标角度阈值</span></span><br><span class="line">        <span class="comment">// 若false则旋转，若true，状态更新为succeed</span></span><br><span class="line">        <span class="keyword">case</span> rotate:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> rotate_to_goal = <span class="built_in">rotateToGoal</span>();</span><br><span class="line">            <span class="keyword">if</span>(rotate_to_goal)</span><br><span class="line">                state_ = scuceed;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// 达到QueueFollow目标</span></span><br><span class="line">        <span class="keyword">case</span> scuceed:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">publishZeroVelocity</span>();</span><br><span class="line">            <span class="built_in">ROS_INFO</span>(<span class="string">&quot;QueueFollow goal reached! &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="built_in">ROS_ERROR</span>(<span class="string">&quot;This case should never be reached, something is wrong, aborting&quot;</span>);</span><br><span class="line">            <span class="built_in">resetState</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::resetState</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    state_ = stopped;</span><br><span class="line">    <span class="built_in">publishZeroVelocity</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/" data-id="ckr28w9uk00694clm98ine2rv" data-title="多机器人队列" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-ROS/ROS Kinetic知识/ROS编程常用方法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/11/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" class="article-date">
@@ -254,7 +126,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" data-id="ckr28w9wn00b84clmfqky4r25" data-title="ROS编程常用方法" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E7%BC%96%E7%A8%8B%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95/" data-id="ckr296gyg00b74klmdlvsa8ie" data-title="ROS编程常用方法" class="article-share-link">Share</a>
       
       
       
@@ -340,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/11.%20optimizeTEB%202%20%20%E6%B7%BB%E5%8A%A0%E7%BA%A6%E6%9D%9F/" data-id="ckr28w9zc00hn4clm7fsjeiwc" data-title="(十一) optimizeTEB 2  添加约束" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/11.%20optimizeTEB%202%20%20%E6%B7%BB%E5%8A%A0%E7%BA%A6%E6%9D%9F/" data-id="ckr296h1m00hm4klm8hz76f4q" data-title="(十一) optimizeTEB 2  添加约束" class="article-share-link">Share</a>
       
       
       
@@ -405,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/14.%20%E5%8F%AF%E8%A1%8C%E6%80%A7%20isTrajectoryFeasible/" data-id="ckr28w9ze00hu4clm28ufe1s9" data-title="(十四) 可行性 isTrajectoryFeasible" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/14.%20%E5%8F%AF%E8%A1%8C%E6%80%A7%20isTrajectoryFeasible/" data-id="ckr296h1q00hy4klm6zlr2m3v" data-title="(十四) 可行性 isTrajectoryFeasible" class="article-share-link">Share</a>
       
       
       
@@ -472,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/9.%20TimedElasticBand%E7%B1%BB%20%E4%BC%98%E5%8C%96%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87/" data-id="ckr28w9zm00il4clmazk5ghhu" data-title="(九) TimedElasticBand 类和优化之前的准备" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/9.%20TimedElasticBand%E7%B1%BB%20%E4%BC%98%E5%8C%96%E4%B9%8B%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87/" data-id="ckr296h1z00ik4klmax5j0rub" data-title="(九) TimedElasticBand 类和优化之前的准备" class="article-share-link">Share</a>
       
       
       
@@ -535,7 +407,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/10.%20optimizeTEB%201%20%20%E6%B5%81%E7%A8%8B%E5%92%8C%20autoResize/" data-id="ckr28w9zb00hm4clmgfuzazto" data-title="(十) optimizeTEB 1  流程和 autoResize" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/10.%20optimizeTEB%201%20%20%E6%B5%81%E7%A8%8B%E5%92%8C%20autoResize/" data-id="ckr296h1m00hl4klmbfxm1fy8" data-title="(十) optimizeTEB 1  流程和 autoResize" class="article-share-link">Share</a>
       
       
       
@@ -637,7 +509,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E6%81%A2%E5%A4%8D%E8%A1%8C%E4%B8%BA/" data-id="ckr28wa0200k24clmgwhk08cu" data-title="恢复行为" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E6%81%A2%E5%A4%8D%E8%A1%8C%E4%B8%BA/" data-id="ckr296h2k00k14klmb5vc5p2g" data-title="恢复行为" class="article-share-link">Share</a>
       
       
       
@@ -701,7 +573,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/7.%20Teb%20Optimal%E7%9A%84%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" data-id="ckr28w9zk00ig4clmey9nasq8" data-title="(七) Teb Optimal的路径规划" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/7.%20Teb%20Optimal%E7%9A%84%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" data-id="ckr296h1x00if4klm874k17wv" data-title="(七) Teb Optimal的路径规划" class="article-share-link">Share</a>
       
       
       
@@ -767,7 +639,121 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/6.%20%E9%9D%99%E6%80%81%E9%9A%9C%E7%A2%8D%E5%92%8C%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%9C%E7%A2%8D/" data-id="ckr28w9zk00ie4clm776l0itr" data-title="(六) 静态障碍和自定义障碍" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/6.%20%E9%9D%99%E6%80%81%E9%9A%9C%E7%A2%8D%E5%92%8C%E8%87%AA%E5%AE%9A%E4%B9%89%E9%9A%9C%E7%A2%8D/" data-id="ckr296h1w00id4klm8zlzfitu" data-title="(六) 静态障碍和自定义障碍" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/TEB算法/3. 从全局路径获得 transform_plan" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/3.%20%E4%BB%8E%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%BE%97%20transform_plan/" class="article-date">
+  <time class="dt-published" datetime="2020-11-15T14:39:36.000Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/3.%20%E4%BB%8E%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%BE%97%20transform_plan/">(三) 从全局路径获得 transform_plan</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><code>MoveBase::executeCycle()</code> —&gt; <code>computeVelocityCommands</code>，就是从这个函数开始调用TEB算法，下面转入<code>teb_local_planner_ros.cpp</code>文件中。</p>
+<p>开始代码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// check if plugin initialized，省略</span></span><br><span class="line">cmd_vel.linear.x = <span class="number">0</span>;</span><br><span class="line">cmd_vel.linear.y = <span class="number">0</span>;</span><br><span class="line">cmd_vel.angular.z = <span class="number">0</span>;</span><br><span class="line">goal_reached_ = <span class="literal">false</span>;  </span><br><span class="line"><span class="comment">// 修改源码</span></span><br><span class="line"><span class="keyword">if</span>(!rotate_to_path_ &amp;&amp; new_goal_)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">double</span> start_angle = tf::<span class="built_in">getYaw</span>(path_start_orientation_);</span><br><span class="line">    tf::Stamped&lt;tf::Pose&gt; robot_pose;</span><br><span class="line">    costmap_ros_-&gt;<span class="built_in">getRobotPose</span>(robot_pose);</span><br><span class="line">    <span class="keyword">double</span> robot_angle = tf::<span class="built_in">getYaw</span>(robot_pose.<span class="built_in">getRotation</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> result  = <span class="built_in">pointToPath</span>(start_angle, robot_angle, cmd_vel);</span><br><span class="line">    <span class="keyword">if</span>(result)</span><br><span class="line">    &#123;</span><br><span class="line">      rotate_to_path_ = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get robot pose in global frame(map坐标系),转为PoseSE2类型</span></span><br><span class="line">tf::Stamped&lt;tf::Pose&gt; robot_pose;</span><br><span class="line">costmap_ros_-&gt;<span class="built_in">getRobotPose</span>(robot_pose);</span><br><span class="line">robot_pose_ = <span class="built_in">PoseSE2</span>(robot_pose);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get robot velocity from odom</span></span><br><span class="line">tf::Stamped&lt;tf::Pose&gt; robot_vel_tf;</span><br><span class="line">odom_helper_.<span class="built_in">getRobotVel</span>(robot_vel_tf);</span><br><span class="line">robot_vel_.linear.x = robot_vel_tf.<span class="built_in">getOrigin</span>().<span class="built_in">getX</span>();</span><br><span class="line">robot_vel_.linear.y = robot_vel_tf.<span class="built_in">getOrigin</span>().<span class="built_in">getY</span>();</span><br><span class="line">robot_vel_.angular.z = tf::<span class="built_in">getYaw</span>(robot_vel_tf.<span class="built_in">getRotation</span>()); </span><br><span class="line"></span><br><span class="line"><span class="comment">// prune global plan to cut off parts of the past (spatially before the robot)</span></span><br><span class="line"><span class="built_in">pruneGlobalPlan</span>(*tf_, robot_pose, global_plan_);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Transform global plan to the frame of interest (w.r.t. the local costmap)</span></span><br><span class="line">std::vector&lt;geometry_msgs::PoseStamped&gt; transformed_plan;</span><br><span class="line"><span class="keyword">int</span> goal_idx;</span><br><span class="line">tf::StampedTransform tf_plan_to_global;</span><br><span class="line"><span class="keyword">if</span> (!<span class="built_in">transformGlobalPlan</span>(*tf_, global_plan_, robot_pose, *costmap_, global_frame_, cfg_.trajectory.max_global_plan_lookahead_dist, </span><br><span class="line">                         transformed_plan, &amp;goal_idx, &amp;tf_plan_to_global))</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Could not transform the global plan to the frame of the controller&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// update via-points container 这里是false,不用看了</span></span><br><span class="line"><span class="keyword">if</span> (!custom_via_points_active_)</span><br><span class="line">  <span class="built_in">updateViaPointsContainer</span>(transformed_plan, cfg_.trajectory.global_plan_viapoint_sep);</span><br><span class="line"></span><br><span class="line"><span class="comment">// check if global goal is reached</span></span><br><span class="line">tf::Stamped&lt;tf::Pose&gt; global_goal;</span><br><span class="line">tf::<span class="built_in">poseStampedMsgToTF</span>(global_plan_.<span class="built_in">back</span>(), global_goal);</span><br><span class="line">global_goal.<span class="built_in">setData</span>( tf_plan_to_global * global_goal );</span><br><span class="line"><span class="keyword">double</span> dx = global_goal.<span class="built_in">getOrigin</span>().<span class="built_in">getX</span>() - robot_pose_.<span class="built_in">x</span>();</span><br><span class="line"><span class="keyword">double</span> dy = global_goal.<span class="built_in">getOrigin</span>().<span class="built_in">getY</span>() - robot_pose_.<span class="built_in">y</span>();</span><br><span class="line"><span class="keyword">double</span> delta_orient = g2o::<span class="built_in">normalize_theta</span>( tf::<span class="built_in">getYaw</span>(global_goal.<span class="built_in">getRotation</span>()) - robot_pose_.<span class="built_in">theta</span>() );</span><br><span class="line"> <span class="comment">// 是否达到目标位置</span></span><br><span class="line"><span class="keyword">if</span>(<span class="built_in">fabs</span>(std::<span class="built_in">sqrt</span>(dx*dx+dy*dy)) &lt; cfg_.goal_tolerance.xy_goal_tolerance)</span><br><span class="line">position_reanched_ = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 修改源码</span></span><br><span class="line"><span class="keyword">if</span>(position_reached_)</span><br><span class="line">&#123; </span><br><span class="line">   <span class="keyword">double</span> goal_angle = tf::<span class="built_in">getYaw</span>(goal_orientation_);</span><br><span class="line">   <span class="keyword">double</span> robot_angle = tf::<span class="built_in">getYaw</span>(robot_pose.<span class="built_in">getRotation</span>());</span><br><span class="line"></span><br><span class="line">   <span class="keyword">bool</span> result  = <span class="built_in">pointToPath</span>(goal_angle, robot_angle, cmd_vel);</span><br><span class="line">   <span class="keyword">if</span>(result)</span><br><span class="line">   &#123;</span><br><span class="line">      goal_reached_ = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(!goal_reached_)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">fabs</span>(std::<span class="built_in">sqrt</span>(dx*dx+dy*dy)) &lt; cfg_.goal_tolerance.xy_goal_tolerance</span><br><span class="line">      &amp;&amp; <span class="built_in">fabs</span>(delta_orient) &lt; cfg_.goal_tolerance.yaw_goal_tolerance</span><br><span class="line">      &amp;&amp; (!cfg_.goal_tolerance.complete_global_plan || via_points_.<span class="built_in">size</span>() == <span class="number">0</span>))</span><br><span class="line">    &#123;</span><br><span class="line">      goal_reached_ = <span class="literal">true</span>;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// check if we should enter any backup mode and apply settings</span></span><br><span class="line"><span class="built_in">configureBackupModes</span>(transformed_plan, goal_idx);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Return false if the transformed global plan is empty</span></span><br><span class="line"><span class="keyword">if</span> (transformed_plan.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Transformed plan is empty. Cannot determine a local plan.&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>pruneGlobalPlan</code>: 截取全局路径的一部分作为局部规划的初始轨迹，主要是把全局路径中机器人已经经过的位姿删去。取决于参数 <code>dist_behind_robot</code>，机器人身后要保留的距离，单位米，默认1，不能太小，尤其不能小于地图的cellsize。 在调用前后，<code>global_plan_</code>常常不发生变化，所以不必太关注。</p>
+</li>
+<li><p><code>transformGlobalPlan</code>: 根据local costmap地图大小，将此地图内的全局规划器的规划保存到<code>transformed_plan</code>中。<code>transformed_plan</code>所在的坐标系仍然为global_frames</p>
+</li>
+</ul>
+<p><code>global_plan_</code>对应的就是话题<code>/move_base/TebLocalPlannerROS/global_plan</code>，它的size和成员一般在规划两三次后就会变，size一般是逐步变小，<code>transformed_plan</code>也跟随变化。</p>
+<p><code>transformGlobalPlan</code>函数之后，<code>transformed_plan</code>开始和<code>global_plan_</code>相等，<code>transformed_plan</code>逐渐取<code>global_plan_</code>的后面部分，此时<code>goal_idx == global_plan.size() - 1</code>。 有时候<code>transformed_plan</code>取<code>global_plan_</code>中间部分，此时<code>goal_idx != global_plan.size() - 1</code></p>
+<p>这三者会出现以下几种情况:</p>
+<ol>
+<li><p><code>global_plan_ size: 49,  transformed_plan size:49,  goal_idx: 48</code> :  <code>transformed_plan</code>是从<code>global_plan</code>第1个点开始(id=0), <strong>二者完全相同</strong>，<code>goal_idx</code>对应<code>transformed_plan</code>和<code>global_plan_</code>最后一个点</p>
+</li>
+<li><p><code>global_plan_ size: 102,  transformed_plan size:69,  goal_idx: 68</code>:  <code>transformed_plan</code>是从<code>global_plan</code>第1个点开始(id=0), <strong>但这次 transformed_plan 取得是 global_plan 前半部分</strong>， <code>goal_idx</code>对应<code>transformed_plan</code>最后一个点，</p>
+</li>
+<li><p><code>global_plan_ size: 49,  transformed_plan size:45,  goal_idx: 48</code>:  <code>transformed_plan</code>是从<code>global_plan</code>第5个点开始(id=4)，<strong>取global_plan后半部分</strong>， <code>goal_idx</code>对应<code>transformed_plan</code>和<code>global_plan_</code>最后一个点</p>
+</li>
+<li><p><code>global_plan size: 98,  transformed_plan size:69,  goal_idx: 73</code>:   <code>transformed_plan</code>是从<code>global_plan</code>第6个点开始(id=5), <strong>也就是取中间部分</strong>，<code>goal_idx</code>对应<code>transformed_plan</code>最后一个点。  <code>goal_idx != transformed_plan.size()-1</code></p>
+</li>
+</ol>
+<p><strong>goal_idx 是 global_plan 中的id，它对应的点一定和 transformed_plan 最后一个点相同</strong>，所以后面才可以赋值给<code>goal_point</code>和<code>robot_goal_</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/3.%20%E4%BB%8E%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%8E%B7%E5%BE%97%20transform_plan/" data-id="ckr296h1t00i54klm5dti4i04" data-title="(三) 从全局路径获得 transform_plan" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/TEB算法/2. 算法的初始化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/2.%20%E7%AE%97%E6%B3%95%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/" class="article-date">
+  <time class="dt-published" datetime="2020-11-15T12:46:48.000Z" itemprop="datePublished">2020-11-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/2.%20%E7%AE%97%E6%B3%95%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/">(二) 算法的初始化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>MoveBase中加载局部路径规划器</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tc_-&gt;<span class="built_in">initialize</span>(blp_loader_.<span class="built_in">getName</span>(local_planner), &amp;tf_, controller_costmap_ros_);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebLocalPlannerROS::initialize</span><span class="params">(std::string name, tf::TransformListener* tf, costmap_2d::Costmap2DROS* costmap_ros)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(!initialized_)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// create Node Handle with name of plugin (as used in move_base for loading)</span></span><br><span class="line">    <span class="function">ros::NodeHandle <span class="title">nh</span><span class="params">(<span class="string">&quot;~/&quot;</span> + name)</span></span>;</span><br><span class="line">	        </span><br><span class="line">    <span class="comment">// get parameters of TebConfig via the nodehandle and override the default config</span></span><br><span class="line">    cfg_.<span class="built_in">loadRosParamFromNodeHandle</span>(nh);  <span class="comment">// TebConfig  cfg_;</span></span><br><span class="line">    <span class="comment">// nh.param(&quot;trapped_threshold&quot;, trapped_threshold_, 20);</span></span><br><span class="line">    nh.<span class="built_in">param</span>(<span class="string">&quot;filter_back_velocity&quot;</span>, filter_back_velocity_, <span class="literal">true</span>); </span><br><span class="line">    <span class="comment">// nh.param(&quot;setting_acc&quot;, setting_acc_, 1.5);     </span></span><br><span class="line"></span><br><span class="line">    obstacles_.<span class="built_in">reserve</span>(<span class="number">500</span>);    <span class="comment">// ObstContainer  obstacles_;</span></span><br><span class="line">        </span><br><span class="line">    <span class="comment">// 在TebVisualization构造函数里,注册话题 global_plan, local_plan,teb_poses, teb_markers, teb_feedback</span></span><br><span class="line">    visualization_ = <span class="built_in">TebVisualizationPtr</span>(<span class="keyword">new</span> <span class="built_in">TebVisualization</span>(nh, cfg_)); </span><br><span class="line">        </span><br><span class="line">    <span class="comment">//创建robot footprint/contour model for optimization，对5种类型分别处理</span></span><br><span class="line">    <span class="comment">// 点类型最简单，返回新建的PointRobotFootprint共享指针</span></span><br><span class="line">    <span class="comment">// 对于polygon类型，只对 Point2dContainer vertices_;赋值</span></span><br><span class="line">    RobotFootprintModelPtr robot_model = <span class="built_in">getRobotFootprintFromParamServer</span>(nh);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 根据参数，选择创建哪种 planner</span></span><br><span class="line">    <span class="keyword">if</span> (cfg_.hcp.enable_homotopy_class_planning)</span><br><span class="line">    &#123;</span><br><span class="line">      planner_ = <span class="built_in">PlannerInterfacePtr</span>(<span class="keyword">new</span> <span class="built_in">HomotopyClassPlanner</span>(cfg_, &amp;obstacles_, robot_model, visualization_, &amp;via_points_));</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Parallel planning in distinctive topologies enabled.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      planner_ = <span class="built_in">PlannerInterfacePtr</span>(<span class="keyword">new</span> <span class="built_in">TebOptimalPlanner</span>(cfg_, &amp;obstacles_, robot_model, visualization_, &amp;via_points_));</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Parallel planning in distinctive topologies disabled.&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// init other variables</span></span><br><span class="line">    tf_ = tf;   <span class="comment">// 在 move_base_node.cpp中最初定义</span></span><br><span class="line">    <span class="comment">// 这个就是 controller_costmap_ros_ = new costmap_2d::Costmap2DROS(&quot;local_costmap&quot;, tf_);</span></span><br><span class="line">    costmap_ros_ = costmap_ros;</span><br><span class="line">    <span class="comment">// locking should be done in MoveBase</span></span><br><span class="line">    costmap_ = costmap_ros_-&gt;<span class="built_in">getCostmap</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 CostmapModel 共享指针</span></span><br><span class="line">    costmap_model_ = boost::make_shared&lt;base_local_planner::CostmapModel&gt;(*costmap_);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 就是return global_frame, 实际是 &quot;map&quot;</span></span><br><span class="line">    global_frame_ = costmap_ros_-&gt;<span class="built_in">getGlobalFrameID</span>();</span><br><span class="line">    cfg_.map_frame = global_frame_; <span class="comment">// 更新cf_的成员</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 代价地图的local frame, 实际是 &quot;base_footprint&quot;</span></span><br><span class="line">    robot_base_frame_ = costmap_ros_-&gt;<span class="built_in">getBaseFrameID</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Initialize a costmap to polygon converter</span></span><br><span class="line">    <span class="keyword">if</span> (!cfg_.obstacles.costmap_converter_plugin.<span class="built_in">empty</span>())</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">try</span></span><br><span class="line">      &#123;</span><br><span class="line">        costmap_converter_ = costmap_converter_loader_.<span class="built_in">createInstance</span>(cfg_.obstacles.costmap_converter_plugin);</span><br><span class="line">        std::string converter_name = costmap_converter_loader_.<span class="built_in">getName</span>(cfg_.obstacles.costmap_converter_plugin);</span><br><span class="line">        <span class="comment">// replace &#x27;::&#x27; by &#x27;/&#x27; to convert the c++ namespace to a NodeHandle namespace</span></span><br><span class="line">        boost::<span class="built_in">replace_all</span>(converter_name, <span class="string">&quot;::&quot;</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">        costmap_converter_-&gt;<span class="built_in">setOdomTopic</span>(cfg_.odom_topic);</span><br><span class="line">        costmap_converter_-&gt;<span class="built_in">initialize</span>(ros::<span class="built_in">NodeHandle</span>(nh, <span class="string">&quot;costmap_converter/&quot;</span> + converter_name));</span><br><span class="line">        costmap_converter_-&gt;<span class="built_in">setCostmap2D</span>(costmap_);</span><br><span class="line">        </span><br><span class="line">        costmap_converter_-&gt;<span class="built_in">startWorker</span>(ros::<span class="built_in">Rate</span>(cfg_.obstacles.costmap_converter_rate), costmap_, cfg_.obstacles.costmap_converter_spin_thread);</span><br><span class="line">        <span class="built_in">ROS_INFO_STREAM</span>(<span class="string">&quot;Costmap conversion plugin &quot;</span> &lt;&lt; cfg_.obstacles.costmap_converter_plugin &lt;&lt; <span class="string">&quot; loaded.&quot;</span>);        </span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in"><span class="keyword">catch</span></span>(pluginlib::PluginlibException&amp; ex)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;The specified costmap converter plugin cannot be loaded. All occupied costmap cells are treated as point obstacles. Error message: %s&quot;</span>, ex.<span class="built_in">what</span>());</span><br><span class="line">        costmap_converter_.<span class="built_in">reset</span>();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;No costmap conversion plugin specified. All occupied costmap cells are treaten as point obstacles.&quot;</span>);</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 类型是 vector&lt;geometry_msgs::Point&gt;</span></span><br><span class="line">    footprint_spec_ = costmap_ros_-&gt;<span class="built_in">getRobotFootprint</span>();</span><br><span class="line">    costmap_2d::<span class="built_in">calculateMinAndMaxDistances</span>(footprint_spec_, robot_inscribed_radius_, robot_circumscribed_radius);</span><br><span class="line">    <span class="comment">// 更新cf_的成员</span></span><br><span class="line">    cfg_.robot.robot_inscribed_radius =  robot_inscribed_radius_;</span><br><span class="line">    cfg_.robot.robot_circumscribed_radius = robot_circumscribed_radius; </span><br><span class="line">    </span><br><span class="line">    <span class="comment">// init the odom helper to receive the robot&#x27;s velocity from odom messages</span></span><br><span class="line">    odom_helper_.<span class="built_in">setOdomTopic</span>(cfg_.odom_topic);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// setup dynamic reconfigure</span></span><br><span class="line">    dynamic_recfg_ = boost::make_shared&lt; dynamic_reconfigure::Server&lt;TebLocalPlannerReconfigureConfig&gt; &gt;(nh);</span><br><span class="line">    dynamic_reconfigure::Server&lt;TebLocalPlannerReconfigureConfig&gt;::CallbackType cb = boost::<span class="built_in">bind</span>(&amp;TebLocalPlannerROS::reconfigureCB, <span class="keyword">this</span>, _1, _2);</span><br><span class="line">    dynamic_recfg_-&gt;<span class="built_in">setCallback</span>(cb);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// validate optimization footprint and costmap footprint</span></span><br><span class="line">    <span class="comment">// 对于point类型，第1个参数是0，要求最好第1项+第3项 &gt; 第2项</span></span><br><span class="line">    <span class="comment">// 否则 Infeasible optimziation results might occur frequently</span></span><br><span class="line">    <span class="built_in">validateFootprints</span>(robot_model-&gt;<span class="built_in">getInscribedRadius</span>(), robot_inscribed_radius_, </span><br><span class="line">          cfg_.obstacles.min_obstacle_dist);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// custom obstacles的回调函数，话题 /move_base/TebLocalPlannerROS/obstacles</span></span><br><span class="line">    custom_obst_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;obstacles&quot;</span>, <span class="number">1</span>, &amp;TebLocalPlannerROS::customObstacleCB, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// custom via-points的回调，话题 /move_base/TebLocalPlannerROS/via_points</span></span><br><span class="line">    via_points_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;via_points&quot;</span>, <span class="number">1</span>, &amp;TebLocalPlannerROS::customViaPointsCB, <span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// queue_follow 所用，话题 /rectangle_distance</span></span><br><span class="line">    front_dist_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/rectangle_distance&quot;</span>, <span class="number">1</span>, &amp;TebLocalPlannerROS::frontDistanceCB, <span class="keyword">this</span>);</span><br><span class="line">    <span class="comment">// 新添加</span></span><br><span class="line">    footprint_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/footprint&quot;</span>, <span class="number">10</span>, &amp;TebLocalPlannerROS::footprintCB, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    <span class="function">ros::NodeHandle <span class="title">nh_move_base</span><span class="params">(<span class="string">&quot;~&quot;</span>)</span></span>;</span><br><span class="line">    <span class="keyword">double</span> controller_frequency = <span class="number">5</span>;</span><br><span class="line">    <span class="comment">// 实际配置是 30</span></span><br><span class="line">    nh_move_base.<span class="built_in">param</span>(<span class="string">&quot;controller_frequency&quot;</span>, controller_frequency, controller_frequency);</span><br><span class="line">    <span class="comment">// initialize failure detector，Detect if the robot got stucked</span></span><br><span class="line">    failure_detector_.<span class="built_in">setBufferLength</span>(std::<span class="built_in">round</span>(cfg_.recovery.oscillation_filter_duration*controller_frequency));</span><br><span class="line">    <span class="comment">// 初始化，返回一个很大的数</span></span><br><span class="line">    min_distance_custom_obstacle = std::numeric_limits&lt;<span class="keyword">double</span>&gt;::<span class="built_in">max</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// set initialized flag</span></span><br><span class="line">    initialized_ = <span class="literal">true</span>;</span><br><span class="line">    <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;teb_local_planner plugin initialized.&quot;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">ROS_WARN</span>(<span class="string">&quot;teb_local_planner has already been initialized, doing nothing.&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>关于RobotFootprintModelPtr，看<a target="_blank" rel="noopener" href="https://charon-cheung.github.io/2021/06/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84footprint/">TEB中的footprint模型</a></p>
+<p><code>calculateMinAndMaxDistances</code>函数和<code>RobotFootprintModelPtr</code>说明同时使用了两种footprint模型</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/2.%20%E7%AE%97%E6%B3%95%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96/" data-id="ckr296h1s00i34klm1y0e3ap1" data-title="(二) 算法的初始化" class="article-share-link">Share</a>
       
       
       
@@ -783,7 +769,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/10/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/12/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -836,14 +822,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -853,6 +831,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

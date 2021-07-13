@@ -71,108 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ROS/ROS Kinetic知识/只发布和订阅一次消息" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/" class="article-date">
-  <time class="dt-published" datetime="2019-01-16T11:46:05.000Z" itemprop="datePublished">2019-01-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/">ROS只发布和订阅一次消息</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="只发布一次消息"><a href="#只发布一次消息" class="headerlink" title="只发布一次消息"></a>只发布一次消息</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc,argv,<span class="string">&quot;op_motor&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">ros::Publisher pub = nh.advertise&lt;std_msgs::Bool&gt;(<span class="string">&quot;Switch&quot;</span>,<span class="number">1000</span>);</span><br><span class="line"><span class="comment">//不必判断订阅者，直接等待１秒钟，只发布一次</span></span><br><span class="line"><span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">pub.<span class="built_in">publish</span>(msg); </span><br></pre></td></tr></table></figure>
-<p>只发布一次消息就简单了，不必用while循环，直接发布就可以，但是最好也延时一次，防止订阅者的网络状况不好，当然如果不考虑有没有订阅者就不必延时了，不过这样没什么意义。</p>
-<br>
-
-<h3 id="ROS只订阅一次消息"><a href="#ROS只订阅一次消息" class="headerlink" title="ROS只订阅一次消息"></a>ROS只订阅一次消息</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc,argv,<span class="string">&quot;node&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">boost::shared_ptr&lt;riki_msgs::Battery <span class="keyword">const</span>&gt; batEdge;    <span class="comment">// 必须有const</span></span><br><span class="line">batEdge = ros::topic::waitForMessage&lt;riki_msgs::Battery&gt;(<span class="string">&quot;BMS&quot;</span>,ros::<span class="built_in">Duration</span>(<span class="number">3</span>));</span><br><span class="line"><span class="keyword">if</span>(batEdge != <span class="literal">NULL</span>)</span><br><span class="line">&#123;</span><br><span class="line">    riki_msgs::Battery  bat = *batEdge;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;battery:&quot;</span>&lt;&lt;  bat.Ah  &lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;battery:&quot;</span>&lt;&lt;  batEdge-&gt;Ah  &lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;no topic BMS&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
-
-<p>这里用到的函数是<code>ros::topic::waitForMessage</code>，没有涉及回调函数，它有4个重载，常用的是两个:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;class M&gt; boost::shared_ptr&lt; M <span class="keyword">const</span> &gt;   <span class="title">waitForMessage</span> <span class="params">(<span class="keyword">const</span> std::string &amp;topic, ros::Duration timeout)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;class M&gt; boost::shared_ptr&lt; M <span class="keyword">const</span> &gt;  <span class="title">waitForMessage</span> <span class="params">(<span class="keyword">const</span> std::string &amp;topic, ros::NodeHandle &amp;nh)</span></span></span><br></pre></td></tr></table></figure>
-<p>第一个是订阅话题topic，假如没有发布话题，那么等待时间timeout，超时后程序继续执行；第二个是如果没有发现话题topic，会一直阻塞，不能向下运行，除非执行<code>rosnode kill</code>。前一个用的比较多，注意时间不要设置太短，否则可能因为网络状况不好而订阅失败。</p>
-<p>返回类型一看就知道是模板类的Boost共享指针，从这里就可以看出， <font color = blue>  <font size= 3> 消息是以Boost共享指针的形式传输，我们可以存储它而又不需要复制数据</font> </font>，<code>waitForMessage</code>就是返回了订阅到的消息，取指向就可以获得消息成员，也可以直接用指针获得消息成员。<br><strong>注意模板类型有const</strong>，否则不符合重载声明</p>
-<p>参考:<br><a target="_blank" rel="noopener" href="https://answers.ros.org/question/11167/how-do-i-publish-exactly-one-message/">How do I publish exactly one message</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/jade/api/roscpp/html/namespaceros_1_1topic.html">ros::topic Namespace</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/" data-id="ckr28w9x100c64clm84yz61c9" data-title="ROS只发布和订阅一次消息" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/rviz深入研究/使用Qt二次开发rviz(三) rviz的插件开发实战" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="article-date">
-  <time class="dt-published" datetime="2019-01-09T13:21:54.000Z" itemprop="datePublished">2019-01-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/">使用Qt二次开发rviz(三) rviz的插件开发实战</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>开发一个rviz插件，用以显示机器人的剩余电量、充电状态、急停状态、导航速度，只做个示范，界面不太完善。<br>环境配置可参考上一节，<a target="_blank" rel="noopener" href="https://github.com/rjosodtssp/ROS-Program/tree/master/topic_viewer">程序的地址</a></p>
-<p>回调函数中判断电池剩余电量百分比，根据不同的值加载不同图片。充电状态也是同理<br>急停按钮按下时，显示急停的图片，否则不显示。</p>
-<p>注意：</p>
-<ul>
-<li>插件加载的图片路径只能是绝对路径，相对路径会加载失败</li>
-<li>Qt样式表不正常，估计跟rviz冲突<br><img src="https://c1.staticflickr.com/5/4894/32812868008_d7c8fcd0ae_b.jpg"></li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" data-id="ckr28w9ye00fb4clm57na9dzv" data-title="使用Qt二次开发rviz(三) rviz的插件开发实战" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-ROS/ROS机器人/超声波传感器和电机驱动器的控制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2019/01/07/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E8%B6%85%E5%A3%B0%E6%B3%A2%E4%BC%A0%E6%84%9F%E5%99%A8%E5%92%8C%E7%94%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8%E5%99%A8%E7%9A%84%E6%8E%A7%E5%88%B6/" class="article-date">
@@ -210,7 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/07/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E8%B6%85%E5%A3%B0%E6%B3%A2%E4%BC%A0%E6%84%9F%E5%99%A8%E5%92%8C%E7%94%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8%E5%99%A8%E7%9A%84%E6%8E%A7%E5%88%B6/" data-id="ckr28w9xt00e54clmazpg2acm" data-title="超声波传感器和电机驱动器的控制" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/07/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E8%B6%85%E5%A3%B0%E6%B3%A2%E4%BC%A0%E6%84%9F%E5%99%A8%E5%92%8C%E7%94%B5%E6%9C%BA%E9%A9%B1%E5%8A%A8%E5%99%A8%E7%9A%84%E6%8E%A7%E5%88%B6/" data-id="ckr296gzw00e44klmcrhh9rdt" data-title="超声波传感器和电机驱动器的控制" class="article-share-link">Share</a>
       
       
       
@@ -266,7 +164,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/05/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%B8%89)/" data-id="ckr28w9yd00f64clm1luncwxk" data-title="rviz源码解读（三） 插件中的interaction" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/05/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%B8%89)/" data-id="ckr296h0c00f44klmfszdd8cs" data-title="rviz源码解读（三） 插件中的interaction" class="article-share-link">Share</a>
       
       
       
@@ -334,7 +232,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/30/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%BA%8C)/" data-id="ckr28w9yd00f84clmcjuj1sv5" data-title="rviz源码解读(二)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/30/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%BA%8C)/" data-id="ckr296h0d00f54klmbes0c7od" data-title="rviz源码解读(二)" class="article-share-link">Share</a>
       
       
       
@@ -386,7 +284,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/25/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%B8%80)/" data-id="ckr28w9yc00f54clm2j3vbe3d" data-title="rviz源码解读(一)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/25/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/rviz%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB(%E4%B8%80)/" data-id="ckr296h0d00f74klmgf893tlh" data-title="rviz源码解读(一)" class="article-share-link">Share</a>
       
       
       
@@ -441,7 +339,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/24/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%BA%8C)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" data-id="ckr28w9yf00fc4clm6hfe3e2r" data-title="使用Qt二次开发rviz(二) rviz的插件开发环境配置" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/24/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%BA%8C)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/" data-id="ckr296h0f00fb4klm1reu8fbc" data-title="使用Qt二次开发rviz(二) rviz的插件开发环境配置" class="article-share-link">Share</a>
       
       
       
@@ -503,7 +401,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/24/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E5%92%8C%E6%B5%8B%E8%AF%95librviz/" data-id="ckr28w9ye00f94clmawx1hl7m" data-title="使用Qt二次开发rviz(一) 配置Qt-ROS编译环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/24/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83%E5%92%8C%E6%B5%8B%E8%AF%95librviz/" data-id="ckr296h0e00f84klmc9n875b6" data-title="使用Qt二次开发rviz(一) 配置Qt-ROS编译环境" class="article-share-link">Share</a>
       
       
       
@@ -600,7 +498,7 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E5%AE%89%E8%A3%85%E5%92%8C%E7%BC%96%E8%AF%91%E7%AD%89%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" data-id="ckr28w9wk00ay4clmhvte4v5s" data-title="安装和编译等常见问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E5%AE%89%E8%A3%85%E5%92%8C%E7%BC%96%E8%AF%91%E7%AD%89%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" data-id="ckr296gyd00ax4klmck5l31cq" data-title="安装和编译等常见问题" class="article-share-link">Share</a>
       
       
       
@@ -661,7 +559,154 @@ event-&gt;accept();
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/rosparam%E4%B8%8E%E5%8F%82%E6%95%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/" data-id="ckr28w9ws00bm4clm30t544yl" data-title="rosparam与参数服务器" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/12/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/rosparam%E4%B8%8E%E5%8F%82%E6%95%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/" data-id="ckr296gyl00bl4klm3xqvamcu" data-title="rosparam与参数服务器" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-第三方库/解析yaml" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/" class="article-date">
+  <time class="dt-published" datetime="2018-12-05T13:33:36.000Z" itemprop="datePublished">2018-12-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/">解析yaml</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>YAML最基本，最常用的一些使用格式：<br>首先YAML中允许表示三种格式，分别是常量值，对象和数组</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">url:</span> <span class="string">http://www.wolfcode.cn</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">http://www.wolfcode.cn</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.21</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.22</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.23</span></span><br><span class="line"><span class="comment">#常量</span></span><br><span class="line"><span class="attr">pi:</span> <span class="number">3.14</span>   <span class="comment">#定义一个数值3.14</span></span><br><span class="line"><span class="attr">hasChild:</span> <span class="literal">true</span>  <span class="comment">#定义一个boolean值</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">&#x27;Hello YAML&#x27;</span>   <span class="comment">#定义一个字符串</span></span><br></pre></td></tr></table></figure>
+
+
+<p>读YAML的最好方法是使用Python的yaml库<code>PyYAML</code>，到<a target="_blank" rel="noopener" href="https://pyyaml.org/wiki/PyYAMLDocumentation">官网</a>下载安装后，可以先运行测试程序看是否成功。<br>读取程序如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml,os</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;test.yaml&quot;</span>)</span><br><span class="line">y = yaml.load(f,Loader=yaml.FullLoader)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> y</span><br></pre></td></tr></table></figure>
+<p>运行后，结果：<br><img src="https://live.staticflickr.com/65535/47751988322_72c2646b97_b.jpg"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/" data-id="ckr296gvz004z4klmfjp29zvn" data-title="解析yaml" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/工作空间和package.xml" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/" class="article-date">
+  <time class="dt-published" datetime="2018-11-29T13:08:22.000Z" itemprop="datePublished">2018-11-29</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/">工作空间和package.xml</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>创建package后，<code>package.xml</code>不需要再修改，cpp文件必须有个main函数<code>return 0</code>，否则报错。</p>
+<p>创建package命令是<code>catkin_create_pkg nodeName</code></p>
+<h3 id="package名称"><a href="#package名称" class="headerlink" title="package名称"></a>package名称</h3><p>package的名称对应<code>CMakeLists</code>中的<code>project(package)</code>和<code>package.xml</code>中的<code>&lt;name&gt;package&lt;/name&gt;</code></p>
+<p>package的命名是有官方规范的，我意外地发现<code>test</code>这个名字往往会带来问题，可能是因为带<code>test</code>的package都是用于测试的，所以要避免使用。基本规则如下:</p>
+<ol>
+<li>只能使用字母数字下划线</li>
+<li>字母只能用小写，开头必须是字母</li>
+<li>至少有两个字符长度</li>
+<li>只做消息的package以_msg结尾，只含launch的以_launch结尾，以此类推</li>
+</ol>
+<p>不要轻易用<code>msg</code>, <code>launch</code>, <code>test</code>这样的字符串做名称，容易出问题。如果命名不规范，编译时会告警，影响编译时间。查看官方package列表，发现除了tf这样一个单词做名称的例子外，其他基本都是<code>a_b</code>或<code>a_b_c</code>这样的名称，例如<code>tuw_geometry_rviz</code>，所以这样命名比较稳妥。</p>
+<h3 id="package-xml"><a href="#package-xml" class="headerlink" title="package.xml"></a>package.xml</h3><p>每个package.xml文件必须包含的标签包括：</p>
+<ul>
+<li><code>&lt;package&gt;</code> : 最高级tag，属性：format，用于指定格式 </li>
+<li><code>&lt;name&gt;</code> ：package名称</li>
+<li><code>&lt;version&gt;</code> ：当前版本</li>
+<li><code>&lt;description&gt;</code>：package的基本描述</li>
+<li><code>&lt;maintainer&gt;</code>(至少一个)：维护者</li>
+<li><code>&lt;license&gt;</code>(至少一个)：协议</li>
+<li><code>&lt;buildtool_depend&gt;</code>(至少一个): 一般情况下只需要指定catkin作为编译工具， <strong>在需要交叉编译的情况下需要增加目标机器的编译工具</strong></li>
+</ul>
+<p>可选标签包括：</p>
+<ul>
+<li><code>&lt;build_depend&gt;</code> (多个)：编译时需要依赖的其它package，适用于静态库</li>
+<li><code>&lt;exec_depend&gt;</code> (多个)：运行时需要依赖的其它package，适用于静态库</li>
+<li><code>build_export_depend</code>: 编译时需要链接(build against)的package</li>
+<li><code>&lt;export&gt;</code>：用于添加额外的信息，比如需要嵌入的其它package的插件，或者一些说明信息。<br><img src="https://c1.staticflickr.com/5/4906/44628455720_2d3643554f_b.jpg"></li>
+</ul>
+<p>使用<code>depend</code>可以表示同时包括<code>build</code>和<code>exec</code>依赖，也就是说<code>&lt;depend&gt;roscpp&lt;/depend&gt;</code>相当于</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build_depend</span>&gt;</span>roscpp<span class="tag">&lt;/<span class="name">build_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">exec_depend</span>&gt;</span>roscpp<span class="tag">&lt;/<span class="name">exec_depend</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>一般都包括的几个是</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">buildtool_depend</span>&gt;</span>catkin<span class="tag">&lt;/<span class="name">buildtool_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build_depend</span>&gt;</span>message_generation<span class="tag">&lt;/<span class="name">build_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">exec_depend</span>&gt;</span>message_runtime<span class="tag">&lt;/<span class="name">exec_depend</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 可能还有其他msgs类型 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">depend</span>&gt;</span>std_msgs<span class="tag">&lt;/<span class="name">depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build_export_depend</span>&gt;</span>std_msgs<span class="tag">&lt;/<span class="name">build_export_depend</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
+
+<h3 id="几个重要路径"><a href="#几个重要路径" class="headerlink" title="几个重要路径"></a>几个重要路径</h3><p>4个ROS的重要路径，可在CMakeLists中用message函数查看：</p>
+<ul>
+<li><p><code>CATKIN_PACKAGE_LIB_DESTINATION</code>： lib库的路径</p>
+</li>
+<li><p><code>CATKIN_PACKAGE_BIN_DESTINATION</code>： 可执行文件的路径</p>
+</li>
+<li><p><code>CATKIN_PACKAGE_SHARE_DESTINATION</code>：共享文件的路径，就是CMakeLists中的INSTALL生成的两个cmake文件的路径</p>
+</li>
+<li><p><code>catkin_INCLUDE_DIRS</code>： 跟catkin有关文件的路径，不仅仅是ROS相关的</p>
+</li>
+</ul>
+<p><img src="https://c2.staticflickr.com/8/7881/44628455000_50c1e40128_b.jpg"></p>
+<p>在代码中包含另一个package的头文件时，经常写成<code>#include&lt;robot_api/robot_api.h&gt;</code>，注意程序目录结构必须是这样：<br><img src="https://i.loli.net/2019/08/20/5TpseFtAu7VfivG.png"></p>
+<h2 id="多工作空间的问题"><a href="#多工作空间的问题" class="headerlink" title="多工作空间的问题"></a>多工作空间的问题</h2><table><tr><td bgcolor=yellow> 尽量只用一个工作空间，如果用到两个以上，不要出现同名package，也不要出现不同工作空间的包有依赖的情况 </td></tr></table>
+
+<p>如果在<code>/opt/ros/kinetic/</code>之外，如果我们创建了多个工作空间且需要在多个工作空间中来回地工作，比如<code>/home/user/catkin_ws1</code> 和 <code>/home/user/catkin_ws2</code></p>
+<p><code>ROS_PACKAGE_PATH</code>环境变量中的多个目录是有先后顺序的。如果工作空间1和2中的所有包之间没有依赖关系，那么将下面两句话放在<code>bashrc</code>文件中合适的位置（至少应该放在<code>source /opt/ros/kinetic/setup.*sh</code>后）。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /home/user/catkin_ws1/devel/setup.*sh --extended</span><br><span class="line"><span class="built_in">source</span> /home/user/catkin_ws2/devel/setup.*sh --extended</span><br></pre></td></tr></table></figure>
+<p>后面source的工作空间会遮蔽之前工作空间的同名包，比如<code>opt/ros/indigo/share/</code>中安装了move_base包，又在<code>/home/user/catkin_ws1</code>中通过下载源代码的方式安装了move_base，由于<code>ROS_PACKAGE_PATH</code>环境变量的遮蔽效果，我实际用的是<code>/home/user/catkin_ws1/</code>中的<code>move_base</code>，这正是我们常常的目的</p>
+<p>环境变量中这样设置：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /opt/ros/kinetic/setup.zsh</span><br><span class="line"><span class="built_in">source</span> /home/xiaoqiang/catkin_ws/devel/setup.zsh</span><br></pre></td></tr></table></figure>
+<p><code>ROS_PACKAGE_PATH</code>结果是<code>/home/xiaoqiang/catkin_ws/src:/opt/ros/kinetic/share</code>，也就是说后source的工作空间会排在<code>ROS_PACKAGE_PATH</code>的靠前部分，也就是优先级高</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/" data-id="ckr296gyy00cd4klm4ka2eyvz" data-title="工作空间和package.xml" class="article-share-link">Share</a>
       
       
       
@@ -677,7 +722,7 @@ event-&gt;accept();
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/38/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><a class="page-number" href="/page/41/">41</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/40/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/38/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/37/">37</a><a class="page-number" href="/page/38/">38</a><span class="page-number current">39</span><a class="page-number" href="/page/40/">40</a><a class="page-number" href="/page/41/">41</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/40/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -730,14 +775,6 @@ event-&gt;accept();
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -747,6 +784,14 @@ event-&gt;accept();
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

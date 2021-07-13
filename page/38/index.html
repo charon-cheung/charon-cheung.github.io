@@ -71,130 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ROS/ROS程序和源码分析/解读teleop_twist_keyboard源码" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/02/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBteleop_twist_keyboard%E6%BA%90%E7%A0%81/" class="article-date">
-  <time class="dt-published" datetime="2019-02-19T12:08:33.000Z" itemprop="datePublished">2019-02-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/02/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBteleop_twist_keyboard%E6%BA%90%E7%A0%81/">解读teleop_twist_keyboard源码</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>我们常用命令<code>rosrun teleop_twist_keyboard teleop_twist_keyboard.py</code>控制机器人，此Python的源码在<code>/opt/ros/kinetic/lib/teleop_twist_keyboard/teleop_twist_keyboard.py</code>，今天分析一下这个脚本</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;ros/ros.h&gt;</span><br><span class="line">#include &lt;geometry_msgs/Twist.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line">#include &lt;termios.h&gt;</span><br><span class="line"></span><br><span class="line">#include &lt;map&gt;</span><br><span class="line"></span><br><span class="line">// Map for movement keys</span><br><span class="line">std::map&lt;char, std::vector&lt;float&gt;&gt; moveBindings</span><br><span class="line">&#123;</span><br><span class="line">  &#123;&#x27;i&#x27;, &#123;1, 0, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;o&#x27;, &#123;1, 0, 0, -1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;j&#x27;, &#123;0, 0, 0, 1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;l&#x27;, &#123;0, 0, 0, -1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;u&#x27;, &#123;1, 0, 0, 1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;,&#x27;, &#123;-1, 0, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;.&#x27;, &#123;-1, 0, 0, 1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;m&#x27;, &#123;-1, 0, 0, -1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;O&#x27;, &#123;1, -1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;I&#x27;, &#123;1, 0, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;J&#x27;, &#123;0, 1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;L&#x27;, &#123;0, -1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;U&#x27;, &#123;1, 1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;&lt;&#x27;, &#123;-1, 0, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;&gt;&#x27;, &#123;-1, -1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;M&#x27;, &#123;-1, 1, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;t&#x27;, &#123;0, 0, 1, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;b&#x27;, &#123;0, 0, -1, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;k&#x27;, &#123;0, 0, 0, 0&#125;&#125;,</span><br><span class="line">  &#123;&#x27;K&#x27;, &#123;0, 0, 0, 0&#125;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Map for speed keys</span><br><span class="line">std::map&lt;char, std::vector&lt;float&gt;&gt; speedBindings</span><br><span class="line">&#123;</span><br><span class="line">  &#123;&#x27;q&#x27;, &#123;1.1, 1.1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;z&#x27;, &#123;0.9, 0.9&#125;&#125;,</span><br><span class="line">  &#123;&#x27;w&#x27;, &#123;1.1, 1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;x&#x27;, &#123;0.9, 1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;e&#x27;, &#123;1, 1.1&#125;&#125;,</span><br><span class="line">  &#123;&#x27;c&#x27;, &#123;1, 0.9&#125;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// Reminder message</span><br><span class="line">const char* msg = R&quot;(</span><br><span class="line"></span><br><span class="line">Reading from the keyboard and Publishing to Twist!</span><br><span class="line">---------------------------</span><br><span class="line">Moving around:</span><br><span class="line">   u    i    o</span><br><span class="line">   j    k    l</span><br><span class="line">   m    ,    .</span><br><span class="line"></span><br><span class="line">For Holonomic mode (strafing), hold down the shift key:</span><br><span class="line">---------------------------</span><br><span class="line">   U    I    O</span><br><span class="line">   J    K    L</span><br><span class="line">   M    &lt;    &gt;</span><br><span class="line"></span><br><span class="line">t : up (+z)</span><br><span class="line">b : down (-z)</span><br><span class="line"></span><br><span class="line">anything else : stop</span><br><span class="line"></span><br><span class="line">q/z : increase/decrease max speeds by 10%</span><br><span class="line">w/x : increase/decrease only linear speed by 10%</span><br><span class="line">e/c : increase/decrease only angular speed by 10%</span><br><span class="line"></span><br><span class="line">CTRL-C to quit</span><br><span class="line"></span><br><span class="line">)&quot;;</span><br><span class="line"></span><br><span class="line">// Init variables</span><br><span class="line">float speed(0.5); // Linear velocity (m/s)</span><br><span class="line">float turn(1.0); // Angular velocity (rad/s)</span><br><span class="line">float x(0), y(0), z(0), th(0); // Forward/backward/neutral direction vars</span><br><span class="line">char key(&#x27; &#x27;);</span><br><span class="line"></span><br><span class="line">// For non-blocking keyboard inputs</span><br><span class="line">int getch(void)</span><br><span class="line">&#123;</span><br><span class="line">  int ch;</span><br><span class="line">  struct termios oldt;</span><br><span class="line">  struct termios newt;</span><br><span class="line"></span><br><span class="line">  // Store old settings, and copy to new settings</span><br><span class="line">  tcgetattr(STDIN_FILENO, &amp;oldt);</span><br><span class="line">  newt = oldt;</span><br><span class="line"></span><br><span class="line">  // Make required changes and apply the settings</span><br><span class="line">  newt.c_lflag &amp;= ~(ICANON | ECHO);</span><br><span class="line">  newt.c_iflag |= IGNBRK;</span><br><span class="line">  newt.c_iflag &amp;= ~(INLCR | ICRNL | IXON | IXOFF);</span><br><span class="line">  newt.c_lflag &amp;= ~(ICANON | ECHO | ECHOK | ECHOE | ECHONL | ISIG | IEXTEN);</span><br><span class="line">  newt.c_cc[VMIN] = 1;</span><br><span class="line">  newt.c_cc[VTIME] = 0;</span><br><span class="line">  tcsetattr(fileno(stdin), TCSANOW, &amp;newt);</span><br><span class="line"></span><br><span class="line">  // Get the current character</span><br><span class="line">  ch = getchar();</span><br><span class="line"></span><br><span class="line">  // Reapply old settings</span><br><span class="line">  tcsetattr(STDIN_FILENO, TCSANOW, &amp;oldt);</span><br><span class="line"></span><br><span class="line">  return ch;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc, char** argv)</span><br><span class="line">&#123;</span><br><span class="line">  // Init ROS node</span><br><span class="line">  ros::init(argc, argv, &quot;teleop_twist_keyboard&quot;);</span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">  // Init cmd_vel publisher</span><br><span class="line">  ros::Publisher pub = nh.advertise&lt;geometry_msgs::Twist&gt;(&quot;cmd_vel&quot;, 1);</span><br><span class="line"></span><br><span class="line">  // Create Twist message</span><br><span class="line">  geometry_msgs::Twist twist;</span><br><span class="line"></span><br><span class="line">  printf(&quot;%s&quot;, msg);</span><br><span class="line">  printf(&quot;\rCurrent: speed %f\tturn %f | Awaiting command...\r&quot;, speed, turn);</span><br><span class="line"></span><br><span class="line">  while(true)&#123;</span><br><span class="line"></span><br><span class="line">    // Get the pressed key</span><br><span class="line">    key = getch();</span><br><span class="line"></span><br><span class="line">    // If the key corresponds to a key in moveBindings</span><br><span class="line">    if (moveBindings.count(key) == 1)</span><br><span class="line">    &#123;</span><br><span class="line">      // Grab the direction data</span><br><span class="line">      x = moveBindings[key][0];</span><br><span class="line">      y = moveBindings[key][1];</span><br><span class="line">      z = moveBindings[key][2];</span><br><span class="line">      th = moveBindings[key][3];</span><br><span class="line"></span><br><span class="line">      printf(&quot;\rCurrent: speed %f\tturn %f | Last command: %c   &quot;, speed, turn, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Otherwise if it corresponds to a key in speedBindings</span><br><span class="line">    else if (speedBindings.count(key) == 1)</span><br><span class="line">    &#123;</span><br><span class="line">      // Grab the speed data</span><br><span class="line">      speed = speed * speedBindings[key][0];</span><br><span class="line">      turn = turn * speedBindings[key][1];</span><br><span class="line"></span><br><span class="line">      printf(&quot;\rCurrent: speed %f\tturn %f | Last command: %c   &quot;, speed, turn, key);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // Otherwise, set the robot to stop</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">      x = 0;</span><br><span class="line">      y = 0;</span><br><span class="line">      z = 0;</span><br><span class="line">      th = 0;</span><br><span class="line"></span><br><span class="line">      // If ctrl-C (^C) was pressed, terminate the program</span><br><span class="line">      if (key == &#x27;\x03&#x27;)</span><br><span class="line">      &#123;</span><br><span class="line">        printf(&quot;\n\n                 .     .\n              .  |\\-^-/|  .    \n             /| &#125; O.=.O &#123; |\\\n\n                 CH3EERS\n\n&quot;);</span><br><span class="line">        break;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      printf(&quot;\rCurrent: speed %f\tturn %f | Invalid command! %c&quot;, speed, turn, key);</span><br><span class="line">    &#125;</span><br><span class="line">    // Update the Twist message</span><br><span class="line">    twist.linear.x = x * speed;</span><br><span class="line">    twist.linear.y = y * speed;</span><br><span class="line">    twist.linear.z = z * speed;</span><br><span class="line"></span><br><span class="line">    twist.angular.x = 0;</span><br><span class="line">    twist.angular.y = 0;</span><br><span class="line">    twist.angular.z = th * turn;</span><br><span class="line">    // Publish it and resolve any remaining callbacks</span><br><span class="line">    pub.publish(twist);</span><br><span class="line">    ros::spinOnce();</span><br><span class="line">  &#125;</span><br><span class="line">  return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/02/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBteleop_twist_keyboard%E6%BA%90%E7%A0%81/" data-id="ckr28w9yb00f34clmcunn3zy3" data-title="解读teleop_twist_keyboard源码" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/机器人导航/使用AprilTag进行机器人导航（一）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/02/19/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/%E4%BD%BF%E7%94%A8AprilTag%E8%BF%9B%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
-  <time class="dt-published" datetime="2019-02-19T12:03:47.000Z" itemprop="datePublished">2019-02-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/02/19/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/%E4%BD%BF%E7%94%A8AprilTag%E8%BF%9B%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%EF%BC%88%E4%B8%80%EF%BC%89/">使用AprilTag进行机器人导航（一）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>ROS官方提供了一个名为<code>apriltags2_ros</code>的包处理AprilTag，可以根据Tag进行定位导航，我使用的是<code>april.launch</code>。使用前需要先启动摄像头的节点，我用的是<code>usb_cam.launch</code>，如果摄像头程序重启，<code>april.launch</code>也要重启，否则无效。</p>
-<p>节点会发布话题<code>tag_detections</code>和<code>tag_detections_image</code>，后者是带数字识别的图，前者是坐标关系的输出。默认的话题频率应该能达到10Hz，<font color = blue size=4>但是完全取决于计算机的性能，无法用参数配置。</font></p>
-<p><code>settings.yaml</code>中的参数如下，按默认即可:</p>
-<ul>
-<li><p>Make sure <code>tag_border</code> corresponds to your tags’ black border bit width (typically 1 - each square in the tag is represents 1 bit);</p>
-</li>
-<li><p>Setting <code>tag_threads</code> allows certain parts of the core AprilTag 2 algorithm to run parallel computations. Typical multithreading advantages and limitations apply;</p>
-</li>
-<li><p>增大<code>tag_decimate&gt;1</code> allows to decimate (reduce the resolution) of the image by that amount. This makes the core AprilTag 2 algorithm faster (there are less pixels to process) but means that smaller tags are less likely to be detected，甚至无法识别。Pose estimation and decoding still happens with the full-resolution image;</p>
-</li>
-<li><p>Setting <code>tag_blur&gt;0</code> blurs the image and <code>tag_blur&lt;0</code> sharpens the image;</p>
-</li>
-<li><p>Setting <code>tag_refine_edges=1</code> improves the detection fit to the tag, thus the corner detection precision, thus the pose estimation accuracy. Not computationally expensive and recommended to be on (1);</p>
-</li>
-<li><p>Setting <code>tag_refine_decode=1</code> reducecs the false negative detetion rate;</p>
-</li>
-<li><p>Setting <code>tag_refine_pose=1</code> improves the estimated pose accuracy but is computationally expensive;</p>
-</li>
-</ul>
-<p>这个包有自定义的消息文件，不知道为什么，如果在自己的程序(我的叫<code>tag_nav</code>)中想包含其消息的头文件，就会报错：<br><img src="https://c2.staticflickr.com/8/7849/40212016093_9a42b7e247_b.jpg"><br>解决方法：先编译好<code>apriltag2_ros</code>包，然后注释掉<code>CMakeLists</code>中的<code>generate_messages</code>部分，再编译<code>tag_nav</code>。之后没事不要再动<code>apriltag2_ros</code>了。如果先注释再编译<code>apriltag2_ros</code>包，会无法在<code>tag_nav</code>中包含前者的头文件。</p>
-<p>我们使用<code>36H11</code>规格的ID为9的二维码进行测试。</p>
-<h3 id="两话题不同步的问题"><a href="#两话题不同步的问题" class="headerlink" title="两话题不同步的问题"></a>两话题不同步的问题</h3><p>运行后提示<font color = orange>  <font size= 3> image消息和camera_info消息没有同步</font> </font><br><img src="https://c2.staticflickr.com/8/7916/33269888108_3e8be792f5_b.jpg"></p>
-<p>此时打开<code>rqt</code>，切换到主题<code>tag_detections_image</code>，发现没有结果</p>
-<p>源码在<code>continuous_detector.cpp</code>，发现没有进入回调函数<code>ContinuousDetector::imageCallback</code>，它的注册在:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">camera_image_subscriber_ =  it_-&gt;<span class="built_in">subscribeCamera</span>(<span class="string">&quot;/usb_cam/image_raw&quot;</span>,   <span class="number">1</span>,  &amp;ContinuousDetector::imageCallback, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
-<p>函数解释：订阅一对同步化的image和camera info话题，This version assumes the standard topic naming scheme, where the info topic is named “camera_info” in the same namespace as the base image topic.</p>
-<p>既然二者目前没有同步，当然没有进入回调函数，也就无法识别Tag了。最终发现原因就是在工控机上运行了<code>roslaunch usb_cam usb_cam.launch</code>，而在远程机运行了<code> apriltag_ros</code>包，而两台电脑通信不畅，解决方法就是将二者都在工控机上运行。</p>
-<p>现在执行<code>rqt</code>就可以看到识别的结果了，二维码中心是ID,终端上也出现了二维码ID等信息:<br><img src="https://i.loli.net/2020/08/31/wPqEDiTYvr3S14C.png" alt="识别Tag"></p>
-<h3 id="Tag的位姿"><a href="#Tag的位姿" class="headerlink" title="Tag的位姿"></a>Tag的位姿</h3><p>若要查看检测结果，执行：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rostopic　<span class="built_in">echo</span>　/tag_detections</span><br></pre></td></tr></table></figure>
-<p>得到这样的结果<br><img src="https://i.loli.net/2020/08/31/8KfgzoBFWEq5Tje.png" alt="tag_detections"><br>很明显，我们需要的是<code>position</code>和<code>orientation</code>。在实际中，Tag应当是不动的，摄像头安装在机器人上，是运动的。所以描述二者关系时，以Tag为原点进行分析，如下图是Tag和摄像头（黄圈）<br><img src="https://i.loli.net/2020/08/31/LUxgC4hMupsHD8Z.png"><br>经过我实际的测试，这种环境中的坐标轴应当是这样的:<br><img src="https://c2.staticflickr.com/8/7839/33280810218_35a1236470_z.jpg"><br>y代表了上下方向，由于Tag是固定的，而机器人不能飞起来，所以y可以不用考虑。当机器人在Tag右边时，x为负，在左边时为正。当机器人远离Tag时，z值变大，走近Tag时，z值变小。我所用的摄像头检测到Tag的最大距离接近5米，已经足够了。</p>
-<p>总结一下，摄像头坐标系和tag坐标系的关系如下（普遍适用）：<br><img src="https://i.loli.net/2020/08/31/ilswyR1bG43MESN.png"></p>
-<h3 id="坐标系转换关系问题"><a href="#坐标系转换关系问题" class="headerlink" title="坐标系转换关系问题"></a>坐标系转换关系问题</h3><p><code>apriltag2_ros</code>包存在<code>tag_9</code>坐标系向<code>camera</code>坐标系的转换，在<code>TagDetector::detectTags</code>函数的最后。</p>
-<p>接下来我们要在<code>camera</code>和<code>base_link</code>之间建立联系，这样就将所有坐标系关联起来了，在launch文件中添加:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">args</span>=<span class="string">&quot;-0.24 0 0.295 1.571 0 -1.571 /base_link /camera 10&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;tf&quot;</span> <span class="attr">name</span>=<span class="string">&quot;base_link_to_camera&quot;</span> <span class="attr">type</span>=<span class="string">&quot;static_transform_publisher&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>因为tf是树结构，所以一个坐标系只能有一个parent，但可以有多个child。因此这里不能让camera做parent，而是base_link，因为base_link的parent已经是odom了，不能再给它找个parent</p>
-<p>启动所有launch文件后，使用<code>rosrun tf view_frame</code>命令生成pdf文件，查看得知，拥有全部坐标系的情况是这样的:<br><img src="https://c2.staticflickr.com/8/7827/40253601803_d6803a012f_b.jpg"></p>
-<h3 id="apriltag2-ros占CPU太大"><a href="#apriltag2-ros占CPU太大" class="headerlink" title="apriltag2_ros占CPU太大"></a>apriltag2_ros占CPU太大</h3><p>发现降低摄像头程序<code>usb_cam</code>的分辨率和帧率，可大大减少<code>apriltag2_ros</code>所占CPU。</p>
-<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/image_transport">ROS  image_transport</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/lunar/api/image_transport/html/classimage__transport_1_1CameraSubscriber.html">image_transport::CameraSubscriber Class </a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/02/19/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/%E4%BD%BF%E7%94%A8AprilTag%E8%BF%9B%E8%A1%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%EF%BC%88%E4%B8%80%EF%BC%89/" data-id="ckr28w9yh00fh4clmh6h9cifg" data-title="使用AprilTag进行机器人导航（一）" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-ROS/ROS机器人/ROS校正摄像头" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2019/02/02/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E6%A0%A1%E6%AD%A3%E6%91%84%E5%83%8F%E5%A4%B4/" class="article-date">
@@ -250,7 +126,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/02/02/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E6%A0%A1%E6%AD%A3%E6%91%84%E5%83%8F%E5%A4%B4/" data-id="ckr28w9xe00d04clmg9tw1h6w" data-title="ROS标定摄像头" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/02/02/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E6%A0%A1%E6%AD%A3%E6%91%84%E5%83%8F%E5%A4%B4/" data-id="ckr296gzf00d04klmb7q90xa7" data-title="ROS标定摄像头" class="article-share-link">Share</a>
       
       
       
@@ -330,7 +206,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBNodeHandle%E6%BA%90%E7%A0%81%EF%BC%88%E4%B8%80%EF%BC%89%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" data-id="ckr28w9ya00ez4clm6wcvcwp4" data-title="解读NodeHandle（一）构造函数与析构函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBNodeHandle%E6%BA%90%E7%A0%81%EF%BC%88%E4%B8%80%EF%BC%89%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" data-id="ckr296h0800ew4klma5xw8xwo" data-title="解读NodeHandle（一）构造函数与析构函数" class="article-share-link">Share</a>
       
       
       
@@ -393,7 +269,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBQt%20ROS%20Package%E6%BA%90%E7%A0%81/" data-id="ckr28w9yb00f24clmb3385ykf" data-title="解读Qt ROS Package源码" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBQt%20ROS%20Package%E6%BA%90%E7%A0%81/" data-id="ckr296h0b00f14klmb6jn4xt7" data-title="解读Qt ROS Package源码" class="article-share-link">Share</a>
       
       
       
@@ -464,7 +340,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E5%B8%B8%E7%94%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8E%A5%E5%8F%A3/" data-id="ckr28w9xw00eb4clm8hp3gfes" data-title="ROS常用的核心接口" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E5%B8%B8%E7%94%A8%E7%9A%84%E6%A0%B8%E5%BF%83%E6%8E%A5%E5%8F%A3/" data-id="ckr296gzy00ea4klm2itn8j2x" data-title="ROS常用的核心接口" class="article-share-link">Share</a>
       
       
       
@@ -536,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%80%EF%BC%89/" data-id="ckr28w9y800eu4clmd2ag0jon" data-title="解析ros::init（一）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/22/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%80%EF%BC%89/" data-id="ckr296h0900ey4klmcexzfnqx" data-title="解析ros::init（一）" class="article-share-link">Share</a>
       
       
       
@@ -593,7 +469,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/22/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/spin%E4%B8%8EspinOnce/" data-id="ckr28w9wu00br4clm2feh0nts" data-title="spin与spinOnce" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/22/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/spin%E4%B8%8EspinOnce/" data-id="ckr296gyn00bq4klm1ctn4hbb" data-title="spin与spinOnce" class="article-share-link">Share</a>
       
       
       
@@ -667,7 +543,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" data-id="ckr28w9x000c34clm4aech9v0" data-title="发布和订阅" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" data-id="ckr296gyt00c24klm146v88h7" data-title="发布和订阅" class="article-share-link">Share</a>
       
       
       
@@ -719,7 +595,109 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E5%AE%9A%E6%97%B6%E5%99%A8/" data-id="ckr28w9wl00b14clm1dqb28mx" data-title="ROS定时器" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E5%AE%9A%E6%97%B6%E5%99%A8/" data-id="ckr296gyd00b04klm2i477bqb" data-title="ROS定时器" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/只发布和订阅一次消息" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/" class="article-date">
+  <time class="dt-published" datetime="2019-01-16T11:46:05.000Z" itemprop="datePublished">2019-01-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/">ROS只发布和订阅一次消息</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="只发布一次消息"><a href="#只发布一次消息" class="headerlink" title="只发布一次消息"></a>只发布一次消息</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc,argv,<span class="string">&quot;op_motor&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">ros::Publisher pub = nh.advertise&lt;std_msgs::Bool&gt;(<span class="string">&quot;Switch&quot;</span>,<span class="number">1000</span>);</span><br><span class="line"><span class="comment">//不必判断订阅者，直接等待１秒钟，只发布一次</span></span><br><span class="line"><span class="built_in">sleep</span>(<span class="number">1</span>);</span><br><span class="line">pub.<span class="built_in">publish</span>(msg); </span><br></pre></td></tr></table></figure>
+<p>只发布一次消息就简单了，不必用while循环，直接发布就可以，但是最好也延时一次，防止订阅者的网络状况不好，当然如果不考虑有没有订阅者就不必延时了，不过这样没什么意义。</p>
+<br>
+
+<h3 id="ROS只订阅一次消息"><a href="#ROS只订阅一次消息" class="headerlink" title="ROS只订阅一次消息"></a>ROS只订阅一次消息</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc,argv,<span class="string">&quot;node&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">boost::shared_ptr&lt;riki_msgs::Battery <span class="keyword">const</span>&gt; batEdge;    <span class="comment">// 必须有const</span></span><br><span class="line">batEdge = ros::topic::waitForMessage&lt;riki_msgs::Battery&gt;(<span class="string">&quot;BMS&quot;</span>,ros::<span class="built_in">Duration</span>(<span class="number">3</span>));</span><br><span class="line"><span class="keyword">if</span>(batEdge != <span class="literal">NULL</span>)</span><br><span class="line">&#123;</span><br><span class="line">    riki_msgs::Battery  bat = *batEdge;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;battery:&quot;</span>&lt;&lt;  bat.Ah  &lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;battery:&quot;</span>&lt;&lt;  batEdge-&gt;Ah  &lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;no topic BMS&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>这里用到的函数是<code>ros::topic::waitForMessage</code>，没有涉及回调函数，它有4个重载，常用的是两个:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;class M&gt; boost::shared_ptr&lt; M <span class="keyword">const</span> &gt;   <span class="title">waitForMessage</span> <span class="params">(<span class="keyword">const</span> std::string &amp;topic, ros::Duration timeout)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">template</span>&lt;class M&gt; boost::shared_ptr&lt; M <span class="keyword">const</span> &gt;  <span class="title">waitForMessage</span> <span class="params">(<span class="keyword">const</span> std::string &amp;topic, ros::NodeHandle &amp;nh)</span></span></span><br></pre></td></tr></table></figure>
+<p>第一个是订阅话题topic，假如没有发布话题，那么等待时间timeout，超时后程序继续执行；第二个是如果没有发现话题topic，会一直阻塞，不能向下运行，除非执行<code>rosnode kill</code>。前一个用的比较多，注意时间不要设置太短，否则可能因为网络状况不好而订阅失败。</p>
+<p>返回类型一看就知道是模板类的Boost共享指针，从这里就可以看出， <font color = blue>  <font size= 3> 消息是以Boost共享指针的形式传输，我们可以存储它而又不需要复制数据</font> </font>，<code>waitForMessage</code>就是返回了订阅到的消息，取指向就可以获得消息成员，也可以直接用指针获得消息成员。<br><strong>注意模板类型有const</strong>，否则不符合重载声明</p>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://answers.ros.org/question/11167/how-do-i-publish-exactly-one-message/">How do I publish exactly one message</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/jade/api/roscpp/html/namespaceros_1_1topic.html">ros::topic Namespace</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/01/16/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%AA%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85%E4%B8%80%E6%AC%A1%E6%B6%88%E6%81%AF/" data-id="ckr296gyu00c54klmgmudfo94" data-title="ROS只发布和订阅一次消息" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/rviz深入研究/使用Qt二次开发rviz(三) rviz的插件开发实战" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="article-date">
+  <time class="dt-published" datetime="2019-01-09T13:21:54.000Z" itemprop="datePublished">2019-01-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/">使用Qt二次开发rviz(三) rviz的插件开发实战</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>开发一个rviz插件，用以显示机器人的剩余电量、充电状态、急停状态、导航速度，只做个示范，界面不太完善。<br>环境配置可参考上一节，<a target="_blank" rel="noopener" href="https://github.com/rjosodtssp/ROS-Program/tree/master/topic_viewer">程序的地址</a></p>
+<p>回调函数中判断电池剩余电量百分比，根据不同的值加载不同图片。充电状态也是同理<br>急停按钮按下时，显示急停的图片，否则不显示。</p>
+<p>注意：</p>
+<ul>
+<li>插件加载的图片路径只能是绝对路径，相对路径会加载失败</li>
+<li>Qt样式表不正常，估计跟rviz冲突<br><img src="https://c1.staticflickr.com/5/4894/32812868008_d7c8fcd0ae_b.jpg"></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/01/09/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E4%BD%BF%E7%94%A8Qt%E4%BA%8C%E6%AC%A1%E5%BC%80%E5%8F%91rviz(%E4%B8%89)%20rviz%E7%9A%84%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" data-id="ckr296h0f00fa4klm6n6df065" data-title="使用Qt二次开发rviz(三) rviz的插件开发实战" class="article-share-link">Share</a>
       
       
       
@@ -735,7 +713,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/37/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><a class="page-number" href="/page/37/">37</a><span class="page-number current">38</span><a class="page-number" href="/page/39/">39</a><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/39/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/37/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/36/">36</a><a class="page-number" href="/page/37/">37</a><span class="page-number current">38</span><a class="page-number" href="/page/39/">39</a><a class="page-number" href="/page/40/">40</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/39/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -788,14 +766,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -805,6 +775,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

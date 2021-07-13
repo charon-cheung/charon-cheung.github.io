@@ -71,126 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-C++/C++  面向对象/new与delete" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/" class="article-date">
-  <time class="dt-published" datetime="2018-08-11T13:45:06.000Z" itemprop="datePublished">2018-08-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/">new与delete</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>对类类型而言，new运算是先分配内存再执行构造函数，delete是先执行析构函数再释放内存</p>
-<h2 id="对array的用法"><a href="#对array的用法" class="headerlink" title="对array的用法"></a>对array的用法</h2><p>我们都知道new与delete经常这样用:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* a = <span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">delete</span> a;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>* b = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">delete</span> []b;</span><br></pre></td></tr></table></figure>
-<p>如果第二种情况改用<code>delete b;</code>会不会有内存泄漏？答案是仍然不会，分配简单类型内存时，内存大小已经确定，系统可以记忆并且进行管理，在析构时，系统并不会调用析构函数。它直接通过指针可以获取实际分配的内存空间，哪怕是一个数组内存空间。</p>
-<p>但是对于类对象就不能这样用了，看下面的类:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类构造 &quot;</span>&lt;&lt;<span class="keyword">this</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类析构&quot;</span>&lt;&lt;<span class="keyword">this</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    Base* pb = <span class="keyword">new</span> Base[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">delete</span> pb;</span><br></pre></td></tr></table></figure>
-<p>运行结果如下，只有一个析构函数，而且从this指针来看，是数组第一个元素的析构函数：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">基类构造 0xe118d4</span><br><span class="line">基类构造 0xe118ec</span><br><span class="line">基类构造 0xe11904</span><br><span class="line">基类构造 0xe1191c</span><br><span class="line">基类构造 0xe11934</span><br><span class="line"></span><br><span class="line">基类析构 0xe118d4</span><br></pre></td></tr></table></figure>
-<p><code>delete pb</code>只用来释放pb指向的内存和一个析构。<code>delete[] pb</code>用来释放指针指向的内存，还逐一调用数组中每个对象的析构。<font color = blue size=4> 所以为了编程规范，不管对简单类型还是类类型，都要用<code>delete []pb</code>的形式。</font><br><br></p>
-<h2 id="与malloc-free的区别"><a href="#与malloc-free的区别" class="headerlink" title="与malloc/free的区别"></a>与malloc/free的区别</h2><ul>
-<li><p><code>new/delete</code>用于C++中的动态内存分配, <code>malloc/free</code>仅用于C环境</p>
-</li>
-<li><p><code>new/delete</code>不必指定分配内存大小, <code>malloc/free</code>必须指定</p>
-</li>
-<li><p><code>malloc/free</code>用于类类型时,不会运行构造析构函数</p>
-</li>
-<li><p>new返回的是指定对象的指针，而malloc返回的是<code>void*</code>，<code>malloc</code>的返回值一般都需要进行类型转化。</p>
-</li>
-<li><p>new是一个操作符可以重载，malloc是一个库函数</p>
-</li>
-</ul>
-<p>比如：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Base* b = (Base*)<span class="built_in">malloc</span>(<span class="number">12</span>);</span><br><span class="line"><span class="built_in">free</span>(b);</span><br></pre></td></tr></table></figure>
-<p>12是随便指定的，结果不运行构造和析构函数，而且如果中间运行成员函数，程序会崩溃；所以这种代码没有任何意义</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/" data-id="ckr28w9vp00924clmfieod1nn" data-title="new与delete" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-C++/C++  基础/函数在main之前或之后运行" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/" class="article-date">
-  <time class="dt-published" datetime="2018-08-09T14:34:15.000Z" itemprop="datePublished">2018-08-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/">函数在main之前或之后运行</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>C++中，全局对象的构造函数在main之前运行，析构函数在main之后运行。</li>
-<li>类静态变量的初始化在main之前，静态函数不行</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类构造&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类析构&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;get()&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">55</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line">Base b;</span><br><span class="line"><span class="comment">// int Base::count = Base::get();	错误，这里不能调静态函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;main &quot;</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">基类构造</span><br><span class="line">get()</span><br><span class="line">main</span><br><span class="line">基类析构</span><br></pre></td></tr></table></figure>
-
-<p>gcc中使用attribute关键字，声明constructor和destructor函数：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((constructor)) <span class="function"><span class="keyword">void</span> <span class="title">before_main</span><span class="params">()</span> </span>&#123; </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;before main\n&quot;</span>); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">__attribute__((destructor)) <span class="function"><span class="keyword">void</span> <span class="title">after_main</span><span class="params">()</span> </span>&#123; </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;after main\n&quot;</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/" data-id="ckr28w9v9007t4clmf4yf6xfv" data-title="函数在main之前或之后运行" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-C++/C++  面向对象/运算符重载(二)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/08/09/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD(%E4%BA%8C)/" class="article-date">
@@ -228,7 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/09/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD(%E4%BA%8C)/" data-id="ckr28w9wd00af4clm8zss72mr" data-title="运算符重载（二）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/09/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD(%E4%BA%8C)/" data-id="ckr296gy400ae4klmclju1dbr" data-title="运算符重载（二）" class="article-share-link">Share</a>
       
       
       
@@ -272,7 +152,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E7%B1%BB%E7%9A%84%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/" data-id="ckr28w9wb00ac4clm20e54gr6" data-title="类的其他知识" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E7%B1%BB%E7%9A%84%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/" data-id="ckr296gy300ab4klmgbhzc5n9" data-title="类的其他知识" class="article-share-link">Share</a>
       
       
       
@@ -333,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD/" data-id="ckr28w9we00ah4clm57buf4gg" data-title="运算符重载（一）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD/" data-id="ckr296gy500ag4klmd5mdeo7f" data-title="运算符重载（一）" class="article-share-link">Share</a>
       
       
       
@@ -421,7 +301,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" data-id="ckr28w9w4009x4clm2nex2eue" data-title="详解copy构造函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" data-id="ckr296gxx009w4klmbgo66rps" data-title="详解copy构造函数" class="article-share-link">Share</a>
       
       
       
@@ -525,7 +405,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/03/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/" data-id="ckr28w9vb00824clmf64qdi6l" data-title="结构体与类的字节对齐(终极方案，简单易懂)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/03/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/" data-id="ckr296gx300814klmhs5i78zx" data-title="结构体与类的字节对齐(终极方案，简单易懂)" class="article-share-link">Share</a>
       
       
       
@@ -577,7 +457,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/02/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" data-id="ckr28w9w0009p4clmd1zhgkb9" data-title="回调函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/02/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" data-id="ckr296gxu009o4klm8ipy162o" data-title="回调函数" class="article-share-link">Share</a>
       
       
       
@@ -630,7 +510,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/this%E6%8C%87%E9%92%88/" data-id="ckr28w9vr00974clm2pdd5y0g" data-title="this指针" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/07/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/this%E6%8C%87%E9%92%88/" data-id="ckr296gxl00964klm4ksgf3zc" data-title="this指针" class="article-share-link">Share</a>
       
       
       
@@ -704,7 +584,193 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/07/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E7%B1%BB%E7%9A%84%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E5%92%8C%E9%9D%99%E6%80%81%E5%87%BD%E6%95%B0/" data-id="ckr28w9wc00ae4clm40egf801" data-title="类的静态变量和静态函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/07/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E7%B1%BB%E7%9A%84%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E5%92%8C%E9%9D%99%E6%80%81%E5%87%BD%E6%95%B0/" data-id="ckr296gy400ad4klm81otgdma" data-title="类的静态变量和静态函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/单例模式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="article-date">
+  <time class="dt-published" datetime="2018-07-23T14:16:23.000Z" itemprop="datePublished">2018-07-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">单例模式的多种形态</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h2><ul>
+<li><p>线程池</p>
+</li>
+<li><p>日志类，一个应用往往只对应一个日志实例</p>
+</li>
+<li><p>Windows 是多进程多线程的，在操作一个文件的时候，就不可避免地出现多个进程或线程同时操作一个文件的现象，所以所有文件的处理必须通过唯一的实例来进行</p>
+</li>
+<li><p>windows系统的任务管理器就是一个例子，总是只有一个管理器的实例。</p>
+</li>
+</ul>
+<p>优点</p>
+<ul>
+<li><p>在内存里只有一个实例，减少了内存的开销，尤其是频繁的创建和销毁实例</p>
+</li>
+<li><p>随时调用</p>
+</li>
+</ul>
+<p>缺点：没有接口，不能继承，与单一职责原则冲突，一个类应该只关心内部逻辑，而不关心外面怎么样来实例化。</p>
+<p>一个单例模式应具备以下特征：</p>
+<ol>
+<li>只能实例化同一个对象</li>
+<li>提供全局访问点</li>
+<li>禁止拷贝</li>
+<li>线程安全</li>
+</ol>
+<p>针对第一条，可以将构造函数权限设为private，如果是public那么每次实例化调用构造函数，对象的内存地址都不同，也就是说只准调用一次构造函数。那问题来了，构造函数都private了，怎么实例化对象？显然要用某个public方法来调用，这又有问题：都没实例化对象，怎么调用public方法？所以这个public方法只能是静态的了。</p>
+<p>针对第二条，全局性很容易想到静态函数，它是属于类的，而不是属于某个对象的。</p>
+<p>第三条很容易，将拷贝构造函数和复制运算符声明为private即可。</p>
+<p>综上，单例类的雏形应该是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 单例方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:    <span class="comment">//构造函数或析构函数为私有函数，所以该类是无法被继承的，</span></span><br><span class="line">    <span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例构造&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    ~<span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例析构&quot;</span>&lt;&lt;endl;  &#125;</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="keyword">const</span> Singleton &amp;);</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Singleton&amp;);</span><br><span class="line">    <span class="keyword">static</span> Singleton* m;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>关键就是怎么实现public static方法。</p>
+<h3 id="测试1"><a href="#测试1" class="headerlink" title="测试1"></a>测试1</h3><p>首先想到这样的方法:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Singleton <span class="title">instance</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Singleton s;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果报错<code>构造函数和析构函数是private</code>，第一行就编译不过</p>
+<h3 id="测试2"><a href="#测试2" class="headerlink" title="测试2"></a>测试2</h3><p>测试下面这种方法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Singleton* <span class="title">instance1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Singleton *s = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line">Singleton* s1 = Singleton::<span class="built_in">instance1</span>();</span><br><span class="line">Singleton *s2 = Singleton::<span class="built_in">instance1</span>();</span><br><span class="line"><span class="keyword">delete</span> s1;</span><br><span class="line"><span class="keyword">delete</span> s2;</span><br></pre></td></tr></table></figure>
+<p>结果发现有两个构造函数，而且无法析构。</p>
+<h3 id="有缺陷的懒汉模式"><a href="#有缺陷的懒汉模式" class="headerlink" title="有缺陷的懒汉模式"></a>有缺陷的懒汉模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Singleton* <span class="title">LazyInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!m)</span><br><span class="line">            m = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">        <span class="keyword">return</span> m;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例析构&quot;</span>&lt;&lt;endl;  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例构造&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="keyword">const</span> Singleton &amp;)=<span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Singleton&amp;)=<span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> Singleton* m;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>测试：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类外要初始化静态变量： SingleTon* SingleTon::instance = nullptr;</span></span><br><span class="line">Singleton* s = Singleton::<span class="built_in">LazyInstance</span>();</span><br><span class="line">std::cout&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">Singleton* s2 = s;</span><br><span class="line">std::cout&lt;&lt;s2&lt;&lt;endl;</span><br><span class="line"><span class="keyword">delete</span> s;</span><br><span class="line"><span class="comment">// delete s2;   不能这样，否则二次析构</span></span><br></pre></td></tr></table></figure>
+<p>s和s2的内存地址相同，说明是单例。但类中只负责new出对象，却没有负责delete对象，结果发现只调用一次构造函数，还需要手动<code>delete s</code>。可以用智能指针修正</p>
+<p>如果有两个线程，假设pthread_1刚判断完 intance 为NULL 为真，准备创建实例的时候，切换到了pthread_2, 此时pthread_2也判断intance为NULL为真，创建了一个实例，再切回pthread_1的时候继续创建一个实例返回，那么此时就不再满足单例模式的要求</p>
+<h3 id="升级版的懒汉模式"><a href="#升级版的懒汉模式" class="headerlink" title="升级版的懒汉模式"></a>升级版的懒汉模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">typedef</span> boost::shared_ptr&lt;SingleTon&gt; Ptr;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Ptr <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(instance==<span class="literal">nullptr</span>)</span><br><span class="line">                instance = boost::shared_ptr&lt;SingleTon&gt;(<span class="keyword">new</span> SingleTon);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SingleTon</span>()&#123; <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;destruct&quot;</span>; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">SingleTon</span>()&#123; <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;construct&quot;</span>; &#125;</span><br><span class="line">    <span class="built_in">SingleTon</span>(<span class="keyword">const</span> SingleTon&amp; s)&#123;&#125;</span><br><span class="line">    SingleTon&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> SingleTon&amp; s)&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> std::mutex m_mutex;</span><br><span class="line">    <span class="keyword">static</span> Ptr instance;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>改用智能指针做静态类型，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类外要初始化静态变量: SingleTon::Ptr SingleTon::instance = nullptr;</span></span><br><span class="line">SingleTon::Ptr s = SingleTon::<span class="built_in">getInstance</span>();</span><br><span class="line"><span class="built_in">qDebug</span>() &lt;&lt; s.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line">SingleTon::Ptr s1 = SingleTon::<span class="built_in">getInstance</span>();</span><br><span class="line"><span class="built_in">qDebug</span>() &lt;&lt; s1.<span class="built_in">get</span>();</span><br></pre></td></tr></table></figure>
+<p>结果二者地址相同，也运行了析构函数。  加了锁，使用互斥量来达到线程安全。这里使用了两个 if判断语句的技术称为<strong>双检锁</strong>；好处是，只有判断指针为空的时候才加锁，避免每次调用<code>getInstance</code>的方法都加锁，锁的开销毕竟还是有点大的。</p>
+<p>不足之处在于：使用智能指针会要求用户也得使用智能指针，非必要不应该提出这种约束；使用锁也有开销; 同时代码量也增多了；在某些平台，双检锁会失效</p>
+<h3 id="Meyers模式"><a href="#Meyers模式" class="headerlink" title="Meyers模式"></a>Meyers模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> App SingleTon::MeyersInstance()</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> SingleTon&amp; <span class="title">MeyersInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> SingleTon s;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式所用到的特性是在C++11标准中的<strong>Magic Static</strong>特性。如果当变量在初始化的时候，并发同时进入声明语句，并发线程将会阻塞等待初始化结束。这样保证了并发线程在获取静态局部变量的时候一定是初始化过的，所以具有线程安全性。</p>
+<p>在 MeyersInstance() 函数内定义局部静态变量的好处是,构造函数只会在第一次调用MeyersInstance() 时被初始化, 保证了成员变量和 Singleton 本身的初始化顺序。<br>它还有一个潜在的安全措施, MeyersInstance() 返回的是对局部静态变量的引用, 如果返回的是指针, MeyersInstance() 的调用者很可能会误认为他要检查指针的有效性, 并负责销毁。</p>
+<h3 id="Qt中的全局指针"><a href="#Qt中的全局指针" class="headerlink" title="Qt中的全局指针"></a>Qt中的全局指针</h3><p>Qt里有一个全局指针<code>qApp</code>，在任意地方都能使用，看看是不是单例模式。</p>
+<p>QApplication中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> qApp (static_cast<span class="meta-string">&lt;QApplication *&gt;</span>(QCoreApplication::instance()))</span></span><br></pre></td></tr></table></figure>
+
+<p>QCoreapplication中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//头文件中</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>  qApp  QCoreApplication::instance()</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> QCoreApplication  *<span class="title">instance</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> self; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> QCoreApplication  *self;</span><br><span class="line"></span><br><span class="line"><span class="comment">//源文件中</span></span><br><span class="line">QCoreApplication *QCoreApplication::self = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 构造函数</span></span><br><span class="line">QCoreApplication::<span class="built_in">QCoreApplication</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">d_func</span>()-&gt;q_ptr = <span class="keyword">this</span>;</span><br><span class="line">    <span class="built_in">d_func</span>()-&gt;<span class="built_in">init</span>();</span><br><span class="line">    QCoreApplicationPrivate::eventDispatcher-&gt;<span class="built_in">startingUp</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 就是 d_func()-&gt;init();</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QCoreApplicationPrivate::init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="built_in">Q_ASSERT_X</span>(!QCoreApplication::self, <span class="string">&quot;QCoreApplication&quot;</span>, <span class="string">&quot;there should be only one application object&quot;</span>);</span><br><span class="line">    QCoreApplication::self = q;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从QCoreapplication来看，qApp是个宏，实际是函数<code>QCoreApplication::instance()</code>，QCoreApplication这个类十分关键，构造函数肯定不能是private。从这个self来看，特别像懒汉模式，self是在QCoreApplication构造函数里赋值，赋给它的q指针实际就是QCoreApplication的this指针。</p>
+<p>但是在程序里使用qApp，你会发现其地址都一样，也就是同一个全局指针，这就在于Q_ASSERT_X这句限定了只能有一个QCoreApplication对象，再加上拷贝构造函数和赋值运算符都在QObject限定为private，因此<strong>qApp也是一种单例模式</strong>。所以我们可以说单例模式不一定限定构造和析构是private，这个使用了Qt特有的d指针和q指针，技巧性太高，还是用meyers模式吧</p>
+<h3 id="ROS中的单例模式"><a href="#ROS中的单例模式" class="headerlink" title="ROS中的单例模式"></a>ROS中的单例模式</h3><p>看ROS源码中的类<code>TopicManager</code>，它用到了单例模式，我模仿写了一个类如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span>;</span></span><br><span class="line"><span class="keyword">typedef</span> boost::shared_ptr&lt;SingleTon&gt; SingleTonPtr;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Ptr SingleTon::getInstance()</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SingleTon</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> SingleTonPtr&amp; <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> SingleTonPtr f = boost::make_shared&lt;SingleTon&gt;();</span><br><span class="line">        <span class="keyword">return</span> f;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">out</span><span class="params">()</span> </span>&#123; cout&lt;&lt;<span class="string">&quot; out put &quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_num;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>结果发现构造函数只能是public，如果是private，就会报错，原因在<code>make_shared</code>中。这样一来就不能实现单例了，看来这种做法不可行。</p>
+<br>
+
+<p>参考:<a target="_blank" rel="noopener" href="https://blog.csdn.net/crayondeng/article/details/24853471">探究 C++ Singleton（单例模式）</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" data-id="ckr296gxt009n4klm8vhw2nzs" data-title="单例模式的多种形态" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/五大cast转型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/" class="article-date">
+  <time class="dt-published" datetime="2018-07-22T12:10:41.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/">五大cast转型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="const-cast"><a href="#const-cast" class="headerlink" title="const_cast"></a>const_cast</h2><ul>
+<li>const_cast是唯一能将const性质转化掉的操作符，但执行其他任何类型的转换都会引起编译错误。</li>
+</ul>
+<p>单纯的把常量转为变量是没多少意义的，也就是这种代码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> con =<span class="number">12</span>;</span><br><span class="line"><span class="keyword">int</span> cc= <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(con);</span><br></pre></td></tr></table></figure>
+<p>直接用变量或者mutable就好了。</p>
+<p>如果定义了一个非const的变量，却使用了一个指向const值的指针来指向它（不规范的风格），在程序的某处我们想改变这个变量的值了，但手头只持有指针，这是const_cast就可以用到了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> constant = <span class="number">26</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>* const_p = &amp;constant;</span><br><span class="line"><span class="keyword">int</span>* modifier = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(const_p);</span><br><span class="line">*modifier = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<p>这并不是一个好的设计，还是应该遵从这样的原则：使用<code>const_cast</code>去除const限定的目的绝对不是为了修改它的内容，只是出于无奈，所以最好少用转型。</p>
+<p>如果有一个函数，它的形参是non-const类型变量，而且函数不会对实参的值进行改动，这时我们可以使用类型为const的变量来调用函数，也就用到const_cast了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InputInt</span><span class="params">(<span class="keyword">int</span> * num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout&lt;&lt;*num&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> constant = <span class="number">21</span>;</span><br><span class="line">    <span class="built_in">InputInt</span>(<span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(&amp;constant));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="dynamic-cast"><a href="#dynamic-cast" class="headerlink" title="dynamic_cast"></a>dynamic_cast</h2><p>dynamic_cast用于类继承层次间的 <font color = blue>  <font size= 3> 指针或引用 </font> </font>的转换。和<code>qobject_cast</code>类似，用于执行<strong>安全的向下转型</strong></p>
+<p><code>dynamic_cast</code> <font color = blue size =3> 只能用于含有虚函数的类，虚函数表是是dynamic_cast操作符转换能够进行的前提条件。虚表的最前面是指向type_info的指针，包含了类的继承信息、类的描述等。能否转换成功，所依据的就是<code>type_info</code>。</font>如果转换失败，new_type 是指针，那么将返回NULL；如果 new_type 是引用，那么将抛出异常 std::bad_cast</p>
+<p>向下转型有两种情况。一种是基类指针所指对象是派生类类型的，这种转换是安全的；另一种是基类指针所指对象为基类类型，在这种情况下dynamic_cast在<strong>运行时做类型检查</strong>，转换失败，返回结果为0</p>
+<p>最常用的情况是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Base* bb = <span class="keyword">new</span> <span class="built_in">Derive</span>();</span><br><span class="line">Derive* dd = <span class="keyword">dynamic_cast</span>&lt;Derive*&gt;(bb);</span><br><span class="line">dd-&gt;<span class="built_in">test</span>();</span><br></pre></td></tr></table></figure>
+<p>如果没有虚函数，会报错:<code>error: C2683: “dynamic_cast”:“Base”不是多态类型</code>。</p>
+<p>dynamic_cast在基类和派生类指针之间转换时，会<strong>遍历整个继承体系进行类型检查</strong>,因此dynamic_cast时间和空间代价较高。比如4级的继承结构，<code>dynamic_cast&lt;Base&gt;</code>将会调用4次才能确定最终的那个子类型，<strong>尤其避免连续使用转型</strong>，用虚函数代替这种情况。</p>
+<h2 id="static-cast"><a href="#static-cast" class="headerlink" title="static_cast"></a>static_cast</h2><p>类似于C风格的强制转换。无条件转换，静态类型转换。用于：</p>
+<ul>
+<li><p>子类转换为父类：其中子类指针转换成父类指针是安全的；但父类指针转换成子类指针是不安全的，此时用dynamic_cast</p>
+</li>
+<li><p>基本数据类型转换，例如double, int, char, float等，不能进行无关类型（如非基类和子类）指针之间的转换。</p>
+</li>
+<li><p>none const转换为const，<code>void*</code>转换为某类型指针</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> a = <span class="number">1.999</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(a); 	<span class="comment">//相当于a = b ;</span></span><br></pre></td></tr></table></figure>
+
+<p>大多数的编译器都会给出一个警告：从“double”转换到“int”，可能丢失数据。<code>static_cast</code>可以明确告诉编译器，这种损失精度的转换是在知情的情况下进行的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> a = <span class="number">1.999</span>;</span><br><span class="line"><span class="keyword">void</span> * vptr = &amp; a;</span><br><span class="line"><span class="keyword">double</span> * dptr = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>*&gt;(vptr);</span><br><span class="line">cout&lt;&lt; *dptr &lt;&lt;endl;		<span class="comment">//输出1.999</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>把任何类型的表达式转换成void类型。</li>
+</ol>
+<p>static_cast进行的是简单粗暴的转换，<strong>static_cast不做运行时的类型检查以保证转换的安全性</strong>，所以static_cast不如dynamic_cast安全，其正确性完全由程序员自己保证。</p>
+<h2 id="reinterpret-cast"><a href="#reinterpret-cast" class="headerlink" title="reinterpret_cast"></a>reinterpret_cast</h2><h2 id="qobject-cast"><a href="#qobject-cast" class="headerlink" title="qobject_cast"></a>qobject_cast</h2><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/dbzhang800/article/details/6665298">qobject_cast 分析及QTBUG 20616</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/" data-id="ckr296gxo009f4klmh09s3j9r" data-title="五大cast转型" class="article-share-link">Share</a>
       
       
       
@@ -720,7 +786,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/42/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/44/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/42/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/41/">41</a><a class="page-number" href="/page/42/">42</a><span class="page-number current">43</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/44/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -773,14 +839,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -790,6 +848,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

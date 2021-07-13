@@ -71,115 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-激光SLAM/Cartographer/原理和配置/cartographer 的map --- odom转换太慢" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/" class="article-date">
-  <time class="dt-published" datetime="2020-12-28T12:41:53.000Z" itemprop="datePublished">2020-12-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/">cartographer发布的 map---&gt;odom 转换频率太低</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>运行cartographer时，可以发现rviz的报警</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[SubmapsDisplay::update] line_220  Could not compute submap fading: <span class="string">&quot;map&quot;</span> passed to lookupTransform argument target_frame does not exist.</span><br></pre></td></tr></table></figure>
-
-<p>运行程序<code>carto_pose</code>运行时持续报警:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lookup would require extrapolation into the past.  Requested time 1609143852.338626800 but the earliest data is at time 1609143860.343082666, when looking up transform from frame [base_footprint] to frame [map]</span><br></pre></td></tr></table></figure>
-<p>但使用<code>rosrun tf tf_echo map odom</code>看不出问题</p>
-<p>查看话题<code>carto_pose</code>，发现位姿更新很慢，甚至时间戳不动，显然是获取坐标系关系不及时。使用<code>rqt_tf_tree</code>发现 <code>map --&gt; odom</code>的频率很低。重新启动cartographer建新的地图，发现发布变换的频率会逐步下降，进而影响tf树的其他变换，因为map坐标系是最顶层<br><img src="https://i.loli.net/2020/12/28/JVdU54FKmBqNDyi.png" alt="频率很低.png"></p>
-<p>有时频率又突然到10000，话题<code>carto_pose</code>会接受很多消息。<br><img src="https://i.loli.net/2020/12/28/i14EkrQPvaKZeoU.png"></p>
-<br>
-
-<p>按定义tf频率的是参数<code>pose_publish_period_sec = 5e-3</code>，但是改了改没有见效。</p>
-<p>有时重启后，这个现象没有了，频率正常</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/" data-id="ckr28wa0q00mf4clm5o44h6w5" data-title="cartographer发布的 map---&gt;odom 转换频率太低" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS Kinetic知识/catkin_make_isolated和ninja" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/" class="article-date">
-  <time class="dt-published" datetime="2020-12-28T12:29:04.000Z" itemprop="datePublished">2020-12-28</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/">catkin_make_isolated和ninja</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>这个命令用于非ROS的包，所以Cartographer用的是它。 缺点是处理pacakge 较慢，只适用于ROS1. 可以和ninja结合</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">catkin_make_isolated  --use-ninja --pkg cartographer_ros</span><br></pre></td></tr></table></figure>
-<p>只编译一个包，会真的跳过其他包，比<code>catkin_make --pkg</code>好用多了。 编译生成的文件在<code>/workspace/devel_isolated/cartographer_ros/lib/cartographer_ros</code></p>
-<p>如果加上<code>--install</code>，编译得到的可执行文件在<code>/workspace/devel_isolated/cartographer_ros/install/lib/cartographer_ros</code></p>
-<br>
-
-<p>它会在工作空间生成文件夹<code>devel_isolated</code>, <code>install_isolated</code>, <code>build_isolated</code>。<br><font size =4 color = blue> 平时我们使用rosrun 运行的是 devel/lib 里的可执行文件，因为一般source的是 catkin_ws/devel/setup.zsh.  修改文件后，使用 catkin_make_isolated 编译，运行发现没有生效，需要先修改为 source catkin_ws/devel_isolated/setup.zsh, 以后就是用catkin_make_isolated  </font></p>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> Installing: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch</span><br><span class="line">-- Installing: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/software_institute.launch</span><br><span class="line">-- Up-to-date: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/\</span><br><span class="line">CMake Error at cmake_install.cmake:<span class="number">142</span> (file):</span><br><span class="line">  file INSTALL cannot set permissions on</span><br><span class="line">  <span class="string">&quot;/home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/\&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FAILED: cd /home/xiaoqiang/Documents/ros/build_isolated/cartographer_ros &amp;&amp; /usr/bin/cmake -P cmake_install.cmake</span></span><br><span class="line"><span class="string">ninja: build stopped: subcommand failed.</span></span><br><span class="line"><span class="string">&lt;== Failed to process package &#x27;cartographer_ros&#x27;:</span></span><br><span class="line"><span class="string">  Command &#x27;[&#x27;/home/xiaoqiang/Documents/ros/install_isolated/env.sh&#x27;, &#x27;ninja&#x27;, &#x27;install&#x27;]&#x27; returned non-zero exit status 1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Reproduce this error by running:</span></span><br><span class="line"><span class="string">==&gt; cd /home/xiaoqiang/Documents/ros/build_isolated/cartographer_ros &amp;&amp; /home/xiaoqiang/Documents/ros/install_isolated/env.sh ninja install</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Command failed, exiting.</span></span><br></pre></td></tr></table></figure>
-
-<p>不知为何出现了文件夹 <code>install_isolated/share/cartographer_ros/launch/\</code>，删除后重新编译还是如此</p>
-<p>参考：<br><a target="_blank" rel="noopener" href="https://www.ros.org/reps/rep-0134.html">catkin_make_isolated 官方说明</a><br><a target="_blank" rel="noopener" href="https://answers.ros.org/question/320613/catkin_make-vs-catkin_make_isolated-which-is-preferred/">catkin_make vs catkin_make_isolated</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/" data-id="ckr28w9wp00bc4clm5ag1e44n" data-title="catkin_make_isolated和ninja" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/TEB算法/8. Homotopy planner" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/12/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/8.%20Homotopy%20planner/" class="article-date">
@@ -225,7 +116,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/8.%20Homotopy%20planner/" data-id="ckr28w9zl00ij4clm8305fyku" data-title="(八) Homotopy planner" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/8.%20Homotopy%20planner/" data-id="ckr296h1y00ii4klm5z7rgnyv" data-title="(八) Homotopy planner" class="article-share-link">Share</a>
       
       
       
@@ -294,7 +185,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/25/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/pbstream_to_ros_map_main.cc%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" data-id="ckr28wa1600np4clm5q22grt3" data-title="pbstream_to_ros_map_main.cc 源码解读" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/25/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/pbstream_to_ros_map_main.cc%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" data-id="ckr296h3w00np4klm3csocpk9" data-title="pbstream_to_ros_map_main.cc 源码解读" class="article-share-link">Share</a>
       
       
       
@@ -360,7 +251,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%823%20%20purgeStaleObservations%20%E5%92%8C%20updateBounds/" data-id="ckr28wa0c00l64clm5zqm5wq7" data-title="障碍层(三) purgeStaleObservations 和 updateBounds" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%823%20%20purgeStaleObservations%20%E5%92%8C%20updateBounds/" data-id="ckr296h2x00l54klmh8hm8nij" data-title="障碍层(三) purgeStaleObservations 和 updateBounds" class="article-share-link">Share</a>
       
       
       
@@ -421,7 +312,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%822%20%20%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%20pointCloud2Callback/" data-id="ckr28wa0c00l34clmaq5k2dpx" data-title="障碍层 (二) 初始化和 pointCloud2Callback" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%822%20%20%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%20pointCloud2Callback/" data-id="ckr296h2w00l24klmej850rfx" data-title="障碍层 (二) 初始化和 pointCloud2Callback" class="article-share-link">Share</a>
       
       
       
@@ -473,7 +364,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E6%9C%8D%E5%8A%A1%20clear_costmaps/" data-id="ckr28wa0900kt4clm4xdng9ba" data-title="服务 clear_costmaps" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E6%9C%8D%E5%8A%A1%20clear_costmaps/" data-id="ckr296h2s00ks4klm9t5yf08t" data-title="服务 clear_costmaps" class="article-share-link">Share</a>
       
       
       
@@ -517,7 +408,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/costmap_converter%E4%BA%A7%E7%94%9F%E7%9A%84%E9%9A%9C%E7%A2%8D%E6%AF%94%E5%AE%9E%E9%99%85%E6%9B%B4%E5%A4%A7/" data-id="ckr28w9ul006d4clm85ubdxh4" data-title="costmap_converter产生的障碍比实际更大" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/costmap_converter%E4%BA%A7%E7%94%9F%E7%9A%84%E9%9A%9C%E7%A2%8D%E6%AF%94%E5%AE%9E%E9%99%85%E6%9B%B4%E5%A4%A7/" data-id="ckr296gwg006c4klm5mup9dur" data-title="costmap_converter产生的障碍比实际更大" class="article-share-link">Share</a>
       
       
       
@@ -571,7 +462,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/3.%20%E5%AF%B9%E4%BD%8E%E5%A4%84%E9%9A%9C%E7%A2%8D%E9%81%BF%E9%9A%9C%E6%97%B6%E7%9A%84%E9%80%9F%E5%BA%A6%E6%B3%A2%E5%8A%A8%E9%97%AE%E9%A2%98/" data-id="ckr28wa0i00ls4clm269dhemj" data-title="(三) 速度波动问题和禁止通道内减速" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/3.%20%E5%AF%B9%E4%BD%8E%E5%A4%84%E9%9A%9C%E7%A2%8D%E9%81%BF%E9%9A%9C%E6%97%B6%E7%9A%84%E9%80%9F%E5%BA%A6%E6%B3%A2%E5%8A%A8%E9%97%AE%E9%A2%98/" data-id="ckr296h3300lr4klm13l7g0h2" data-title="(三) 速度波动问题和禁止通道内减速" class="article-share-link">Share</a>
       
       
       
@@ -620,7 +511,100 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/4.%20%E5%B1%80%E9%83%A8%E8%B7%AF%E5%BE%84%E5%81%8F%E7%A6%BB%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr28wa0j00lv4clmgn1a94z3" data-title="(四) 局部路径偏离全局路径的问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/4.%20%E5%B1%80%E9%83%A8%E8%B7%AF%E5%BE%84%E5%81%8F%E7%A6%BB%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr296h3400lu4klm2tjtc9ju" data-title="(四) 局部路径偏离全局路径的问题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/TEB算法/TEB中的最大线速度约束" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/" class="article-date">
+  <time class="dt-published" datetime="2020-12-14T13:27:51.000Z" itemprop="datePublished">2020-12-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/">TEB中的最大线速度约束</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>最大线速度约束主要在 <code>bool TimedElasticBand::initTrajectoryToGoal (const PoseSE2&amp; start, const PoseSE2&amp; goal, double diststep, double max_vel_x, int min_samples, bool guess_backwards_motion)</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/" data-id="ckr296h2000ip4klm61xbcoxj" data-title="TEB中的最大线速度约束" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/雷达/雷达扫描到不存在的障碍" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/" class="article-date">
+  <time class="dt-published" datetime="2020-12-14T13:07:56.000Z" itemprop="datePublished">2020-12-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/">雷达扫描到不存在的障碍</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="https://i.loli.net/2020/12/14/21NmoitDAsf3KI4.png" alt="雷达默认参数"></p>
+<ol>
+<li><img src="https://i.loli.net/2021/02/24/DhPp5GqxolsM7Ar.png" alt="机器人的杂物挡住了雷达.png"><br>这是常见的一种情况</li>
+</ol>
+<ol start="2">
+<li>起初经过观察，发现在一些地方容易出现，而且是都在雷达的左侧出现，于是怀疑是雷达自身问题，最后把<code>angle_min</code>的绝对值改小，不再出现这个问题。<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=h1TfzAyHez8">雷达扫描到不存在的障碍</a></li>
+</ol>
+<p>后来又出现这种现象，而且不分左右，有时看不出在哪边<br><img src="https://i.loli.net/2020/12/14/2wtrSiULXGYjsk1.png" alt="不存在的障碍导致全局路径改变"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/" data-id="ckr296h1h00hf4klmbxczbp8y" data-title="雷达扫描到不存在的障碍" class="article-share-link">Share</a>
       
       
       
@@ -636,7 +620,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/6/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/8/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -689,14 +673,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -706,6 +682,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

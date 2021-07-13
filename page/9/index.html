@@ -71,121 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/大轮廓机器人的导航/(三) 振荡问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-12-01T02:17:51.000Z" itemprop="datePublished">2020-12-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/">(三) 振荡问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>车到目标附近，有时以很小角速度旋转，一定时间后才到达。如果无法到达，一般是目标的位姿不好，车相当于钻一个狭窄的地方，很容易触发TEB的振荡机制。首先通过试验保证目标点合适，其次适当增加<code>xy_goal_tolerance</code>和<code>yaw_goal_tolerance</code>。由于实际要求的朝向不是0就是π，所以不会有车中心到达位置，但车尾会撞障碍的情况。</p>
-<p>修改TEB参数:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 减小后，recently_oscillated 容易是false</span></span><br><span class="line">oscillation_recovery_min_duration: 5</span><br><span class="line">oscillation_v_eps: 0.1</span><br><span class="line">oscillation_omega_eps: 0.1</span><br><span class="line">oscillation_filter_duration: 6</span><br></pre></td></tr></table></figure>
-
-<p>在源码中的部分</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> oscillating = failure_detector_.<span class="built_in">isOscillating</span>();</span><br><span class="line"><span class="comment">// 距离上次振荡过了多久，若小于配置值(10秒)，说明最近也振荡了</span></span><br><span class="line"><span class="keyword">bool</span> recently_oscillated = (ros::Time::<span class="built_in">now</span>()-time_last_oscillation_).<span class="built_in">toSec</span>() &lt; </span><br><span class="line">			cfg_.recovery.oscillation_recovery_min_duration;</span><br><span class="line"><span class="comment">// 如果现在是振荡状态</span></span><br><span class="line"><span class="keyword">if</span> (oscillating)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!recently_oscillated)    <span class="comment">//  最近的状态不是振荡</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// save current turning direction</span></span><br><span class="line">        <span class="comment">// 以下其实都是对 last_preferred_rotdir_ 赋值</span></span><br><span class="line">        <span class="keyword">if</span> (robot_vel_.angular.z &gt; <span class="number">0</span>)</span><br><span class="line">            last_preferred_rotdir_ = RotType::left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            last_preferred_rotdir_ = RotType::right;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;TebLocalPlannerROS: possible oscillation (of the robot </span></span><br><span class="line"><span class="string">            or its local plan) detected. Activating recovery strategy </span></span><br><span class="line"><span class="string">            (prefer current turning direction during optimization) &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    time_last_oscillation_ = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// 对 prefer_rotdir_ 赋值，最终影响 AddEdgesPreferRotDir</span></span><br><span class="line">    planner_-&gt;<span class="built_in">setPreferredTurningDir</span>(last_preferred_rotdir_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>减小<code>oscillation_recovery_min_duration</code>后，在源码中会容易更新<code>last_preferred_rotdir_</code>，原来是转过了目标点后接着转，现在是转过了以后会朝反方向调整。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" data-id="ckr28wa0l00m14clmg8j03edm" data-title="(三) 振荡问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/move_base 分析/move_base参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-11-30T13:22:22.000Z" itemprop="datePublished">2020-11-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/">move_base参数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>base_global_planner: 指定全局规划器</p>
-</li>
-<li><p>base_local_planner: 指定局部规划器</p>
-</li>
-<li><p>global_costmap/robot_base_frame: 指定局部坐标系，一般是base_link或base_footprint</p>
-</li>
-<li><p>global_costmap/global_frame: 指定全局坐标系，一般是odom，也可以是map</p>
-</li>
-<li><p>planner_frequency</p>
-</li>
-<li><p>controller_frequency</p>
-</li>
-<li><p>planner_patience: 默认5</p>
-</li>
-<li><p>controller_patience</p>
-</li>
-<li><p>max_planning_retries: 默认-1，源码里转成无符号，变成了很大的数，其实就是不考虑</p>
-</li>
-<li><p>oscillation_timeout</p>
-</li>
-<li><p>oscillation_distance</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" data-id="ckr28w9zw00ji4clm5ktpdqkf" data-title="move_base参数" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/move_base 分析/move_base分析（五） planService和makePlan函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89%20planService%E5%92%8CmakePlan%E5%87%BD%E6%95%B0/" class="article-date">
@@ -250,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89%20planService%E5%92%8CmakePlan%E5%87%BD%E6%95%B0/" data-id="ckr28w9zt00ja4clmd59g1hdh" data-title="move_base分析（五） planService和makePlan函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%BA%94%EF%BC%89%20planService%E5%92%8CmakePlan%E5%87%BD%E6%95%B0/" data-id="ckr296h2900j94klmellj48ri" data-title="move_base分析（五） planService和makePlan函数" class="article-share-link">Share</a>
       
       
       
@@ -307,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E5%9B%9B)%20%E8%BF%87%E7%8B%AD%E7%AA%84%E9%80%9A%E9%81%93/" data-id="ckr28wa0n00m64clm942676k8" data-title="(四) 过狭窄通道" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E5%9B%9B)%20%E8%BF%87%E7%8B%AD%E7%AA%84%E9%80%9A%E9%81%93/" data-id="ckr296h3800m54klm9o3m91on" data-title="(四) 过狭窄通道" class="article-share-link">Share</a>
       
       
       
@@ -356,7 +241,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/28/Linux%E5%9F%BA%E7%A1%80/crontab%E5%92%8C%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E8%80%85/" data-id="ckr28w9s4000a4clm4m3lc75r" data-title="crontab和文件所有者" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/28/Linux%E5%9F%BA%E7%A1%80/crontab%E5%92%8C%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E8%80%85/" data-id="ckr296gtx000a4klm7wsi3xnp" data-title="crontab和文件所有者" class="article-share-link">Share</a>
       
       
       
@@ -418,7 +303,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%821%20%20%E9%85%8D%E7%BD%AE%E5%92%8C%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" data-id="ckr28wa0b00l14clm5v077bdc" data-title="障碍层 (一) 配置和常见问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9A%9C%E7%A2%8D%E5%B1%821%20%20%E9%85%8D%E7%BD%AE%E5%92%8C%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98/" data-id="ckr296h2u00kx4klmema35epz" data-title="障碍层 (一) 配置和常见问题" class="article-share-link">Share</a>
       
       
       
@@ -467,7 +352,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%BB%E7%BB%93/" data-id="ckr28w9zw00jk4clm7icr4krc" data-title="move_base启动失败的总结" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%80%BB%E7%BB%93/" data-id="ckr296h2d00jj4klm1v6yht5k" data-title="move_base启动失败的总结" class="article-share-link">Share</a>
       
       
       
@@ -525,7 +410,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/24/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%8C)%20%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9C%A8%E8%B5%B7%E7%82%B9%E6%88%96%E7%BB%88%E7%82%B9%E8%BD%AC%E5%90%91%E8%80%8C%E5%AF%BC%E8%88%AA%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr28wa0m00m34clm2xam26oi" data-title="(二) 机器人在起点或终点转向而导航失败的问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/24/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%8C)%20%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%9C%A8%E8%B5%B7%E7%82%B9%E6%88%96%E7%BB%88%E7%82%B9%E8%BD%AC%E5%90%91%E8%80%8C%E5%AF%BC%E8%88%AA%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr296h3600m24klmaiku8phu" data-title="(二) 机器人在起点或终点转向而导航失败的问题" class="article-share-link">Share</a>
       
       
       
@@ -589,7 +474,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/24/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E5%90%84%E7%A7%8D%E5%B8%B8%E7%94%A8%E9%9B%B7%E8%BE%BE/" data-id="ckr28w9z600hd4clmatmye6fd" data-title="各种常用雷达" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/24/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E5%90%84%E7%A7%8D%E5%B8%B8%E7%94%A8%E9%9B%B7%E8%BE%BE/" data-id="ckr296h1f00hc4klm7eze8eqf" data-title="各种常用雷达" class="article-share-link">Share</a>
       
       
       
@@ -660,7 +545,116 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/24/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/13.%20optimizeTEB%204%20%20%E5%9B%BE%E4%BC%98%E5%8C%96%E7%9A%84%E8%BF%87%E7%A8%8B/" data-id="ckr28w9zd00hr4clmfn71fjg8" data-title="(十三) optimizeTEB 4  图优化的过程" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/24/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/13.%20optimizeTEB%204%20%20%E5%9B%BE%E4%BC%98%E5%8C%96%E7%9A%84%E8%BF%87%E7%A8%8B/" data-id="ckr296h1o00hq4klm4a835e8p" data-title="(十三) optimizeTEB 4  图优化的过程" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/代价地图/代价地图的层 1 概述" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-11-23T13:23:56.000Z" itemprop="datePublished">2020-11-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/">代价地图的层(一) 概述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>所有的层都是继承<code>Layer</code>类，这个类本身比较简单，是一个虚基类，定义了两个重要接口：<br><code>updateBounds</code>、<code>updateCosts</code><br><img src="https://i.loli.net/2020/11/25/XDSteAcQbEBrVIg.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每层的初始化</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Layer::initialize</span><span class="params">(LayeredCostmap* parent, std::string name, </span></span></span><br><span class="line"><span class="params"><span class="function">                          tf::TransformListener *tf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    layered_costmap_ = parent;</span><br><span class="line">    name_ = name;</span><br><span class="line">    tf_ = tf;</span><br><span class="line">    <span class="built_in">onInitialize</span>(); 	<span class="comment">//虚函数，空</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">const</span> std::vector&lt;geometry_msgs::Point&gt;&amp; <span class="title">Layer::getFootprint</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> layered_costmap_-&gt;<span class="built_in">getFootprint</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>调用在<code>Costmap2DROS</code>的构造函数:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>) )</span><br><span class="line">    <span class="built_in">resetOldParameters</span>(private_nh);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>) )</span><br><span class="line">&#123;</span><br><span class="line">    XmlRpc::XmlRpcValue my_list;</span><br><span class="line">    private_nh.<span class="built_in">getParam</span>(<span class="string">&quot;plugins&quot;</span>, my_list);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int32_t</span> i = <span class="number">0</span>; i &lt; my_list.<span class="built_in">size</span>(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">      std::string pname = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;name&quot;</span>]);</span><br><span class="line">      std::string type = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;type&quot;</span>]);</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Using plugin \&quot;%s\&quot;&quot;</span>, pname.<span class="built_in">c_str</span>()  );</span><br><span class="line"></span><br><span class="line">      <span class="comment">// plugin_loader_ 类型是　pluginlib::ClassLoader&lt;Layer&gt;，ROS插件机制</span></span><br><span class="line">      boost::shared_ptr&lt;Layer&gt; plugin = plugin_loader_.<span class="built_in">createInstance</span>(type);</span><br><span class="line">      <span class="comment">// 添加到容器 plugins_</span></span><br><span class="line">      layered_costmap_-&gt;<span class="built_in">addPlugin</span>(plugin);</span><br><span class="line">      <span class="comment">// 执行 Layer::initialize，它向各层地图通知主地图的存在，并调用</span></span><br><span class="line">      <span class="comment">// oninitialize方法（Layer类中的虚函数，被定义在各层地图中）</span></span><br><span class="line">      plugin-&gt;<span class="built_in">initialize</span>(layered_costmap_, name + <span class="string">&quot;/&quot;</span> + pname, &amp;tf_);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里得到的插件即为各层子地图。如果是新定义的层，至少需要对虚函数<code>onInitialize</code>覆盖</p>
+<p><code>Layer</code>的所有虚函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* called by the LayeredCostmap to poll this plugin as to how</span></span><br><span class="line"><span class="comment">   much of the costmap it needs to update. </span></span><br><span class="line"><span class="comment">   Each layer can increase  the size of this bounds.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateBounds</span><span class="params">(<span class="keyword">double</span> robot_x, <span class="keyword">double</span> robot_y, <span class="keyword">double</span> robot_yaw, </span></span></span><br><span class="line"><span class="params"><span class="function">      <span class="keyword">double</span>* min_x, <span class="keyword">double</span>* min_y, <span class="keyword">double</span>* max_x, <span class="keyword">double</span>* max_y)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Actually update the underlying costmap, only within the bounds</span></span><br><span class="line"><span class="comment"> * calculated during UpdateBounds(). */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateCosts</span><span class="params">(Costmap2D&amp; master_grid, <span class="keyword">int</span> min_i, <span class="keyword">int</span> min_j, <span class="keyword">int</span> max_i, <span class="keyword">int</span> max_j)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Stop publishers. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">deactivate</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">/* Restart publishers if they&#x27;ve been stopped. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">activate</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">  <span class="comment">/* make this layer match the size of the parent costmap. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">matchSize</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">  <span class="comment">/** LayeredCostmap calls this whenever the footprint there</span></span><br><span class="line"><span class="comment"> * changes (via LayeredCostmap::setFootprint()).  </span></span><br><span class="line"><span class="comment">  Override to be notified of changes to the robot&#x27;s footprint. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onFootprintChanged</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onInitialize</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>聚合layer的功能：<code>LayeredCostmap* layered_costmap_</code></li>
+<li>此layer是否被使能，是否当前(更新信息)：<code>bool enabled_，current</code></li>
+<li>layer名：<code>std::string   name_，</code></li>
+<li>小车：  <code>std::vector&lt; geometry_msgs::Point&gt;  footprint_spec_，</code></li>
+</ul>
+<h2 id="三层的加载过程"><a href="#三层的加载过程" class="headerlink" title="三层的加载过程"></a>三层的加载过程</h2><p><code>Costmap2DROS::mapUpdateLoop</code> —— <code>Costmap2DROS::updateMap</code> —— <code>LayeredCostmap::updateMap</code> ——　每一层调用<code>updateBounds</code>　——　每一层调用<code>updateCosts</code>(核心函数)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/" data-id="ckr296h2q00kn4klmccaheern" data-title="代价地图的层(一) 概述" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/常用日志的宏" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/" class="article-date">
+  <time class="dt-published" datetime="2020-11-23T13:09:10.000Z" itemprop="datePublished">2020-11-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/">常用日志的宏</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>总共有二十多个宏，我只列出有价值而且容易用的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO(...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_COND(cond, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_ONCE(...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_STREAM(args)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_NAMED(name, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_THROTTLE(rate, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_FILTER(filter, ...)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ROS-INFO-ONCE"><a href="#ROS-INFO-ONCE" class="headerlink" title="ROS_INFO_ONCE"></a>ROS_INFO_ONCE</h2><p>适用于循环内，防止不断产生日志</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">3</span>; i++)</span><br><span class="line">    <span class="built_in">ROS_INFO_ONCE</span>(<span class="string">&quot;1111111&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>结果只有一个<code>1111111</code></p>
+<h2 id="ROS-INFO-COND"><a href="#ROS-INFO-COND" class="headerlink" title="ROS_INFO_COND"></a>ROS_INFO_COND</h2><p><code>ROS_INFO_COND(2&gt;1, &quot;log here&quot;);</code></p>
+<h2 id="ROS-INFO-STREAM"><a href="#ROS-INFO-STREAM" class="headerlink" title="ROS_INFO_STREAM"></a>ROS_INFO_STREAM</h2><p>其实就是C++风格的<code>ROS_INFO</code>:<br><code>ROS_INFO_STREAM(&quot;velocity command: &quot; &lt;&lt; &quot; linear=&quot; &lt;&lt; msg. linear . x &lt;&lt; &quot; angular=&quot; &lt;&lt; msg. angular . z)</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/" data-id="ckr296gyx00cb4klmgp470wud" data-title="常用日志的宏" class="article-share-link">Share</a>
       
       
       
@@ -676,7 +670,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/8/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/10/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -729,14 +723,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -746,6 +732,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

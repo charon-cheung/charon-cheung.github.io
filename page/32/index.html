@@ -71,112 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-C++/C++  基础/用freopen函数操作输入输出流和读写文件" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%94%A8freopen%E5%87%BD%E6%95%B0%E6%93%8D%E4%BD%9C%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81%E5%92%8C%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6/" class="article-date">
-  <time class="dt-published" datetime="2019-08-02T13:10:19.000Z" itemprop="datePublished">2019-08-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%94%A8freopen%E5%87%BD%E6%95%B0%E6%93%8D%E4%BD%9C%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81%E5%92%8C%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6/">用freopen函数操作输入输出流和读写文件</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p> <font color = blue>  <font size= 3> 此方法非常不好，容易造成输入输出流混乱，最好用fopen,fread,fwrite </font> </font></p>
-<br>
-freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于将输出流定向到文件file，`freopen(file, "r",stdin)`是从文件file读文件。
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FILE* fp = <span class="built_in">freopen</span>(<span class="string">&quot;/home/user/Documents/test.txt&quot;</span>,<span class="string">&quot;w&quot;</span>,stdout);</span><br><span class="line"><span class="built_in">srand</span>((<span class="keyword">int</span>)<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">8</span>;i++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> num = <span class="built_in">rand</span>()%<span class="number">100</span>;</span><br><span class="line">    string s = boost::lexical_cast&lt;string&gt;(num);</span><br><span class="line">    cout &lt;&lt; s &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// fclose(stdout);</span></span><br><span class="line"><span class="built_in">freopen</span>(<span class="string">&quot;/dev/tty&quot;</span>, <span class="string">&quot;w&quot;</span>, stdout);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在终端运行会输出，在IDE里不会输出</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;**************&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
-<p>代码先将输出流定向到文件<code>test.txt</code>，后面的<code>cout&lt;&lt;s&lt;&lt;endl</code>会将几个随机数写入到文件。<br>如果之后直接<code>fclose(stdout)</code>，之后的cout输出肯定不管用，此时把输出流关了，对终端和文件都无法输出了。</p>
-<p>在使用完freopen之后，如果还需要使用标准输入输出，不能把它们直接fclose，不妨再次重定向，把stdin、stdout重定向到控制台，就能从键盘接受输入、从屏幕输出。在linux中，控制台设备是<code>/dev/tty</code>，所以再次调用<code>freopen</code>。最后的星号只能在终端执行可执行文件时，才会输出。</p>
-<p>以上函数对<code>log4cpp</code>的日志和<code>ROS_INFO</code>也有影响，显然<code>log4cpp</code>的本质也是操作输出流，与<code>freopen</code>相同。</p>
-<h3 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h3><p>比如文件内容如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">31</span></span><br><span class="line"><span class="number">96</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">86</span></span><br><span class="line"><span class="number">98</span></span><br><span class="line"><span class="number">20</span></span><br></pre></td></tr></table></figure>
-
-<p>读其中数字的代码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">freopen</span>(file, <span class="string">&quot;r&quot;</span>, stdin);</span><br><span class="line"><span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">data</span><span class="params">(<span class="number">6</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">6</span>; ++i)</span><br><span class="line">&#123;</span><br><span class="line">    cin &gt;&gt; data[i];</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;data: &quot;</span> &lt;&lt; data[i] ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>但是文件中有其他内容时，会读取失败，例如：<br><img src="https://i.loli.net/2019/08/05/XekxCGN78j5YQWu.png"><br>第4个元素赋值会成为0，值之后的数据都不正常</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%94%A8freopen%E5%87%BD%E6%95%B0%E6%93%8D%E4%BD%9C%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E6%B5%81%E5%92%8C%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6/" data-id="ckr28w9vb00814clmarqsawzh" data-title="用freopen函数操作输入输出流和读写文件" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-C++/C++  基础/传递数组给函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E4%BC%A0%E9%80%92%E6%95%B0%E7%BB%84%E7%BB%99%E5%87%BD%E6%95%B0/" class="article-date">
-  <time class="dt-published" datetime="2019-08-02T12:16:17.000Z" itemprop="datePublished">2019-08-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E4%BC%A0%E9%80%92%E6%95%B0%E7%BB%84%E7%BB%99%E5%87%BD%E6%95%B0/">传递数组给函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>形式参数是一个已定义大小的数组：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myFunction</span><span class="params">(<span class="keyword">int</span> param[<span class="number">10</span>])</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>形式参数是一个未定义大小的数组：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myFunction</span><span class="params">(<span class="keyword">int</span> param[])</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-<p>函数而言，数组的长度是无关紧要的，因为 C++ 不会对形式参数执行边界检查。</p>
-<h3 id="二维数组做形参"><a href="#二维数组做形参" class="headerlink" title="二维数组做形参"></a>二维数组做形参</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func1</span><span class="params">(<span class="keyword">int</span>  iArray[][<span class="number">10</span>])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> array[<span class="number">10</span>][<span class="number">10</span>];</span><br><span class="line">    <span class="built_in">func1</span>(array);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>形参声明一定要给出第二个维度的大小，否则编译不过。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/08/02/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E4%BC%A0%E9%80%92%E6%95%B0%E7%BB%84%E7%BB%99%E5%87%BD%E6%95%B0/" data-id="ckr28w9va007x4clm24ob0zy0" data-title="传递数组给函数" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/move_base 分析/里程计和map坐标系" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2019/07/26/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E9%87%8C%E7%A8%8B%E8%AE%A1%E5%92%8Cmap%E5%9D%90%E6%A0%87%E7%B3%BB/" class="article-date">
@@ -234,7 +128,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/26/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E9%87%8C%E7%A8%8B%E8%AE%A1%E5%92%8Cmap%E5%9D%90%E6%A0%87%E7%B3%BB/" data-id="ckr28wa0400k94clm40pnh86f" data-title="里程计和map坐标系" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/26/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E9%87%8C%E7%A8%8B%E8%AE%A1%E5%92%8Cmap%E5%9D%90%E6%A0%87%E7%B3%BB/" data-id="ckr296h2m00k84klm5yymd5xo" data-title="里程计和map坐标系" class="article-share-link">Share</a>
       
       
       
@@ -310,7 +204,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/08/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84iterator/" data-id="ckr28w9vk008m4clm5dij9qua" data-title="容器中的iterator" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/08/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84iterator/" data-id="ckr296gxc008n4klm1b059hjo" data-title="容器中的iterator" class="article-share-link">Share</a>
       
       
       
@@ -364,7 +258,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/06/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89bind%EF%BC%8Cfunction%EF%BC%8Csignal/" data-id="ckr28w9uz00734clm5gci7aku" data-title="Boost教程（五）bind，function和signal" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/06/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E4%BA%94%EF%BC%89bind%EF%BC%8Cfunction%EF%BC%8Csignal/" data-id="ckr296gwq006z4klm6j0dgywp" data-title="Boost教程（五）bind，function和signal" class="article-share-link">Share</a>
       
       
       
@@ -418,7 +312,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%E4%BD%BF%E7%94%A8GetPlan%E8%8E%B7%E5%BE%97%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" data-id="ckr28w9zr00j34clm2d5b2p85" data-title="move_base分析（一）使用GetPlan获得路径规划" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%80%EF%BC%89%E4%BD%BF%E7%94%A8GetPlan%E8%8E%B7%E5%BE%97%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/" data-id="ckr296h2500j24klm5elogwew" data-title="move_base分析（一）使用GetPlan获得路径规划" class="article-share-link">Share</a>
       
       
       
@@ -484,7 +378,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/03/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/" data-id="ckr28w9xx00ee4clmgt1p8wkf" data-title="ROS话题通信原理" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/03/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E8%AF%9D%E9%A2%98%E9%80%9A%E4%BF%A1%E5%8E%9F%E7%90%86/" data-id="ckr296gzz00ed4klmcyzncj1x" data-title="ROS话题通信原理" class="article-share-link">Share</a>
       
       
       
@@ -552,7 +446,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/01/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E6%8E%A2%E7%B4%A2ROS%E4%B8%AD%E7%9A%84XML-RPC%E6%9C%BA%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E5%AE%A2%E6%88%B7%E7%AB%AF/" data-id="ckr28w9y500eo4clm4i64723r" data-title="探索ROS中的XML-RPC机制（二）客户端" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/01/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E6%8E%A2%E7%B4%A2ROS%E4%B8%AD%E7%9A%84XML-RPC%E6%9C%BA%E5%88%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E5%AE%A2%E6%88%B7%E7%AB%AF/" data-id="ckr296h0500en4klm06fv4zfm" data-title="探索ROS中的XML-RPC机制（二）客户端" class="article-share-link">Share</a>
       
       
       
@@ -604,7 +498,7 @@ freopen函数用于重定向输入输出流，`freopen(file, "w",stdout)`用于�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/07/01/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBNodeHandle%E6%BA%90%E7%A0%81%EF%BC%88%E4%BA%8C%EF%BC%89ros%20start()%E5%87%BD%E6%95%B0/" data-id="ckr28w9ya00f04clmeiv5czie" data-title="解读NodeHandle源码（二）ros start()函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/07/01/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E8%AF%BBNodeHandle%E6%BA%90%E7%A0%81%EF%BC%88%E4%BA%8C%EF%BC%89ros%20start()%E5%87%BD%E6%95%B0/" data-id="ckr296h0a00ez4klm03iuh9hy" data-title="解读NodeHandle源码（二）ros start()函数" class="article-share-link">Share</a>
       
       
       
@@ -677,7 +571,137 @@ XML-RPC的优点：简单、轻量；XML编码，可读性强；支持多语言�
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/27/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E6%8E%A2%E7%B4%A2ROS%E4%B8%AD%E7%9A%84XML-RPC%E6%9C%BA%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E8%BF%B0%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF/" data-id="ckr28w9y400el4clm9s1d66e5" data-title="探索ROS中的XML-RPC机制（一）概述和服务端" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/27/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E6%8E%A2%E7%B4%A2ROS%E4%B8%AD%E7%9A%84XML-RPC%E6%9C%BA%E5%88%B6%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E8%BF%B0%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF/" data-id="ckr296h0400em4klm59qda0aj" data-title="探索ROS中的XML-RPC机制（一）概述和服务端" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-第三方库/使用jsoncpp读写JSON" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/" class="article-date">
+  <time class="dt-published" datetime="2019-06-26T12:29:06.000Z" itemprop="datePublished">2019-06-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/">使用jsoncpp读写JSON</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>从Github上下载后，使用老三步安装：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir dir &amp;&amp; cd dir</span><br><span class="line">cmake ..</span><br><span class="line">make </span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+<p>安装的路径如下：<br><img src="https://i.loli.net/2019/06/26/5d13766c7f0ac42652.png"></p>
+<p>在CMakeList里进行配置，别忘了最后链接库文件：<code>-ljsoncpp</code></p>
+<h3 id="写JSON"><a href="#写JSON" class="headerlink" title="写JSON"></a>写JSON</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Json::Value ret_json;</span><br><span class="line"></span><br><span class="line">ret_json[<span class="string">&quot;msg&quot;</span>] = <span class="string">&quot;Hello JSON&quot;</span>;</span><br><span class="line">ret_json[<span class="string">&quot;code&quot;</span>] = <span class="number">123</span>;</span><br><span class="line">ret_json[<span class="string">&quot;ret&quot;</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; ret_json.<span class="built_in">toStyledString</span>()&lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;code&quot; : 123,</span><br><span class="line">   &quot;msg&quot; : &quot;Hello JSON&quot;,</span><br><span class="line">   &quot;ret&quot; : true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>写JSON数组如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Json::Value ret_json,sub;</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">123</span>));</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">456</span>));</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">789</span>));</span><br><span class="line"></span><br><span class="line">ret_json[<span class="string">&quot;msg&quot;</span>] = <span class="string">&quot;Hello JSON&quot;</span>;</span><br><span class="line">ret_json[<span class="string">&quot;code&quot;</span>] = sub;</span><br><span class="line">ret_json[<span class="string">&quot;ret&quot;</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; ret_json.<span class="built_in">toStyledString</span>()&lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+
+<p>结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;code&quot; : [ 123, 456, 789 ],</span><br><span class="line">   &quot;msg&quot; : &quot;Hello JSON&quot;,</span><br><span class="line">   &quot;ret&quot; : true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/" data-id="ckr296gvy004y4klmfnp8e68m" data-title="使用jsoncpp读写JSON" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS程序和源码分析/用SIGINT信号的回调函数关闭节点" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/" class="article-date">
+  <time class="dt-published" datetime="2019-06-26T12:29:06.000Z" itemprop="datePublished">2019-06-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/">用SIGINT信号的回调函数关闭节点（自定义+ROS源码）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>用自定义的方法关闭节点时，代码一般是这样的:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mySigintHandler</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Exit from my_node !&quot;</span>);</span><br><span class="line">  ros::<span class="built_in">shutdown</span>();</span><br><span class="line">  ros::<span class="built_in">waitForShutdown</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;my_node&quot;</span>, ros::init_options::NoSigintHandler);</span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line">  <span class="built_in">signal</span>(SIGINT, mySigintHandler);</span><br><span class="line">  ros::<span class="built_in">spin</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br>
+
+<p>为什么这样做，原因看<code>ros::start()</code>的源码就明白了，其中有一句:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(g_init_options &amp; init_options::NoSigintHandler))</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">signal</span>(SIGINT, basicSigintHandler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">basicSigintHandler</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>)sig;</span><br><span class="line">  ros::<span class="built_in">requestShutdown</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是配置ROS启动flag的问题，它是个枚举值，定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//  Flags for ROS initialization，在命名空间ros::init_options</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">InitOption</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">   <span class="comment">//不安装SIGINT handler，可以安装自定义的SIGINT handler</span></span><br><span class="line">  NoSigintHandler = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 匿名节点模式，在节点名最后添加随机数，使得可以同时运行多个同名节点</span></span><br><span class="line">  AnonymousName = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// brief Don&#x27;t broadcast rosconsole output to the /rosout topic</span></span><br><span class="line">  NoRosout = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> init_options::InitOption  InitOption;</span><br></pre></td></tr></table></figure>
+<p>再看上面的源码，如果ROS flag不是NoSigintHandler，那么<strong>basicSigintHandler</strong>就是默认的SIGINT回调函数，它会运行<code>ros::requestShutdown();</code>，所以我们在运行节点时，按Ctrl+C可以退出节点。</p>
+<p>下面我们详细看看这个过程，先看回调函数中的函数<code>requestShutdown</code>，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">requestShutdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  g_shutdown_requested = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只有一个赋值，而处理变量g_shutdown_requested的只有一个函数checkForShutdown</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkForShutdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (g_shutdown_requested)		 <span class="comment">// 除非ros::requestShutdown()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Since this gets run from within a mutex inside PollManager, we need to prevent ourselves from deadlocking with  another thread that&#x27;s already in the middle of shutdown()</span></span><br><span class="line">    boost::<span class="function">recursive_mutex::scoped_try_lock <span class="title">lock</span><span class="params">(g_shutting_down_mutex, boost::defer_lock)</span></span>;</span><br><span class="line">    <span class="keyword">while</span> (!lock.<span class="built_in">try_lock</span>() &amp;&amp; !g_shutting_down)</span><br><span class="line">    &#123;</span><br><span class="line">      ros::<span class="built_in">WallDuration</span>(<span class="number">0.001</span>).<span class="built_in">sleep</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!g_shutting_down)		<span class="comment">// ros::start()中赋值为false，之后未变</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">shutdown</span>();	<span class="comment">// 关闭节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    g_shutdown_requested = <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而跟checkForShutdown有关的只有<code>PollManager::instance()-&gt;addPollThreadListener(checkForShutdown);</code>，它位于<code>ros::start()</code>中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PollManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">addPollThreadListener</span>(checkForShutdown);</span><br><span class="line">	. . . . . .</span><br><span class="line">PollManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">start</span>();</span><br></pre></td></tr></table></figure>
+
+<p>函数的定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> boost::signals2::signal&lt;<span class="built_in"><span class="keyword">void</span></span>(<span class="keyword">void</span>)&gt; VoidSignal;</span><br><span class="line">VoidSignal poll_signal_;</span><br><span class="line"><span class="keyword">typedef</span> boost::function&lt;<span class="built_in"><span class="keyword">void</span></span>(<span class="keyword">void</span>)&gt; VoidFunc;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用了观察者模式</span></span><br><span class="line">boost::<span class="function">signals2::connection  <span class="title">PollManager::addPollThreadListener</span><span class="params">(<span class="keyword">const</span> VoidFunc&amp; func)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  boost::<span class="function">recursive_mutex::scoped_lock <span class="title">lock</span><span class="params">(signal_mutex_)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> poll_signal_.<span class="built_in">connect</span>(func);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PollManager::start</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  shutting_down_ = <span class="literal">false</span>;</span><br><span class="line">  thread_ = boost::<span class="built_in">thread</span>(&amp;PollManager::threadFunc, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PollManager::threadFunc</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="built_in">disableAllSignalsInThisThread</span>();</span><br><span class="line">     <span class="keyword">while</span> (!shutting_down_)  <span class="comment">//start()里赋值为false，PollManager::shutdown()里赋值true</span></span><br><span class="line">    &#123;</span><br><span class="line">          boost::<span class="function">recursive_mutex::scoped_lock   <span class="title">lock</span><span class="params">(signal_mutex_)</span></span>;</span><br><span class="line">          <span class="built_in">poll_signal_</span>();               <span class="comment">// 触发信号，执行槽函数 checkForShutdown</span></span><br><span class="line">        <span class="keyword">if</span> (shutting_down_)</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        poll_set_.<span class="built_in">update</span>(<span class="number">100</span>);          <span class="comment">// PollSet 　poll_set_;函数定义在 poll_set.cpp</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里用到了boost中的信号和槽，和Qt中的原理一样，关键变量<code>poll_signal_</code>用于连接函数，这里是连接了 checkForShutdown。PollManager是一个线程，<code>start()</code>开启线程，不停地运行函数<code>threadFunc()</code>，因为<code>shutting_down_</code>开始为false，所以不停运行while循环，然后执行<code>poll_signal_()</code>，这会触发信号然后执行它连接的函数，也就是checkForShutdown，也就是节点不停检查是否需要关闭。</p>
+<p>这里就是关键的变量<code>g_shutdown_requested</code>了，它只在<code>ros::requestShutdown()</code>赋值为true，所以节点只有在执行了<code>ros::requestShutdown()</code>函数后才会执行，然后执行<code>ros::shutdown()</code>，节点最终的关闭都在这里。当最后一个节点句柄被销毁时，shutdown()被自动调用。</p>
+<p>说的有点乱了，整个过程示意图如下：</p>
+<p><img src="https://i.loli.net/2019/06/29/5d16d38ea530d70844.png"></p>
+<br>
+
+<h3 id="节点退出问题"><a href="#节点退出问题" class="headerlink" title="节点退出问题"></a>节点退出问题</h3><p>以前我的SIGINT回调函数是这样写的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">shutdown</span>();</span><br><span class="line">ros::<span class="built_in">waitForShutdown</span>();</span><br></pre></td></tr></table></figure>
+
+<p>这是从网上看来的，后来发现偶尔会很长时间才执行成功，甚至不能成功，一直阻塞。现在来看一下源码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">waitForShutdown</span><span class="params">()</span>		<span class="comment">// Wait for this node to be shutdown</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">ok</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">WallDuration</span>(<span class="number">0.05</span>).<span class="built_in">sleep</span>();		<span class="comment">// 0.05s</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ok</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> g_ok;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>waitForShutdown</code>表示如果节点ok()，会一直睡眠。只有在<code>ros::shutdown()</code>的最后执行了<code>g_ok = false;</code>，有时一直无法退出，说明节点是一直ok()，因为节点在回调函数运行时无法完成shutdown，没执行到<code>g_ok = false;</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/" data-id="ckr296h0700es4klmd59w5rkj" data-title="用SIGINT信号的回调函数关闭节点（自定义+ROS源码）" class="article-share-link">Share</a>
       
       
       
@@ -693,7 +717,7 @@ XML-RPC的优点：简单、轻量；XML编码，可读性强；支持多语言�
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/31/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/33/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/31/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/30/">30</a><a class="page-number" href="/page/31/">31</a><span class="page-number current">32</span><a class="page-number" href="/page/33/">33</a><a class="page-number" href="/page/34/">34</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/33/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -746,14 +770,6 @@ XML-RPC的优点：简单、轻量；XML编码，可读性强；支持多语言�
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -763,6 +779,14 @@ XML-RPC的优点：简单、轻量；XML编码，可读性强；支持多语言�
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

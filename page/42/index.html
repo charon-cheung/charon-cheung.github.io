@@ -71,139 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-cmake qmake/cmake教程（一）基本使用规则" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/" class="article-date">
-  <time class="dt-published" datetime="2018-09-17T13:51:59.000Z" itemprop="datePublished">2018-09-17</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/cmake-qmake/">cmake/qmake</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/">cmake教程（一）基本使用规则</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>查看cmake版本： <code>cmake --version</code>，Ubuntu自带的是3.5.1</p>
-<p>cmake和qmake都用于产生Makefile，然后执行<code>make</code>命令进行编译，make还有其他参数，叫做make目标</p>
-<h3 id="常见的make目标"><a href="#常见的make目标" class="headerlink" title="常见的make目标"></a>常见的make目标</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">make all：编译程序、库、文档等（等同于make）</span><br><span class="line"></span><br><span class="line">make install：安装已经编译好的程序，会默认把程序安装至 /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line">make unistall：卸载已经安装的程序。</span><br><span class="line"></span><br><span class="line">make clean：删除由make命令产生的文件(例如object file，*.o)</span><br><span class="line"></span><br><span class="line">make -j N : 同时允许N个任务进行，如果不指定N则进行无限个任务，结果会将CPU性能榨干。N的最大值取决于CPU性能，不要把N设置太大，更不要不指定，否则可能死机。</span><br><span class="line"></span><br><span class="line">make distclean：删除由./configure产生的文件</span><br><span class="line"></span><br><span class="line">make check：测试刚刚编译的软件（某些程序可能不支持，有时会测试很长时间，这就没有必要）</span><br><span class="line"></span><br><span class="line">make installcheck：检查安装的库和程序（某些程序可能不支持）</span><br><span class="line"></span><br><span class="line">make dist：重新打包成packname-version.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 有时碰到这样的情况，第一次make会出错，再次make却能成功，以下命令用于这种情况</span></span><br><span class="line">make -i: 忽略指令执行错误，并继续执行，且如果出错的话就会生成目标文件。这个一般用在调试的时候。</span><br><span class="line">make -k: 出错也不停止运行，不仅可以忽略指令错误，而且还能忽略makefile规则错误</span><br></pre></td></tr></table></figure>
-
-<p><strong>注释方法</strong>： CMake 3.0以上版本的多行注释：从<code>#[[</code>开始，在块注释的另一端以<code>]]</code>结束。</p>
-<br>
-语法规则：
-
-<ul>
-<li>变量使用${}方式取值, 但是在IF控制语句中是直接使用变量名</li>
-<li>环境变量使用$ENV{}方式取值, 使用SET(ENV{VAR} VALUE)赋值</li>
-<li>指令(参数1 参数2…) 参数使用括弧括起, 参数之间使用空格或分号分开</li>
-</ul>
-<h3 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h3><p>预定义变量，设置方式是<code>set(VARIABLE value)</code>，大小写都是敏感的，可以用message函数查看：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_NAME   <span class="comment">#通过PROJECT指令定义的项目名称</span></span><br><span class="line">PROJECT_SOURCE_DIR   <span class="comment">#工程的根目录</span></span><br><span class="line">PROJECT_BINARY_DIR      <span class="comment">#运行cmake命令的目录,通常是$&#123;PROJECT_SOURCE_DIR&#125;/build</span></span><br><span class="line">CMAKE_CURRENT_SOURCE_DIR    <span class="comment">#当前处理的CMakeLists.txt所在的路径</span></span><br><span class="line">EXECUTABLE_OUTPUT_PATH     <span class="comment">#目标可执行文件的存放位置</span></span><br><span class="line">LIBRARY_OUTPUT_PATH        <span class="comment">#目标链接库文件的存放位置</span></span><br><span class="line"></span><br><span class="line">CMAKE_MAJOR_VERSION 	<span class="comment">#cmake主版本号,如2.8.6中的2</span></span><br><span class="line">CMAKE_MINOR_VERSION 	<span class="comment">#cmake次版本号,如2.8.6中的8</span></span><br><span class="line">CMAKE_PATCH_VERSION 	<span class="comment">#cmake补丁等级,如2.8.6中的6</span></span><br><span class="line">CMAKE_SYSTEM  			<span class="comment">#系统名称，包含内核版本，例如Linux-2.6.22</span></span><br><span class="line">CAMKE_SYSTEM_NAME 		<span class="comment">#不包含版本的系统名,如Linux</span></span><br><span class="line">UNIX   		<span class="comment">#在所有的类UNIX平台为TRUE,包括OS X和cygwin</span></span><br><span class="line">WIN32  		<span class="comment">#在所有的win32平台为TRUE,包括cygwin</span></span><br><span class="line"></span><br><span class="line">BUILD_SHARED_LIBS  		<span class="comment">#控制默认的库编译方式,默认编译生成的库都是静态库</span></span><br><span class="line">CMAKE_C_COMPILER/CMAKE_CXX_COMPILER    <span class="comment">#指定C/C++编译器</span></span><br><span class="line">CMAKE_CXX_FLAGS   	<span class="comment"># 设置C++编译选项</span></span><br><span class="line">CMAKE_BUILD_TYPE  	<span class="comment"># 常用的编译类型 Debug  Release </span></span><br><span class="line">BUILD_SHARED_LIBS   <span class="comment"># 编译动态链接库(ON,OFF)</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="add-compile-options"><a href="#add-compile-options" class="headerlink" title="add_compile_options"></a>add_compile_options</h3><p>下面的代码里，<code>foo</code>不会按照<code>-Wall</code>编译,但是<code>bar</code>会。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">add_library(foo ...)</span><br><span class="line">add_compile_options(-Wall 03)</span><br><span class="line">add_library(bar ...)</span><br></pre></td></tr></table></figure>
-<p><code>-Wall</code>显示所有警告。<br><code>O3</code>(字母O)是编译优化的程度选择，有O1 O2 O3。数字越大编译优化越多，程序执行速度越快 但编译时间越长，不过一般程序看不出来。</p>
-<h3 id="CMAKE-CXX-STANDARD"><a href="#CMAKE-CXX-STANDARD" class="headerlink" title="CMAKE_CXX_STANDARD"></a>CMAKE_CXX_STANDARD</h3><p>CMake 3.1或者更高版本可使用<code>set(CMAKE_CXX_STANDARD 11)</code>，不能用17</p>
-<h3 id="configure命令"><a href="#configure命令" class="headerlink" title="./configure命令"></a>./configure命令</h3><p>一般第三方库里都有个<code>configure</code>文件，它是个Shell脚本，内容很多．./configure 是用来检测你的安装平台的目标特征的，比如它会检测你是不是有CC或GCC。主要功能是生成 Makefile，为下一步的编译做准备，你可以通过在<code>./configure</code>后加上参数来对安装进行控制，比如<code>./configure --prefix=/usr</code>是将该软件安装在 /usr 下面，执行文件就会安装在<code> /usr/bin</code>（而不是默认的 <code>/usr/local/bin</code>)，资源文件就会安装在 <code>/usr/share</code>（而不是默认的/usr/local/share）</p>
-<h3 id="message函数"><a href="#message函数" class="headerlink" title="message函数"></a>message函数</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">message(STATUS  <span class="string">&quot;12345&quot;</span>)   <span class="comment">#如果不加STATUS，不会在前面加--标志</span></span><br><span class="line">message(STATUS <span class="string">&quot; include dirs:　<span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span>&quot;</span>　)     <span class="comment">#有一个--开头</span></span><br><span class="line">message(STATUS <span class="string">&quot; include dirs:&quot;</span>　<span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span>　)     <span class="comment"># 同上面等价</span></span><br></pre></td></tr></table></figure>
-<p>如果在执行cmake时，遇到一个错误情况需要停止执行，可以用<code>FATAL_ERROR</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if( SOME_COND )</span><br><span class="line">  message( FATAL_ERROR &quot;You can not do this at all, CMake will exit.&quot; )</span><br><span class="line">endif()</span><br></pre></td></tr></table></figure>
-<p>如果出现这种情况还要继续编译，那么就换成<code>SEND_ERROR</code><br><br><br>指令最好全用大写<br>路径名中不要用\，而是用/，例如<code>include_directories(F:/Eigen)</code></p>
-<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这必须是CMakeLists的第一行，限定cmake版本，Catkin需要2.8.3或更高版本</span></span><br><span class="line"><span class="keyword">CMAKE_MINIMUM_REQUIRED</span>(VERSION <span class="number">3.3</span>)  </span><br><span class="line"></span><br><span class="line"><span class="keyword">PROJECT</span>		<span class="comment">#指定工程名称</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_compile_options</span>(-std=c++<span class="number">11</span>)		<span class="comment"># 支持C++ 11</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE <span class="string">&quot;Release&quot;</span>)		<span class="comment"># 指定cmake版本为Release，或者用Debug</span></span><br><span class="line"><span class="keyword">if</span>(CMAKE_BUILD_TYPE <span class="keyword">STREQUAL</span> <span class="string">&quot;Release&quot;</span>)</span><br><span class="line">	<span class="keyword">message</span>(STATUS <span class="string">&quot;build type is Release&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#SET	定义变量,可定义多个变量，例如: set(SRC_FILES main.cpp mainwindow.cpp mainwindow.h)</span></span><br><span class="line"><span class="comment">#MESSAGE 	输出用户定义的信息</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>   	<span class="comment">#指定头文件的搜索路径</span></span><br><span class="line"><span class="keyword">link_directories</span>      	<span class="comment">#指定动态链接库的搜索路径</span></span><br><span class="line"><span class="keyword">ADD_EXECUTABLE</span>(bin_file_name <span class="variable">$&#123;SRC_FILES&#125;</span>)   	<span class="comment">#生成可执行文件</span></span><br><span class="line"><span class="keyword">add_definitions</span>   	<span class="comment">#添加编译参数 add_definitions(&quot;-Wall -g&quot;)</span></span><br><span class="line"><span class="keyword">ADD_LIBRARY</span>   		<span class="comment">#生成动态库或静态库</span></span><br><span class="line"><span class="keyword">link_libraries</span>(lib1 lib2)   <span class="comment">#所有编译目标链接相同的库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SET_TARGET_PROPERTIES</span>  		<span class="comment">#设置输出的名称,设置动态库的版本和API版本</span></span><br><span class="line"><span class="keyword">ADD_SUBDIRECTORY</span>   			<span class="comment">#向当前工程添加存放源文件的子目录</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="获取环境变量"><a href="#获取环境变量" class="headerlink" title="获取环境变量"></a>获取环境变量</h3><p>获取bash.rc中的环境变量，通过ENV前缀来访问环境变量，读取环境变量使用<code>$ENV&#123;JAVA_HOME&#125;</code>，查看环境变量：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message(STATUS &quot; java home:　$ENV&#123;JAVA_HOME&#125;&quot;　)</span><br></pre></td></tr></table></figure>
-
-<p>写环境变量如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set( ENV&#123;PATH&#125; /home/martink )</span><br></pre></td></tr></table></figure>
-
-<h3 id="cmake判断操作系统"><a href="#cmake判断操作系统" class="headerlink" title="cmake判断操作系统:"></a>cmake判断操作系统:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MESSAGE(STATUS &quot;operation system is $&#123;CMAKE_SYSTEM&#125;&quot;)         #输出系统内核版本</span><br><span class="line"></span><br><span class="line">IF (WIN32)</span><br><span class="line">    MESSAGE(STATUS &quot;Now is windows&quot;)</span><br><span class="line">ELSEIF (UNIX)</span><br><span class="line">    MESSAGE(STATUS &quot;Now is UNIX-like OS&#x27;s.&quot;)</span><br><span class="line">ENDIF ()</span><br></pre></td></tr></table></figure>
-
-<h3 id="指定生成文件的输出路径"><a href="#指定生成文件的输出路径" class="headerlink" title="指定生成文件的输出路径"></a>指定生成文件的输出路径</h3><p>使用SET命令重新定义<code>EXECUTABLE_OUTPUT_PATH</code>和<code>LIBRARY_OUTPUT_PATH</code>变量来指定最终的二进制文件的位置</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET(EXECUTABLE_OUTPUT_PATH $&#123;PROJECT_BINARY_DIR&#125;/bin)</span><br><span class="line">SET(LIBRARY_OUTPUT_PATH $&#123;PROJECT_BINARY_DIR&#125;/lib)</span><br></pre></td></tr></table></figure>
-<p>上面的两条命令通常紧跟<code>ADD_EXECUTABLE</code>和<code>ADD_LIBRARY</code>,与其写在同一个CMakeLists.txt即可</p>
-<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hgl868/article/details/72236547">CMake基本教程</a><br><a target="_blank" rel="noopener" href="https://qtdream.com/topic/1056/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E8%AE%B0%E5%BD%95qt-creator%E6%9E%84%E5%BB%BAcmake%E9%A1%B9%E7%9B%AE-%E5%9B%9B">子工程和链接静态库</a><br><a target="_blank" rel="noopener" href="https://linghutf.github.io/2016/06/16/cmake/#">CMake使用进阶</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/" data-id="ckr28w9st001x4clmaispeezf" data-title="cmake教程（一）基本使用规则" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS机器人/ROS串口通信（一）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/09/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%EF%BC%88%E4%B8%80%EF%BC%89/" class="article-date">
-  <time class="dt-published" datetime="2018-09-16T12:40:33.000Z" itemprop="datePublished">2018-09-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/09/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%EF%BC%88%E4%B8%80%EF%BC%89/">ROS串口通信（一）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="ttyUSB0"><a href="#ttyUSB0" class="headerlink" title="ttyUSB0"></a>ttyUSB0</h3><p>使用串口通信，一般需要用USB转串口，涉及到一个叫<code>ttyUSB0</code>的接口，首先用<code>ls /dev | grep ttyU</code>命令查看<code>/dev</code>下有没有一个<code>ttyUSB0</code>的文件，结果一般为空。<br>此时插上一个USB转串口的数据线，另一头不需加任何东西，应当马上就有这个文件了。</p>
-<p>还可以用<code>dmesg</code>命令判断<br><img src="https://c2.staticflickr.com/2/1889/44665327612_463c2c3a9d_b.jpg"><br>上面的命令输出说明数据线本来是插到电脑上，然后又拔出。<br>打开对应的文件夹，可以发现<code>ttyUSB0</code>文件<br><img src="https://c2.staticflickr.com/2/1878/42950424620_47498a3d70_b.jpg"><br>使用串口助手工具cutecom，需要手动输入设备<code>ttyUSB0</code>，打开即可。</p>
-<p>使用时可能会报错：<code>/dev/ttyUSB0 denied permission</code>，这是由于没有给权限，可以用<code>chmod 777</code>的命令，但永久解决是这样的：<code>sudo usermod -aG　dialout username</code></p>
-<h3 id="ros测试程序"><a href="#ros测试程序" class="headerlink" title="ros测试程序"></a>ros测试程序</h3><p>可以直接运行ros附带的一个串口程序，有两种方式，一种是运行launch文件，另一种是用<code>rosrun</code>命令。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">roslaunch bringup.launch</span><br><span class="line">rosrun rosserial_python serial_node.py /dev/ttyUSB0</span><br></pre></td></tr></table></figure>
-<p>正确运行时大概是这样的<br><img src="https://c2.staticflickr.com/2/1857/42929348090_1b913d214a_b.jpg"><br>发布的消息类型是<code>std_msgs/String</code></p>
-<p>但我在运行时报了错误：<br><img src="https://c2.staticflickr.com/2/1870/43830544325_089ac7e0c6_b.jpg"><br>看上去是把STM32发布的消息类型是<code>Battery</code>，可同事的代码里就是<code>battery</code>，还需要再查。</p>
-<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/jiangchao3392/article/details/73740841">串口调试助手cutecom</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ykevin0510/article/details/72725633">ROS下使用stm32 与rosserial进行通信的开发说明及源代码示例</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/09/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%EF%BC%88%E4%B8%80%EF%BC%89/" data-id="ckr28w9xa00cr4clm51ufgk34" data-title="ROS串口通信（一）" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-C++/C++  基础/随机数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/08/29/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E9%9A%8F%E6%9C%BA%E6%95%B0/" class="article-date">
@@ -239,7 +106,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/29/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E9%9A%8F%E6%9C%BA%E6%95%B0/" data-id="ckr28w9vd00894clmbi976s0j" data-title="C++中的随机数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/29/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E9%9A%8F%E6%9C%BA%E6%95%B0/" data-id="ckr296gx500844klmeyjh3002" data-title="C++中的随机数" class="article-share-link">Share</a>
       
       
       
@@ -316,7 +183,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/28/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/C++%E9%9D%A2%E8%AF%95/" data-id="ckr28w9tw004k4clmdv79an4u" data-title="C++面试" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/28/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/C++%E9%9D%A2%E8%AF%95/" data-id="ckr296gvo004j4klm8lo79pys" data-title="C++面试" class="article-share-link">Share</a>
       
       
       
@@ -372,7 +239,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/memset%E5%92%8Cmemcpy%E5%87%BD%E6%95%B0/" data-id="ckr28w9v6007k4clm1g5e5x6v" data-title="memset和memcpy函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/memset%E5%92%8Cmemcpy%E5%87%BD%E6%95%B0/" data-id="ckr296gwx007j4klm2esl84qe" data-title="memset和memcpy函数" class="article-share-link">Share</a>
       
       
       
@@ -480,7 +347,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/17/%E8%84%9A%E6%9C%AC/shell%E5%91%BD%E4%BB%A4%20%E5%AD%97%E7%AC%A6%E4%B8%B2/" data-id="ckr28w9u9005c4clm3asd91zy" data-title="shell命令 — 字符串" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/17/%E8%84%9A%E6%9C%AC/shell%E5%91%BD%E4%BB%A4%20%E5%AD%97%E7%AC%A6%E4%B8%B2/" data-id="ckr296gw3005b4klmeth07bxe" data-title="shell命令 — 字符串" class="article-share-link">Share</a>
       
       
       
@@ -542,7 +409,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/16/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%B8%8D%E8%A6%81%E6%98%BE%E5%BC%8F%E8%B0%83%E7%94%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" data-id="ckr28w9vu009d4clmabie871y" data-title="不要显式调用构造函数和析构函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/16/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%B8%8D%E8%A6%81%E6%98%BE%E5%BC%8F%E8%B0%83%E7%94%A8%E6%9E%84%E9%80%A0%E5%92%8C%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/" data-id="ckr296gxn009c4klm0a6a4q9v" data-title="不要显式调用构造函数和析构函数" class="article-share-link">Share</a>
       
       
       
@@ -585,7 +452,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/15/C++/C++%20%20%E5%9F%BA%E7%A1%80/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%B7%9F%E8%B8%AA%E8%B0%83%E8%AF%95%E5%AE%8F%E5%92%8C%E5%8F%98%E9%87%8F/" data-id="ckr28w9v3007f4clmadok08xl" data-title="C++中的跟踪调试宏和变量" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/15/C++/C++%20%20%E5%9F%BA%E7%A1%80/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%B7%9F%E8%B8%AA%E8%B0%83%E8%AF%95%E5%AE%8F%E5%92%8C%E5%8F%98%E9%87%8F/" data-id="ckr296gwu007e4klm1vq90rsv" data-title="C++中的跟踪调试宏和变量" class="article-share-link">Share</a>
       
       
       
@@ -638,7 +505,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/15/C++/C++%20%20%E5%9F%BA%E7%A1%80/fprintf%20%20snprintf%E5%92%8Csprintf%E5%87%BD%E6%95%B0/" data-id="ckr28w9v5007j4clm6q00c3yf" data-title="fprintf,snprintf和sprintf函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/15/C++/C++%20%20%E5%9F%BA%E7%A1%80/fprintf%20%20snprintf%E5%92%8Csprintf%E5%87%BD%E6%95%B0/" data-id="ckr296gwx007i4klmdoavgcwq" data-title="fprintf,snprintf和sprintf函数" class="article-share-link">Share</a>
       
       
       
@@ -712,7 +579,127 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/08/12/C++/C++%20%20%E5%9F%BA%E7%A1%80/char%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" data-id="ckr28w9v4007g4clmdlyx75e0" data-title="char数组和指针问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/08/12/C++/C++%20%20%E5%9F%BA%E7%A1%80/char%E6%95%B0%E7%BB%84%E5%92%8C%E6%8C%87%E9%92%88%E9%97%AE%E9%A2%98/" data-id="ckr296gww007f4klm9yle9lym" data-title="char数组和指针问题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/new与delete" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/" class="article-date">
+  <time class="dt-published" datetime="2018-08-11T13:45:06.000Z" itemprop="datePublished">2018-08-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/">new与delete</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>对类类型而言，new运算是先分配内存再执行构造函数，delete是先执行析构函数再释放内存</p>
+<h2 id="对array的用法"><a href="#对array的用法" class="headerlink" title="对array的用法"></a>对array的用法</h2><p>我们都知道new与delete经常这样用:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* a = <span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">delete</span> a;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>* b = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>];</span><br><span class="line"><span class="keyword">delete</span> []b;</span><br></pre></td></tr></table></figure>
+<p>如果第二种情况改用<code>delete b;</code>会不会有内存泄漏？答案是仍然不会，分配简单类型内存时，内存大小已经确定，系统可以记忆并且进行管理，在析构时，系统并不会调用析构函数。它直接通过指针可以获取实际分配的内存空间，哪怕是一个数组内存空间。</p>
+<p>但是对于类对象就不能这样用了，看下面的类:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类构造 &quot;</span>&lt;&lt;<span class="keyword">this</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类析构&quot;</span>&lt;&lt;<span class="keyword">this</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">    Base* pb = <span class="keyword">new</span> Base[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">delete</span> pb;</span><br></pre></td></tr></table></figure>
+<p>运行结果如下，只有一个析构函数，而且从this指针来看，是数组第一个元素的析构函数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">基类构造 0xe118d4</span><br><span class="line">基类构造 0xe118ec</span><br><span class="line">基类构造 0xe11904</span><br><span class="line">基类构造 0xe1191c</span><br><span class="line">基类构造 0xe11934</span><br><span class="line"></span><br><span class="line">基类析构 0xe118d4</span><br></pre></td></tr></table></figure>
+<p><code>delete pb</code>只用来释放pb指向的内存和一个析构。<code>delete[] pb</code>用来释放指针指向的内存，还逐一调用数组中每个对象的析构。<font color = blue size=4> 所以为了编程规范，不管对简单类型还是类类型，都要用<code>delete []pb</code>的形式。</font><br><br></p>
+<h2 id="与malloc-free的区别"><a href="#与malloc-free的区别" class="headerlink" title="与malloc/free的区别"></a>与malloc/free的区别</h2><ul>
+<li><p><code>new/delete</code>用于C++中的动态内存分配, <code>malloc/free</code>仅用于C环境</p>
+</li>
+<li><p><code>new/delete</code>不必指定分配内存大小, <code>malloc/free</code>必须指定</p>
+</li>
+<li><p><code>malloc/free</code>用于类类型时,不会运行构造析构函数</p>
+</li>
+<li><p>new返回的是指定对象的指针，而malloc返回的是<code>void*</code>，<code>malloc</code>的返回值一般都需要进行类型转化。</p>
+</li>
+<li><p>new是一个操作符可以重载，malloc是一个库函数</p>
+</li>
+</ul>
+<p>比如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Base* b = (Base*)<span class="built_in">malloc</span>(<span class="number">12</span>);</span><br><span class="line"><span class="built_in">free</span>(b);</span><br></pre></td></tr></table></figure>
+<p>12是随便指定的，结果不运行构造和析构函数，而且如果中间运行成员函数，程序会崩溃；所以这种代码没有任何意义</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/08/11/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/new%E4%B8%8Edelete/" data-id="ckr296gxk00914klm3q4ffrc8" data-title="new与delete" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  基础/函数在main之前或之后运行" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/" class="article-date">
+  <time class="dt-published" datetime="2018-08-09T14:34:15.000Z" itemprop="datePublished">2018-08-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/">函数在main之前或之后运行</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>C++中，全局对象的构造函数在main之前运行，析构函数在main之后运行。</li>
+<li>类静态变量的初始化在main之前，静态函数不行</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类构造&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Base</span>()</span><br><span class="line">    &#123;</span><br><span class="line">    	std::cout&lt;&lt;<span class="string">&quot;基类析构&quot;</span>&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        std::cout&lt;&lt;<span class="string">&quot;get()&quot;</span>&lt;&lt;endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">55</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> count;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// main.cpp</span></span><br><span class="line">Base b;</span><br><span class="line"><span class="comment">// int Base::count = Base::get();	错误，这里不能调静态函数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    std::cout&lt;&lt;<span class="string">&quot;main &quot;</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">基类构造</span><br><span class="line">get()</span><br><span class="line">main</span><br><span class="line">基类析构</span><br></pre></td></tr></table></figure>
+
+<p>gcc中使用attribute关键字，声明constructor和destructor函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__attribute__((constructor)) <span class="function"><span class="keyword">void</span> <span class="title">before_main</span><span class="params">()</span> </span>&#123; </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;before main\n&quot;</span>); </span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">__attribute__((destructor)) <span class="function"><span class="keyword">void</span> <span class="title">after_main</span><span class="params">()</span> </span>&#123; </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">&quot;after main\n&quot;</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/08/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E5%9C%A8main%E4%B9%8B%E5%89%8D%E6%88%96%E4%B9%8B%E5%90%8E%E8%BF%90%E8%A1%8C/" data-id="ckr296gx1007v4klmgkdhgptu" data-title="函数在main之前或之后运行" class="article-share-link">Share</a>
       
       
       
@@ -728,7 +715,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/41/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><a class="page-number" href="/page/44/">44</a><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/43/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/41/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/40/">40</a><a class="page-number" href="/page/41/">41</a><span class="page-number current">42</span><a class="page-number" href="/page/43/">43</a><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/43/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -781,14 +768,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -798,6 +777,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

@@ -71,153 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-第三方库/解析yaml" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/" class="article-date">
-  <time class="dt-published" datetime="2018-12-05T13:33:36.000Z" itemprop="datePublished">2018-12-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/">解析yaml</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>YAML最基本，最常用的一些使用格式：<br>首先YAML中允许表示三种格式，分别是常量值，对象和数组</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">url:</span> <span class="string">http://www.wolfcode.cn</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">    <span class="attr">host:</span> <span class="string">http://www.wolfcode.cn</span> </span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.21</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.22</span></span><br><span class="line">    <span class="bullet">-</span> <span class="number">120.168</span><span class="number">.117</span><span class="number">.23</span></span><br><span class="line"><span class="comment">#常量</span></span><br><span class="line"><span class="attr">pi:</span> <span class="number">3.14</span>   <span class="comment">#定义一个数值3.14</span></span><br><span class="line"><span class="attr">hasChild:</span> <span class="literal">true</span>  <span class="comment">#定义一个boolean值</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">&#x27;Hello YAML&#x27;</span>   <span class="comment">#定义一个字符串</span></span><br></pre></td></tr></table></figure>
-
-
-<p>读YAML的最好方法是使用Python的yaml库<code>PyYAML</code>，到<a target="_blank" rel="noopener" href="https://pyyaml.org/wiki/PyYAMLDocumentation">官网</a>下载安装后，可以先运行测试程序看是否成功。<br>读取程序如下：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml,os</span><br><span class="line"></span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;test.yaml&quot;</span>)</span><br><span class="line">y = yaml.load(f,Loader=yaml.FullLoader)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> y</span><br></pre></td></tr></table></figure>
-<p>运行后，结果：<br><img src="https://live.staticflickr.com/65535/47751988322_72c2646b97_b.jpg"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/12/05/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A7%A3%E6%9E%90yaml/" data-id="ckr28w9u400504clm0gh08nxz" data-title="解析yaml" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS Kinetic知识/工作空间和package.xml" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/" class="article-date">
-  <time class="dt-published" datetime="2018-11-29T13:08:22.000Z" itemprop="datePublished">2018-11-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/">工作空间和package.xml</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>创建package后，<code>package.xml</code>不需要再修改，cpp文件必须有个main函数<code>return 0</code>，否则报错。</p>
-<p>创建package命令是<code>catkin_create_pkg nodeName</code></p>
-<h3 id="package名称"><a href="#package名称" class="headerlink" title="package名称"></a>package名称</h3><p>package的名称对应<code>CMakeLists</code>中的<code>project(package)</code>和<code>package.xml</code>中的<code>&lt;name&gt;package&lt;/name&gt;</code></p>
-<p>package的命名是有官方规范的，我意外地发现<code>test</code>这个名字往往会带来问题，可能是因为带<code>test</code>的package都是用于测试的，所以要避免使用。基本规则如下:</p>
-<ol>
-<li>只能使用字母数字下划线</li>
-<li>字母只能用小写，开头必须是字母</li>
-<li>至少有两个字符长度</li>
-<li>只做消息的package以_msg结尾，只含launch的以_launch结尾，以此类推</li>
-</ol>
-<p>不要轻易用<code>msg</code>, <code>launch</code>, <code>test</code>这样的字符串做名称，容易出问题。如果命名不规范，编译时会告警，影响编译时间。查看官方package列表，发现除了tf这样一个单词做名称的例子外，其他基本都是<code>a_b</code>或<code>a_b_c</code>这样的名称，例如<code>tuw_geometry_rviz</code>，所以这样命名比较稳妥。</p>
-<h3 id="package-xml"><a href="#package-xml" class="headerlink" title="package.xml"></a>package.xml</h3><p>每个package.xml文件必须包含的标签包括：</p>
-<ul>
-<li><code>&lt;package&gt;</code> : 最高级tag，属性：format，用于指定格式 </li>
-<li><code>&lt;name&gt;</code> ：package名称</li>
-<li><code>&lt;version&gt;</code> ：当前版本</li>
-<li><code>&lt;description&gt;</code>：package的基本描述</li>
-<li><code>&lt;maintainer&gt;</code>(至少一个)：维护者</li>
-<li><code>&lt;license&gt;</code>(至少一个)：协议</li>
-<li><code>&lt;buildtool_depend&gt;</code>(至少一个): 一般情况下只需要指定catkin作为编译工具， <strong>在需要交叉编译的情况下需要增加目标机器的编译工具</strong></li>
-</ul>
-<p>可选标签包括：</p>
-<ul>
-<li><code>&lt;build_depend&gt;</code> (多个)：编译时需要依赖的其它package，适用于静态库</li>
-<li><code>&lt;exec_depend&gt;</code> (多个)：运行时需要依赖的其它package，适用于静态库</li>
-<li><code>build_export_depend</code>: 编译时需要链接(build against)的package</li>
-<li><code>&lt;export&gt;</code>：用于添加额外的信息，比如需要嵌入的其它package的插件，或者一些说明信息。<br><img src="https://c1.staticflickr.com/5/4906/44628455720_2d3643554f_b.jpg"></li>
-</ul>
-<p>使用<code>depend</code>可以表示同时包括<code>build</code>和<code>exec</code>依赖，也就是说<code>&lt;depend&gt;roscpp&lt;/depend&gt;</code>相当于</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build_depend</span>&gt;</span>roscpp<span class="tag">&lt;/<span class="name">build_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">exec_depend</span>&gt;</span>roscpp<span class="tag">&lt;/<span class="name">exec_depend</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>一般都包括的几个是</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">buildtool_depend</span>&gt;</span>catkin<span class="tag">&lt;/<span class="name">buildtool_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build_depend</span>&gt;</span>message_generation<span class="tag">&lt;/<span class="name">build_depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">exec_depend</span>&gt;</span>message_runtime<span class="tag">&lt;/<span class="name">exec_depend</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 可能还有其他msgs类型 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">depend</span>&gt;</span>std_msgs<span class="tag">&lt;/<span class="name">depend</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">build_export_depend</span>&gt;</span>std_msgs<span class="tag">&lt;/<span class="name">build_export_depend</span>&gt;</span>  </span><br></pre></td></tr></table></figure>
-
-<h3 id="几个重要路径"><a href="#几个重要路径" class="headerlink" title="几个重要路径"></a>几个重要路径</h3><p>4个ROS的重要路径，可在CMakeLists中用message函数查看：</p>
-<ul>
-<li><p><code>CATKIN_PACKAGE_LIB_DESTINATION</code>： lib库的路径</p>
-</li>
-<li><p><code>CATKIN_PACKAGE_BIN_DESTINATION</code>： 可执行文件的路径</p>
-</li>
-<li><p><code>CATKIN_PACKAGE_SHARE_DESTINATION</code>：共享文件的路径，就是CMakeLists中的INSTALL生成的两个cmake文件的路径</p>
-</li>
-<li><p><code>catkin_INCLUDE_DIRS</code>： 跟catkin有关文件的路径，不仅仅是ROS相关的</p>
-</li>
-</ul>
-<p><img src="https://c2.staticflickr.com/8/7881/44628455000_50c1e40128_b.jpg"></p>
-<p>在代码中包含另一个package的头文件时，经常写成<code>#include&lt;robot_api/robot_api.h&gt;</code>，注意程序目录结构必须是这样：<br><img src="https://i.loli.net/2019/08/20/5TpseFtAu7VfivG.png"></p>
-<h2 id="多工作空间的问题"><a href="#多工作空间的问题" class="headerlink" title="多工作空间的问题"></a>多工作空间的问题</h2><table><tr><td bgcolor=yellow> 尽量只用一个工作空间，如果用到两个以上，不要出现同名package，也不要出现不同工作空间的包有依赖的情况 </td></tr></table>
-
-<p>如果在<code>/opt/ros/kinetic/</code>之外，如果我们创建了多个工作空间且需要在多个工作空间中来回地工作，比如<code>/home/user/catkin_ws1</code> 和 <code>/home/user/catkin_ws2</code></p>
-<p><code>ROS_PACKAGE_PATH</code>环境变量中的多个目录是有先后顺序的。如果工作空间1和2中的所有包之间没有依赖关系，那么将下面两句话放在<code>bashrc</code>文件中合适的位置（至少应该放在<code>source /opt/ros/kinetic/setup.*sh</code>后）。</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /home/user/catkin_ws1/devel/setup.*sh --extended</span><br><span class="line"><span class="built_in">source</span> /home/user/catkin_ws2/devel/setup.*sh --extended</span><br></pre></td></tr></table></figure>
-<p>后面source的工作空间会遮蔽之前工作空间的同名包，比如<code>opt/ros/indigo/share/</code>中安装了move_base包，又在<code>/home/user/catkin_ws1</code>中通过下载源代码的方式安装了move_base，由于<code>ROS_PACKAGE_PATH</code>环境变量的遮蔽效果，我实际用的是<code>/home/user/catkin_ws1/</code>中的<code>move_base</code>，这正是我们常常的目的</p>
-<p>环境变量中这样设置：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">source</span> /opt/ros/kinetic/setup.zsh</span><br><span class="line"><span class="built_in">source</span> /home/xiaoqiang/catkin_ws/devel/setup.zsh</span><br></pre></td></tr></table></figure>
-<p><code>ROS_PACKAGE_PATH</code>结果是<code>/home/xiaoqiang/catkin_ws/src:/opt/ros/kinetic/share</code>，也就是说后source的工作空间会排在<code>ROS_PACKAGE_PATH</code>的靠前部分，也就是优先级高</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/29/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4%E5%92%8Cpackage.xml/" data-id="ckr28w9x400cc4clm9j0cedui" data-title="工作空间和package.xml" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-脚本/Linux中常用的alias" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2018/11/27/%E8%84%9A%E6%9C%AC/Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84alias/" class="article-date">
@@ -249,7 +102,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/27/%E8%84%9A%E6%9C%AC/Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84alias/" data-id="ckr28w9u500534clmesw2aja0" data-title="Linux中常用的alias" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/27/%E8%84%9A%E6%9C%AC/Linux%E4%B8%AD%E5%B8%B8%E7%94%A8%E7%9A%84alias/" data-id="ckr296gw000524klm7xe9cdpw" data-title="Linux中常用的alias" class="article-share-link">Share</a>
       
       
       
@@ -324,7 +177,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" data-id="ckr28w9wj00av4clmfmk899o9" data-title="环境变量" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" data-id="ckr296gya00ar4klme10i4lez" data-title="环境变量" class="article-share-link">Share</a>
       
       
       
@@ -410,7 +263,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/23/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/cgi%E5%88%87%E6%8D%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%9C%B0%E5%9B%BE/" data-id="ckr28w9xg00d54clm4k7jgp99" data-title="通过cgi切换机器人的地图" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/23/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/cgi%E5%88%87%E6%8D%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%9C%B0%E5%9B%BE/" data-id="ckr296gzg00d44klmgpi06bxo" data-title="通过cgi切换机器人的地图" class="article-share-link">Share</a>
       
       
       
@@ -503,7 +356,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/22/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/launch%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" data-id="ckr28w9wq00bh4clmhwmk90pb" data-title="roslaunch详解" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/22/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/launch%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" data-id="ckr296gyj00bg4klmdhm3csrc" data-title="roslaunch详解" class="article-share-link">Share</a>
       
       
       
@@ -575,7 +428,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/20/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89%20%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" data-id="ckr28w9sw00254clmgd7qepu7" data-title="cmake教程（二） 库的使用" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/20/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%BA%8C%EF%BC%89%20%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8/" data-id="ckr296guq00244klmb4gq5xke" data-title="cmake教程（二） 库的使用" class="article-share-link">Share</a>
       
       
       
@@ -655,7 +508,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/19/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF/" data-id="ckr28w9wh00aq4clm12o42gz7" data-title="自定义msg或srv" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/19/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF/" data-id="ckr296gyb00at4klmehsu8paa" data-title="自定义msg或srv" class="article-share-link">Share</a>
       
       
       
@@ -706,7 +559,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rosbridge%E5%AE%9E%E6%88%98%20(%E4%B8%89)/" data-id="ckr28w9xh00d94clm529u5dle" data-title="rosbridge实战(三)  使用roslibjs订阅消息" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rosbridge%E5%AE%9E%E6%88%98%20(%E4%B8%89)/" data-id="ckr296gzj00d84klm0m1kanvp" data-title="rosbridge实战(三)  使用roslibjs订阅消息" class="article-share-link">Share</a>
       
       
       
@@ -778,7 +631,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEUSB%E6%91%84%E5%83%8F%E5%A4%B4/" data-id="ckr28w9xc00cw4clm2io671rt" data-title="ROS安装配置单目摄像头" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AEUSB%E6%91%84%E5%83%8F%E5%A4%B4/" data-id="ckr296gz900cv4klm2vys9gl2" data-title="ROS安装配置单目摄像头" class="article-share-link">Share</a>
       
       
       
@@ -792,11 +645,170 @@
 
 
   
+    <article id="post-ROS/ROS机器人/手柄控制小车" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%8B%E6%9F%84%E6%8E%A7%E5%88%B6%E5%B0%8F%E8%BD%A6/" class="article-date">
+  <time class="dt-published" datetime="2018-11-14T12:17:47.000Z" itemprop="datePublished">2018-11-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%8B%E6%9F%84%E6%8E%A7%E5%88%B6%E5%B0%8F%E8%BD%A6/">使用游戏手柄控制机器人</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="手柄的配置和测试"><a href="#手柄的配置和测试" class="headerlink" title="手柄的配置和测试"></a>手柄的配置和测试</h3><p>环境：Ubuntu16.04 + ROS kinetic</p>
+<p><code>joy</code>package为通用的Linux手柄提供了ROS驱动，它包括了一个<code>joy_node</code>节点，可以让Linux手柄和ROS交互。这个节点发布一个<code>Joy</code>消息，包含了手柄每一个按钮和轴的当前状态。  安装:  <code>sudo apt-get install ros-kinetic-joy</code></p>
+<p>安装好后先用usb线将手柄与电脑连接，测试有线连接的情况下，Linux是否能够识别游戏手柄。使用<code>ls /dev/input</code>，显示所有输入设备的列表，如果出现了<code>jsX</code>(在我的电脑中显示的是<code>js0</code>)，说明Linux成功识别了戏手柄。</p>
+<p>对手柄进行测试，运行命令：<code>sudo jstest /dev/input/js0</code>，终端中看到手柄的输出信息，按手柄的按键就可以看到数据的变化。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Axes: 0: 1982 1: 894 2:-32767 3: 392 4: 438 5:-32767 6: 0 7: 0 Buttons: 0:off 1:off 2:off 3:off 4:off 5:off 6:off 7:off 8:off 9:off 10:off </span><br></pre></td></tr></table></figure>
+
+<p>每个按钮和轴对应的索引可以在<code>http://wiki.ros.org/joy</code>查到，当然也可以直接试出来。接下来，要让ROS的节点joy_node可以使用手柄，首先需要赋予手柄的权限，这跟串口的使用是类似的。使用<code>ls -l /dev/input/jsX</code>查看手柄权限，这样类似的输出：<code>crw-rw-XX-+ 1 root input 13, 0 9月  12 14:45 /dev/input/js0</code>。如果XX是<code>rw</code>的话，说明设备配置成功，否则需要<code>sudo chmod a+rw /dev/input/js0</code></p>
+<p><code>jstest-gtk</code>是一个可以测试手柄的工具，可以显示哪个按钮和轴被按下，可以校准和重新为手柄设置每个按钮的索引。安装: <code>sudo apt-get install jstest-gtk</code>，用命令<code>jstest-gtk</code>运行工具，出现手柄信息时，手柄会震动，点击属性按钮进行测试:<br><img src="https://c2.staticflickr.com/2/1972/45875867691_8e8583dfd5_b.jpg"><br><img src="https://c1.staticflickr.com/5/4837/45875867981_d0292a649b_b.jpg"></p>
+<p>依次测试每个键，其中摇杆可以测试偏移量，直接影响机器人的行驶<br>使用蓝牙无线连接的测试跟上面一样，如果连接不正常，就是蓝牙的问题。</p>
+<p>不同手柄的按键映射可能不同，可以用mapping修改，但问题是<font color = orange>  <font size= 3> 重新拔插手柄后，又恢复原状 </font> </font></p>
+<br>
+要使手柄的数据发布在ROS上，我们需要启动joy package中的joy_node节点．首先，我们需要将设备名这个参数设置为当前的设备名，默认为js0。依次运行：
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">roscore</span><br><span class="line">rosparam <span class="built_in">set</span> joy_node/dev <span class="string">&quot;/dev/input/js0&quot;</span></span><br><span class="line">rosrun joy joy_node</span><br></pre></td></tr></table></figure>
+
+<p><code>joy</code>消息定义如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Header header           # timestamp in the header is the time the data is received from the joystick</span><br><span class="line">float32[] axes          # the axes measurements from a joystick</span><br><span class="line">int32[] buttons         # the buttons measurements from a joystick </span><br></pre></td></tr></table></figure>
+<p>在新的终端查看joy这个话题的数据:  <code>rostopic echo joy</code>，按手柄的按键，你会看到数据在不断变化，说明手柄有线配置成功。</p>
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><p>使用package <a target="_blank" rel="noopener" href="http://wiki.ros.org/joy/Tutorials/WritingTeleopNode">learning_joy</a>进行测试，<br>启动<code>roslaunch learning_joy turtle_joy.launch</code>，会出现包含乌龟的窗口。现在使用手柄进行控制乌龟，摇杆控制其移动，但是发现每次乌龟只能移动一小步然后就停止了。先检查是否是摇杆的问题，还是用上面安装的<code>jstest-gtk</code>，看是否按摇杆后，对应的<code>Axis</code>值是否自动重置，但一般不会有问题。</p>
+<p>再看 <code>rostopic echo joy</code>的结果，看<code>seq</code>参数的变化，结果发现按摇杆时只会增加３，这就解释了乌龟为什么只移动了一小步。<br><img src="https://c1.staticflickr.com/5/4839/45151697264_887b28bc35_b.jpg"><br>查看ros官网，发现有个参数<code>autorepeat_rate</code>， <font color = blue>  <font size= 3> 描述了手柄状态不变时，重发之前消息的频率(Hz)，但默认这个参数为０。</font> </font>所以如果一直压着摇杆，<code>joy_node</code>节点不会重发消息，所以乌龟不会动。因此需要在launch文件对这个参数进行设置。</p>
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><p>2018.12.27，调试另一机器人的手柄控制时，<font color = orange>  <font size= 3> 又出现机器人只走一步的情况， </font> </font>看程序输出情况，发现频繁的重启<br><img src="https://c1.staticflickr.com/5/4855/31556529507_bf2a1f23f7_b.jpg"><br>最终发现原因是<code>launch</code>文件中设置<code>respawn=true</code>，但另一个版本程序没有这个问题，初步判断是手柄不同造成的。</p>
+<h3 id="问题3"><a href="#问题3" class="headerlink" title="问题3"></a>问题3</h3><p>我在使用另一个手柄时报错：<br><img src="https://i.loli.net/2019/10/23/Hm2jYQfWnMcXPsr.png"><br>这个手柄错误其实不影响，只说明手柄不支持<code>force-feedback</code>，仍然正常使用</p>
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h3><p>出于工作需要，我对<code>learning_joy</code>进行了以下优化：</p>
+<ul>
+<li>原程序在不使用手柄时，仍会发布话题cmd_vel，也就是消息成员全是0，结果会影响导航，优化后不再有这种情况</li>
+<li>使机器人的角速度和线速度都有快慢两个值，按下一次相应的键就可以切换速度</li>
+</ul>
+<p>待优化：同一个手柄的按键进行映射设置后，重启又恢复原状，如何使映射永久化？</p>
+<p>参考:<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/joy#Published_Topics">ROS官网对手柄的介绍</a><br><a target="_blank" rel="noopener" href="http://wiki.ros.org/joystick_remapper">joystick_remapper</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/11/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%8B%E6%9F%84%E6%8E%A7%E5%88%B6%E5%B0%8F%E8%BD%A6/" data-id="ckr296gzt00dy4klmh6od3e1t" data-title="使用游戏手柄控制机器人" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/ROS日志系统和log4cxx" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/11/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E5%92%8Clog4cxx/" class="article-date">
+  <time class="dt-published" datetime="2018-11-06T12:40:27.000Z" itemprop="datePublished">2018-11-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2018/11/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E5%92%8Clog4cxx/">日志系统和log4cxx</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>我们都知道ROS有默认的日志工具，用<code>rosclean check</code>检查日志所在路径和占用的大小，一般放在<code>~/.ros/log</code>，可以定义环境变量<code>ROS_LOG_DIR</code>改变日志存放的位置。<code>rosclean purge</code>可以清除日志，日志记录了所有的输出信息，有时我们只需要看部分信息，看自带的日志太费劲了，所以本文讲一下怎么利用ROS实现自定义的日志。</p>
+<h3 id="log4cpp与log4cxx"><a href="#log4cpp与log4cxx" class="headerlink" title="log4cpp与log4cxx"></a>log4cpp与log4cxx</h3><p><code>log4..</code>是基于log4j的一系列的c++移植版本，使用了log4j的模式结构，目前主要有:log4cxx,log4cplus,log4cpp. </p>
+<p>一开始看到网上说ROS提供了log4cpp库的安装，而且还有对应的官方帮助页面，于是执行<code>sudo apt-get install ros-kinetic-log4cpp</code>顺利安装了，在CMakeList里的<code>find package</code>添加<code>log4cpp</code>，结果发现编译时报错：<br><img src="https://c1.staticflickr.com/5/4840/45024263164_28a514b6c5_b.jpg"><br>执行catkin_make时，编译器会寻找<code>find package</code>中的package对应的<code>-config.cmake</code>文件，比如<code>roscpp</code>这个package，我们用<code>roscd roscpp</code>进入对应安装目录中，看到一个cmake目录，进入后发现几个文件，其中一个是<code>roscppConfig.cmake</code>。但是<code>log4cxx</code>对应的目录连cmake文件夹都没有，所以编译失败。后来看到网上一些人的讨论，说log4cpp涉及到Orocos环境，这个比较陌生，实在懒得研究了。</p>
+<p>后来又看到log4cxx已经集成到了ROS里面，不过不是以package的形式，而是头文件的形式，在安装ROS时就安装到了<code>/usr/local/log4cxx</code>，这样就好办多了，不用担心编译问题了。</p>
+<p>为什么使用log4cxx，因为它提供了强大的配置功能，好像ROS也能实现，但是我没有去研究，应该就是<code>rosconsole</code>这个东西，它在启动时会加载<code>$ROS_ROOT/config/rosconsole.config</code>作为配置文件。另外可以定义配置文件供log4cxx使用，定义环境变量<code>ROSCONSOLE_CONFIG_FILE</code>为配置文件的路径。</p>
+<p>一般做成launch文件，这样使用方便，编辑灵活:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">env</span> <span class="attr">name</span>=<span class="string">&quot;ROSCONSOLE_CONFIG_FILE&quot;</span></span></span><br><span class="line"><span class="tag">       <span class="attr">value</span>=<span class="string">&quot;$(find log_test)/setting.conf&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;log_test&quot;</span> <span class="attr">type</span>=<span class="string">&quot;log_test&quot;</span> <span class="attr">name</span>=<span class="string">&quot;log_test&quot;</span> <span class="attr">output</span>=<span class="string">&quot;screen&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>package和可执行文件的名称都是<code>log_test</code>，配置文件由环境变量指定路径。</p>
+<p>一个典型的配置文件是这样的，看上去不复杂，但是和普通log4cxx配置不同，需要结合ROS的特性，查了好久才成功:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">log4j.logger.ros.log_test=INFO,rosout_a    # log_test是package名</span><br><span class="line">log4j.appender.rosout_a=org.apache.log4j.RollingFileAppender # 输出到文件，超过大小后自动创建下一个</span><br><span class="line">log4j.appender.rosout_a.Threshold=INFO          # 最低级别是INFO</span><br><span class="line">log4j.appender.rosout_a.Append=true				# 追加模式</span><br><span class="line">log4j.appender.rosout_a.MaxFileSize=100KB		# 每个日志文件的大小</span><br><span class="line">log4j.appender.rosout_a.MaxBackupIndex=10		# 最多产生多少日志文件，默认2个</span><br><span class="line">log4j.appender.rosout_a.File=/home/hlhp/output.txt     # 输出文件，可结合环境变量$&#123;ROSOUT_LOG_PATH&#125;</span><br><span class="line">log4j.appender.rosout_a.layout=org.apache.log4j.PatternLayout   # 常用PatternLayout</span><br><span class="line">log4j.appender.rosout_a.layout.ConversionPattern = %-d&#123;yyyy-MM-dd HH:mm:ss SSS&#125; %m%n  # 输出格式</span><br></pre></td></tr></table></figure>
+<p>注意：</p>
+<ul>
+<li>第一行 <code>log_test</code>是package名称。</li>
+<li>如果没有设置文件最多产生个数，默认只生成２个日志文件。超过大小后，会从第一个开始覆盖。</li>
+<li>注意日志级别，否则不会记录</li>
+</ul>
+<p>注意文件中就是<code>log4j</code>不是<code>log4cxx</code>，PatternLayout指可以灵活地指定布局模式，最后输出格式中的<code>SSS</code>指的是毫秒。log4j采用类似C语言中的printf函数的打印格式格式化日志信息:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">%m   输出代码中指定的消息</span><br><span class="line">%n   输出一个回车换行符</span><br><span class="line">%p   输出优先级，即DEBUG，INFO，WARN，ERROR，FATAL </span><br><span class="line">%r   输出自应用启动到输出该log信息耗费的毫秒数 </span><br><span class="line">%c   输出所属的类目，通常就是所在类的全名 </span><br><span class="line">%t   输出产生该日志事件的线程名 </span><br><span class="line">%l   输出日志事件的发生位置，包括类目名、发生的线程，以及在代码中的行数。举例：Testlog4.main(TestLog4.java: 10 ) </span><br></pre></td></tr></table></figure>
+<p>日志打印宏以<code>_ONCE</code>结尾，表示只调用一次:<code>ROS_DEBUG_STREAM_ONCE(&quot;This appears only once.&quot;);</code><br>日志打印宏以<code>_THROTTLE</code>结尾，表示按指定频率打印日志:<code>ROS_DEBUG_STREAM_THROTTLE(0.1, &quot;This appears every 0.1 seconds.&quot;);</code></p>
+<p>日志消息有三个不同的目的地：控制台，话题/rosout，日志文件。相比于控制台输出，<code>rosout</code>话题输出的主要作用是它在一个流中包含了系统中<strong>所有节点的日志消息</strong>。查看话题/rosout中的消息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rostopic echo /rosout</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/03/06/5PzeWbSA2GORdIf.png"></p>
+<p>也可以使用图形界面查看：<code>rqt_console</code>，<code>rqt_console</code>订阅的是话题<code>/rosout_agg</code>，话题由节点rosout收集话题<code>/rosout</code>聚合之后发布。</p>
+<p>我写的一个节点订阅了5个话题，这几个话题是单片机发布的，在回调函数里输出对应消息类型的变量信息，日志信息最终在<code>output.txt</code>中，注意输出信息是用逗号隔开，这样用EXCEL打开可以将各部分隔开，实现表格效果:<br><img src="https://c1.staticflickr.com/5/4898/43947104460_664a19a139_b.jpg"><br><img src="https://c1.staticflickr.com/5/4918/43947104630_aa7d127ea6_b.jpg"><br>说白了，代码里没用到log4cxx的东西，当然也可以用，但是我这个例子没必要，关键用的是它的配置文件。</p>
+<h3 id="ROS-INFO中文显示问号"><a href="#ROS-INFO中文显示问号" class="headerlink" title="ROS_INFO中文显示问号"></a>ROS_INFO中文显示问号</h3><p>显然这是编码问题，在ROS_INFO之前加入下面代码中的一行：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 设置区域为中文，或者直接取所有枚举的并集，不必仔细研究了</span></span><br><span class="line"><span class="comment">// setlocale(LC_CTYPE, &quot;zh_CN.utf8&quot;);</span></span><br><span class="line"><span class="built_in">setlocale</span>(LC_ALL, <span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义ROS日志的格式"><a href="#自定义ROS日志的格式" class="headerlink" title="自定义ROS日志的格式"></a>自定义ROS日志的格式</h3><p>默认的日志输出是这样的:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[ INFO] [1556115082.590417546]: msg:91</span><br><span class="line">[ INFO] [1556115083.591389486]: msg:12</span><br></pre></td></tr></table></figure>
+<p>感觉时间没用必要，希望能像log4cxx一样自定义，其实看源码<code>rosconsole.cpp</code>可知ROS日志就是基于log4cxx。我们可以修改环境变量<code>ROSCONSOLE_FORMAT</code>定制格式，格式包括以下选项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">severity</span><br><span class="line">message</span><br><span class="line">time</span><br><span class="line">thread</span><br><span class="line">logger</span><br><span class="line">file</span><br><span class="line">line</span><br><span class="line">function</span><br><span class="line">node</span><br></pre></td></tr></table></figure>
+
+<p>看一下<code>rosconsole.cpp</code>源码部分：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* g_format_string = <span class="string">&quot;[$&#123;severity&#125;] [$&#123;time&#125;]: $&#123;message&#125;&quot;</span>;</span><br><span class="line">Formatter g_formatter;</span><br><span class="line">format_string =  <span class="built_in">getenv</span>(<span class="string">&quot;ROSCONSOLE_FORMAT&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (format_string)</span><br><span class="line">&#123;</span><br><span class="line">  g_format_string = format_string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">g_formatter.<span class="built_in">init</span>(g_format_string);</span><br></pre></td></tr></table></figure>
+<p>从中可以发现源码里先给了个默认格式，我们也可以针对环境变量自己设置格式．</p>
+<p>网上有人问能不能自定义日志信息的颜色，结果发现在函数<code>Formatter::print</code>里，各等级的日志信息的颜色已经写死了，比如<code>levels::Fatal</code>对应<code>COLOR_RED</code>，所以不能自定义了．</p>
+<p>根据环境变量，我们可以这样修改：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> ROSCONSOLE_FORMAT=<span class="string">&#x27;[$&#123;severity&#125;][$&#123;node&#125;] [$&#123;function&#125;] line_$&#123;line&#125;  $&#123;message&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>只保留等级、节点名、函数、行号、信息，结果是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ INFO][/Pub] [main] line_19  msg:13</span><br><span class="line">[ INFO][/Pub] [main] line_19  msg:37</span><br><span class="line">[ INFO][/Pub] [main] line_19  msg:73</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="界面日志工具"><a href="#界面日志工具" class="headerlink" title="界面日志工具"></a>界面日志工具</h3><p>ROS提供两个带界面的日志工具：rqt_console和rqt_logger_level</p>
+<p>命令如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rosrun rqt_console rqt_console</span><br><span class="line">rosrun rqt_logger_level rqt_logger_level</span><br></pre></td></tr></table></figure>
+<p>使用很简单，就不详细解释了</p>
+<p><br><br><br>参考:<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/rosconsole">rosconsole</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ITEagle/archive/2010/04/23/1718365.html">log4j.properties配置详解</a><br><a target="_blank" rel="noopener" href="https://chenjunjun.bitbucket.io/2016/03/17/ROS-%E7%A8%8B%E5%BA%8F%E7%BC%96%E5%86%99%E4%B9%8B%E6%97%A5%E5%BF%97/">ROS 程序编写之日志</a><br><a target="_blank" rel="noopener" href="https://github.com/ros/ros_comm/blob/98aa98e565ea623aae61c02f54ecb06c7ee190dd/tools/rosconsole/src/rosconsole/rosconsole.cpp#L103">rosconsole.cpp</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/11/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F%E5%92%8Clog4cxx/" data-id="ckr296gye00b24klmcxry4xto" data-title="日志系统和log4cxx" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/39/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="page-number current">40</span><a class="page-number" href="/page/41/">41</a><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/41/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/39/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/38/">38</a><a class="page-number" href="/page/39/">39</a><span class="page-number current">40</span><a class="page-number" href="/page/41/">41</a><a class="page-number" href="/page/42/">42</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/41/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -849,14 +861,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -866,6 +870,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

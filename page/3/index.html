@@ -71,99 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/TEB和DWA算法的对比" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/06/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E5%92%8CDWA%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/" class="article-date">
-  <time class="dt-published" datetime="2021-06-11T09:52:22.000Z" itemprop="datePublished">2021-06-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/06/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E5%92%8CDWA%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/">TEB和DWA算法的对比</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>TEB与DWA对比： teb在运动过程中会调整自己的位姿朝向，当到达目标点时，通常机器人的朝向也是目标朝向而不需要旋转。 dwa则是先到达目标坐标点，然后原地旋转到目标朝向。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/06/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E5%92%8CDWA%E7%AE%97%E6%B3%95%E7%9A%84%E5%AF%B9%E6%AF%94/" data-id="ckr28w9ul006a4clm15ki45ka" data-title="TEB和DWA算法的对比" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/走狭窄通道的调试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B5%B0%E7%8B%AD%E7%AA%84%E9%80%9A%E9%81%93%E7%9A%84%E8%B0%83%E8%AF%95/" class="article-date">
-  <time class="dt-published" datetime="2021-06-07T12:56:07.000Z" itemprop="datePublished">2021-06-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B5%B0%E7%8B%AD%E7%AA%84%E9%80%9A%E9%81%93%E7%9A%84%E8%B0%83%E8%AF%95/">走狭窄通道的调试</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>调整膨胀半径和cost_factor的作用不大</p>
-<p>空隙0.86，小车半径0.35，直径0.7，结果发现走不过间隙，频繁报警。<br><img src="https://i.loli.net/2020/11/06/R1m2wAXxUJ9CWKk.png" alt="走不过空隙.png"></p>
-<p><img src="https://i.loli.net/2020/11/06/dkSszEcLbZeIxip.png" alt="trajectory not feasible.png"><br>因为直径还不算太大，应该能过去，尝试减小<code>feasibility_check_no_poses</code>为3，结果成功了。</p>
-<p>现在将半径增大到0.37，这样直径成了0.74，难度更大了。结果发现直接撞上了障碍物<br><img src="https://i.loli.net/2020/11/06/OYGHoVLa62ynrjJ.png" alt="已经撞上障碍.png"></p>
-<p>这种情况是不可能再成功了，难就难在这种情况不是每次发生<br><img src="https://i.loli.net/2020/11/06/Uru8VTSW1EC5PnN.png" alt="所有恢复行为失败，无法导航.png"></p>
-<p>因为使用了<code>cost_converter</code>，显然障碍物变大了，所以将其disable，结果成功了，但不保证成功率100%<br><img src="https://i.loli.net/2020/11/06/lYJZTV67RsDieBo.png" alt="成功通过.png"></p>
-<p>参数<code>feasibility_check_no_poses</code>不能太大，因为optimizer可能不完全收敛。小的障碍碰撞在未来可以获得纠正，所以设置太大导致的失败不一定是有效的。</p>
-<p>狭窄环境中，调试要慎重。局部规划可能拒绝一个<code>infeasible trajectory</code>，但全局规划会认为全局路径是feasible，结果就是机器人stucked。 如果禁止了后退速度，会经常出现not feasible，尤其是在cluttered环境</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E8%B5%B0%E7%8B%AD%E7%AA%84%E9%80%9A%E9%81%93%E7%9A%84%E8%B0%83%E8%AF%95/" data-id="ckr28w9uw006w4clmdcg26cdl" data-title="走狭窄通道的调试" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/TEB算法/TEB所有参数含义" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/" class="article-date">
@@ -445,7 +352,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/" data-id="ckr28w9zo00it4clm187jgjay" data-title="TEB所有参数含义" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/" data-id="ckr296h2100is4klmgmfiemir" data-title="TEB所有参数含义" class="article-share-link">Share</a>
       
       
       
@@ -519,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%A7%A3%E8%AF%BB%20Costmap2DROS%20%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" data-id="ckr28wa0a00ky4clmh0hn9n7w" data-title="解读 Costmap2DROS 的构造函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%A7%A3%E8%AF%BB%20Costmap2DROS%20%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" data-id="ckr296h2v00l04klmewvhejm2" data-title="解读 Costmap2DROS 的构造函数" class="article-share-link">Share</a>
       
       
       
@@ -654,7 +561,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%843%E4%B8%AA%E7%B1%BB%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/" data-id="ckr28wa0700km4clm4rhk7mhc" data-title="代价地图的3个类常用的函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%843%E4%B8%AA%E7%B1%BB%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/" data-id="ckr296h2q00kl4klmc66lb6lt" data-title="代价地图的3个类常用的函数" class="article-share-link">Share</a>
       
       
       
@@ -702,7 +609,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%9A%84%E8%BD%A6%E6%80%BB%E4%B8%8D%E8%83%BD%E5%88%B0%E8%BE%BE%E7%BB%88%E7%82%B9%E7%9A%84bug/" data-id="ckr28w9un006i4clmdha7azv6" data-title="仿真的车总不能到达终点的bug" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%9A%84%E8%BD%A6%E6%80%BB%E4%B8%8D%E8%83%BD%E5%88%B0%E8%BE%BE%E7%BB%88%E7%82%B9%E7%9A%84bug/" data-id="ckr296gwi006h4klm7q2p31ql" data-title="仿真的车总不能到达终点的bug" class="article-share-link">Share</a>
       
       
       
@@ -765,7 +672,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/05/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/5.%20%E5%89%A9%E4%BD%99%E9%97%AE%E9%A2%98%E5%92%8C%E6%80%BB%E7%BB%93/" data-id="ckr28wa0k00lx4clm2dhc8xgd" data-title="(五) 剩余问题和总结" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/05/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/5.%20%E5%89%A9%E4%BD%99%E9%97%AE%E9%A2%98%E5%92%8C%E6%80%BB%E7%BB%93/" data-id="ckr296h3400lw4klmcggeej8l" data-title="(五) 剩余问题和总结" class="article-share-link">Share</a>
       
       
       
@@ -810,7 +717,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/30/%E5%85%B6%E4%BB%96/21142/" data-id="ckr28w9t4002v4clma6fagbfv" data-title="21142" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/30/%E5%85%B6%E4%BB%96/21142/" data-id="ckr296guy002u4klm0cbw63f6" data-title="21142" class="article-share-link">Share</a>
       
       
       
@@ -853,7 +760,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/28/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E5%B0%8F%E5%B7%A5%E5%85%B7/" data-id="ckr28w9tl003z4clmdbm67b8p" data-title="小工具" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/28/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E5%B0%8F%E5%B7%A5%E5%85%B7/" data-id="ckr296gve003y4klmhmy72gj6" data-title="小工具" class="article-share-link">Share</a>
       
       
       
@@ -909,7 +816,106 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/04/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E6%89%A9%E5%B1%95%E5%BB%BA%E5%9B%BE%20(%E4%BA%8C)/" data-id="ckr28wa0t00mp4clma7os3h5i" data-title="扩展建图 (二)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/04/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E6%89%A9%E5%B1%95%E5%BB%BA%E5%9B%BE%20(%E4%BA%8C)/" data-id="ckr296h3g00mp4klm8nvzdj24" data-title="扩展建图 (二)" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/我自定义的常用函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/26/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%88%91%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-04-26T08:58:52.000Z" itemprop="datePublished">2021-04-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/26/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%88%91%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/">我自定义的常用函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="杀死指定的ROS节点"><a href="#杀死指定的ROS节点" class="headerlink" title="杀死指定的ROS节点"></a>杀死指定的ROS节点</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">killNode</span><span class="params">(std::string nodeName)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">pid_t</span> status;</span><br><span class="line">  string cmd = <span class="string">&quot;rosnode kill &quot;</span>+nodeName;</span><br><span class="line">  status = <span class="built_in">system</span>(cmd.<span class="built_in">data</span>());</span><br><span class="line">  <span class="keyword">if</span> (<span class="number">-1</span> == status)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;  <span class="comment">// system func error</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">WIFEXITED</span>(status))    <span class="comment">//返回一个非零值, 正常退出</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;child process exit done: %d&quot;</span>, <span class="built_in">WEXITSTATUS</span>(status) );</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">WEXITSTATUS</span>(status);   <span class="comment">// rosnode kill done, exit status value</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">ROS_WARN</span>(<span class="string">&quot;child process exit abnormally&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">-3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="获得Linux命令的结果"><a href="#获得Linux命令的结果" class="headerlink" title="获得Linux命令的结果"></a>获得Linux命令的结果</h2><p>比如输入<code>ls</code>，返回当前目录的文件名</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">string <span class="title">getCmdResult</span><span class="params">(<span class="keyword">const</span> string &amp;strCmd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">char</span> buf[<span class="number">10240</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">	FILE *pf = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">if</span>( (pf = <span class="built_in">popen</span>(strCmd.<span class="built_in">c_str</span>(), <span class="string">&quot;r&quot;</span>)) == <span class="literal">NULL</span> )</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	string strResult;</span><br><span class="line">	<span class="keyword">while</span>(<span class="built_in">fgets</span>(buf, <span class="keyword">sizeof</span> buf, pf))</span><br><span class="line">	&#123;</span><br><span class="line">		strResult += buf;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">pclose</span>(pf);</span><br><span class="line"> </span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> iSize =  strResult.<span class="built_in">size</span>();</span><br><span class="line">	<span class="keyword">if</span>(iSize &gt; <span class="number">0</span> &amp;&amp; strResult[iSize - <span class="number">1</span>] == <span class="string">&#x27;\n&#x27;</span>)  <span class="comment">// linux</span></span><br><span class="line">	&#123;</span><br><span class="line">		strResult = strResult.<span class="built_in">substr</span>(<span class="number">0</span>, iSize - <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> strResult;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ros-Time-转为年月日的string"><a href="#ros-Time-转为年月日的string" class="headerlink" title="ros::Time 转为年月日的string"></a>ros::Time 转为年月日的string</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::string <span class="title">stampToString</span><span class="params">(<span class="keyword">const</span> ros::Time&amp; stamp, <span class="keyword">const</span> std::string format=<span class="string">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">int</span> output_size = <span class="number">100</span>;</span><br><span class="line">	<span class="keyword">char</span> output[output_size];</span><br><span class="line">	std::<span class="keyword">time_t</span> raw_time = <span class="keyword">static_cast</span>&lt;<span class="keyword">time_t</span>&gt;(stamp.sec);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">tm</span>* <span class="title">timeinfo</span> =</span> <span class="built_in">localtime</span>(&amp;raw_time);</span><br><span class="line">	std::<span class="built_in">strftime</span>(output, output_size, format.<span class="built_in">c_str</span>(), timeinfo);</span><br><span class="line">	std::stringstream ss; </span><br><span class="line">	ss &lt;&lt; std::<span class="built_in">setw</span>(<span class="number">9</span>) &lt;&lt; std::<span class="built_in">setfill</span>(<span class="string">&#x27;0&#x27;</span>) &lt;&lt; stamp.nsec;  </span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">size_t</span> fractional_second_digits = <span class="number">4</span>;</span><br><span class="line">	<span class="keyword">return</span> std::<span class="built_in">string</span>(output) + <span class="string">&quot;.&quot;</span> + ss.<span class="built_in">str</span>().<span class="built_in">substr</span>(<span class="number">0</span>, fractional_second_digits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/26/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%88%91%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0/" data-id="ckr296gz100ch4klm6vrm4o5j" data-title="我自定义的常用函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/反光板/反光板定位 (四) 定位流程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/25/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E5%9B%9B)%20%E5%AE%9A%E4%BD%8D%E6%B5%81%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2021-04-25T09:39:32.000Z" itemprop="datePublished">2021-04-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/25/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E5%9B%9B)%20%E5%AE%9A%E4%BD%8D%E6%B5%81%E7%A8%8B/">反光板定位 (四) 定位流程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>定位模式下，先在构造函数里加载特征地图，若地图里不足3个坐标点则退出，然后计算和保存三角形地图。</p>
+<p>进入回调函数后，先判断是否一直接收到调度发来的话题<code>reflector_start</code>的true消息，若有，再向下执行。只要调度一停止发布，定位也会停止。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(ros::this_node::<span class="built_in">getName</span>()==<span class="string">&quot;/reflector_locate&quot;</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 接收到话题 reflector_start 后才启动定位和建图</span></span><br><span class="line">    boost::shared_ptr&lt;std_msgs::Bool <span class="keyword">const</span>&gt; isStart;</span><br><span class="line">    isStart = ros::topic::waitForMessage&lt;std_msgs::Bool&gt;(<span class="string">&quot;reflector_start&quot;</span>,ros::<span class="built_in">Duration</span>(<span class="number">0.3</span>) );</span><br><span class="line">    <span class="keyword">if</span>(isStart != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(isStart-&gt;data == <span class="literal">false</span>)	<span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>经过对点云高强度数据处理后，发布反光板的局部位姿，如果检测不到3个以上则return. 然后进行三角形匹配和三边定位，最后发布机器人的位姿话题<code>reflector_robot_pose</code></p>
+<br>
+
+<p><code>reflector_robot_pose</code>的发布频率只有1Hz左右，追根溯源，它其实是在话题<code>scan_rectified</code>的回调函数里发布的。 callback里发布新话题时，尽量少使用循环，否则话题的频率会比较低</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/04/25/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E5%9B%9B)%20%E5%AE%9A%E4%BD%8D%E6%B5%81%E7%A8%8B/" data-id="ckr296h1c00h44klm1dym89vv" data-title="反光板定位 (四) 定位流程" class="article-share-link">Share</a>
       
       
       
@@ -925,7 +931,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/4/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -978,14 +984,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -995,6 +993,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

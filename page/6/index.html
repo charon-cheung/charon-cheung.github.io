@@ -71,129 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/两台车同向时的边缘碰撞问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/02/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%B8%A4%E5%8F%B0%E8%BD%A6%E5%90%8C%E5%90%91%E6%97%B6%E7%9A%84%E8%BE%B9%E7%BC%98%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2021-02-25T13:30:41.000Z" itemprop="datePublished">2021-02-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/02/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%B8%A4%E5%8F%B0%E8%BD%A6%E5%90%8C%E5%90%91%E6%97%B6%E7%9A%84%E8%BE%B9%E7%BC%98%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98/">两台车同向时的边缘碰撞问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=t4XxVax6zK4&feature=youtu.be">两车同向行驶时，边缘相撞</a></p>
-<p>全局路径是<code>/move_base/GlobalPlanner/plan</code>，实际导航时，长度最低为2，没有出现1的时候。它的改变是因为路径碰到了代价地图中的障碍，</p>
-<p>自定义的障碍不进入代价地图，只限于TEB算法</p>
-<p>三角形障碍是话题<code>/move_base/TebLocalPlannerROS/obstacles</code>，类型<code>costmap_converter/ObstacleArrayMsg</code>，发布者<code>tm_node</code>，订阅者<code>move_base</code></p>
-<p>如果代价地图里插入了<code>people_cloud</code>，一般两个机器人无法在窄通道对开</p>
-<p>三角形动态障碍只影响TEB算法，不管怎么修改动态障碍的形状，边缘相撞都会发生，可见其不是主要原因。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%B8%A4%E5%8F%B0%E8%BD%A6%E5%90%8C%E5%90%91%E6%97%B6%E7%9A%84%E8%BE%B9%E7%BC%98%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98/" data-id="ckr28w9um006e4clmcksu24kb" data-title="两台车同向时的边缘碰撞问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/多机器人的互相避障 people_msgs" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/02/22/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E4%BA%92%E7%9B%B8%E9%81%BF%E9%9A%9C%20people_msgs/" class="article-date">
-  <time class="dt-published" datetime="2021-02-22T13:38:12.000Z" itemprop="datePublished">2021-02-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/02/22/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E4%BA%92%E7%9B%B8%E9%81%BF%E9%9A%9C%20people_msgs/">多机器人的互相避障 people_msgs</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="people-话题"><a href="#people-话题" class="headerlink" title="people 话题"></a>people 话题</h2><p>比如，在车202上查看<code>people</code>话题，可获知其他车的位姿</p>
-<figure class="highlight zsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">header: </span><br><span class="line">  seq: 13777</span><br><span class="line">  stamp: </span><br><span class="line">    secs: 1613982471</span><br><span class="line">    nsecs: 492479130</span><br><span class="line">  frame_id: <span class="string">&quot;map&quot;</span></span><br><span class="line">people: </span><br><span class="line">  - </span><br><span class="line">    name: <span class="string">&quot;204&quot;</span></span><br><span class="line">    position: </span><br><span class="line">      x: 0.41</span><br><span class="line">      y: -12.78</span><br><span class="line">      z: 0.0</span><br><span class="line">    velocity: </span><br><span class="line">      x: 0.0</span><br><span class="line">      y: -0.0</span><br><span class="line">      z: 0.0</span><br><span class="line">    reliability: 1.0</span><br><span class="line">    tagnames: []</span><br><span class="line">    tags: []</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
-<p>同样地，在204上查看<code>people</code>，获知包括202在内的其他车位姿。</p>
-<p><code>people</code>话题类型<code>people_msgs/People</code>，发布者是<code>/tm_node</code>，订阅者是<code>people_cloud_generate</code>和<code>move_base</code>.</p>
-<h2 id="people-msgs"><a href="#people-msgs" class="headerlink" title="people_msgs"></a>people_msgs</h2><ul>
-<li><code>people_msgs/Person</code> - A position estimate with an added velocity vector, as well as the ability to add tags to the person. Has no header, should only be used in conjunction with PersonStamped or People.</li>
-</ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">string               name</span><br><span class="line">geometry_msgs/Point  position</span><br><span class="line">geometry_msgs/Point  velocity</span><br><span class="line">float64              reliability</span><br><span class="line">string[]             tagnames</span><br><span class="line">string[]             tags</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p><code>people_msgs/People</code> - A header + an array of persons</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std_msgs/Header header</span><br><span class="line">people_msgs/Person[] people</span><br></pre></td></tr></table></figure></li>
-<li><p><code>people_msgs/PersonStamped</code> - A header + a person</p>
-</li>
-</ul>
-<p>有2种social navigation层，但是它们共享部分功能（如：都需要订阅人在哪里的消息，都是用高斯分布调节人周围的代价地图）。 这种方法的类都继承了<code>SocialLayer</code>类。</p>
-<p><code>ProxemicLayer</code>层利用上面指定参数在探测到的人周围添加高斯代价。 如果人是静止的，高斯代价分布是圆形；如果认识运动的，代价会在人移动方向上增长，至于代价在人周围增长多远与比例参数factor有关。</p>
-<h2 id="people-cloud-话题"><a href="#people-cloud-话题" class="headerlink" title="people_cloud 话题"></a>people_cloud 话题</h2><p><code>people_cloud_generate</code>订阅了<code>people</code>，发布<code>people_cloud</code>话题，类型<code>sensor_msgs/PointCloud2</code></p>
-<p><code>people_cloud</code>的订阅者是<code>move_base</code>和<code>rviz</code></p>
-<p><code>people_cloud_generate</code>节点对应的文件就是<code>people_cloud_generate.cpp</code>，关键部分如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">PeopleCloudGenerate::<span class="built_in">PeopleCloudGenerate</span>()</span><br><span class="line">&#123;</span><br><span class="line">	ros::NodeHandle nh;</span><br><span class="line">	<span class="function">ros::NodeHandle <span class="title">p_nh</span><span class="params">(<span class="string">&quot;~&quot;</span>)</span></span>;</span><br><span class="line">	<span class="keyword">if</span>(p_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;robot_radius&quot;</span>))</span><br><span class="line">	&#123;</span><br><span class="line">		p_nh.<span class="built_in">param</span>(<span class="string">&quot;robot_radius&quot;</span>, robot_radius_, <span class="number">0.25</span>);</span><br><span class="line">        is_radius_ = <span class="literal">true</span>;</span><br><span class="line">		radius_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/radius&quot;</span>, <span class="number">10</span>,  &amp;PeopleCloudGenerate::radiusCallback, <span class="keyword">this</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    map_cloud_xyz_ = boost::shared_ptr&lt;pcl::PointCloud&lt;pcl::PointXYZ&gt; &gt;(<span class="keyword">new</span> pcl::PointCloud&lt;pcl::PointXYZ&gt;()  );</span><br><span class="line">    map_cloud_ = boost::shared_ptr&lt;sensor_msgs::PointCloud2&gt;(<span class="keyword">new</span> sensor_msgs::<span class="built_in">PointCloud2</span>()  );</span><br><span class="line"></span><br><span class="line">	people_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/people&quot;</span>, <span class="number">100</span>, &amp;PeopleCloudGenerate::peopleCallback, <span class="keyword">this</span>);</span><br><span class="line">	people_cloud_pub_ = nh.advertise&lt;sensor_msgs::PointCloud2&gt;(<span class="string">&quot;/people_cloud&quot;</span>, <span class="number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PeopleCloudGenerate::~<span class="built_in">PeopleCloudGenerate</span>()</span><br><span class="line">&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PeopleCloudGenerate::peopleCallback</span><span class="params">(<span class="keyword">const</span> people_msgs::People&amp; people_msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    boost::<span class="function">recursive_mutex::scoped_lock <span class="title">lock</span><span class="params">(lock_)</span></span>;</span><br><span class="line"></span><br><span class="line">    map_cloud_xyz_-&gt;points.<span class="built_in">clear</span>();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">unsigned</span> <span class="keyword">int</span> i=<span class="number">0</span>; i&lt;people_msg.people.<span class="built_in">size</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        people_msgs::Person person = people_msg.people[i];</span><br><span class="line">        geometry_msgs::PointStamped pt, opt;</span><br><span class="line">        </span><br><span class="line">        std_msgs::Header header;</span><br><span class="line">		header.stamp = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">		header.frame_id = <span class="string">&quot;map&quot;</span>;</span><br><span class="line">		map_cloud_xyz_-&gt;header = pcl_conversions::<span class="built_in">toPCL</span>(header);</span><br><span class="line">		map_cloud_xyz_-&gt;height = <span class="number">1</span>;</span><br><span class="line">		map_cloud_xyz_-&gt;is_dense = <span class="literal">false</span>; <span class="comment">// if has invalid data(NAN or inf)</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>&#123;</span><br><span class="line">          pt.point.x = person.position.x;</span><br><span class="line">          pt.point.y = person.position.y;</span><br><span class="line">          pt.point.z = <span class="number">0.0</span>;</span><br><span class="line">          pt.header.frame_id = people_msg.header.frame_id;</span><br><span class="line">   </span><br><span class="line">          tf_.<span class="built_in">transformPoint</span>(<span class="string">&quot;map&quot;</span>, pt, opt);</span><br><span class="line">          <span class="comment">// 以坐标为圆心，发布一个圆形点云，半径为机器人底盘半径</span></span><br><span class="line">		  <span class="keyword">if</span>(is_radius_)</span><br><span class="line">		  &#123;</span><br><span class="line">		    <span class="keyword">int</span> N = <span class="number">16</span>;</span><br><span class="line">			pcl::PointXYZ point_xyz;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; N; ++i)</span><br><span class="line">			&#123;</span><br><span class="line">				<span class="keyword">double</span> angle = i * <span class="number">2</span> * M_PI / N;</span><br><span class="line">				point_xyz.x = opt.point.x + <span class="built_in">cos</span>(angle) * robot_radius_;</span><br><span class="line">				point_xyz.y = opt.point.y + <span class="built_in">sin</span>(angle) * robot_radius_;</span><br><span class="line">				point_xyz.z = <span class="number">0.3</span>;</span><br><span class="line"></span><br><span class="line">				map_cloud_xyz_-&gt;points.<span class="built_in">push_back</span>(point_xyz);</span><br><span class="line">			&#125; </span><br><span class="line">		  &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        	<span class="comment">// 省略try catch 部分</span></span><br><span class="line">    &#125;</span><br><span class="line">    map_cloud_xyz_-&gt;width = map_cloud_xyz_-&gt;points.<span class="built_in">size</span>();</span><br><span class="line">    pcl::<span class="built_in">toROSMsg</span>(*map_cloud_xyz_,*map_cloud_);</span><br><span class="line">    people_cloud_pub_.<span class="built_in">publish</span>(*map_cloud_);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PeopleCloudGenerate::radiusCallback</span><span class="params">(<span class="keyword">const</span> std_msgs::Float32&amp; radius)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	robot_radius_ = radius.data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;people_cloud_generate&quot;</span>);</span><br><span class="line">  people_cloud_generate::PeopleCloudGenerate cloud_generator;</span><br><span class="line">  </span><br><span class="line">  ros::<span class="built_in">spin</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代码就是从<code>people</code>话题获得其他机器人坐标后，把它们作为点云障碍发布出来</p>
-<p>在通用代价地图yaml中的配置:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">pointcloud2_sensor:</span><br><span class="line">   topic:          /people_cloud</span><br><span class="line">   data_type:      PointCloud2</span><br><span class="line">   sensor_frame:   <span class="string">&quot;/base_link&quot;</span></span><br><span class="line">   obstacle_range: 5.0</span><br><span class="line">   raytrace_range: 5.0</span><br><span class="line">   observation_persistence: 5.0</span><br><span class="line">   marking:        <span class="literal">true</span></span><br><span class="line">   clearing:       <span class="literal">true</span> </span><br><span class="line">   min_obstacle_height: 0.0 </span><br><span class="line">   max_obstacle_height: 2.0</span><br></pre></td></tr></table></figure>
-<p>在全局代价地图yaml中的plugins增加一行 <code>- &#123;name: proxemic_layer,   type: &quot;social_navigation_layers::ProxemicLayer&quot;&#125;</code></p>
-<table><tr><td bgcolor=yellow> 也就是说 people_cloud 和雷达数据、深度相机数据一样插入代价地图，相当于一个单独的传感器 </td></tr></table>
-
-<h2 id="动态障碍"><a href="#动态障碍" class="headerlink" title="动态障碍"></a>动态障碍</h2><p>对应得话题是<code>/move_base/TebLocalPlannerROS/teb_markers</code>话题，一个消息是这样的:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">header:</span><br><span class="line">  seq: 401858</span><br><span class="line">  stamp:</span><br><span class="line">    secs: 1614132298</span><br><span class="line">    nsecs: 520858921</span><br><span class="line">  frame_id: <span class="string">&quot;map&quot;</span></span><br><span class="line">ns: <span class="string">&quot;TebContainer&quot;</span></span><br><span class="line">id: 0</span><br><span class="line"><span class="built_in">type</span>: 5</span><br><span class="line">action: 0</span><br><span class="line">pose:</span><br><span class="line">  position:</span><br><span class="line">    x: 0.0</span><br><span class="line">    y: 0.0</span><br><span class="line">    z: 0.0</span><br><span class="line">  orientation:</span><br><span class="line">    x: 0.0</span><br><span class="line">    y: 0.0</span><br><span class="line">    z: 0.0</span><br><span class="line">    w: 0.0</span><br><span class="line">scale:</span><br><span class="line">  x: 0.01</span><br><span class="line">  y: 0.0</span><br><span class="line">  z: 0.0</span><br><span class="line">color:</span><br><span class="line">  r: 0.5</span><br><span class="line">  g: 1.0</span><br><span class="line">  b: 0.0</span><br><span class="line">  a: 1.0</span><br><span class="line">lifetime:</span><br><span class="line">  secs: 0</span><br><span class="line">  nsecs:         0</span><br><span class="line">frame_locked: False</span><br><span class="line">points:</span><br><span class="line">  -</span><br><span class="line">    x: -0.285662257758</span><br><span class="line">    y: -6.63353603286</span><br><span class="line">    z: 0.0</span><br><span class="line"> <span class="comment"># 省略  很多点的坐标</span></span><br><span class="line"></span><br><span class="line">colors: []</span><br><span class="line">text: <span class="string">&#x27;&#x27;</span></span><br><span class="line">mesh_resource: <span class="string">&#x27;&#x27;</span></span><br><span class="line">mesh_use_embedded_materials: False</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://i.loli.net/2021/02/24/uhgTPZQBvmqp2WF.png" alt="rviz中的teb_marker"></p>
-<p>查TEB代码，最终的动态障碍发布是在<code>updateObstacleContainerWithCustomObstacles</code>，其中的<code>custom_obstacle_msg_.obstacles</code>是由调度<code>tm_node</code>发布</p>
-<p>最终的导航情况是这样的<br><img src="https://i.loli.net/2021/02/24/oFIPDNesXGA7xZW.png" alt="people和动态障碍"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/22/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E4%BA%92%E7%9B%B8%E9%81%BF%E9%9A%9C%20people_msgs/" data-id="ckr28w9ur006m4clm1trs01iv" data-title="多机器人的互相避障 people_msgs" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/仿真环境的配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/02/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E9%85%8D%E7%BD%AE/" class="article-date">
@@ -251,7 +128,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/02/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E9%85%8D%E7%BD%AE/" data-id="ckr28w9un006h4clm1ygt5iqw" data-title="仿真环境的配置" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/02/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83%E7%9A%84%E9%85%8D%E7%BD%AE/" data-id="ckr296gwh006g4klm55kqb492" data-title="仿真环境的配置" class="article-share-link">Share</a>
       
       
       
@@ -301,7 +178,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/landmark%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%20AprilTag%E5%81%9Alandmark/" data-id="ckr28wa0s00ml4clmf30x1awv" data-title="landmark的使用 (二) AprilTag做landmark放入Cartographer" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/landmark%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%20AprilTag%E5%81%9Alandmark/" data-id="ckr296h3e00mk4klm54x71tiy" data-title="landmark的使用 (二) AprilTag做landmark放入Cartographer" class="article-share-link">Share</a>
       
       
       
@@ -350,7 +227,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/26/%E5%85%B6%E4%BB%96/%E5%BF%83%E5%BE%97%E6%84%9F%E6%82%9F/" data-id="ckr28w9t600324clm3ytrglci" data-title="心得感悟" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/26/%E5%85%B6%E4%BB%96/%E5%BF%83%E5%BE%97%E6%84%9F%E6%82%9F/" data-id="ckr296guz00314klm4h03hkxh" data-title="心得感悟" class="article-share-link">Share</a>
       
       
       
@@ -394,7 +271,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92(%E4%B8%89)%20%E4%BC%98%E5%8C%96%E9%83%A8%E5%88%86%20/" data-id="ckr28w9zz00js4clm9kzyhmu7" data-title="全局路径规划(三) 优化部分" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92(%E4%B8%89)%20%E4%BC%98%E5%8C%96%E9%83%A8%E5%88%86%20/" data-id="ckr296h2h00jr4klm80or2iu6" data-title="全局路径规划(三) 优化部分" class="article-share-link">Share</a>
       
       
       
@@ -451,7 +328,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/19/cmake%20qmake/%E6%89%BE%E4%B8%8D%E5%88%B0%E5%8A%A8%E6%80%81%E5%BA%93.so--cannot%20open%20shared%20object%20file/" data-id="ckr28w9t1002m4clm3728417t" data-title="找不到动态库.so--cannot open shared object file" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/19/cmake%20qmake/%E6%89%BE%E4%B8%8D%E5%88%B0%E5%8A%A8%E6%80%81%E5%BA%93.so--cannot%20open%20shared%20object%20file/" data-id="ckr296guv002l4klmfko9gsyk" data-title="找不到动态库.so--cannot open shared object file" class="article-share-link">Share</a>
       
       
       
@@ -502,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/06/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%85%AC%E5%8F%B8%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%BC%80%E6%9C%BA%E7%A8%8B%E5%BA%8F%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%83%85%E5%86%B5/" data-id="ckr28w9xo00ds4clmcbp0dt3p" data-title="公司机器人开机程序启动失败的情况" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/06/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%85%AC%E5%8F%B8%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%BC%80%E6%9C%BA%E7%A8%8B%E5%BA%8F%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%83%85%E5%86%B5/" data-id="ckr296gzr00dr4klm3zse5xbl" data-title="公司机器人开机程序启动失败的情况" class="article-share-link">Share</a>
       
       
       
@@ -574,7 +451,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2021/01/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E7%BA%AF%E5%AE%9A%E4%BD%8D%E6%A8%A1%E5%BC%8F%20(%E4%BA%8C)/" data-id="ckr28wa0u00ms4clm3j8s89zv" data-title="纯定位模式(二) 设定初始位姿" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2021/01/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E7%BA%AF%E5%AE%9A%E4%BD%8D%E6%A8%A1%E5%BC%8F%20(%E4%BA%8C)/" data-id="ckr296h3k00ms4klm3jln4fpj" data-title="纯定位模式(二) 设定初始位姿" class="article-share-link">Share</a>
       
       
       
@@ -647,10 +524,119 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E5%BB%BA%E5%9B%BE%E5%92%8C%E5%9B%9E%E7%8E%AF/" data-id="ckr28wa0s00mn4clm5ok53unc" data-title="建图和回环检测" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E5%BB%BA%E5%9B%BE%E5%92%8C%E5%9B%9E%E7%8E%AF/" data-id="ckr296h3e00mm4klm0g7b38cb" data-title="建图和回环检测" class="article-share-link">Share</a>
       
       
       
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/原理和配置/cartographer 的map --- odom转换太慢" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/" class="article-date">
+  <time class="dt-published" datetime="2020-12-28T12:41:53.000Z" itemprop="datePublished">2020-12-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/">cartographer发布的 map---&gt;odom 转换频率太低</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>运行cartographer时，可以发现rviz的报警</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[SubmapsDisplay::update] line_220  Could not compute submap fading: <span class="string">&quot;map&quot;</span> passed to lookupTransform argument target_frame does not exist.</span><br></pre></td></tr></table></figure>
+
+<p>运行程序<code>carto_pose</code>运行时持续报警:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Lookup would require extrapolation into the past.  Requested time 1609143852.338626800 but the earliest data is at time 1609143860.343082666, when looking up transform from frame [base_footprint] to frame [map]</span><br></pre></td></tr></table></figure>
+<p>但使用<code>rosrun tf tf_echo map odom</code>看不出问题</p>
+<p>查看话题<code>carto_pose</code>，发现位姿更新很慢，甚至时间戳不动，显然是获取坐标系关系不及时。使用<code>rqt_tf_tree</code>发现 <code>map --&gt; odom</code>的频率很低。重新启动cartographer建新的地图，发现发布变换的频率会逐步下降，进而影响tf树的其他变换，因为map坐标系是最顶层<br><img src="https://i.loli.net/2020/12/28/JVdU54FKmBqNDyi.png" alt="频率很低.png"></p>
+<p>有时频率又突然到10000，话题<code>carto_pose</code>会接受很多消息。<br><img src="https://i.loli.net/2020/12/28/i14EkrQPvaKZeoU.png"></p>
+<br>
+
+<p>按定义tf频率的是参数<code>pose_publish_period_sec = 5e-3</code>，但是改了改没有见效。</p>
+<p>有时重启后，这个现象没有了，频率正常</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/28/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/cartographer%20%E7%9A%84map%20---%20odom%E8%BD%AC%E6%8D%A2%E5%A4%AA%E6%85%A2/" data-id="ckr296h3d00mg4klmdxzv37l7" data-title="cartographer发布的 map---&gt;odom 转换频率太低" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/catkin_make_isolated和ninja" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/" class="article-date">
+  <time class="dt-published" datetime="2020-12-28T12:29:04.000Z" itemprop="datePublished">2020-12-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/">catkin_make_isolated和ninja</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>这个命令用于非ROS的包，所以Cartographer用的是它。 缺点是处理pacakge 较慢，只适用于ROS1. 可以和ninja结合</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">catkin_make_isolated  --use-ninja --pkg cartographer_ros</span><br></pre></td></tr></table></figure>
+<p>只编译一个包，会真的跳过其他包，比<code>catkin_make --pkg</code>好用多了。 编译生成的文件在<code>/workspace/devel_isolated/cartographer_ros/lib/cartographer_ros</code></p>
+<p>如果加上<code>--install</code>，编译得到的可执行文件在<code>/workspace/devel_isolated/cartographer_ros/install/lib/cartographer_ros</code></p>
+<br>
+
+<p>它会在工作空间生成文件夹<code>devel_isolated</code>, <code>install_isolated</code>, <code>build_isolated</code>。<br><font size =4 color = blue> 平时我们使用rosrun 运行的是 devel/lib 里的可执行文件，因为一般source的是 catkin_ws/devel/setup.zsh.  修改文件后，使用 catkin_make_isolated 编译，运行发现没有生效，需要先修改为 source catkin_ws/devel_isolated/setup.zsh, 以后就是用catkin_make_isolated  </font></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> Installing: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch</span><br><span class="line">-- Installing: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/software_institute.launch</span><br><span class="line">-- Up-to-date: /home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/\</span><br><span class="line">CMake Error at cmake_install.cmake:<span class="number">142</span> (file):</span><br><span class="line">  file INSTALL cannot set permissions on</span><br><span class="line">  <span class="string">&quot;/home/xiaoqiang/Documents/ros/install_isolated/share/cartographer_ros/launch/\&quot;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">FAILED: cd /home/xiaoqiang/Documents/ros/build_isolated/cartographer_ros &amp;&amp; /usr/bin/cmake -P cmake_install.cmake</span></span><br><span class="line"><span class="string">ninja: build stopped: subcommand failed.</span></span><br><span class="line"><span class="string">&lt;== Failed to process package &#x27;cartographer_ros&#x27;:</span></span><br><span class="line"><span class="string">  Command &#x27;[&#x27;/home/xiaoqiang/Documents/ros/install_isolated/env.sh&#x27;, &#x27;ninja&#x27;, &#x27;install&#x27;]&#x27; returned non-zero exit status 1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Reproduce this error by running:</span></span><br><span class="line"><span class="string">==&gt; cd /home/xiaoqiang/Documents/ros/build_isolated/cartographer_ros &amp;&amp; /home/xiaoqiang/Documents/ros/install_isolated/env.sh ninja install</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Command failed, exiting.</span></span><br></pre></td></tr></table></figure>
+
+<p>不知为何出现了文件夹 <code>install_isolated/share/cartographer_ros/launch/\</code>，删除后重新编译还是如此</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://www.ros.org/reps/rep-0134.html">catkin_make_isolated 官方说明</a><br><a target="_blank" rel="noopener" href="https://answers.ros.org/question/320613/catkin_make-vs-catkin_make_isolated-which-is-preferred/">catkin_make vs catkin_make_isolated</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/28/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make_isolated%E5%92%8Cninja/" data-id="ckr296gyh00bb4klm983k6lhl" data-title="catkin_make_isolated和ninja" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
+
     </footer>
   </div>
   
@@ -663,7 +649,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/5/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/7/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -716,14 +702,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -733,6 +711,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

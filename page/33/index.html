@@ -71,136 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-第三方库/使用jsoncpp读写JSON" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/" class="article-date">
-  <time class="dt-published" datetime="2019-06-26T12:29:06.000Z" itemprop="datePublished">2019-06-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/">使用jsoncpp读写JSON</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>从Github上下载后，使用老三步安装：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir dir &amp;&amp; cd dir</span><br><span class="line">cmake ..</span><br><span class="line">make </span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
-<p>安装的路径如下：<br><img src="https://i.loli.net/2019/06/26/5d13766c7f0ac42652.png"></p>
-<p>在CMakeList里进行配置，别忘了最后链接库文件：<code>-ljsoncpp</code></p>
-<h3 id="写JSON"><a href="#写JSON" class="headerlink" title="写JSON"></a>写JSON</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Json::Value ret_json;</span><br><span class="line"></span><br><span class="line">ret_json[<span class="string">&quot;msg&quot;</span>] = <span class="string">&quot;Hello JSON&quot;</span>;</span><br><span class="line">ret_json[<span class="string">&quot;code&quot;</span>] = <span class="number">123</span>;</span><br><span class="line">ret_json[<span class="string">&quot;ret&quot;</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; ret_json.<span class="built_in">toStyledString</span>()&lt;&lt; endl;</span><br></pre></td></tr></table></figure>
-
-<p>运行结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;code&quot; : 123,</span><br><span class="line">   &quot;msg&quot; : &quot;Hello JSON&quot;,</span><br><span class="line">   &quot;ret&quot; : true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>写JSON数组如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Json::Value ret_json,sub;</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">123</span>));</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">456</span>));</span><br><span class="line">sub.<span class="built_in">append</span>(Json::<span class="built_in">Value</span>(<span class="number">789</span>));</span><br><span class="line"></span><br><span class="line">ret_json[<span class="string">&quot;msg&quot;</span>] = <span class="string">&quot;Hello JSON&quot;</span>;</span><br><span class="line">ret_json[<span class="string">&quot;code&quot;</span>] = sub;</span><br><span class="line">ret_json[<span class="string">&quot;ret&quot;</span>] = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; ret_json.<span class="built_in">toStyledString</span>()&lt;&lt; endl;</span><br></pre></td></tr></table></figure>
-
-<p>结果为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   &quot;code&quot; : [ 123, 456, 789 ],</span><br><span class="line">   &quot;msg&quot; : &quot;Hello JSON&quot;,</span><br><span class="line">   &quot;ret&quot; : true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E4%BD%BF%E7%94%A8jsoncpp%E8%AF%BB%E5%86%99JSON/" data-id="ckr28w9u4004z4clm1krrfk54" data-title="使用jsoncpp读写JSON" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS程序和源码分析/用SIGINT信号的回调函数关闭节点" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/" class="article-date">
-  <time class="dt-published" datetime="2019-06-26T12:29:06.000Z" itemprop="datePublished">2019-06-26</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/">用SIGINT信号的回调函数关闭节点（自定义+ROS源码）</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>用自定义的方法关闭节点时，代码一般是这样的:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mySigintHandler</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Exit from my_node !&quot;</span>);</span><br><span class="line">  ros::<span class="built_in">shutdown</span>();</span><br><span class="line">  ros::<span class="built_in">waitForShutdown</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;my_node&quot;</span>, ros::init_options::NoSigintHandler);</span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line">  <span class="built_in">signal</span>(SIGINT, mySigintHandler);</span><br><span class="line">  ros::<span class="built_in">spin</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<br>
-
-<p>为什么这样做，原因看<code>ros::start()</code>的源码就明白了，其中有一句:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(g_init_options &amp; init_options::NoSigintHandler))</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">signal</span>(SIGINT, basicSigintHandler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">basicSigintHandler</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  (<span class="keyword">void</span>)sig;</span><br><span class="line">  ros::<span class="built_in">requestShutdown</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这就是配置ROS启动flag的问题，它是个枚举值，定义如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">//  Flags for ROS initialization，在命名空间ros::init_options</span></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">InitOption</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">   <span class="comment">//不安装SIGINT handler，可以安装自定义的SIGINT handler</span></span><br><span class="line">  NoSigintHandler = <span class="number">1</span> &lt;&lt; <span class="number">0</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 匿名节点模式，在节点名最后添加随机数，使得可以同时运行多个同名节点</span></span><br><span class="line">  AnonymousName = <span class="number">1</span> &lt;&lt; <span class="number">1</span>,</span><br><span class="line"></span><br><span class="line">  <span class="comment">// brief Don&#x27;t broadcast rosconsole output to the /rosout topic</span></span><br><span class="line">  NoRosout = <span class="number">1</span> &lt;&lt; <span class="number">2</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">typedef</span> init_options::InitOption  InitOption;</span><br></pre></td></tr></table></figure>
-<p>再看上面的源码，如果ROS flag不是NoSigintHandler，那么<strong>basicSigintHandler</strong>就是默认的SIGINT回调函数，它会运行<code>ros::requestShutdown();</code>，所以我们在运行节点时，按Ctrl+C可以退出节点。</p>
-<p>下面我们详细看看这个过程，先看回调函数中的函数<code>requestShutdown</code>，</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">requestShutdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  g_shutdown_requested = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>只有一个赋值，而处理变量g_shutdown_requested的只有一个函数checkForShutdown</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">checkForShutdown</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (g_shutdown_requested)		 <span class="comment">// 除非ros::requestShutdown()</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// Since this gets run from within a mutex inside PollManager, we need to prevent ourselves from deadlocking with  another thread that&#x27;s already in the middle of shutdown()</span></span><br><span class="line">    boost::<span class="function">recursive_mutex::scoped_try_lock <span class="title">lock</span><span class="params">(g_shutting_down_mutex, boost::defer_lock)</span></span>;</span><br><span class="line">    <span class="keyword">while</span> (!lock.<span class="built_in">try_lock</span>() &amp;&amp; !g_shutting_down)</span><br><span class="line">    &#123;</span><br><span class="line">      ros::<span class="built_in">WallDuration</span>(<span class="number">0.001</span>).<span class="built_in">sleep</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!g_shutting_down)		<span class="comment">// ros::start()中赋值为false，之后未变</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">shutdown</span>();	<span class="comment">// 关闭节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    g_shutdown_requested = <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>而跟checkForShutdown有关的只有<code>PollManager::instance()-&gt;addPollThreadListener(checkForShutdown);</code>，它位于<code>ros::start()</code>中：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PollManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">addPollThreadListener</span>(checkForShutdown);</span><br><span class="line">	. . . . . .</span><br><span class="line">PollManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">start</span>();</span><br></pre></td></tr></table></figure>
-
-<p>函数的定义如下：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> boost::signals2::signal&lt;<span class="built_in"><span class="keyword">void</span></span>(<span class="keyword">void</span>)&gt; VoidSignal;</span><br><span class="line">VoidSignal poll_signal_;</span><br><span class="line"><span class="keyword">typedef</span> boost::function&lt;<span class="built_in"><span class="keyword">void</span></span>(<span class="keyword">void</span>)&gt; VoidFunc;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用了观察者模式</span></span><br><span class="line">boost::<span class="function">signals2::connection  <span class="title">PollManager::addPollThreadListener</span><span class="params">(<span class="keyword">const</span> VoidFunc&amp; func)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  boost::<span class="function">recursive_mutex::scoped_lock <span class="title">lock</span><span class="params">(signal_mutex_)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> poll_signal_.<span class="built_in">connect</span>(func);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PollManager::start</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  shutting_down_ = <span class="literal">false</span>;</span><br><span class="line">  thread_ = boost::<span class="built_in">thread</span>(&amp;PollManager::threadFunc, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PollManager::threadFunc</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="built_in">disableAllSignalsInThisThread</span>();</span><br><span class="line">     <span class="keyword">while</span> (!shutting_down_)  <span class="comment">//start()里赋值为false，PollManager::shutdown()里赋值true</span></span><br><span class="line">    &#123;</span><br><span class="line">          boost::<span class="function">recursive_mutex::scoped_lock   <span class="title">lock</span><span class="params">(signal_mutex_)</span></span>;</span><br><span class="line">          <span class="built_in">poll_signal_</span>();               <span class="comment">// 触发信号，执行槽函数 checkForShutdown</span></span><br><span class="line">        <span class="keyword">if</span> (shutting_down_)</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">        poll_set_.<span class="built_in">update</span>(<span class="number">100</span>);          <span class="comment">// PollSet 　poll_set_;函数定义在 poll_set.cpp</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里用到了boost中的信号和槽，和Qt中的原理一样，关键变量<code>poll_signal_</code>用于连接函数，这里是连接了 checkForShutdown。PollManager是一个线程，<code>start()</code>开启线程，不停地运行函数<code>threadFunc()</code>，因为<code>shutting_down_</code>开始为false，所以不停运行while循环，然后执行<code>poll_signal_()</code>，这会触发信号然后执行它连接的函数，也就是checkForShutdown，也就是节点不停检查是否需要关闭。</p>
-<p>这里就是关键的变量<code>g_shutdown_requested</code>了，它只在<code>ros::requestShutdown()</code>赋值为true，所以节点只有在执行了<code>ros::requestShutdown()</code>函数后才会执行，然后执行<code>ros::shutdown()</code>，节点最终的关闭都在这里。当最后一个节点句柄被销毁时，shutdown()被自动调用。</p>
-<p>说的有点乱了，整个过程示意图如下：</p>
-<p><img src="https://i.loli.net/2019/06/29/5d16d38ea530d70844.png"></p>
-<br>
-
-<h3 id="节点退出问题"><a href="#节点退出问题" class="headerlink" title="节点退出问题"></a>节点退出问题</h3><p>以前我的SIGINT回调函数是这样写的：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">shutdown</span>();</span><br><span class="line">ros::<span class="built_in">waitForShutdown</span>();</span><br></pre></td></tr></table></figure>
-
-<p>这是从网上看来的，后来发现偶尔会很长时间才执行成功，甚至不能成功，一直阻塞。现在来看一下源码：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">waitForShutdown</span><span class="params">()</span>		<span class="comment">// Wait for this node to be shutdown</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">ok</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">WallDuration</span>(<span class="number">0.05</span>).<span class="built_in">sleep</span>();		<span class="comment">// 0.05s</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">ok</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> g_ok;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>waitForShutdown</code>表示如果节点ok()，会一直睡眠。只有在<code>ros::shutdown()</code>的最后执行了<code>g_ok = false;</code>，有时一直无法退出，说明节点是一直ok()，因为节点在回调函数运行时无法完成shutdown，没执行到<code>g_ok = false;</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/26/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E7%94%A8SIGINT%E4%BF%A1%E5%8F%B7%E7%9A%84%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%85%B3%E9%97%AD%E8%8A%82%E7%82%B9/" data-id="ckr28w9y700et4clmg0an71dr" data-title="用SIGINT信号的回调函数关闭节点（自定义+ROS源码）" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-第三方库/Log4cpp的配置和使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/Log4cpp%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8/" class="article-date">
@@ -250,7 +120,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/Log4cpp%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8/" data-id="ckr28w9tz004r4clm55zmaqq2" data-title="Log4cpp的配置和使用" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/26/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/Log4cpp%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8C%E4%BD%BF%E7%94%A8/" data-id="ckr296gvr004q4klm7npsc3ov" data-title="Log4cpp的配置和使用" class="article-share-link">Share</a>
       
       
       
@@ -299,7 +169,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/25/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89%E5%85%B6%E4%BB%96%E6%9D%82%E9%A1%B9/" data-id="ckr28w9uy00704clm5y907m5o" data-title="Boost教程（六）其他杂项" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/25/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%85%AD%EF%BC%89%E5%85%B6%E4%BB%96%E6%9D%82%E9%A1%B9/" data-id="ckr296gwr00724klm99sp4v4t" data-title="Boost教程（六）其他杂项" class="article-share-link">Share</a>
       
       
       
@@ -407,7 +277,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/25/%E8%84%9A%E6%9C%AC/shell%E5%B0%8F%E6%8A%80%E5%B7%A7/" data-id="ckr28w9ua005f4clma8753qm0" data-title="Shell小技巧" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/25/%E8%84%9A%E6%9C%AC/shell%E5%B0%8F%E6%8A%80%E5%B7%A7/" data-id="ckr296gw4005e4klma7df4c06" data-title="Shell小技巧" class="article-share-link">Share</a>
       
       
       
@@ -473,7 +343,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/24/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E9%80%9A%E8%AE%AF%E6%A8%A1%E5%9E%8B/" data-id="ckr28w9xy00ef4clmfmxjee41" data-title="ROS通信模型" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/24/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E9%80%9A%E8%AE%AF%E6%A8%A1%E5%9E%8B/" data-id="ckr296h0000ee4klm3sigcnsf" data-title="ROS通信模型" class="article-share-link">Share</a>
       
       
       
@@ -575,7 +445,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/24/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/rosbag%E7%9A%84%E4%BD%BF%E7%94%A8/" data-id="ckr28w9wr00bj4clmem7iek7t" data-title="rosbag的使用" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/24/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/rosbag%E7%9A%84%E4%BD%BF%E7%94%A8/" data-id="ckr296gyj00bi4klmg5c47yzr" data-title="rosbag的使用" class="article-share-link">Share</a>
       
       
       
@@ -660,7 +530,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++%E4%B8%8EQt%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" data-id="ckr28w9v2007b4clmbn4u8wly" data-title="C++与Qt常用的类型转换" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++%E4%B8%8EQt%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" data-id="ckr296gws00764klm7dtx8yfp" data-title="C++与Qt常用的类型转换" class="article-share-link">Share</a>
       
       
       
@@ -715,7 +585,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/roscore%E6%BA%90%E7%A0%81/" data-id="ckr28w9y200eh4clm8rzj07wt" data-title="roscore源码" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/roscore%E6%BA%90%E7%A0%81/" data-id="ckr296h0100eg4klmdsv533wt" data-title="roscore源码" class="article-share-link">Share</a>
       
       
       
@@ -786,7 +656,137 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/06/18/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%89%EF%BC%89/" data-id="ckr28w9y900ex4clma3oe1g18" data-title="解析ros init（三）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/06/18/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%89%EF%BC%89/" data-id="ckr296h0800ev4klmeu858hwm" data-title="解析ros init（三）" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/Boost/Boost教程（四）读写JSON" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/18/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89%E8%AF%BB%E5%86%99JSON/" class="article-date">
+  <time class="dt-published" datetime="2019-06-18T11:44:39.000Z" itemprop="datePublished">2019-06-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/Boost/">Boost</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/06/18/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89%E8%AF%BB%E5%86%99JSON/">Boost教程（四）读写JSON</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Boost读写JSON用的是<code>property_tree</code>模块，这个模块不用加到<code>find_package</code>里，它没有库文件，直接include头文件即可．但用法总体上不如Qt的JSON模块好用。</p>
+<p> <font color = orange>  <font size= 3> 今天发现用Boost写JSON有个大问题，就是数值类型和bool最终都被转化为字符串，无法避免。所以最好不要用Boost读写JSON了 </font> </font></p>
+<h3 id="写JSON"><a href="#写JSON" class="headerlink" title="写JSON"></a>写JSON</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/property_tree/ptree.hpp&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/property_tree/json_parser.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> std::string file_path=<span class="string">&quot;/home/user/test.txt&quot;</span>;</span><br><span class="line"></span><br><span class="line">boost::property_tree::ptree root; </span><br><span class="line">boost::property_tree::ptree items;</span><br><span class="line"></span><br><span class="line">boost::property_tree::ptree item1;</span><br><span class="line">item1.<span class="built_in">put</span>(<span class="string">&quot;ID&quot;</span>,<span class="string">&quot;1&quot;</span>);</span><br><span class="line">item1.<span class="built_in">put</span>(<span class="string">&quot;Name&quot;</span>,<span class="string">&quot;wang&quot;</span>);</span><br><span class="line">items.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(<span class="string">&quot;1&quot;</span>,item1));</span><br><span class="line"></span><br><span class="line">boost::property_tree::ptree item2;</span><br><span class="line">item2.<span class="built_in">put</span>(<span class="string">&quot;ID&quot;</span>,<span class="string">&quot;2&quot;</span>);</span><br><span class="line">item2.<span class="built_in">put</span>(<span class="string">&quot;Name&quot;</span>,<span class="string">&quot;zhang&quot;</span>);</span><br><span class="line">items.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(<span class="string">&quot;2&quot;</span>,item2));</span><br><span class="line"></span><br><span class="line">root.<span class="built_in">put_child</span>(<span class="string">&quot;user&quot;</span>,items);</span><br><span class="line">boost::property_tree::<span class="built_in">write_json</span>(file_path,root);</span><br></pre></td></tr></table></figure>
+<p>这样写出的JSON如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;user&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;1&quot;</span>: &#123; <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;1&quot;</span>,<span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;wang&quot;</span>&#125;,</span><br><span class="line">        <span class="attr">&quot;2&quot;</span>: &#123; <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;2&quot;</span>,<span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;zhang&quot;</span>&#125;,</span><br><span class="line">        <span class="attr">&quot;3&quot;</span>: &#123; <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;3&quot;</span>, <span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;li&quot;</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把最后两句改一下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boost::property_tree::<span class="built_in">write_json</span>(file_path,item1);</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;wang&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把最后两句再这样改：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root.<span class="built_in">put_child</span>(<span class="string">&quot;user&quot;</span>,item1);</span><br><span class="line">boost::property_tree::<span class="built_in">write_json</span>(file_path,root);</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">&quot;user&quot;</span>: &#123;</span><br><span class="line">        <span class="attr">&quot;ID&quot;</span>: <span class="string">&quot;1&quot;</span>,</span><br><span class="line">        <span class="attr">&quot;Name&quot;</span>: <span class="string">&quot;wang&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改某个JSON值"><a href="#修改某个JSON值" class="headerlink" title="修改某个JSON值"></a>修改某个JSON值</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">json::ptree pt;</span><br><span class="line">pt.<span class="built_in">put</span>(<span class="string">&quot;data&quot;</span>,<span class="number">1</span>);</span><br><span class="line">pt.<span class="built_in">put</span>(<span class="string">&quot;num&quot;</span>,<span class="number">2</span>);</span><br><span class="line">pt.<span class="built_in">get_child</span>(<span class="string">&quot;num&quot;</span>).<span class="built_in">put_value</span>(<span class="number">9</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="JSON数组"><a href="#JSON数组" class="headerlink" title="JSON数组"></a>JSON数组</h4><p>实现JSON数组还是只用<code>ptree</code>类型，稍微复杂点，之前因为<code>make_pair</code>而一直以为用别的方法，其实是让paire的key为空即可：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> json = boost::property_tree;</span><br><span class="line"></span><br><span class="line">json::ptree pt;</span><br><span class="line">json::ptree children;</span><br><span class="line">json::ptree child1, child2, child3;</span><br><span class="line"></span><br><span class="line">child1.<span class="built_in">put</span>(<span class="string">&quot;&quot;</span>, <span class="number">1</span>);</span><br><span class="line">child2.<span class="built_in">put</span>(<span class="string">&quot;&quot;</span>, <span class="number">2</span>);</span><br><span class="line">child3.<span class="built_in">put</span>(<span class="string">&quot;&quot;</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">children.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(<span class="string">&quot;&quot;</span>, child1));</span><br><span class="line">children.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(<span class="string">&quot;&quot;</span>, child2));</span><br><span class="line">children.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(<span class="string">&quot;&quot;</span>, child3));</span><br><span class="line"></span><br><span class="line">pt.<span class="built_in">add_child</span>(<span class="string">&quot;MyArray&quot;</span>, children);</span><br><span class="line"></span><br><span class="line">std::stringstream stream;</span><br><span class="line">json::<span class="built_in">write_json</span>(stream, pt);</span><br><span class="line">cout&lt;&lt; stream.<span class="built_in">str</span>() &lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;MyArray&quot;: [</span><br><span class="line">        &quot;1&quot;,</span><br><span class="line">        &quot;2&quot;,</span><br><span class="line">        &quot;3&quot;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样结果，代码还可以优化成这样：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">json::ptree child;</span><br><span class="line">for(int i=0;i&lt;3;i++)</span><br><span class="line">&#123;</span><br><span class="line">    child.put(&quot;&quot;, i);</span><br><span class="line">    children.push_back(std::make_pair(&quot;&quot;, child));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>child的内容会依次更新，逐个都插入children</p>
+<h3 id="将json写入string"><a href="#将json写入string" class="headerlink" title="将json写入string"></a>将json写入string</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::stringstream stream;</span><br><span class="line">boost::property_tree::<span class="built_in">write_json</span>(stream, item1);</span><br><span class="line">cout&lt;&lt;stream.<span class="built_in">str</span>()&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<p>不能直接用cout&lt;&lt;，没有重载运算符，不过这样也比较简单</p>
+<h3 id="从string中解析json串"><a href="#从string中解析json串" class="headerlink" title="从string中解析json串"></a>从string中解析json串</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// json是　&#123; &quot;a&quot;: 2&#125;</span></span><br><span class="line">std::string c;		<span class="comment">//c为json串</span></span><br><span class="line">std::istringstream iss;</span><br><span class="line">iss.<span class="built_in">str</span>(c);</span><br><span class="line"></span><br><span class="line">boost::property_tree::ptree item;</span><br><span class="line">boost::property_tree::json_parser::<span class="built_in">read_json</span>(iss, item);</span><br><span class="line"><span class="keyword">int</span> n = item.get&lt;<span class="keyword">int</span>&gt;(<span class="string">&quot;a&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/18/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89%E8%AF%BB%E5%86%99JSON/" data-id="ckr296gwr00734klmdcg79dc5" data-title="Boost教程（四）读写JSON" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-常用工具/使用第三方win10主题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/15/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9win10%E4%B8%BB%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2019-06-15T13:04:15.000Z" itemprop="datePublished">2019-06-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/06/15/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9win10%E4%B8%BB%E9%A2%98/">使用第三方win10主题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>win10自带的主题就那几个，希望能用一些好看的，但Win10原生是不支持第三方主题的，需要特别之后才可以用</p>
+<p>需要先安装一个叫<code>UltraUXThemePatcher </code>的软件，下载在<a target="_blank" rel="noopener" href="https://www.mediafire.com/file/dj52gcod2rt7t00/UxthemePatcher+Win10+1903.zip">这里</a></p>
+<p>安装时要注意，软件版本应当和系统版本基本一致，否则会出问题</p>
+<ol>
+<li><p>右键用管理员身份运行 UltraUXThemePatcher，然后点击 Install，开启安装。<br><img src="https://live.staticflickr.com/65535/48066780947_5137161986_b.jpg"></p>
+</li>
+<li><p>重启电脑，打开<code>Cortana</code>，打开<code>创建还原点</code>程序，这个应当是win10的新程序，应当是与VMWare的还原点类似的。打开后选C盘，先到<code>配置</code>里<code>启用系统保护</code>，然后<code>创建</code>。因为主题文件偶尔会出问题，所以最好有还原点。<br><img src="https://live.staticflickr.com/65535/48066728898_9df0c0118b.jpg"></p>
+</li>
+<li><p>(可选)安装OldNewExplore，让Windows 10的资源管理器变成Windows 7风格（有些主题需要）</p>
+</li>
+<li><p>把下载的第三方主题放到<code>C:\Windows\Resources\Themes</code>文件夹</p>
+</li>
+<li><p>到 桌面-右键-个性化-主题 里面选择主题。</p>
+</li>
+</ol>
+<p>效果：<br><img src="https://live.staticflickr.com/65535/48066728758_b1e65dfe8e_b.jpg"></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://www.xia1ge.com/tag/win10%E4%B8%BB%E9%A2%98">第三方主题</a><br><a target="_blank" rel="noopener" href="https://www.cleodesktop.com/2019/05/uxthemepatcher-for-windows10-may-2019.html">视频指导使用第三方主题</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/15/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9win10%E4%B8%BB%E9%A2%98/" data-id="ckr296gvc003v4klm01s21o7t" data-title="使用第三方win10主题" class="article-share-link">Share</a>
       
       
       
@@ -802,7 +802,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/32/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/34/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/32/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/31/">31</a><a class="page-number" href="/page/32/">32</a><span class="page-number current">33</span><a class="page-number" href="/page/34/">34</a><a class="page-number" href="/page/35/">35</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/34/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -855,14 +855,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -872,6 +864,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

@@ -71,99 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/TEB算法/TEB中的最大线速度约束" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/" class="article-date">
-  <time class="dt-published" datetime="2020-12-14T13:27:51.000Z" itemprop="datePublished">2020-12-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/">TEB中的最大线速度约束</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>最大线速度约束主要在 <code>bool TimedElasticBand::initTrajectoryToGoal (const PoseSE2&amp; start, const PoseSE2&amp; goal, double diststep, double max_vel_x, int min_samples, bool guess_backwards_motion)</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%BA%A6%E6%9D%9F/" data-id="ckr28w9zn00iq4clm127fgcxn" data-title="TEB中的最大线速度约束" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/雷达/雷达扫描到不存在的障碍" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/" class="article-date">
-  <time class="dt-published" datetime="2020-12-14T13:07:56.000Z" itemprop="datePublished">2020-12-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/">雷达扫描到不存在的障碍</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2020/12/14/21NmoitDAsf3KI4.png" alt="雷达默认参数"></p>
-<ol>
-<li><img src="https://i.loli.net/2021/02/24/DhPp5GqxolsM7Ar.png" alt="机器人的杂物挡住了雷达.png"><br>这是常见的一种情况</li>
-</ol>
-<ol start="2">
-<li>起初经过观察，发现在一些地方容易出现，而且是都在雷达的左侧出现，于是怀疑是雷达自身问题，最后把<code>angle_min</code>的绝对值改小，不再出现这个问题。<br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=h1TfzAyHez8">雷达扫描到不存在的障碍</a></li>
-</ol>
-<p>后来又出现这种现象，而且不分左右，有时看不出在哪边<br><img src="https://i.loli.net/2020/12/14/2wtrSiULXGYjsk1.png" alt="不存在的障碍导致全局路径改变"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/14/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E6%89%AB%E6%8F%8F%E5%88%B0%E4%B8%8D%E5%AD%98%E5%9C%A8%E7%9A%84%E9%9A%9C%E7%A2%8D/" data-id="ckr28w9z800hg4clmcgh6259v" data-title="雷达扫描到不存在的障碍" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/根据全局路径的目标和多个机器人间距优化速度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/" class="article-date">
@@ -202,7 +109,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/" data-id="ckr28w9uv006u4clmfkbram19" data-title="根据全局路径的目标和多个机器人间距优化速度" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/" data-id="ckr296gwn006t4klm04nnfci8" data-title="根据全局路径的目标和多个机器人间距优化速度" class="article-share-link">Share</a>
       
       
       
@@ -272,7 +179,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/" data-id="ckr28wa0i00lq4clmha0r8n1s" data-title="(二) 最大线速度优化" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/" data-id="ckr296h3200lp4klm7k7jclcn" data-title="(二) 最大线速度优化" class="article-share-link">Share</a>
       
       
       
@@ -332,7 +239,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="ckr28w9zg00i14clm471i0zqm" data-title="(十七) 可视化" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="ckr296h1r00i04klm1ueefnju" data-title="(十七) 可视化" class="article-share-link">Share</a>
       
       
       
@@ -404,7 +311,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/" data-id="ckr28w9si00194clmgjs7hbb7" data-title="点云消息的解析和转换" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/" data-id="ckr296gub00184klm6x3wfifx" data-title="点云消息的解析和转换" class="article-share-link">Share</a>
       
       
       
@@ -453,7 +360,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/" data-id="ckr28wa0a00kw4clm4zqx4vcu" data-title="膨胀层" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/" data-id="ckr296h2t00kv4klm17tfbpda" data-title="膨胀层" class="article-share-link">Share</a>
       
       
       
@@ -505,7 +412,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/" data-id="ckr28w9s5000b4clm8uhfaax9" data-title="ldd和ldconfig命令" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/" data-id="ckr296gtx00094klm3vvh14iv" data-title="ldd和ldconfig命令" class="article-share-link">Share</a>
       
       
       
@@ -625,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr28wa0h00ln4clmgwt6htqe" data-title="(一) 初步配置和发现的问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr296h3200lm4klm1ja8547v" data-title="(一) 初步配置和发现的问题" class="article-share-link">Share</a>
       
       
       
@@ -677,7 +584,122 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/" data-id="ckr28wa0m00m44clmhqcl5s02" data-title="(五) 导航的其他问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/" data-id="ckr296h3700m34klm8iag9jeo" data-title="(五) 导航的其他问题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/大轮廓机器人的导航/(三) 振荡问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2020-12-01T02:17:51.000Z" itemprop="datePublished">2020-12-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/">(三) 振荡问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>车到目标附近，有时以很小角速度旋转，一定时间后才到达。如果无法到达，一般是目标的位姿不好，车相当于钻一个狭窄的地方，很容易触发TEB的振荡机制。首先通过试验保证目标点合适，其次适当增加<code>xy_goal_tolerance</code>和<code>yaw_goal_tolerance</code>。由于实际要求的朝向不是0就是π，所以不会有车中心到达位置，但车尾会撞障碍的情况。</p>
+<p>修改TEB参数:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 减小后，recently_oscillated 容易是false</span></span><br><span class="line">oscillation_recovery_min_duration: 5</span><br><span class="line">oscillation_v_eps: 0.1</span><br><span class="line">oscillation_omega_eps: 0.1</span><br><span class="line">oscillation_filter_duration: 6</span><br></pre></td></tr></table></figure>
+
+<p>在源码中的部分</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> oscillating = failure_detector_.<span class="built_in">isOscillating</span>();</span><br><span class="line"><span class="comment">// 距离上次振荡过了多久，若小于配置值(10秒)，说明最近也振荡了</span></span><br><span class="line"><span class="keyword">bool</span> recently_oscillated = (ros::Time::<span class="built_in">now</span>()-time_last_oscillation_).<span class="built_in">toSec</span>() &lt; </span><br><span class="line">			cfg_.recovery.oscillation_recovery_min_duration;</span><br><span class="line"><span class="comment">// 如果现在是振荡状态</span></span><br><span class="line"><span class="keyword">if</span> (oscillating)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!recently_oscillated)    <span class="comment">//  最近的状态不是振荡</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// save current turning direction</span></span><br><span class="line">        <span class="comment">// 以下其实都是对 last_preferred_rotdir_ 赋值</span></span><br><span class="line">        <span class="keyword">if</span> (robot_vel_.angular.z &gt; <span class="number">0</span>)</span><br><span class="line">            last_preferred_rotdir_ = RotType::left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            last_preferred_rotdir_ = RotType::right;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;TebLocalPlannerROS: possible oscillation (of the robot </span></span><br><span class="line"><span class="string">            or its local plan) detected. Activating recovery strategy </span></span><br><span class="line"><span class="string">            (prefer current turning direction during optimization) &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    time_last_oscillation_ = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// 对 prefer_rotdir_ 赋值，最终影响 AddEdgesPreferRotDir</span></span><br><span class="line">    planner_-&gt;<span class="built_in">setPreferredTurningDir</span>(last_preferred_rotdir_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>减小<code>oscillation_recovery_min_duration</code>后，在源码中会容易更新<code>last_preferred_rotdir_</code>，原来是转过了目标点后接着转，现在是转过了以后会朝反方向调整。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" data-id="ckr296h3600m04klm55yx3w7y" data-title="(三) 振荡问题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/move_base 分析/move_base参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-11-30T13:22:22.000Z" itemprop="datePublished">2020-11-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/">move_base参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>base_global_planner: 指定全局规划器</p>
+</li>
+<li><p>base_local_planner: 指定局部规划器</p>
+</li>
+<li><p>global_costmap/robot_base_frame: 指定局部坐标系，一般是base_link或base_footprint</p>
+</li>
+<li><p>global_costmap/global_frame: 指定全局坐标系，一般是odom，也可以是map</p>
+</li>
+<li><p>planner_frequency</p>
+</li>
+<li><p>controller_frequency</p>
+</li>
+<li><p>planner_patience: 默认5</p>
+</li>
+<li><p>controller_patience</p>
+</li>
+<li><p>max_planning_retries: 默认-1，源码里转成无符号，变成了很大的数，其实就是不考虑</p>
+</li>
+<li><p>oscillation_timeout</p>
+</li>
+<li><p>oscillation_distance</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" data-id="ckr296h2c00jh4klmcsgr301r" data-title="move_base参数" class="article-share-link">Share</a>
       
       
       
@@ -693,7 +715,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -746,14 +768,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -763,6 +777,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

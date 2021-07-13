@@ -71,115 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-路径规划/代价地图/代价地图的层 1 概述" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-11-23T13:23:56.000Z" itemprop="datePublished">2020-11-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/">代价地图的层(一) 概述</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>所有的层都是继承<code>Layer</code>类，这个类本身比较简单，是一个虚基类，定义了两个重要接口：<br><code>updateBounds</code>、<code>updateCosts</code><br><img src="https://i.loli.net/2020/11/25/XDSteAcQbEBrVIg.png"></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 每层的初始化</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Layer::initialize</span><span class="params">(LayeredCostmap* parent, std::string name, </span></span></span><br><span class="line"><span class="params"><span class="function">                          tf::TransformListener *tf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    layered_costmap_ = parent;</span><br><span class="line">    name_ = name;</span><br><span class="line">    tf_ = tf;</span><br><span class="line">    <span class="built_in">onInitialize</span>(); 	<span class="comment">//虚函数，空</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">const</span> std::vector&lt;geometry_msgs::Point&gt;&amp; <span class="title">Layer::getFootprint</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> layered_costmap_-&gt;<span class="built_in">getFootprint</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>调用在<code>Costmap2DROS</code>的构造函数:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>) )</span><br><span class="line">    <span class="built_in">resetOldParameters</span>(private_nh);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>) )</span><br><span class="line">&#123;</span><br><span class="line">    XmlRpc::XmlRpcValue my_list;</span><br><span class="line">    private_nh.<span class="built_in">getParam</span>(<span class="string">&quot;plugins&quot;</span>, my_list);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int32_t</span> i = <span class="number">0</span>; i &lt; my_list.<span class="built_in">size</span>(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">      std::string pname = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;name&quot;</span>]);</span><br><span class="line">      std::string type = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;type&quot;</span>]);</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Using plugin \&quot;%s\&quot;&quot;</span>, pname.<span class="built_in">c_str</span>()  );</span><br><span class="line"></span><br><span class="line">      <span class="comment">// plugin_loader_ 类型是　pluginlib::ClassLoader&lt;Layer&gt;，ROS插件机制</span></span><br><span class="line">      boost::shared_ptr&lt;Layer&gt; plugin = plugin_loader_.<span class="built_in">createInstance</span>(type);</span><br><span class="line">      <span class="comment">// 添加到容器 plugins_</span></span><br><span class="line">      layered_costmap_-&gt;<span class="built_in">addPlugin</span>(plugin);</span><br><span class="line">      <span class="comment">// 执行 Layer::initialize，它向各层地图通知主地图的存在，并调用</span></span><br><span class="line">      <span class="comment">// oninitialize方法（Layer类中的虚函数，被定义在各层地图中）</span></span><br><span class="line">      plugin-&gt;<span class="built_in">initialize</span>(layered_costmap_, name + <span class="string">&quot;/&quot;</span> + pname, &amp;tf_);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这里得到的插件即为各层子地图。如果是新定义的层，至少需要对虚函数<code>onInitialize</code>覆盖</p>
-<p><code>Layer</code>的所有虚函数</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* called by the LayeredCostmap to poll this plugin as to how</span></span><br><span class="line"><span class="comment">   much of the costmap it needs to update. </span></span><br><span class="line"><span class="comment">   Each layer can increase  the size of this bounds.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateBounds</span><span class="params">(<span class="keyword">double</span> robot_x, <span class="keyword">double</span> robot_y, <span class="keyword">double</span> robot_yaw, </span></span></span><br><span class="line"><span class="params"><span class="function">      <span class="keyword">double</span>* min_x, <span class="keyword">double</span>* min_y, <span class="keyword">double</span>* max_x, <span class="keyword">double</span>* max_y)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Actually update the underlying costmap, only within the bounds</span></span><br><span class="line"><span class="comment"> * calculated during UpdateBounds(). */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">updateCosts</span><span class="params">(Costmap2D&amp; master_grid, <span class="keyword">int</span> min_i, <span class="keyword">int</span> min_j, <span class="keyword">int</span> max_i, <span class="keyword">int</span> max_j)</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Stop publishers. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">deactivate</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="comment">/* Restart publishers if they&#x27;ve been stopped. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">activate</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">  <span class="comment">/* make this layer match the size of the parent costmap. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">matchSize</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">  <span class="comment">/** LayeredCostmap calls this whenever the footprint there</span></span><br><span class="line"><span class="comment"> * changes (via LayeredCostmap::setFootprint()).  </span></span><br><span class="line"><span class="comment">  Override to be notified of changes to the robot&#x27;s footprint. */</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onFootprintChanged</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">onInitialize</span><span class="params">()</span> </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>聚合layer的功能：<code>LayeredCostmap* layered_costmap_</code></li>
-<li>此layer是否被使能，是否当前(更新信息)：<code>bool enabled_，current</code></li>
-<li>layer名：<code>std::string   name_，</code></li>
-<li>小车：  <code>std::vector&lt; geometry_msgs::Point&gt;  footprint_spec_，</code></li>
-</ul>
-<h2 id="三层的加载过程"><a href="#三层的加载过程" class="headerlink" title="三层的加载过程"></a>三层的加载过程</h2><p><code>Costmap2DROS::mapUpdateLoop</code> —— <code>Costmap2DROS::updateMap</code> —— <code>LayeredCostmap::updateMap</code> ——　每一层调用<code>updateBounds</code>　——　每一层调用<code>updateCosts</code>(核心函数)</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%201%20%E6%A6%82%E8%BF%B0/" data-id="ckr28wa0800ko4clm9ku9g8lb" data-title="代价地图的层(一) 概述" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS Kinetic知识/常用日志的宏" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/" class="article-date">
-  <time class="dt-published" datetime="2020-11-23T13:09:10.000Z" itemprop="datePublished">2020-11-23</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/">常用日志的宏</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>总共有二十多个宏，我只列出有价值而且容易用的</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO(...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_COND(cond, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_ONCE(...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_STREAM(args)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_NAMED(name, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_THROTTLE(rate, ...)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> ROS_INFO_FILTER(filter, ...)</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="ROS-INFO-ONCE"><a href="#ROS-INFO-ONCE" class="headerlink" title="ROS_INFO_ONCE"></a>ROS_INFO_ONCE</h2><p>适用于循环内，防止不断产生日志</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">3</span>; i++)</span><br><span class="line">    <span class="built_in">ROS_INFO_ONCE</span>(<span class="string">&quot;1111111&quot;</span>);</span><br></pre></td></tr></table></figure>
-<p>结果只有一个<code>1111111</code></p>
-<h2 id="ROS-INFO-COND"><a href="#ROS-INFO-COND" class="headerlink" title="ROS_INFO_COND"></a>ROS_INFO_COND</h2><p><code>ROS_INFO_COND(2&gt;1, &quot;log here&quot;);</code></p>
-<h2 id="ROS-INFO-STREAM"><a href="#ROS-INFO-STREAM" class="headerlink" title="ROS_INFO_STREAM"></a>ROS_INFO_STREAM</h2><p>其实就是C++风格的<code>ROS_INFO</code>:<br><code>ROS_INFO_STREAM(&quot;velocity command: &quot; &lt;&lt; &quot; linear=&quot; &lt;&lt; msg. linear . x &lt;&lt; &quot; angular=&quot; &lt;&lt; msg. angular . z)</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/23/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E6%97%A5%E5%BF%97%E7%9A%84%E5%AE%8F/" data-id="ckr28w9x500ce4clmcggpbnla" data-title="常用日志的宏" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-路径规划/move_base 分析/全局路径规划(二)  makePlan" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/11/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92(%E4%BA%8C)%20%20makePlan/" class="article-date">
@@ -227,7 +118,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92(%E4%BA%8C)%20%20makePlan/" data-id="ckr28w9zz00ju4clm6t3s9mmq" data-title="全局路径规划(二) makePlan" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92(%E4%BA%8C)%20%20makePlan/" data-id="ckr296h2i00jt4klm22ktb0vc" data-title="全局路径规划(二) makePlan" class="article-share-link">Share</a>
       
       
       
@@ -270,7 +161,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/21/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E5%B8%B8%E7%94%A8%E7%9F%A5%E8%AF%86/" data-id="ckr28w9yf00fe4clm1h7bcbd0" data-title="rviz 常用知识" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/21/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/%E5%B8%B8%E7%94%A8%E7%9F%A5%E8%AF%86/" data-id="ckr296h0g00fd4klme5acd0gp" data-title="rviz 常用知识" class="article-share-link">Share</a>
       
       
       
@@ -320,7 +211,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E7%9A%84%E7%BC%BA%E9%99%B7%E5%92%8C%E4%BC%98%E5%8C%96/" data-id="ckr28w9zo00iv4clm0sn133ff" data-title="TEB的缺陷和优化" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E7%9A%84%E7%BC%BA%E9%99%B7%E5%92%8C%E4%BC%98%E5%8C%96/" data-id="ckr296h2200iu4klmfntdfyid" data-title="TEB的缺陷和优化" class="article-share-link">Share</a>
       
       
       
@@ -382,7 +273,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/no%20path%E5%92%8Ctrapped%E7%8A%B6%E6%80%81/" data-id="ckr28w9zx00jn4clmfu0xhvtn" data-title="no path和trapped状态" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/no%20path%E5%92%8Ctrapped%E7%8A%B6%E6%80%81/" data-id="ckr296h2f00jm4klm4i0ff6j2" data-title="no path和trapped状态" class="article-share-link">Share</a>
       
       
       
@@ -439,7 +330,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E6%8C%AF%E8%8D%A1%E5%92%8C%E6%81%A2%E5%A4%8D%E8%A1%8C%E4%B8%BA/" data-id="ckr28wa0200k44clmdb9ud05c" data-title="振荡和恢复行为" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/19/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E6%8C%AF%E8%8D%A1%E5%92%8C%E6%81%A2%E5%A4%8D%E8%A1%8C%E4%B8%BA/" data-id="ckr296h2l00k34klmg00r1czj" data-title="振荡和恢复行为" class="article-share-link">Share</a>
       
       
       
@@ -498,7 +389,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/12.%20optimizeTEB%203%20%20%20AddEdgesObstacles/" data-id="ckr28w9zc00hp4clme4ssd7bd" data-title="(十二) optimizeTEB 3   AddEdgesObstacles" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/12.%20optimizeTEB%203%20%20%20AddEdgesObstacles/" data-id="ckr296h1n00ho4klmdrnlgs0x" data-title="(十二) optimizeTEB 3   AddEdgesObstacles" class="article-share-link">Share</a>
       
       
       
@@ -548,7 +439,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/16.%20saturateVelocity/" data-id="ckr28w9zf00hz4clm8kclf99c" data-title="(十六) saturateVelocity" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/16.%20saturateVelocity/" data-id="ckr296h1q00hv4klm9ovn1cme" data-title="(十六) saturateVelocity" class="article-share-link">Share</a>
       
       
       
@@ -601,7 +492,135 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/15.%20%E8%BE%93%E5%87%BA%E9%80%9F%E5%BA%A6%E5%91%BD%E4%BB%A4/" data-id="ckr28w9ze00hw4clm88q317j0" data-title="(十五) 输出速度命令" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/15.%20%E8%BE%93%E5%87%BA%E9%80%9F%E5%BA%A6%E5%91%BD%E4%BB%A4/" data-id="ckr296h1p00ht4klmhk5n8vos" data-title="(十五) 输出速度命令" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/TEB算法/4. configureBackupModes1： goal_idx和transformed_plan的处理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/" class="article-date">
+  <time class="dt-published" datetime="2020-11-18T12:41:40.000Z" itemprop="datePublished">2020-11-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/">(四)configureBackupModes 1： 处理 goal_idx 和 transformed_plan</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebLocalPlannerROS::configureBackupModes</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    std::vector&lt;geometry_msgs::PoseStamped&gt;&amp; transformed_plan,  </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">int</span>&amp; goal_idx)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::Time current_time = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// reduced horizon backup mode  上篇博客所列的第四种情况下</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// we do not reduce if the goal is already selected , because the orientation </span></span><br><span class="line">    <span class="comment">// might change -&gt; can introduce oscillations</span></span><br><span class="line">    <span class="comment">// no_infeasible_plans_  改成 no_feasible_plans_ 比较合适</span></span><br><span class="line">    <span class="keyword">if</span> (cfg_.recovery.shrink_horizon_backup &amp;&amp; </span><br><span class="line">        goal_idx &lt; (<span class="keyword">int</span>)transformed_plan.<span class="built_in">size</span>()<span class="number">-1</span> &amp;&amp; </span><br><span class="line">       (no_infeasible_plans_&gt;<span class="number">0</span> || (current_time - time_last_infeasible_plan_).<span class="built_in">toSec</span>() &lt; </span><br><span class="line">         <span class="comment">// keep short horizon for at least a few seconds</span></span><br><span class="line">         cfg_.recovery.shrink_horizon_min_duration )  ) </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ROS_INFO_COND</span>(no_infeasible_plans_==<span class="number">1</span>, </span><br><span class="line">        <span class="string">&quot;Activating reduced horizon backup mode for at least %.2f sec (infeasible </span></span><br><span class="line"><span class="string">        trajectory detected).&quot;</span>, </span><br><span class="line">        cfg_.recovery.shrink_horizon_min_duration);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Shorten horizon if requested     reduce to 50 percent:</span></span><br><span class="line">        <span class="keyword">int</span> horizon_reduction = goal_idx/<span class="number">2</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> (no_infeasible_plans_ &gt; <span class="number">9</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">ROS_INFO_COND</span>(no_infeasible_plans_==<span class="number">10</span>, <span class="string">&quot;Infeasible trajectory detected </span></span><br><span class="line"><span class="string">                10 times in a row: further reducing horizon...&quot;</span>);</span><br><span class="line">            horizon_reduction /= <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// we have a small overhead (过头) here, since we already transformed 50% </span></span><br><span class="line">        <span class="comment">// more of the trajectory.  But that&#x27;s ok for now, since we do not </span></span><br><span class="line">        <span class="comment">// need to make   transformGlobalPlan   more complex</span></span><br><span class="line">        <span class="comment">// reduced horizon 应当很少发生</span></span><br><span class="line">        <span class="keyword">int</span> new_goal_idx_transformed_plan = <span class="built_in"><span class="keyword">int</span></span>(transformed_plan.<span class="built_in">size</span>()) - horizon_reduction - <span class="number">1</span>;</span><br><span class="line">        goal_idx -= horizon_reduction;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 从 transformed_plan 的 new_goal_idx 开始，一直删除到尾部</span></span><br><span class="line">        <span class="keyword">if</span> (new_goal_idx_transformed_plan &gt;<span class="number">0</span>  &amp;&amp;  goal_idx &gt;= <span class="number">0</span>)</span><br><span class="line">            transformed_plan.<span class="built_in">erase</span>(transformed_plan.<span class="built_in">begin</span>() + new_goal_idx_transformed_plan, transformed_plan.<span class="built_in">end</span>());</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            goal_idx += horizon_reduction; <span class="comment">// this should not happen, but safety first</span></span><br><span class="line">    &#125;</span><br><span class="line">                <span class="comment">// ......第二部分......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>shrink_horizon_backup</code>: true.  在自动检测到问题(plan not feasible)的情况下，允许planner临时缩小范围(50%). TEB将以更近的点作为规划目标，尝试重新规划出可行路径。调试时可关闭，以在可视化界面上观察原出错路径。另请参阅参数<code>shrink_horizo​​n_min_duration</code></p>
+</li>
+<li><p><code>shrink_horizon_min_duration</code>: 10，单位秒。 如果检测到不可行的轨迹，激活缩小的水平线后备模式，本参数为其最短持续时间。个人怀疑这个参数无意义，因为它更新值的地方也都有<code>no_infeasible_plans_</code>变量的更新，判断时，只根据<code>no_infeasible_plans_</code>即可，详见代码<code>configureBackupModes</code></p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/4.%20configureBackupModes1%EF%BC%9A%20goal_idx%E5%92%8Ctransformed_plan%E7%9A%84%E5%A4%84%E7%90%86/" data-id="ckr296h1u00i84klmdmdlf0e9" data-title="(四)configureBackupModes 1： 处理 goal_idx 和 transformed_plan" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/QueueFollow模块" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/" class="article-date">
+  <time class="dt-published" datetime="2020-11-16T13:28:44.000Z" itemprop="datePublished">2020-11-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/">多机器人队列</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="话题"><a href="#话题" class="headerlink" title="话题"></a>话题</h2><p><code>/queue_up/status</code>，类型<code>actionlib_msgs/GoalStatusArray</code>，不在排队时的消息如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">header:</span><br><span class="line">  seq: 678</span><br><span class="line">  stamp:</span><br><span class="line">    secs: 1610014977</span><br><span class="line">    nsecs: 494630237</span><br><span class="line">  frame_id: <span class="string">&#x27;&#x27;</span></span><br><span class="line">status_list: []</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2021/01/07/OXw2FYVUmrlDszj.png" alt="在排队的状态"></p>
+<br>
+
+<p>在rviz上指定导航的目标点，三个话题可获得目标点信息</p>
+<ul>
+<li><p>话题<code>move_base/current_goal</code>类型<code>geometry_msgs/PoseStamped</code>, 发布者是move_base，无订阅者</p>
+</li>
+<li><p>话题<code>move_base/goal</code>类型<code>move_base_msgs/MoveBaseActionGoal</code>, 发布者和订阅者都是move_base</p>
+</li>
+<li><p>话题<code>move_base_simple/goal</code>类型<code>geometry_msgs/PoseStamped</code>, 发布者是rviz，订阅者是move_base</p>
+</li>
+</ul>
+<p>queue_follow的情况类似：</p>
+<p><code>/robot_0/queue_follow_node/queue_current_goal</code>，类型<code>geometry_msgs/PoseStamped</code>，发布者<code>/robot_0/queue_follow_node</code>，无订阅者</p>
+<p><code>/robot_0/queue_up/goal</code>，类型<code>move_base_msgs/MoveBaseActionGoal</code>，发布者和订阅者都是<code>/robot_0/queue_follow_node</code></p>
+<p><code>/robot_0/queue_follow_node/goal</code>，类型<code>geometry_msgs/PoseStamped</code>，无发布者，订阅者<code>/robot_0/queue_follow_node</code></p>
+<p><code>MoveBaseActionClient</code>在节点<code>tm_node</code>，发布<code>queue_up/goal</code></p>
+<p>queue_follow链接<code>libcostmap_2d.so</code>，后者由<code>observation_buffer.cpp</code>编译，用到了点云库</p>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><ul>
+<li><p>QueueFollow::isAngleReached()      机器人距离目标的角度差在阈值内，且速度也在阈值内，则达到目标角度</p>
+</li>
+<li><p>QueueFollow::pointToGoal()  状态是stopped，则一直旋转到目标角度，但还未达到目标，保证返回值是true</p>
+</li>
+<li><p>QueueFollow::rotateToGoal()   类似pointToGoal()，不过前提是状态为rotate，最终达到目标</p>
+</li>
+</ul>
+<p><code>queue_follow</code>中对两个话题的回调，处理 <code>rectangle_width_</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::footprintRadiusCB</span><span class="params">(<span class="keyword">const</span> std_msgs::Float32::ConstPtr&amp; footprint_radius)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    rectangle_width_ = <span class="number">2.0</span> * (footprint_radius-&gt;data);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::footprintPolygonCB</span><span class="params">(<span class="keyword">const</span> geometry_msgs::Polygon::ConstPtr&amp; footprint_polygon)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> robot_inscribed_radius;</span><br><span class="line">    <span class="keyword">double</span> robot_circumscribed_radius;</span><br><span class="line">    costmap_2d::<span class="built_in">calculateMinAndMaxDistances</span>(costmap_2d::<span class="built_in">toPointVector</span>(*footprint_polygon), robot_inscribed_radius, robot_circumscribed_radius);</span><br><span class="line">    rectangle_width_ = <span class="number">2.0</span> * robot_inscribed_radius;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">QueueFollow::doneFollow</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (state_ == stopped &amp;&amp; <span class="built_in">isCloseEnough</span>(target_pose, robot_pose))</span><br><span class="line">        state_ = rotate; </span><br><span class="line"></span><br><span class="line">    <span class="built_in"><span class="keyword">switch</span></span>(state_)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// 状态stopped，但没有closeEnough，若角度未达到阈值则旋转</span></span><br><span class="line">        <span class="comment">// 若角度在阈值内，更新状态为following</span></span><br><span class="line">        <span class="keyword">case</span> stopped:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> p_goal = <span class="built_in">pointToGoal</span>();</span><br><span class="line">            <span class="keyword">if</span>(p_goal)</span><br><span class="line">                state_ = following;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">case</span> following:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">double</span> current_robot_linear_x, current_robot_angular_z;</span><br><span class="line">            <span class="built_in">getCurrentVelocity</span>(current_robot_linear_x, current_robot_angular_z);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;min_dist_from_robot = &quot;</span> &lt;&lt; min_dist_from_robot &lt;&lt; std::endl;</span><br><span class="line">            <span class="keyword">bool</span> result_follow = <span class="built_in">actionFollow</span>(target_pose, robot_pose, current_robot_linear_x, min_dist_from_robot, target_linear_vel, target_angular_vel);</span><br><span class="line">            std::cout &lt;&lt; <span class="string">&quot;done: target_linear_vel = &quot;</span> &lt;&lt; target_linear_vel &lt;&lt; std::endl;</span><br><span class="line">            <span class="built_in">publishVelocity</span>(target_linear_vel, target_angular_vel);</span><br><span class="line">            <span class="keyword">if</span>(result_follow)</span><br><span class="line">                state_ = rotate;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 状态是stopped且closeEnough，判断是否达到目标角度阈值</span></span><br><span class="line">        <span class="comment">// 若false则旋转，若true，状态更新为succeed</span></span><br><span class="line">        <span class="keyword">case</span> rotate:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">bool</span> rotate_to_goal = <span class="built_in">rotateToGoal</span>();</span><br><span class="line">            <span class="keyword">if</span>(rotate_to_goal)</span><br><span class="line">                state_ = scuceed;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">        <span class="comment">// 达到QueueFollow目标</span></span><br><span class="line">        <span class="keyword">case</span> scuceed:</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">publishZeroVelocity</span>();</span><br><span class="line">            <span class="built_in">ROS_INFO</span>(<span class="string">&quot;QueueFollow goal reached! &quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="built_in">ROS_ERROR</span>(<span class="string">&quot;This case should never be reached, something is wrong, aborting&quot;</span>);</span><br><span class="line">            <span class="built_in">resetState</span>();</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QueueFollow::resetState</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    state_ = stopped;</span><br><span class="line">    <span class="built_in">publishZeroVelocity</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/QueueFollow%E6%A8%A1%E5%9D%97/" data-id="ckr296gwe00684klmfwrg1cmo" data-title="多机器人队列" class="article-share-link">Share</a>
       
       
       
@@ -617,7 +636,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/9/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/11/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -670,14 +689,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -687,6 +698,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

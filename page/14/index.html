@@ -71,129 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-ROS/ROS Kinetic知识/常用的tf命令" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E7%9A%84tf%E5%91%BD%E4%BB%A4/" class="article-date">
-  <time class="dt-published" datetime="2020-11-15T11:54:58.000Z" itemprop="datePublished">2020-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E7%9A%84tf%E5%91%BD%E4%BB%A4/">常用的tf命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ol>
-<li>rosrun tf view_frames</li>
-</ol>
-<p>当启动ROS程序后，如果想查看存在的所有坐标系转换关系，可以使用命令<code>rosrun tf view_frames</code>，结果会在当前目录生成pdf文件：<br><img src="https://c2.staticflickr.com/8/7850/46490602034_1924870de3_b.jpg"><br>顺便说一下，打开pdf的命令为<code>evince frames.pdf</code></p>
-<ol start="2">
-<li>rosrun rqt_tf_tree rqt_tf_tree</li>
-</ol>
-<p>跟上一个命令差不多，区别是直接打开一个pdf文件，但不会保存</p>
-<p>在仿真环境下，使用<code>rostopic hz tf</code>，发现tf的频率是40Hz左右，这个数值是各个tf变化叠加的结果，使用<code>rqt_tf_tree</code>可以看到<br><img src="https://i.loli.net/2020/11/01/ZdnNrFjezJoAtay.png" alt="11-01__105511.png"></p>
-<p>有些转换可能显示average rate有数值，但是buffer 和 recent transform都是0，这种其实没有发生tf，所以不能算数。</p>
-<br>
-左上角还有一个`clear buffer`按钮，`Buffer length`会清零
-`Buffer length`表示`tf buffer`中有几秒的数据可使用，`rqt_tf_tree`中是10秒，`view frames`大约5秒
-
-
-<ol start="3">
-<li>tf_echo</li>
-</ol>
-<p>本命令用来查看两个坐标系之间的实时转换，需要5秒钟：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun tf tf_echo /turtle1 /turtle2  　//turtle1是parent坐标系, turtle2是child</span><br></pre></td></tr></table></figure>
-<p><img src="https://c2.staticflickr.com/8/7834/40261688443_57d3ca29b1_b.jpg"></p>
-<ol start="4">
-<li>rqt_tf_tree</li>
-</ol>
-<p><code>rosrun rqt_tf_tree rqt_tf_tree</code>显示一个带界面的tf图显示工具，不必等待，然后可以另存为svg,png等格式<br>结果发现刷新按钮不好用，当tf树改变后，刷新有时没有改变显示，有时工具无法响应了</p>
-<ol start="5">
-<li>launch文件中的应用</li>
-</ol>
-<p>如果要让两个坐标系建立转换关系，常常在launch文件中添加</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">args</span>=<span class="string">&quot;-0.24 0 0.295 1.571 0 -1.571 /base_link /camera 10&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;tf&quot;</span> <span class="attr">name</span>=<span class="string">&quot;base_link_to_camera&quot;</span> <span class="attr">type</span>=<span class="string">&quot;static_transform_publisher&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这个节点就是以<code>base_link</code>为parent坐标系，向<code>camera</code>转换的欧拉角形式。前三个参数是x,y,z三个方向的位移，之后的三个参数是yaw,pitch,roll，然后是parent坐标系和child坐标系，最后是隔多长时间发送一次变换，一般取100(ms)。另一种形式就是四元数形式，也就是将第4~6参数换为qx,qy,qz,qw。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%B8%B8%E7%94%A8%E7%9A%84tf%E5%91%BD%E4%BB%A4/" data-id="ckr28w9x500cf4clmeo9rh68w" data-title="常用的tf命令" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS Kinetic知识/tf_prefix和多机器人的应用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf_prefix%E5%92%8C%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%BA%94%E7%94%A8/" class="article-date">
-  <time class="dt-published" datetime="2020-11-15T11:54:53.000Z" itemprop="datePublished">2020-11-15</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf_prefix%E5%92%8C%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%BA%94%E7%94%A8/">tf_prefix和多机器人的应用</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>为了支持多个“相似”的机器人，tf使用tf_prefix参数。没有tf_prefix参数，帧名<code>base_link</code>将解析为<code>/base_link</code></p>
-<p>如果tf_prefix参数设置为<code>robot1</code>，<code>base_link</code>将解析为<code>/robot1/base_link</code>。这在运行多机器人时是最有用的，否则这些机器人将在其frame_ids中具有名称冲突。</p>
-<p>源码其实很简单:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> std::string <span class="title">getPrefixParam</span><span class="params">(ros::NodeHandle &amp; nh)</span>\</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   std::string param; </span><br><span class="line">   <span class="keyword">if</span> (!nh.<span class="built_in">searchParam</span>(<span class="string">&quot;tf_prefix&quot;</span>, param)) </span><br><span class="line">     <span class="keyword">return</span> <span class="string">&quot;&quot;</span>; </span><br><span class="line">   </span><br><span class="line">   std::string return_val;</span><br><span class="line">   nh.<span class="built_in">getParam</span>(param, return_val);</span><br><span class="line">   <span class="keyword">return</span> return_val;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-<p>一般用法是:</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">group</span> <span class="attr">ns</span>=<span class="string">&quot;robot_1&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;tf_prefix&quot;</span> <span class="attr">value</span>=<span class="string">&quot;robot_1&quot;</span>/&gt;</span></span><br><span class="line">  ......</span><br><span class="line"><span class="tag">&lt;/<span class="name">group</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>tf2不再支持<code>tf_prefix</code>. <code>my_frame</code>和<code>/my_frame</code>是不同的坐标系名称, tf2不接受以<code>/</code>开头的坐标系名称,否则会报<code>tf2::InvalidArgument exception</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf_prefix%E5%92%8C%E5%A4%9A%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%BA%94%E7%94%A8/" data-id="ckr28w9ww00bw4clm55dzbeco" data-title="tf_prefix和多机器人的应用" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-ROS/ROS Kinetic知识/动态调整机制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E6%9C%BA%E5%88%B6/" class="article-date">
@@ -227,7 +104,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E6%9C%BA%E5%88%B6/" data-id="ckr28w9wz00c24clmh15r4v9i" data-title="动态调整机制" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E6%9C%BA%E5%88%B6/" data-id="ckr296gys00c14klmc4h2hz4c" data-title="动态调整机制" class="article-share-link">Share</a>
       
       
       
@@ -276,7 +153,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/12/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%80)%20%E8%BD%AE%E5%BB%93%E7%9A%84%E8%AE%BE%E7%BD%AE%E5%92%8C%E5%88%87%E6%8D%A2/" data-id="ckr28wa0k00m04clmfycmfsb4" data-title="(一) 轮廓的设置和切换" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/12/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%80)%20%E8%BD%AE%E5%BB%93%E7%9A%84%E8%AE%BE%E7%BD%AE%E5%92%8C%E5%88%87%E6%8D%A2/" data-id="ckr296h3500lz4klm8filfkdr" data-title="(一) 轮廓的设置和切换" class="article-share-link">Share</a>
       
       
       
@@ -335,7 +212,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" data-id="ckr28w9vc00854clm6cil8rfd" data-title="编程技巧" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/11/09/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%BC%96%E7%A8%8B%E6%8A%80%E5%B7%A7/" data-id="ckr296gx700894klm033ef2ri" data-title="编程技巧" class="article-share-link">Share</a>
       
       
       
@@ -378,7 +255,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/18/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rqt_robot_steering/" data-id="ckr28w9xi00db4clm0szb9kfg" data-title="rqt_robot_steering" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/10/18/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rqt_robot_steering/" data-id="ckr296gzl00db4klm2uivgq44" data-title="rqt_robot_steering" class="article-share-link">Share</a>
       
       
       
@@ -447,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/18/%E8%A7%86%E8%A7%89SLAM/%E4%BB%8EROS%E9%85%8D%E7%BD%AErealsense%E7%9A%84%E5%8F%82%E6%95%B0/" data-id="ckr28w9uh005y4clm8cu66ofo" data-title="从ROS配置realsense的参数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/10/18/%E8%A7%86%E8%A7%89SLAM/%E4%BB%8EROS%E9%85%8D%E7%BD%AErealsense%E7%9A%84%E5%8F%82%E6%95%B0/" data-id="ckr296gwb005w4klm3dw180pw" data-title="从ROS配置realsense的参数" class="article-share-link">Share</a>
       
       
       
@@ -496,7 +373,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/10/18/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E7%89%88%E6%9C%AC%E4%B8%8D%E5%85%BC%E5%AE%B9%E4%BA%A7%E7%94%9F%E7%9A%84TransformListenerWrapper%E9%97%AE%E9%A2%98/" data-id="ckr28w9wn00b64clm2jf9571w" data-title="tf的疑难问题" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/10/18/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E7%89%88%E6%9C%AC%E4%B8%8D%E5%85%BC%E5%AE%B9%E4%BA%A7%E7%94%9F%E7%9A%84TransformListenerWrapper%E9%97%AE%E9%A2%98/" data-id="ckr296gyf00b44klm08na9zcc" data-title="tf的疑难问题" class="article-share-link">Share</a>
       
       
       
@@ -539,7 +416,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/09/25/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%BA%8C)/" data-id="ckr28w9yk00fq4clm8c1eeftd" data-title="csm包的源码解读 (二)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/09/25/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%BA%8C)/" data-id="ckr296h0n00fp4klmgt4gh1x7" data-title="csm包的源码解读 (二)" class="article-share-link">Share</a>
       
       
       
@@ -582,7 +459,109 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/09/21/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20%E5%A4%84%E7%90%86%E9%87%8C%E7%A8%8B%E8%AE%A1%E5%92%8CIMU%E6%95%B0%E6%8D%AE%E7%9A%84%E6%B5%81%E7%A8%8B/" data-id="ckr28wa0w00mw4clm30619wkt" data-title="(七) 处理里程计和IMU数据的流程" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/09/21/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20%E5%A4%84%E7%90%86%E9%87%8C%E7%A8%8B%E8%AE%A1%E5%92%8CIMU%E6%95%B0%E6%8D%AE%E7%9A%84%E6%B5%81%E7%A8%8B/" data-id="ckr296h3l00mv4klmftxigd3s" data-title="(七) 处理里程计和IMU数据的流程" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-数学基础/坐标系空间转换" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/" class="article-date">
+  <time class="dt-published" datetime="2020-09-20T12:00:16.000Z" itemprop="datePublished">2020-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/">坐标系空间转换</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Censi-公式"><a href="#Censi-公式" class="headerlink" title="Censi 公式"></a>Censi 公式</h2><p><img src="https://i.loli.net/2020/09/20/hsubLed7priFZmS.jpg" alt="坐标系示意图.jpg"><br><img src="https://i.loli.net/2020/09/20/YzpFTi8yEwqHhf5.jpg" alt="圆加和圆减.jpg"><br><img src="https://i.loli.net/2020/09/20/WbSvxUlGwCHNzgF.png"><br><img src="https://i.loli.net/2021/04/28/sbLxYg1oUdRaNkT.jpg"></p>
+<p>左乘是行变换，右乘是列变换。这是因为习惯上来说，空间中的向量用列向量表示，用矩阵左乘列向量，就是把它在空间当中变换。</p>
+<p>若绕静坐标系（世界坐标系）旋转，则左乘，也是<strong>变换矩阵 X 坐标矩阵</strong></p>
+<p>若是绕动坐标系旋转（自身建立一个坐标系），则右乘，也就是<strong>坐标矩阵 X 变换矩阵</strong>。 </p>
+<p>即左乘是相对于坐标值所在的坐标系（世界坐标系）下的三个坐标轴进行旋转变换，右乘则是以当前点为旋转中心，进行旋转变换。</p>
+<p><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/17351558785/">cartographer中公式的推导</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/" data-id="ckr296gvi00474klm46864339" data-title="坐标系空间转换" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/ICP/laser_scan_matcher 源码解读" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="article-date">
+  <time class="dt-published" datetime="2020-09-19T13:44:12.000Z" itemprop="datePublished">2020-09-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">laser_scan_matcher 源码解读</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>主要是<code>LaserScanMatcher</code>的构造函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;LaserScanMatcher&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line"><span class="function">ros::NodeHandle <span class="title">nh_private</span><span class="params">(<span class="string">&quot;~&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">scan_tools::LaserScanMatcher <span class="title">laser_scan_matcher</span><span class="params">(nh, nh_private)</span></span>;</span><br><span class="line">ros::<span class="built_in">spin</span>();</span><br></pre></td></tr></table></figure>
+
+<p>构造函数里初始化一系列参数，重点就是回调函数<code>scanCallback</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一帧scan, cache the tf from base to the scanner</span></span><br><span class="line"><span class="keyword">if</span> (!initialized_)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">createCache</span>(scan_msg);    <span class="comment">// caches the sin and cos of all angles</span></span><br><span class="line">  <span class="comment">// cache the static tf from base to laser</span></span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">getBaseToLaserTf</span>(scan_msg-&gt;header.frame_id))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Skipping scan&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 保存scan数据到  LDP  prev_ldp_scan_;</span></span><br><span class="line">  <span class="built_in">laserScanToLDP</span>(scan_msg, prev_ldp_scan_);</span><br><span class="line">  last_icp_time_ = scan_msg-&gt;header.stamp;</span><br><span class="line">  initialized_ = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第二帧及以后的scan</span></span><br><span class="line">index++;		<span class="comment">// static unsigned int index;</span></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;scan index: %d&quot;</span>, index);</span><br><span class="line">LDP  curr_ldp_scan;</span><br><span class="line"><span class="built_in">laserScanToLDP</span>(scan_msg, curr_ldp_scan);</span><br><span class="line"><span class="built_in">processScan</span>(curr_ldp_scan, scan_msg-&gt;header.stamp);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/09/20/VTNfbxGYmPqK3Li.png" alt="流程.png"></p>
+<h2 id="公式计算"><a href="#公式计算" class="headerlink" title="公式计算"></a>公式计算</h2><h2 id="newKeyframeNeeded"><a href="#newKeyframeNeeded" class="headerlink" title="newKeyframeNeeded"></a>newKeyframeNeeded</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">fabs</span>(tf::<span class="built_in">getYaw</span>(d.<span class="built_in">getRotation</span>())) &gt; kf_dist_angular_)</span><br><span class="line">   <span class="keyword">return</span>   <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">double</span> x = d.<span class="built_in">getOrigin</span>().<span class="built_in">getX</span>();</span><br><span class="line"><span class="keyword">double</span> y = d.<span class="built_in">getOrigin</span>().<span class="built_in">getY</span>();</span><br><span class="line"><span class="keyword">if</span> (x*x + y*y &gt; kf_dist_linear_sq_)</span><br><span class="line">   <span class="keyword">return</span>  <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p>优先判断相对旋转</p>
+<p>调用是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 交换新旧frame, key frame 的意思应该是当前配准时的参考帧</span></span><br><span class="line"><span class="comment">// 这个在机器人一直走直线或原地旋转时很难发生</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">newKeyframeNeeded</span>(corr_ch))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// generate  a  keyframe</span></span><br><span class="line">	<span class="built_in">ld_free</span>(prev_ldp_scan_);</span><br><span class="line">	prev_ldp_scan_ = curr_ldp_scan;</span><br><span class="line">	<span class="comment">// 更新下一个时间段的 f2b_kf</span></span><br><span class="line">	f2b_kf_ = f2b_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>prev_ldp_scan_</code>之前是第一帧scan的数据，只有需要 key frame时，才会更新它，但在<code>processScan</code>开头又会把估计位姿和真值初始化为0。  如果没有达到运动阈值，<code>prev_ldp_scan_</code>还是第一帧scan，时间也是第一帧的时间，仍以第一帧为基准进行ICP配准</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" data-id="ckr296h0o00fq4klmh9hx65t5" data-title="laser_scan_matcher 源码解读" class="article-share-link">Share</a>
       
       
       
@@ -598,7 +577,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/13/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/15/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -651,14 +630,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -668,6 +639,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>

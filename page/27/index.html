@@ -71,169 +71,6 @@
       <div class="outer">
         <section id="main">
   
-    <article id="post-激光SLAM/amcl和粒子滤波/源码分析(一)总体逻辑" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/" class="article-date">
-  <time class="dt-published" datetime="2020-01-12T14:22:15.000Z" itemprop="datePublished">2020-01-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/">源码分析(一) 总体逻辑</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>局部定位：假定机器人有了初始位姿，通过增加运动噪声完成机器人定位。不确定性围绕在真实位姿附近，用单峰概率模拟，比如高斯分布。</p>
-</li>
-<li><p>全局定位： 不知道初始位姿，不确定定位误差的有界性。需要匹配定位，单峰概率难以模拟误差分布</p>
-</li>
-<li><p>机器人绑架： 全局定位的延伸，定位难度更大。机器人运行时被搬离原来位置，导致之前定位不准确。</p>
-</li>
-</ul>
-<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img src="https://i.loli.net/2020/08/30/sCI2oG6kHlxim5M.png" alt="AMCL.png"></p>
-<ul>
-<li>初始化</li>
-</ul>
-<p>首先定义两个粒子集，开始都是空集，一个用于重采样缓冲的<code>set_a</code>，一个是最终需要的<code>set_b</code>，对每份粒子集合创建kdtree。算法的目的是用粒子集合来表示置信度。</p>
-<p>先在AMCL里给定一个初始位姿值和协方差矩阵，粒子数为M。一开始，每一个粒子的权重值都是1/M，位姿的分布是一个高斯分布，每个粒子的初始位姿记做<code>(x,y,theta)</code>，其均值是AMCL的初始位姿，方差是从协方差矩阵获得的。将每个粒子插入到kdtree中，对粒子滤波器的粒子集进行聚类。</p>
-<ul>
-<li>运动模型</li>
-</ul>
-<p>概率模型是p(x<sub> t</sub> | u<sub> t</sub>, x<sub> t-1</sub>)， 使用里程计模型进行估计。对每一个粒子更新位姿。位姿是从运动模型中采样获得的，机器人从t-1时刻运动到t时刻，获得相对运动参数<code>rot1,trans,rot2</code></p>
-<p>最终，对于每个粒子的位姿， x加上相对平移量在x轴的分量(乘以cos), y加上相对平移量在y轴的分量， theta加上两次旋转的参数。这些分量除了跟rot1,trans,rot2有关，还跟AMCL中的四个运动噪声参数<code>alpha1~alpha4</code>有关</p>
-<ul>
-<li>感知模型</li>
-</ul>
-<p>概率模型是p(z <sub> t </sub> | x<sub>t</sub>)，使用似然场模型，用于更新每一个粒子的权重</p>
-<ul>
-<li>失效恢复的准备</li>
-</ul>
-<p>把每个粒子添加到临时粒子集中，也就是说<code>set_a</code>内的粒子的权重是不同的，更新粒子集的平均权重。根据alpha_slow和alpha_fast计算短期和长期的似然平均</p>
-<ul>
-<li>重采样</li>
-</ul>
-<p>从缓冲的粒子集中替换所有粒子，抽取粒子的概率取决于粒子的权重，更新后的粒子集有很多粒子是重复的，而抛弃了大多数的低权重的粒子。</p>
-<p>上面的算法还有两个问题： 1. 粒子重采样的退化问题；2. 固定的粒子群导致无用的计算，影响效率。</p>
-<p>具体做法：开始处理每一个粒子，先生成一个(0,1)的随机数rand，如果<code>rand&lt; w_diff = (1 - w_fast / w_slow)</code>，那么当前粒子的位姿是随机值。如果是<code>&gt;=</code>，需要从<code>set_a</code>中寻找一个权重比较大的粒子。方法是：c[i]是第<code>1~i</code>个粒子的权重之和，如果第i+1个粒子的权重很大，那么<code>c[i+1] - c[i]</code>很大，i+1就是我们需要的粒子。</p>
-<p>把上面找出的所有粒子添加到<code>set_b</code>，<code>set_b</code>的粒子个数是M，多数粒子是原来<code>set_a</code>中权重比较大的粒子，而且可能重复。让<code>set_b</code>中的粒子权重全是<code>1 / M</code></p>
-<p>AMCL用到的算法:</p>
-<ul>
-<li>sample_motion_model_odometry</li>
-<li>likelihood_field_range_finder_model</li>
-<li>Augmented_MCL</li>
-<li>KLD_Sampling_MCL</li>
-</ul>
-<p>还有一些剩余的内容，比如KD树，KLD采样</p>
-<br>
-
-<p>文件<code>amcl_node.cpp</code>最主要的几个函数是构造函数，handleMapMessage, laserReceived。尤其是最后一个</p>
-<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><p><code>sigintHandler</code>回调函数在关闭程序之前只有一句<code>amcl_node_ptr-&gt;savePoseToServer();</code>，也就是关闭前把最近一次的机器人位姿存入参数服务器，这就可以理解为什么关掉程序后，用<code>rosparam get</code>获得的<code>initial_pose_x</code>等位姿仍然是以前的。</p>
-<p><code>amcl</code>根据输入参数来决定运行方式。从代码中可以看到amcl支持数据回放的，运行时只需要通过参数<code>--run-from-bag</code>指定bag文件即可</p>
-<p>从main函数可以看出，amcl的所有业务逻辑都是由AmclNode类的构造函数完成</p>
-<h2 id="AmclNode构造函数"><a href="#AmclNode构造函数" class="headerlink" title="AmclNode构造函数"></a>AmclNode构造函数</h2><p>通过参数服务器，根据launch文件里的大量参数，对各类变量赋值</p>
-<p>成员函数<code>updatePoseFromServer</code>，该函数就是用来从参数服务器上获取机器人的初始位姿和位姿误差的协方差矩阵的。</p>
-<p>发布<code>amcl_pose</code>和<code>particlecloud</code>两个主题，分别用于输出机器人位姿估计和粒子集合。</p>
-<p>接着注册三个服务：<code>global_localization</code>用于获取机器人的全局定位，<code>request_nomotion_update</code>则用于手动的触发粒子更新并发布新的位姿估计，<code>set_map</code>用于设定机器人位姿和地图信息。 <strong>这几个平时都用不到</strong></p>
-<br>
-接下来构建激光传感器的消息过滤器对象和tf2的过滤器，并注册回调函数laserReceived。
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">laser_scan_sub_ = <span class="keyword">new</span> message_filters::Subscriber&lt;sensor_msgs::LaserScan&gt;(nh_, scan_topic_, <span class="number">100</span>);</span><br><span class="line">laser_scan_filter_ = <span class="keyword">new</span> tf::MessageFilter&lt;sensor_msgs::LaserScan&gt;(</span><br><span class="line">                                  *laser_scan_sub_, </span><br><span class="line">                                  *tf_, </span><br><span class="line">                                  odom_frame_id_, </span><br><span class="line">                                  <span class="number">100</span> );</span><br><span class="line">laser_scan_filter_-&gt;<span class="built_in">registerCallback</span>(boost::<span class="built_in">bind</span>(&amp;AmclNode::laserReceived,</span><br><span class="line">                                                 <span class="keyword">this</span>, _1));</span><br></pre></td></tr></table></figure>
-这里的message_filter为ROS系统提供了一些通用的消息过滤方法， 它对接收到的消息进行缓存，只有当满足过滤条件后才输出，在需要消息同步的时候应用比较多。这里主要是同时监听激光扫描消息和里程计坐标变换，同步两者的输出。 这一套路在GMapping中也有用到。
-
-<p>订阅用于初始化机器人位姿估计的主题<code>initialpose</code></p>
-<p>根据运行参数<code>use_map_topic_</code>获取地图，或者订阅地图主题，或者通过<code>requestMap</code>请求<code>static_map</code>服务。因为一般取false，所以后面我们直接看<code>requestMap</code>函数，也就是如下逻辑：<br><img src="https://i.loli.net/2020/03/31/qX4dgajlT58Swix.png"><br>定义<code>m_force_update</code>为false，后面会用到</p>
-<p>最后定义一个计时器用于每隔15s检查一次激光雷达的接收数据，如果期间没有收到新的数据给出告警</p>
-<h3 id="requestMap-和-handleMapMessage"><a href="#requestMap-和-handleMapMessage" class="headerlink" title="requestMap 和 handleMapMessage"></a>requestMap 和 handleMapMessage</h3><p><code>requestMap</code>函数请求<code>static_map</code>服务成功后，调用函数<code>handleMapMessage</code>处理接收到的地图数据，进一步完成AmclNode的初始化工作，内容庞大的其实是handleMapMessage</p>
-<p><code>handleMapMessage</code>的流程图在<a target="_blank" rel="noopener" href="https://live.staticflickr.com/65535/49379331342_b2dfde6972_b.jpg">这里</a></p>
-<p>释放了与地图相关的内存和对象之后，通过函数convertMap将地图消息转换成amcl中的地图数据结构。</p>
-<p>接着构建粒子滤波器对象，并完成初始化：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建粒子滤波器对象</span></span><br><span class="line">pf_ = <span class="built_in">pf_alloc</span>(min_particles_,</span><br><span class="line">               max_particles_,</span><br><span class="line">               alpha_slow_,</span><br><span class="line">               alpha_fast_,</span><br><span class="line">               (<span class="keyword">pf_init_model_fn_t</span>)AmclNode::uniformPoseGenerator,</span><br><span class="line">               (<span class="keyword">void</span> *)map_ );</span><br><span class="line">pf_-&gt;pop_err = pf_err_;</span><br><span class="line">pf_-&gt;pop_z = pf_z_;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从参数服务器获取初始位姿及方差放到pf中</span></span><br><span class="line"><span class="built_in">updatePoseFromServer</span>();</span><br><span class="line"><span class="keyword">pf_vector_t</span> pf_init_pose_mean = <span class="built_in">pf_vector_zero</span>();</span><br><span class="line">pf_init_pose_mean.v[<span class="number">0</span>] = init_pose_[<span class="number">0</span>];   <span class="comment">// initial_pose_x</span></span><br><span class="line">pf_init_pose_mean.v[<span class="number">1</span>] = init_pose_[<span class="number">1</span>];   <span class="comment">// initial_pose_y</span></span><br><span class="line">pf_init_pose_mean.v[<span class="number">2</span>] = init_pose_[<span class="number">2</span>];   <span class="comment">// initial_pose_a</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pf_matrix_t</span> pf_init_pose_cov = <span class="built_in">pf_matrix_zero</span>();</span><br><span class="line">pf_init_pose_cov.m[<span class="number">0</span>][<span class="number">0</span>] = init_cov_[<span class="number">0</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">1</span>][<span class="number">1</span>] = init_cov_[<span class="number">1</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">2</span>][<span class="number">2</span>] = init_cov_[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化高斯粒子滤波器</span></span><br><span class="line"><span class="built_in">pf_init</span>(pf_, pf_init_pose_mean, pf_init_pose_cov);</span><br><span class="line">pf_init_ = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
-<p>这里面有两个重要函数<strong>pf_alloc</strong>和<strong>pf_init</strong></p>
-<p>构建里程计对象，根据launch文件里的参数配置里程计模型</p>
-<p>构建雷达传感器对象，根据运行参数<code>laser_model_type_</code>构建不同模型的雷达</p>
-<p>最后考虑到，在接收到地图数据之前，有可能已经接收到了机器人的初始位姿，这里调用函数applyInitialPose处理</p>
-<h3 id="pf-alloc"><a href="#pf-alloc" class="headerlink" title="pf_alloc"></a>pf_alloc</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a new filter</span></span><br><span class="line"><span class="function"><span class="keyword">pf_t</span> *<span class="title">pf_alloc</span><span class="params">(<span class="keyword">int</span> min_samples, <span class="keyword">int</span> max_samples,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="keyword">double</span> alpha_slow, <span class="keyword">double</span> alpha_fast,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="keyword">pf_init_model_fn_t</span> random_pose_fn, <span class="keyword">void</span> *random_pose_data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i, j;</span><br><span class="line">  <span class="keyword">pf_t</span> *pf;</span><br><span class="line">  <span class="keyword">pf_sample_set_t</span> *set;</span><br><span class="line">  <span class="keyword">pf_sample_t</span> *sample;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">srand48</span>(<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line"></span><br><span class="line">  pf = <span class="built_in">calloc</span>(<span class="number">1</span>, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_t</span>));</span><br><span class="line"></span><br><span class="line">  pf-&gt;random_pose_fn = random_pose_fn;</span><br><span class="line">  pf-&gt;random_pose_data = random_pose_data;</span><br><span class="line"></span><br><span class="line">  pf-&gt;min_samples = min_samples;</span><br><span class="line">  pf-&gt;max_samples = max_samples;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Control parameters for the population size calculation.  [err] is</span></span><br><span class="line">  <span class="comment">// the max error between the true distribution and the estimated</span></span><br><span class="line">  <span class="comment">// distribution.  [z] is the upper standard normal quantile for (1 -</span></span><br><span class="line">  <span class="comment">// p), where p is the probability that the error on the estimated</span></span><br><span class="line">  <span class="comment">// distrubition will be less than [err].</span></span><br><span class="line">  pf-&gt;pop_err = <span class="number">0.01</span>;</span><br><span class="line">  pf-&gt;pop_z = <span class="number">3</span>;</span><br><span class="line">  pf-&gt;dist_threshold = <span class="number">0.5</span>; </span><br><span class="line">  pf-&gt;current_set = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">2</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    set = pf-&gt;sets + j;</span><br><span class="line"></span><br><span class="line">    set-&gt;sample_count = max_samples;</span><br><span class="line">    set-&gt;samples = <span class="built_in">calloc</span>(max_samples, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_sample_t</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; set-&gt;sample_count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      sample = set-&gt;samples + i;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">0</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">1</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">2</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;weight = <span class="number">1.0</span> / max_samples;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">HACK:</span> is 3 times max_samples enough?</span></span><br><span class="line">    set-&gt;kdtree = <span class="built_in">pf_kdtree_alloc</span>(<span class="number">3</span> * max_samples);</span><br><span class="line"></span><br><span class="line">    set-&gt;cluster_count = <span class="number">0</span>;</span><br><span class="line">    set-&gt;cluster_max_count = max_samples;</span><br><span class="line">    set-&gt;clusters = <span class="built_in">calloc</span>(set-&gt;cluster_max_count, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_cluster_t</span>));</span><br><span class="line"></span><br><span class="line">    set-&gt;mean = <span class="built_in">pf_vector_zero</span>();</span><br><span class="line">    set-&gt;cov = <span class="built_in">pf_matrix_zero</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pf-&gt;w_slow = <span class="number">0.0</span>;</span><br><span class="line">  pf-&gt;w_fast = <span class="number">0.0</span>;</span><br><span class="line">  pf-&gt;alpha_slow = alpha_slow;</span><br><span class="line">  pf-&gt;alpha_fast = alpha_fast;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//set converged to 0</span></span><br><span class="line">  <span class="built_in">pf_init_converged</span>(pf);</span><br><span class="line">  <span class="keyword">return</span> pf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="pf-init"><a href="#pf-init" class="headerlink" title="pf_init"></a>pf_init</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Initialize the filter using a guassian</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pf_init</span><span class="params">(<span class="keyword">pf_t</span> *pf, <span class="keyword">pf_vector_t</span> mean, <span class="keyword">pf_matrix_t</span> cov)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">pf_sample_set_t</span> *set;</span><br><span class="line">  <span class="keyword">pf_sample_t</span> *sample;</span><br><span class="line">  <span class="keyword">pf_pdf_gaussian_t</span> *pdf;</span><br><span class="line">  </span><br><span class="line">  set = pf-&gt;sets + pf-&gt;current_set;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Create the kd tree for adaptive sampling</span></span><br><span class="line">  <span class="built_in">pf_kdtree_clear</span>(set-&gt;kdtree);</span><br><span class="line"></span><br><span class="line">  set-&gt;sample_count = pf-&gt;max_samples;</span><br><span class="line"></span><br><span class="line">  pdf = <span class="built_in">pf_pdf_gaussian_alloc</span>(mean, cov);</span><br><span class="line">    </span><br><span class="line">  <span class="comment">// Compute the new sample poses</span></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; set-&gt;sample_count; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    sample = set-&gt;samples + i;</span><br><span class="line">    sample-&gt;weight = <span class="number">1.0</span> / pf-&gt;max_samples;</span><br><span class="line">    sample-&gt;pose = <span class="built_in">pf_pdf_gaussian_sample</span>(pdf);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add sample to histogram</span></span><br><span class="line">    <span class="built_in">pf_kdtree_insert</span>(set-&gt;kdtree, sample-&gt;pose, sample-&gt;weight);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pf-&gt;w_slow = pf-&gt;w_fast = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">pf_pdf_gaussian_free</span>(pdf);</span><br><span class="line">    </span><br><span class="line">  <span class="comment">// Re-compute cluster statistics</span></span><br><span class="line">  <span class="built_in">pf_cluster_stats</span>(pf, set); </span><br><span class="line"></span><br><span class="line">  <span class="comment">//set converged to 0</span></span><br><span class="line">  <span class="built_in">pf_init_converged</span>(pf);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/" data-id="ckr28w9yo00g04clm30a5dqgp" data-title="源码分析(一) 总体逻辑" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-C++/C++  面向对象/在命名空间中用非成员函数取代成员函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9C%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%94%A8%E9%9D%9E%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-01-03T09:15:07.000Z" itemprop="datePublished">2020-01-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9C%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%94%A8%E9%9D%9E%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/">在命名空间中用非成员函数取代成员函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>这个就是Effective C++条款23，假如类有多个成员函数，现在需要在一个函数里调用这几个函数，那么最好不要把它定义为成员函数，而是类外的普通函数。</p>
-<p>最常见的做法是定义一个namespace，把类和普通函数都放到里面，namespace可以跨越多个文件，但类不能。这正是C++标准库std的风格，std有数十个文件，每个声明std的部分机能，这样能<font color = blue size =3> 降低编译的依存性。 </font></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 头文件</span></span><br><span class="line"><span class="keyword">namespace</span> test &#123;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Base</span>();</span><br><span class="line">    ~<span class="built_in">Base</span>();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setA</span><span class="params">(<span class="keyword">int</span> a)</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setB</span><span class="params">(<span class="keyword">int</span> b)</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_a;</span><br><span class="line">    <span class="keyword">double</span> m_b;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//  这里声明，但不能定义函数体，否则编译不通过</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setAB</span><span class="params">(Base&amp; obj, <span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 源文件</span></span><br><span class="line">test::Base::<span class="built_in">Base</span>():</span><br><span class="line">    <span class="built_in">m_a</span>(<span class="number">0</span>),</span><br><span class="line">    <span class="built_in">m_b</span>(<span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;base constructor&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test::Base::~<span class="built_in">Base</span>()</span><br><span class="line">&#123;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;base destructor&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> test::Base::<span class="built_in">setA</span>(<span class="keyword">int</span> a)</span><br><span class="line">&#123;</span><br><span class="line">    m_a = a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> test::Base::<span class="built_in">setB</span>(<span class="keyword">int</span> b)</span><br><span class="line">&#123;</span><br><span class="line">    m_b = b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//必须加test:: ，否则编译不通过</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test::setAB</span><span class="params">(Base&amp; obj, <span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    obj.<span class="built_in">setA</span>(a);</span><br><span class="line">    obj.<span class="built_in">setB</span>(b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 调用</span></span><br><span class="line">test::Base b;</span><br><span class="line">test::<span class="built_in">setAB</span>(b, <span class="number">43</span>, <span class="number">23</span>);</span><br></pre></td></tr></table></figure>
-
-<p><code>setAB</code>函数在类Base之外，这样的封装性比作为成员函数要好，它并不增加能访问类private成员的函数数量，有较低的编译相依度。</p>
-<p>类放到命名空间后，继承类可以像平常那样继承，不必也放到这个命名空间里。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9C%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%94%A8%E9%9D%9E%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" data-id="ckr28w9w1009s4clmd3gdc11m" data-title="在命名空间中用非成员函数取代成员函数" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-C++/C++  面向对象/内联函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0/" class="article-date">
@@ -292,7 +129,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0/" data-id="ckr28w9vy009k4clm284we0b8" data-title="内联函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0/" data-id="ckr296gxp009j4klm1xi0954c" data-title="内联函数" class="article-share-link">Share</a>
       
       
       
@@ -467,7 +304,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/" data-id="ckr28w9w2009t4clmeottg8yr" data-title="总结Effective C++条款" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/" data-id="ckr296gxv009s4klm1m1lcpy2" data-title="总结Effective C++条款" class="article-share-link">Share</a>
       
       
       
@@ -525,7 +362,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8(%E4%BA%8C)/" data-id="ckr28w9w900a84clm2denfwhc" data-title="构造函数的成员初始化列表 (二)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8(%E4%BA%8C)/" data-id="ckr296gy000a74klm4g5lg2vk" data-title="构造函数的成员初始化列表 (二)" class="article-share-link">Share</a>
       
       
       
@@ -582,7 +419,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/const%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" data-id="ckr28w9vp008z4clm1xaletd5" data-title="const成员变量和成员函数" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/const%E6%88%90%E5%91%98%E5%8F%98%E9%87%8F%E5%92%8C%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" data-id="ckr296gxj008y4klmenj1gk3y" data-title="const成员变量和成员函数" class="article-share-link">Share</a>
       
       
       
@@ -642,7 +479,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BD%BF%E7%94%A8const%E5%BC%95%E7%94%A8%E5%81%9A%E5%87%BD%E6%95%B0%E5%BD%A2%E5%8F%82%E7%B1%BB%E5%9E%8B/" data-id="ckr28w9vv009h4clm5rllh1lg" data-title="使用const引用做函数形参类型" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BD%BF%E7%94%A8const%E5%BC%95%E7%94%A8%E5%81%9A%E5%87%BD%E6%95%B0%E5%BD%A2%E5%8F%82%E7%B1%BB%E5%9E%8B/" data-id="ckr296gxp009g4klm2yte0l95" data-title="使用const引用做函数形参类型" class="article-share-link">Share</a>
       
       
       
@@ -730,7 +567,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/19/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%80)%20%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" data-id="ckr28w9yu00gf4clm2ksjebr8" data-title="(一) 论文解读" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/19/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%80)%20%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/" data-id="ckr296h0x00gb4klm2wf1dol8" data-title="(一) 论文解读" class="article-share-link">Share</a>
       
       
       
@@ -781,7 +618,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BF%90%E5%8A%A8%E6%A8%A1%E5%9E%8B/" data-id="ckr28w9xs00e24clm3e94hodg" data-title="机器人运动模型" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BF%90%E5%8A%A8%E6%A8%A1%E5%9E%8B/" data-id="ckr296gzu00e14klm2qr91xr4" data-title="机器人运动模型" class="article-share-link">Share</a>
       
       
       
@@ -826,7 +663,130 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/12/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%89)%20%E6%A0%87%E5%AE%9A%E5%86%85%E5%A4%96%E5%8F%82/" data-id="ckr28w9x900co4clme6pzfzlf" data-title="IMU在ROS中的使用 (三) 标定内外参" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/12/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%89)%20%E6%A0%87%E5%AE%9A%E5%86%85%E5%A4%96%E5%8F%82/" data-id="ckr296gz600cn4klma56zbif1" data-title="IMU在ROS中的使用 (三) 标定内外参" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/IMU在ROS中的使用 (二) 发布话题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%E5%8F%91%E5%B8%83%E8%AF%9D%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2019-12-10T12:39:16.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%E5%8F%91%E5%B8%83%E8%AF%9D%E9%A2%98/">IMU在ROS中的使用 (二) 发布话题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>通过IMU获得的是odom坐标系下的坐标，<code>sensor_msgs/Imu</code>消息：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存IMU的数据</span></span><br><span class="line"><span class="comment"># 加速度单位 m/s^2 (not in g&#x27;s), 角速度单位 rad/sec</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># If the covariance of the measurement is known, it should be filled in (if all you know is the </span></span><br><span class="line"><span class="comment"># variance of each measurement, e.g. from the datasheet, just put those along the diagonal)</span></span><br><span class="line"><span class="comment"># 如果协方差矩阵元素全是0，那么认为是未知协方差。</span></span><br><span class="line"><span class="comment"># If you have no estimate for one of the data elements (e.g. your IMU doesn&#x27;t produce an orientation </span></span><br><span class="line"><span class="comment"># estimate), please set element 0 of the associated covariance matrix to -1</span></span><br><span class="line"><span class="comment"># If you are interpreting this message, please check for a value of -1 in the first element of each </span></span><br><span class="line"><span class="comment"># covariance matrix, and disregard the associated estimate.</span></span><br><span class="line"></span><br><span class="line">Header header</span><br><span class="line">geometry_msgs/Quaternion orientation   <span class="comment"># IMU的当前姿态，4元数的形式表示</span></span><br><span class="line">float64[9] orientation_covariance   <span class="comment"># 姿态的协方差</span></span><br><span class="line"></span><br><span class="line">geometry_msgs/Vector3 angular_velocity  	 <span class="comment"># IMU的3轴角速度</span></span><br><span class="line">float64[9] angular_velocity_covariance</span><br><span class="line"></span><br><span class="line">geometry_msgs/Vector3 linear_acceleration  	 <span class="comment"># IMU的3轴加速度</span></span><br><span class="line">float64[9] linear_acceleration_covariance</span><br></pre></td></tr></table></figure>
+
+<h3 id="滤波工具"><a href="#滤波工具" class="headerlink" title="滤波工具"></a>滤波工具</h3><p>ROS官方提供了滤波工具，可以直接安装：<code>sudo apt-get install ros-kinetic-imu-tools</code>，包括两个package和一个rviz插件：</p>
+<ul>
+<li><p>imu_filter_madgwick: 将IMU设备读取的角速度、加速度和磁力计融合成方位信息</p>
+</li>
+<li><p>imu_complementary_filter: 一种基于强制融合的新方法将IMU设备读取的角速度、加速度和磁力计融合成方位信息。</p>
+</li>
+<li><p>rviz_imu_plugin：显示sensor_msgs::Imu的rviz插件</p>
+</li>
+</ul>
+<p>两种滤波器都是订阅IMU节点发布的<code>imu/data_raw</code>话题，经过滤波处理后，再发布<code>imu/data</code>话题。但是我用两种滤波器处理IMU数据后，没有发现明显的改善，也许是设备的原因，本来数据浮动就不大</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/ccny-ros-pkg/imu_tools">imu_tools</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%E5%8F%91%E5%B8%83%E8%AF%9D%E9%A2%98/" data-id="ckr296gz600cp4klm2irjaloy" data-title="IMU在ROS中的使用 (二) 发布话题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/IMU在ROS中的使用 (一) 基于串口通信获取欧拉角，角速度，线加速度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/" class="article-date">
+  <time class="dt-published" datetime="2019-12-10T11:40:53.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/">IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>IMU一般包括3个功能:</p>
+<ul>
+<li>3轴加速度计：测量 x y z 3个方向上的加速度，z轴的加速度也就是重力值的大小(IMU水平的情况下)</li>
+<li>3轴角速度计：测量出IMU分别绕着 x y z 轴旋转的角速度</li>
+<li>3轴磁力计：测出地球磁场的方向，用于确定IMU 在 x y z 轴的方向，但是受磁铁，金属等影响较大．</li>
+</ul>
+<p>前两个功能的组合被称为6轴IMU，这3个功能的组合被称为9轴IMU． IMU的频率可以很高，10hz-400hz。<br>里程计中也存在线速度角速度，但是这个线速度角速度是通过距离除以时间得到的，没有IMU的精确．</p>
+<p>任何IMU都不能直接提供姿态，我所用的陀螺仪的姿态是内置算法计算得到的。</p>
+<p>我用的陀螺仪是深圳瑞芬的TL740D，基于RS485接口的瑞芬协议<br><img src="https://i.loli.net/2019/12/10/7Le3V4hkzPXE81G.png"></p>
+<p>它有四种输出模式，默认使用第一种<br><img src="https://i.loli.net/2019/12/10/S4YmaKqg7O6Cvnl.png"></p>
+<h2 id="默认模式"><a href="#默认模式" class="headerlink" title="默认模式"></a>默认模式</h2><p>协议内容如下：<br><img src="https://i.loli.net/2019/12/10/Cdo86kyQNxgJqeR.png"><br><img src="https://i.loli.net/2019/12/10/nOB6zplPGmuEX4K.png"></p>
+<p>使用默认模式时，数据长度为14字节，地址码00，命令字为84.之后的9个字节是数据域，最后是校验和。三个数据的计算方法如图所示，不必详细分析。</p>
+<p>注意校验和是十六进制相加，不必换成十进制，但照常进位。</p>
+<p>根据说明，安装好IMU之后，IMU就按照协议开始向串口发数据了，我们需要的是读串口的程序</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># license removed for brevity</span></span><br><span class="line"><span class="keyword">import</span> rospy</span><br><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> sensor_msgs.msg <span class="keyword">import</span> Imu</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recv</span>(<span class="params">serial</span>):</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = serial.read(<span class="number">14</span>)   <span class="comment"># 读14字节</span></span><br><span class="line">        <span class="keyword">if</span> data == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        sleep(<span class="number">0.04</span>)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将ASCII码转为十六进制显示，十六进制显示的实质是把接收到的字符转换成其对应的ASCII码，</span></span><br><span class="line"><span class="comment"># 然后将ASCII码值再转换成十六进制数显示出来，这样就可以显示特殊字符了。</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hexShow</span>(<span class="params">argv</span>):</span>  </span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span>  </span><br><span class="line">    hLen = <span class="built_in">len</span>(argv)  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(hLen):  </span><br><span class="line">        hvol = <span class="built_in">ord</span>(argv[i])  </span><br><span class="line">        hhex = <span class="string">&#x27;%02x&#x27;</span>%hvol  </span><br><span class="line">        result += hhex+<span class="string">&#x27; &#x27;</span>  </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;read hex data:&#x27;</span>,result  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    rospy.init_node(<span class="string">&#x27;imu_node&#x27;</span>)</span><br><span class="line">    serial = serial.Serial(<span class="string">&#x27;/dev/ttyS1&#x27;</span>, <span class="number">115200</span>, timeout=<span class="number">0.5</span>)</span><br><span class="line">    <span class="keyword">if</span> serial.isOpen() :</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;open serial success&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;open serial failed&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data =recv(serial)</span><br><span class="line">        <span class="keyword">if</span> data != <span class="string">b&#x27;&#x27;</span> :</span><br><span class="line">            hexShow(data)   <span class="comment"># 显示读到的14个字节数据</span></span><br><span class="line"></span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">10</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">11</span>])&gt;&gt;<span class="number">4</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">11</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">12</span>])&gt;&gt;<span class="number">4</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">12</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">            <span class="comment"># 处理第11~13字节</span></span><br><span class="line">			int_100 = (<span class="built_in">ord</span>(data[<span class="number">10</span>])&amp;<span class="number">0x0f</span>)*<span class="number">100</span></span><br><span class="line">			int_10  = (<span class="built_in">ord</span>(data[<span class="number">11</span>])&gt;&gt;<span class="number">4</span>)*<span class="number">10</span></span><br><span class="line">			int_1   = (<span class="built_in">ord</span>(data[<span class="number">11</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			dec_0_1 = (<span class="built_in">ord</span>(data[<span class="number">12</span>])&gt;&gt;<span class="number">4</span>)*<span class="number">0.1</span></span><br><span class="line">			dec_0_0_1 = (<span class="built_in">ord</span>(data[<span class="number">12</span>])&amp;<span class="number">0x0f</span>)*<span class="number">0.01</span></span><br><span class="line">			sum_num = int_100+int_10+int_1+dec_0_1+dec_0_0_1</span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">ord</span>(data[<span class="number">10</span>])&gt;&gt;<span class="number">4</span> :</span><br><span class="line">				sum_num = -sum_num</span><br></pre></td></tr></table></figure>
+<p>这是基于Python的ROS程序，<code>ord()</code>函数以一个字符（长度为1的字符串）作为参数，返回对应的ASCII数值，用法： <code>ord(&#39;a&#39;)  # 结果为97</code></p>
+<p>经过一系列进制转换，求得的<code>sum_num</code>是Z轴方位角，而显示的14字节数据是这样的<br><img src="https://i.loli.net/2019/12/10/U6TlcC3RkFdbxJf.png"></p>
+<h2 id="9轴模式"><a href="#9轴模式" class="headerlink" title="9轴模式"></a>9轴模式</h2><p>ROS中最常用的是9轴模式，也就是需要三向角速度，三向线加速度和姿态角(欧拉角表示)</p>
+<p>对于本型号的IMU，如果要切换成9轴模式，用串口助手向IMU所连接的串口发送数据，依据如下：<br><img src="https://i.loli.net/2019/12/10/ybKTN7FU3LHV54j.png"><br>根据上面所说的校验和计算方法，应该发送<code>68  05  00  FD  70  72</code>，因为IMU不断在向串口发数据，所以最好使用python程序读串口数据，用串口助手的写模式打开串口，这样容易观察数据是否变化。注意用串口助手发命令，<font color = blue>  <font size= 3> 十六进制数据之间不能有空格 </font> </font><br><img src="https://i.loli.net/2019/12/11/NTudS9YgZtO2hUR.png"></p>
+<p>问题在于我开始怎么发命令都不成功，后来用了RS485转串口线，此时的接口变成了<code>/dev/ttyUSB0</code>，发命令后的读数据会有变化，这样就成功了。</p>
+<p>现在读串口的协议是这样<br><img src="https://i.loli.net/2019/12/10/X8FqARvgWs7DIfG.png"></p>
+<p>程序应该读32字节了，按照协议处理数据后，结果如下：<br><img src="https://i.loli.net/2019/12/11/gTHIZ6lhbAUwNXq.png"><br>IMU每次上电后(不是启动读串口程序后)，获得的yaw就是0，直接等于运动模型中的航向角，而且经过其算法处理，范围一直在(-π，π）。IMU的z轴受重力影响，加速度应当是是g。本IMU根据通信协议，<strong>z轴加速度的单位是g，不是m²/s</strong></p>
+<p>9个数据都有了，下一步就是转换成<code>sensor_msgs/Imu</code>消息发布出去</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>IMU协议中有一个命令是对方位角清零，也就是设置当前位置为IMU的零度，放到机器人的环境，就是设置yaw的零点<br><img src="https://i.loli.net/2019/12/11/WNqXMaZUTGK7oBx.png"><br>我在测试IMU时发了一次，后来发现竟然设置成功了，这样yaw零点变了，但是后来发现没有影响机器人的定位，应该是因为AMCL没有用到IMU的缘故</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/lovelyaiq/article/details/48101487">pyserial控制串口</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/21207-iHome/p/7832355.html">ROS中发布IMU传感器消息</a><br><a target="_blank" rel="noopener" href="https://item.taobao.com/item.htm?spm=a230r.1.14.32.70f87402NOjFgN&id=550003805104&ns=1&abbucket=5">陀螺仪购买链接</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/" data-id="ckr296gz500cm4klm7qy47i1l" data-title="IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度" class="article-share-link">Share</a>
       
       
       
@@ -842,7 +802,7 @@
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/page/26/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="page-number current">27</span><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/28/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/page/26/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="page-number current">27</span><a class="page-number" href="/page/28/">28</a><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/28/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -895,14 +855,6 @@
       <ul>
         
           <li>
-            <a href="/2021/07/13/7861/">7861</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
           </li>
         
@@ -912,6 +864,14 @@
         
           <li>
             <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
           </li>
         
       </ul>
