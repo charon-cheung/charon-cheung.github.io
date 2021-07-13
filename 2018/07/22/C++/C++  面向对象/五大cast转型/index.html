@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>五大cast转型 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="const_cast const_cast是唯一能将const性质转化掉的操作符，但执行其他任何类型的转换都会引起编译错误。  单纯的把常量转为变量是没多少意义的，也就是这种代码: 12const int con &#x3D;12;int cc&#x3D; static_cast&lt;int&gt;(con); 直接用变量或者mutable就好了。 如果定义了一个非const的变量，却使用了一个指向const值的指">
+<meta property="og:type" content="article">
+<meta property="og:title" content="五大cast转型">
+<meta property="og:url" content="http://example.com/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="const_cast const_cast是唯一能将const性质转化掉的操作符，但执行其他任何类型的转换都会引起编译错误。  单纯的把常量转为变量是没多少意义的，也就是这种代码: 12const int con &#x3D;12;int cc&#x3D; static_cast&lt;int&gt;(con); 直接用变量或者mutable就好了。 如果定义了一个非const的变量，却使用了一个指向const值的指">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-22T12:10:41.000Z">
+<meta property="article:modified_time" content="2020-08-25T02:23:17.812Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-C++/C++  面向对象/五大cast转型" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/" class="article-date">
+  <time class="dt-published" datetime="2018-07-22T12:10:41.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      五大cast转型
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="const-cast"><a href="#const-cast" class="headerlink" title="const_cast"></a>const_cast</h2><ul>
+<li>const_cast是唯一能将const性质转化掉的操作符，但执行其他任何类型的转换都会引起编译错误。</li>
+</ul>
+<p>单纯的把常量转为变量是没多少意义的，也就是这种代码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> con =<span class="number">12</span>;</span><br><span class="line"><span class="keyword">int</span> cc= <span class="keyword">static_cast</span>&lt;<span class="keyword">int</span>&gt;(con);</span><br></pre></td></tr></table></figure>
+<p>直接用变量或者mutable就好了。</p>
+<p>如果定义了一个非const的变量，却使用了一个指向const值的指针来指向它（不规范的风格），在程序的某处我们想改变这个变量的值了，但手头只持有指针，这是const_cast就可以用到了：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> constant = <span class="number">26</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>* const_p = &amp;constant;</span><br><span class="line"><span class="keyword">int</span>* modifier = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(const_p);</span><br><span class="line">*modifier = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<p>这并不是一个好的设计，还是应该遵从这样的原则：使用<code>const_cast</code>去除const限定的目的绝对不是为了修改它的内容，只是出于无奈，所以最好少用转型。</p>
+<p>如果有一个函数，它的形参是non-const类型变量，而且函数不会对实参的值进行改动，这时我们可以使用类型为const的变量来调用函数，也就用到const_cast了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InputInt</span><span class="params">(<span class="keyword">int</span> * num)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout&lt;&lt;*num&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> constant = <span class="number">21</span>;</span><br><span class="line">    <span class="built_in">InputInt</span>(<span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(&amp;constant));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="dynamic-cast"><a href="#dynamic-cast" class="headerlink" title="dynamic_cast"></a>dynamic_cast</h2><p>dynamic_cast用于类继承层次间的 <font color = blue>  <font size= 3> 指针或引用 </font> </font>的转换。和<code>qobject_cast</code>类似，用于执行<strong>安全的向下转型</strong></p>
+<p><code>dynamic_cast</code> <font color = blue size =3> 只能用于含有虚函数的类，虚函数表是是dynamic_cast操作符转换能够进行的前提条件。虚表的最前面是指向type_info的指针，包含了类的继承信息、类的描述等。能否转换成功，所依据的就是<code>type_info</code>。</font>如果转换失败，new_type 是指针，那么将返回NULL；如果 new_type 是引用，那么将抛出异常 std::bad_cast</p>
+<p>向下转型有两种情况。一种是基类指针所指对象是派生类类型的，这种转换是安全的；另一种是基类指针所指对象为基类类型，在这种情况下dynamic_cast在<strong>运行时做类型检查</strong>，转换失败，返回结果为0</p>
+<p>最常用的情况是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Base* bb = <span class="keyword">new</span> <span class="built_in">Derive</span>();</span><br><span class="line">Derive* dd = <span class="keyword">dynamic_cast</span>&lt;Derive*&gt;(bb);</span><br><span class="line">dd-&gt;<span class="built_in">test</span>();</span><br></pre></td></tr></table></figure>
+<p>如果没有虚函数，会报错:<code>error: C2683: “dynamic_cast”:“Base”不是多态类型</code>。</p>
+<p>dynamic_cast在基类和派生类指针之间转换时，会<strong>遍历整个继承体系进行类型检查</strong>,因此dynamic_cast时间和空间代价较高。比如4级的继承结构，<code>dynamic_cast&lt;Base&gt;</code>将会调用4次才能确定最终的那个子类型，<strong>尤其避免连续使用转型</strong>，用虚函数代替这种情况。</p>
+<h2 id="static-cast"><a href="#static-cast" class="headerlink" title="static_cast"></a>static_cast</h2><p>类似于C风格的强制转换。无条件转换，静态类型转换。用于：</p>
+<ul>
+<li><p>子类转换为父类：其中子类指针转换成父类指针是安全的；但父类指针转换成子类指针是不安全的，此时用dynamic_cast</p>
+</li>
+<li><p>基本数据类型转换，例如double, int, char, float等，不能进行无关类型（如非基类和子类）指针之间的转换。</p>
+</li>
+<li><p>none const转换为const，<code>void*</code>转换为某类型指针</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> a = <span class="number">1.999</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(a); 	<span class="comment">//相当于a = b ;</span></span><br></pre></td></tr></table></figure>
+
+<p>大多数的编译器都会给出一个警告：从“double”转换到“int”，可能丢失数据。<code>static_cast</code>可以明确告诉编译器，这种损失精度的转换是在知情的情况下进行的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> a = <span class="number">1.999</span>;</span><br><span class="line"><span class="keyword">void</span> * vptr = &amp; a;</span><br><span class="line"><span class="keyword">double</span> * dptr = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>*&gt;(vptr);</span><br><span class="line">cout&lt;&lt; *dptr &lt;&lt;endl;		<span class="comment">//输出1.999</span></span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>把任何类型的表达式转换成void类型。</li>
+</ol>
+<p>static_cast进行的是简单粗暴的转换，<strong>static_cast不做运行时的类型检查以保证转换的安全性</strong>，所以static_cast不如dynamic_cast安全，其正确性完全由程序员自己保证。</p>
+<h2 id="reinterpret-cast"><a href="#reinterpret-cast" class="headerlink" title="reinterpret_cast"></a>reinterpret_cast</h2><h2 id="qobject-cast"><a href="#qobject-cast" class="headerlink" title="qobject_cast"></a>qobject_cast</h2><p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/dbzhang800/article/details/6665298">qobject_cast 分析及QTBUG 20616</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/" data-id="ckr28oqxp009fewlm1f52bjnj" data-title="五大cast转型" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          单例模式的多种形态
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/21/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E9%9D%99%E6%80%81%E7%BB%91%E5%AE%9A%E5%92%8C%E5%8A%A8%E6%80%81%E7%BB%91%E5%AE%9A/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">静态绑定和动态绑定</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

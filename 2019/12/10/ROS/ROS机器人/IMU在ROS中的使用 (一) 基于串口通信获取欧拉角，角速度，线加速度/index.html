@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="IMU一般包括3个功能:  3轴加速度计：测量 x y z 3个方向上的加速度，z轴的加速度也就是重力值的大小(IMU水平的情况下) 3轴角速度计：测量出IMU分别绕着 x y z 轴旋转的角速度 3轴磁力计：测出地球磁场的方向，用于确定IMU 在 x y z 轴的方向，但是受磁铁，金属等影响较大．  前两个功能的组合被称为6轴IMU，这3个功能的组合被称为9轴IMU． IMU的频率可以很高，10">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度">
+<meta property="og:url" content="http://example.com/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="IMU一般包括3个功能:  3轴加速度计：测量 x y z 3个方向上的加速度，z轴的加速度也就是重力值的大小(IMU水平的情况下) 3轴角速度计：测量出IMU分别绕着 x y z 轴旋转的角速度 3轴磁力计：测出地球磁场的方向，用于确定IMU 在 x y z 轴的方向，但是受磁铁，金属等影响较大．  前两个功能的组合被称为6轴IMU，这3个功能的组合被称为9轴IMU． IMU的频率可以很高，10">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/7Le3V4hkzPXE81G.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/S4YmaKqg7O6Cvnl.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/Cdo86kyQNxgJqeR.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/nOB6zplPGmuEX4K.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/U6TlcC3RkFdbxJf.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/ybKTN7FU3LHV54j.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/11/NTudS9YgZtO2hUR.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/10/X8FqARvgWs7DIfG.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/11/gTHIZ6lhbAUwNXq.png">
+<meta property="og:image" content="https://i.loli.net/2019/12/11/WNqXMaZUTGK7oBx.png">
+<meta property="article:published_time" content="2019-12-10T11:40:53.000Z">
+<meta property="article:modified_time" content="2021-05-08T07:44:42.864Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/12/10/7Le3V4hkzPXE81G.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROS/ROS机器人/IMU在ROS中的使用 (一) 基于串口通信获取欧拉角，角速度，线加速度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/" class="article-date">
+  <time class="dt-published" datetime="2019-12-10T11:40:53.000Z" itemprop="datePublished">2019-12-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>IMU一般包括3个功能:</p>
+<ul>
+<li>3轴加速度计：测量 x y z 3个方向上的加速度，z轴的加速度也就是重力值的大小(IMU水平的情况下)</li>
+<li>3轴角速度计：测量出IMU分别绕着 x y z 轴旋转的角速度</li>
+<li>3轴磁力计：测出地球磁场的方向，用于确定IMU 在 x y z 轴的方向，但是受磁铁，金属等影响较大．</li>
+</ul>
+<p>前两个功能的组合被称为6轴IMU，这3个功能的组合被称为9轴IMU． IMU的频率可以很高，10hz-400hz。<br>里程计中也存在线速度角速度，但是这个线速度角速度是通过距离除以时间得到的，没有IMU的精确．</p>
+<p>任何IMU都不能直接提供姿态，我所用的陀螺仪的姿态是内置算法计算得到的。</p>
+<p>我用的陀螺仪是深圳瑞芬的TL740D，基于RS485接口的瑞芬协议<br><img src="https://i.loli.net/2019/12/10/7Le3V4hkzPXE81G.png"></p>
+<p>它有四种输出模式，默认使用第一种<br><img src="https://i.loli.net/2019/12/10/S4YmaKqg7O6Cvnl.png"></p>
+<h2 id="默认模式"><a href="#默认模式" class="headerlink" title="默认模式"></a>默认模式</h2><p>协议内容如下：<br><img src="https://i.loli.net/2019/12/10/Cdo86kyQNxgJqeR.png"><br><img src="https://i.loli.net/2019/12/10/nOB6zplPGmuEX4K.png"></p>
+<p>使用默认模式时，数据长度为14字节，地址码00，命令字为84.之后的9个字节是数据域，最后是校验和。三个数据的计算方法如图所示，不必详细分析。</p>
+<p>注意校验和是十六进制相加，不必换成十进制，但照常进位。</p>
+<p>根据说明，安装好IMU之后，IMU就按照协议开始向串口发数据了，我们需要的是读串口的程序</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># license removed for brevity</span></span><br><span class="line"><span class="keyword">import</span> rospy</span><br><span class="line"><span class="keyword">import</span> serial</span><br><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">from</span> sensor_msgs.msg <span class="keyword">import</span> Imu</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">recv</span>(<span class="params">serial</span>):</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data = serial.read(<span class="number">14</span>)   <span class="comment"># 读14字节</span></span><br><span class="line">        <span class="keyword">if</span> data == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        sleep(<span class="number">0.04</span>)</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将ASCII码转为十六进制显示，十六进制显示的实质是把接收到的字符转换成其对应的ASCII码，</span></span><br><span class="line"><span class="comment"># 然后将ASCII码值再转换成十六进制数显示出来，这样就可以显示特殊字符了。</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hexShow</span>(<span class="params">argv</span>):</span>  </span><br><span class="line">    result = <span class="string">&#x27;&#x27;</span>  </span><br><span class="line">    hLen = <span class="built_in">len</span>(argv)  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(hLen):  </span><br><span class="line">        hvol = <span class="built_in">ord</span>(argv[i])  </span><br><span class="line">        hhex = <span class="string">&#x27;%02x&#x27;</span>%hvol  </span><br><span class="line">        result += hhex+<span class="string">&#x27; &#x27;</span>  </span><br><span class="line">    <span class="built_in">print</span> <span class="string">&#x27;read hex data:&#x27;</span>,result  </span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line"></span><br><span class="line">    rospy.init_node(<span class="string">&#x27;imu_node&#x27;</span>)</span><br><span class="line">    serial = serial.Serial(<span class="string">&#x27;/dev/ttyS1&#x27;</span>, <span class="number">115200</span>, timeout=<span class="number">0.5</span>)</span><br><span class="line">    <span class="keyword">if</span> serial.isOpen() :</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;open serial success&quot;</span>)</span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;open serial failed&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        data =recv(serial)</span><br><span class="line">        <span class="keyword">if</span> data != <span class="string">b&#x27;&#x27;</span> :</span><br><span class="line">            hexShow(data)   <span class="comment"># 显示读到的14个字节数据</span></span><br><span class="line"></span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">10</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">11</span>])&gt;&gt;<span class="number">4</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">11</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">12</span>])&gt;&gt;<span class="number">4</span>)</span><br><span class="line">			<span class="built_in">print</span>(<span class="built_in">ord</span>(data[<span class="number">12</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">            <span class="comment"># 处理第11~13字节</span></span><br><span class="line">			int_100 = (<span class="built_in">ord</span>(data[<span class="number">10</span>])&amp;<span class="number">0x0f</span>)*<span class="number">100</span></span><br><span class="line">			int_10  = (<span class="built_in">ord</span>(data[<span class="number">11</span>])&gt;&gt;<span class="number">4</span>)*<span class="number">10</span></span><br><span class="line">			int_1   = (<span class="built_in">ord</span>(data[<span class="number">11</span>])&amp;<span class="number">0x0f</span>)</span><br><span class="line">			dec_0_1 = (<span class="built_in">ord</span>(data[<span class="number">12</span>])&gt;&gt;<span class="number">4</span>)*<span class="number">0.1</span></span><br><span class="line">			dec_0_0_1 = (<span class="built_in">ord</span>(data[<span class="number">12</span>])&amp;<span class="number">0x0f</span>)*<span class="number">0.01</span></span><br><span class="line">			sum_num = int_100+int_10+int_1+dec_0_1+dec_0_0_1</span><br><span class="line">			<span class="keyword">if</span> <span class="built_in">ord</span>(data[<span class="number">10</span>])&gt;&gt;<span class="number">4</span> :</span><br><span class="line">				sum_num = -sum_num</span><br></pre></td></tr></table></figure>
+<p>这是基于Python的ROS程序，<code>ord()</code>函数以一个字符（长度为1的字符串）作为参数，返回对应的ASCII数值，用法： <code>ord(&#39;a&#39;)  # 结果为97</code></p>
+<p>经过一系列进制转换，求得的<code>sum_num</code>是Z轴方位角，而显示的14字节数据是这样的<br><img src="https://i.loli.net/2019/12/10/U6TlcC3RkFdbxJf.png"></p>
+<h2 id="9轴模式"><a href="#9轴模式" class="headerlink" title="9轴模式"></a>9轴模式</h2><p>ROS中最常用的是9轴模式，也就是需要三向角速度，三向线加速度和姿态角(欧拉角表示)</p>
+<p>对于本型号的IMU，如果要切换成9轴模式，用串口助手向IMU所连接的串口发送数据，依据如下：<br><img src="https://i.loli.net/2019/12/10/ybKTN7FU3LHV54j.png"><br>根据上面所说的校验和计算方法，应该发送<code>68  05  00  FD  70  72</code>，因为IMU不断在向串口发数据，所以最好使用python程序读串口数据，用串口助手的写模式打开串口，这样容易观察数据是否变化。注意用串口助手发命令，<font color = blue>  <font size= 3> 十六进制数据之间不能有空格 </font> </font><br><img src="https://i.loli.net/2019/12/11/NTudS9YgZtO2hUR.png"></p>
+<p>问题在于我开始怎么发命令都不成功，后来用了RS485转串口线，此时的接口变成了<code>/dev/ttyUSB0</code>，发命令后的读数据会有变化，这样就成功了。</p>
+<p>现在读串口的协议是这样<br><img src="https://i.loli.net/2019/12/10/X8FqARvgWs7DIfG.png"></p>
+<p>程序应该读32字节了，按照协议处理数据后，结果如下：<br><img src="https://i.loli.net/2019/12/11/gTHIZ6lhbAUwNXq.png"><br>IMU每次上电后(不是启动读串口程序后)，获得的yaw就是0，直接等于运动模型中的航向角，而且经过其算法处理，范围一直在(-π，π）。IMU的z轴受重力影响，加速度应当是是g。本IMU根据通信协议，<strong>z轴加速度的单位是g，不是m²/s</strong></p>
+<p>9个数据都有了，下一步就是转换成<code>sensor_msgs/Imu</code>消息发布出去</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>IMU协议中有一个命令是对方位角清零，也就是设置当前位置为IMU的零度，放到机器人的环境，就是设置yaw的零点<br><img src="https://i.loli.net/2019/12/11/WNqXMaZUTGK7oBx.png"><br>我在测试IMU时发了一次，后来发现竟然设置成功了，这样yaw零点变了，但是后来发现没有影响机器人的定位，应该是因为AMCL没有用到IMU的缘故</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/lovelyaiq/article/details/48101487">pyserial控制串口</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/21207-iHome/p/7832355.html">ROS中发布IMU传感器消息</a><br><a target="_blank" rel="noopener" href="https://item.taobao.com/item.htm?spm=a230r.1.14.32.70f87402NOjFgN&id=550003805104&ns=1&abbucket=5">陀螺仪购买链接</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%9F%BA%E4%BA%8E%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%E8%8E%B7%E5%8F%96%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E8%A7%92%E9%80%9F%E5%BA%A6%EF%BC%8C%E7%BA%BF%E5%8A%A0%E9%80%9F%E5%BA%A6/" data-id="ckr28oqz400cmewlm01a7bt53" data-title="IMU在ROS中的使用(一) 基于串口通信获取欧拉角，角速度，线加速度" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%E5%8F%91%E5%B8%83%E8%AF%9D%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          IMU在ROS中的使用 (二) 发布话题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/03/PCL%E7%82%B9%E4%BA%91/%E5%B0%86%E9%9B%B7%E8%BE%BE%E7%9A%84%E6%89%AB%E6%8F%8F%E5%8F%91%E5%B8%83%E4%B8%BA%E7%82%B9%E4%BA%91/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">laser_geometry将雷达scan发布为点云(scan to PointCloud2)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

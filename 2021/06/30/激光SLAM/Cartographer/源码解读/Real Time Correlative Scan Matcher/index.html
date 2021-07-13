@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>AddAccumulatedRangeData 函数(1) Real Time Correlative Scan Matcher | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="函数返回类型为 std::unique_ptr&lt;LocalTrajectoryBuilder2D::MatchingResult&gt; 所用参数为  const common::Time time    当前同步时间 const sensor::RangeData&amp;    gravity_aligned_range_data   经过重力修正后的点云returns和miss con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AddAccumulatedRangeData 函数(1) Real Time Correlative Scan Matcher">
+<meta property="og:url" content="http://example.com/2021/06/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/Real%20Time%20Correlative%20Scan%20Matcher/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="函数返回类型为 std::unique_ptr&lt;LocalTrajectoryBuilder2D::MatchingResult&gt; 所用参数为  const common::Time time    当前同步时间 const sensor::RangeData&amp;    gravity_aligned_range_data   经过重力修正后的点云returns和miss con">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-30T01:38:43.000Z">
+<meta property="article:modified_time" content="2021-07-07T04:50:59.200Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/Cartographer/源码解读/Real Time Correlative Scan Matcher" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/06/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/Real%20Time%20Correlative%20Scan%20Matcher/" class="article-date">
+  <time class="dt-published" datetime="2021-06-30T01:38:43.000Z" itemprop="datePublished">2021-06-30</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      AddAccumulatedRangeData 函数(1) Real Time Correlative Scan Matcher
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>函数返回类型为 <code>std::unique_ptr&lt;LocalTrajectoryBuilder2D::MatchingResult&gt;</code></p>
+<p>所用参数为</p>
+<ul>
+<li><code>const common::Time time</code>    当前同步时间</li>
+<li><code>const sensor::RangeData&amp;</code>    gravity_aligned_range_data   经过重力修正后的点云returns和miss</li>
+<li><code>const transform::Rigid3d&amp;</code>   gravity_alignment,</li>
+<li><code>const absl::optional&lt;common::Duration&gt;&amp;    sensor_duration</code></li>
+</ul>
+<p>先看开头，我交换了部分代码顺序，并不影响。这里实际是获得<code>scanMatch</code>的两个参数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (gravity_aligned_range_data.returns.<span class="built_in">empty</span>())</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">LOG</span>(WARNING) &lt;&lt; <span class="string">&quot;Dropped empty horizontal range data.&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> sensor::PointCloud&amp;  filtered_gravity_aligned_point_cloud =</span><br><span class="line">    sensor::<span class="built_in">AdaptiveVoxelFilter</span>(options_.<span class="built_in">adaptive_voxel_filter_options</span>())</span><br><span class="line">        .<span class="built_in">Filter</span>(gravity_aligned_range_data.returns);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (filtered_gravity_aligned_point_cloud.<span class="built_in">empty</span>())</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br></pre></td></tr></table></figure>
+<p>这一段就是流程图的<strong>Adaptive Voxel Filter</strong>环节，解释参考<a href="">(九) Voxel Filter和Adaptive Voxel Filter</a></p>
+<p>然后是估计位姿部分</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> transform::Rigid3d  non_gravity_aligned_pose_prediction =</span><br><span class="line">  extrapolator_-&gt;<span class="built_in">ExtrapolatePose</span>(time);</span><br><span class="line">  <span class="comment">// // 经过重力方向计算投影后的2d位置</span></span><br><span class="line"><span class="keyword">const</span> transform::Rigid2d   pose_prediction = transform::<span class="built_in">Project2D</span>(</span><br><span class="line">      non_gravity_aligned_pose_prediction * gravity_alignment.<span class="built_in">inverse</span>() );</span><br></pre></td></tr></table></figure>
+<p>返回的<code>pose_prediction</code>和上面的<code>filtered_gravity_aligned_point_cloud</code>一起进入 <strong>Scan Mathching</strong> 环节，这个在流程图上很明显。</p>
+<h2 id="scan-match"><a href="#scan-match" class="headerlink" title="scan match"></a>scan match</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// local map frame &lt;- gravity-aligned frame</span></span><br><span class="line"><span class="comment">// 求 Scan 插入Submap的最优 Pose</span></span><br><span class="line">std::unique_ptr&lt;transform::Rigid2d&gt; pose_estimate_2d =</span><br><span class="line">    <span class="built_in">ScanMatch</span>(time, pose_prediction, filtered_gravity_aligned_point_cloud);</span><br><span class="line"><span class="keyword">if</span> (pose_estimate_2d == <span class="literal">nullptr</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">LOG</span>(WARNING) &lt;&lt; <span class="string">&quot;Scan matching failed.&quot;</span>;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里的<code>ScanMatch</code>包含了<strong>real time correlative scan matcher</strong> 和 <strong>ceres scan match</strong>两部分</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输出是对该帧传感器数据的最优pose</span></span><br><span class="line"><span class="function">std::unique_ptr&lt;transform::Rigid2d&gt; <span class="title">LocalTrajectoryBuilder2D::ScanMatch</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> common::Time time,  <span class="keyword">const</span> transform::Rigid2d&amp;  pose_prediction,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> sensor::PointCloud&amp;  filtered_gravity_aligned_point_cloud)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 如果还没有子图，返回PoseExtrapolator的预测值</span></span><br><span class="line">  <span class="keyword">if</span> (active_submaps_.<span class="built_in">submaps</span>().<span class="built_in">empty</span>()) &#123;</span><br><span class="line">    <span class="keyword">return</span> absl::make_unique&lt;transform::Rigid2d&gt;(pose_prediction);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 永远是头部的子图做匹配</span></span><br><span class="line">  std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt; matching_submap =  </span><br><span class="line">      active_submaps_.<span class="built_in">submaps</span>().<span class="built_in">front</span>();</span><br><span class="line"></span><br><span class="line">  transform::Rigid2d initial_ceres_pose = pose_prediction;</span><br><span class="line">  <span class="comment">// online correlative scan matcher 将提供好的初值 for Ceres scan matcher</span></span><br><span class="line">  <span class="comment">// 函数更新 initial_ceres_pose，返回匹配的最高分数</span></span><br><span class="line">  <span class="keyword">if</span> (options_.<span class="built_in">use_online_correlative_scan_matching</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> score = real_time_correlative_scan_matcher_.<span class="built_in">Match</span>(</span><br><span class="line">        pose_prediction,   filtered_gravity_aligned_point_cloud,</span><br><span class="line">        *matching_submap-&gt;<span class="built_in">grid</span>(),  &amp;initial_ceres_pose);</span><br><span class="line">    kRealTimeCorrelativeScanMatcherScoreMetric-&gt;<span class="built_in">Observe</span>(score);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ceres scan matcher 部分</span></span><br><span class="line">  <span class="keyword">auto</span> pose_observation = absl::make_unique&lt;transform::Rigid2d&gt;();</span><br><span class="line">  ceres::Solver::Summary summary;</span><br><span class="line">  ceres_scan_matcher_.<span class="built_in">Match</span>(pose_prediction.<span class="built_in">translation</span>(), </span><br><span class="line">            initial_ceres_pose,</span><br><span class="line">           filtered_gravity_aligned_point_cloud,</span><br><span class="line">           *matching_submap-&gt;<span class="built_in">grid</span>(),    pose_observation.<span class="built_in">get</span>(),</span><br><span class="line">           &amp;summary);</span><br><span class="line">  <span class="comment">// 统计残差， 观测值 - 预测值</span></span><br><span class="line">  <span class="keyword">if</span> (pose_observation)</span><br><span class="line">  &#123;</span><br><span class="line">    kCeresScanMatcherCostMetric-&gt;<span class="built_in">Observe</span>(summary.final_cost);</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> residual_distance =</span><br><span class="line">        (pose_observation-&gt;<span class="built_in">translation</span>() - pose_prediction.<span class="built_in">translation</span>())</span><br><span class="line">            .<span class="built_in">norm</span>();</span><br><span class="line">    kScanMatcherResidualDistanceMetric-&gt;<span class="built_in">Observe</span>(residual_distance);</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">double</span> residual_angle =</span><br><span class="line">        std::<span class="built_in">abs</span>(pose_observation-&gt;<span class="built_in">rotation</span>().<span class="built_in">angle</span>() -</span><br><span class="line">                 pose_prediction.<span class="built_in">rotation</span>().<span class="built_in">angle</span>());</span><br><span class="line">    kScanMatcherResidualAngleMetric-&gt;<span class="built_in">Observe</span>(residual_angle);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> pose_observation;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Real-Time-Correlative-Scan-Matcher"><a href="#Real-Time-Correlative-Scan-Matcher" class="headerlink" title="Real Time Correlative Scan Matcher"></a>Real Time Correlative Scan Matcher</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 更新 pose_estimate， 返回最高的分数</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">RealTimeCorrelativeScanMatcher2D::Match</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> transform::Rigid2d&amp;  initial_pose_estimate,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> sensor::PointCloud&amp;  point_cloud, <span class="keyword">const</span> Grid2D&amp; grid,</span></span></span><br><span class="line"><span class="params"><span class="function">    transform::Rigid2d*  pose_estimate)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">CHECK</span>(pose_estimate != <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> Eigen::Rotation2Dd initial_rotation = initial_pose_estimate.<span class="built_in">rotation</span>();</span><br><span class="line">  <span class="keyword">const</span> sensor::PointCloud rotated_point_cloud = sensor::<span class="built_in">TransformPointCloud</span>(</span><br><span class="line">      point_cloud,</span><br><span class="line">      transform::Rigid3f::<span class="built_in">Rotation</span>(Eigen::<span class="built_in">AngleAxisf</span>(</span><br><span class="line">          initial_rotation.cast&lt;<span class="keyword">float</span>&gt;().<span class="built_in">angle</span>(), </span><br><span class="line">          Eigen::Vector3f::<span class="built_in">UnitZ</span>()  )   )</span><br><span class="line">      );</span><br><span class="line">  <span class="function"><span class="keyword">const</span> SearchParameters <span class="title">search_parameters</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">      options_.linear_search_window(), options_.angular_search_window(),</span></span></span><br><span class="line"><span class="params"><span class="function">      rotated_point_cloud, grid.limits().resolution())</span></span>;</span><br><span class="line">	<span class="comment">// 获取搜索窗口下机器人朝向各个方向角时的点云数据</span></span><br><span class="line">  <span class="comment">// 预投影法：先通过角度切片，然后在xy方向上暴力搜索，为了减少计算量</span></span><br><span class="line">  <span class="comment">// 切片旋转, 按照搜索角度/步长，以初始值为基础，生成一些列的旋转后的点云</span></span><br><span class="line">  <span class="keyword">const</span> std::vector&lt;sensor::PointCloud&gt; rotated_scans =</span><br><span class="line">      <span class="built_in">GenerateRotatedScans</span>(rotated_point_cloud, search_parameters);</span><br><span class="line">      <span class="comment">// DiscreteScan2D 就是 std::vector&lt;Eigen::Array2i&gt;</span></span><br><span class="line">      <span class="comment">// 从旋转点云坐标，转化到地图坐标，最终返回的是一系列的 激光点return所在的cell index</span></span><br><span class="line">  <span class="keyword">const</span> std::vector&lt;DiscreteScan2D&gt; discrete_scans = <span class="built_in">DiscretizeScans</span>(</span><br><span class="line">      grid.<span class="built_in">limits</span>(),   rotated_scans,</span><br><span class="line">      Eigen::<span class="built_in">Translation2f</span>(initial_pose_estimate.<span class="built_in">translation</span>().<span class="built_in">x</span>(),</span><br><span class="line">                           initial_pose_estimate.<span class="built_in">translation</span>().<span class="built_in">y</span>()  )</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 获得candidates，size是 search_parameters.num_scans * </span></span><br><span class="line">  <span class="comment">// (linear_bounds.max_x - inear_bounds.min_x) * (linear_bounds.max_y - inear_bounds.min_y) </span></span><br><span class="line">  <span class="comment">// 成员是 scan_index, x_index_offset(逐步增加), y_index_offset(逐步增加), search_parameters</span></span><br><span class="line">  <span class="comment">// 意思其实是 每个激光点附近的矩形区域</span></span><br><span class="line">  std::vector&lt;Candidate2D&gt; candidates =</span><br><span class="line">      <span class="built_in">GenerateExhaustiveSearchCandidates</span>(search_parameters);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算所有 candidate 的分数，search_parameters实际没用了</span></span><br><span class="line">  <span class="built_in">ScoreCandidates</span>(grid, discrete_scans, search_parameters, &amp;candidates);</span><br><span class="line">  <span class="comment">// 取最好的候选</span></span><br><span class="line">  <span class="keyword">const</span> Candidate2D&amp;   best_candidate =</span><br><span class="line">      *std::<span class="built_in">max_element</span>(candidates.<span class="built_in">begin</span>(), candidates.<span class="built_in">end</span>());</span><br><span class="line"></span><br><span class="line">  *pose_estimate = transform::<span class="built_in">Rigid2d</span>(</span><br><span class="line">      &#123;initial_pose_estimate.<span class="built_in">translation</span>().<span class="built_in">x</span>() + best_candidate.x,</span><br><span class="line">       initial_pose_estimate.<span class="built_in">translation</span>().<span class="built_in">y</span>() + best_candidate.y &#125;,</span><br><span class="line">       <span class="comment">// 为什么又成了 右乘 ???</span></span><br><span class="line">      initial_rotation * Eigen::<span class="built_in">Rotation2Dd</span>(best_candidate.orientation) );</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> best_candidate.score;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以初始位置（角度）为基础，角度搜索范围内，按照搜索步长进行旋转当前scan。将这一系列的离散化的scan，按照旋转顺序存储起来。也就是切片<br>在每个切片内，以初始位置（xy）为基础，xy搜索搜索范围内，按照搜索步长，进行离散，生成候选位置。<br>求得每个候选位置的score，score最高的，就为最佳位置。</p>
+<h2 id="SearchParameters"><a href="#SearchParameters" class="headerlink" title="SearchParameters"></a>SearchParameters</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">SearchParameters::<span class="built_in">SearchParameters</span>(<span class="keyword">const</span> <span class="keyword">double</span> linear_search_window,</span><br><span class="line">                                   <span class="keyword">const</span> <span class="keyword">double</span> angular_search_window,</span><br><span class="line">                                   <span class="keyword">const</span> sensor::PointCloud&amp; point_cloud,</span><br><span class="line">                                   <span class="keyword">const</span> <span class="keyword">double</span> resolution)</span><br><span class="line">    : <span class="built_in">resolution</span>(resolution) &#123;</span><br><span class="line">  <span class="comment">// We set this value to something on the order of resolution to make sure that</span></span><br><span class="line">  <span class="comment">// the std::acos() below is defined.</span></span><br><span class="line">  <span class="keyword">float</span> max_scan_range = <span class="number">3.f</span> * resolution;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> sensor::RangefinderPoint&amp; point : point_cloud) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> range = point.position.head&lt;<span class="number">2</span>&gt;().<span class="built_in">norm</span>();</span><br><span class="line">    max_scan_range = std::<span class="built_in">max</span>(range, max_scan_range);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">double</span> kSafetyMargin = <span class="number">1.</span> - <span class="number">1e-3</span>;</span><br><span class="line">  angular_perturbation_step_size =</span><br><span class="line">      kSafetyMargin * std::<span class="built_in">acos</span>(<span class="number">1.</span> - common::<span class="built_in">Pow2</span>(resolution) /</span><br><span class="line">                                         (<span class="number">2.</span> * common::<span class="built_in">Pow2</span>(max_scan_range)));</span><br><span class="line">  <span class="comment">// 这两者的计算不同</span></span><br><span class="line">  num_angular_perturbations =</span><br><span class="line">      std::<span class="built_in">ceil</span>(angular_search_window / angular_perturbation_step_size);</span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> num_linear_perturbations =</span><br><span class="line">      std::<span class="built_in">ceil</span>(linear_search_window / resolution);</span><br><span class="line">  <span class="comment">// 切片数目，由于resolution不修改，实际取决于 max_scan_range 和 angular_search_window</span></span><br><span class="line">  num_scans = <span class="number">2</span> * num_angular_perturbations + <span class="number">1</span>;</span><br><span class="line">  <span class="comment">/*  Linear search window in pixel offsets; bounds are inclusive.</span></span><br><span class="line"><span class="comment">  struct LinearBounds &#123;</span></span><br><span class="line"><span class="comment">    int min_x;</span></span><br><span class="line"><span class="comment">    int max_x;</span></span><br><span class="line"><span class="comment">    int min_y;</span></span><br><span class="line"><span class="comment">    int max_y;</span></span><br><span class="line"><span class="comment">  &#125;;</span></span><br><span class="line"><span class="comment">  std::vector&lt;LinearBounds&gt; linear_bounds;   Per rotated scans  */</span></span><br><span class="line">  linear_bounds.<span class="built_in">reserve</span>(num_scans);</span><br><span class="line">  <span class="comment">// 对同一帧scan, linear_bounds的元素都相同，不同帧就不同了</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i != num_scans; ++i) &#123;</span><br><span class="line">    linear_bounds.<span class="built_in">push_back</span>(</span><br><span class="line">        LinearBounds&#123;-num_linear_perturbations, num_linear_perturbations,</span><br><span class="line">                     -num_linear_perturbations, num_linear_perturbations&#125; );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="ComputeCandidateScore"><a href="#ComputeCandidateScore" class="headerlink" title="ComputeCandidateScore"></a>ComputeCandidateScore</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">ScoreCandidates</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Grid2D&amp; grid,  <span class="keyword">const</span> std::vector&lt;DiscreteScan2D&gt;&amp; discrete_scans,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> SearchParameters&amp;  search_parameters,</span></span></span><br><span class="line"><span class="params"><span class="function">    std::vector&lt;Candidate2D&gt;*  <span class="keyword">const</span> candidates)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (Candidate2D&amp; candidate : *candidates)</span><br><span class="line">  &#123;</span><br><span class="line">    candidate.score = <span class="built_in">ComputeCandidateScore</span>(</span><br><span class="line">        <span class="keyword">static_cast</span>&lt;<span class="keyword">const</span> ProbabilityGrid&amp;&gt;(grid),</span><br><span class="line">        discrete_scans[candidate.scan_index], candidate.x_index_offset,</span><br><span class="line">        candidate.y_index_offset);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">      <span class="comment">// 省略 GridType::TSDF</span></span><br><span class="line">    <span class="comment">// 权重处理</span></span><br><span class="line">    candidate.score *=</span><br><span class="line">        std::<span class="built_in">exp</span>(</span><br><span class="line">          -common::<span class="built_in">Pow2</span>(</span><br><span class="line">            std::<span class="built_in">hypot</span>(candidate.x, candidate.y) *</span><br><span class="line">            options_.<span class="built_in">translation_delta_cost_weight</span>() </span><br><span class="line">                        +</span><br><span class="line">            std::<span class="built_in">abs</span>(candidate.orientation) *</span><br><span class="line">            options_.<span class="built_in">rotation_delta_cost_weight</span>()</span><br><span class="line">                       )</span><br><span class="line">          );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 计算每个候选的得分</span></span><br><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">ComputeCandidateScore</span><span class="params">(<span class="keyword">const</span> ProbabilityGrid&amp; probability_grid,</span></span></span><br><span class="line"><span class="params"><span class="function">             <span class="keyword">const</span> DiscreteScan2D&amp;  discrete_scan,</span></span></span><br><span class="line"><span class="params"><span class="function">             <span class="keyword">int</span> x_index_offset,  <span class="keyword">int</span> y_index_offset)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">float</span> candidate_score = <span class="number">0.f</span>;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> Eigen::Array2i&amp; xy_index : discrete_scan)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="function"><span class="keyword">const</span> Eigen::Array2i <span class="title">proposed_xy_index</span><span class="params">(xy_index.x() + x_index_offset,</span></span></span><br><span class="line"><span class="params"><span class="function">                                           xy_index.y() + y_index_offset)</span></span>;</span><br><span class="line">    <span class="comment">// Returns the probability of the cell with &#x27;cell_index&#x27;</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> probability =</span><br><span class="line">        probability_grid.<span class="built_in">GetProbability</span>(proposed_xy_index);</span><br><span class="line">    candidate_score += probability;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 返回的是一帧点云所有激光点得分的平均值</span></span><br><span class="line">  candidate_score /= <span class="keyword">static_cast</span>&lt;<span class="keyword">float</span>&gt;(discrete_scan.<span class="built_in">size</span>());</span><br><span class="line">  <span class="built_in">CHECK_GT</span>(candidate_score, <span class="number">0.f</span>);</span><br><span class="line">  <span class="keyword">return</span> candidate_score;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/06/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/Real%20Time%20Correlative%20Scan%20Matcher/" data-id="ckr28or3300nkewlmdqudg7zd" data-title="AddAccumulatedRangeData 函数(1) Real Time Correlative Scan Matcher" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/30/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/Ceres%20scan%20matcher/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          AddAccumulatedRangeData函数(2) Ceres Scan Matcher
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/29/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/pugixml%E8%AF%BB%E5%86%99XML/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">pugixml读写XML</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

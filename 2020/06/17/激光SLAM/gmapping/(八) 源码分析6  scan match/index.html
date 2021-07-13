@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>(八) 源码分析6  scan match | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="先接上篇，不是第一帧激光数据的情况，上来是scanMatch函数，也就是GridSlamProcessor::scanMatch(在文件gridslamprocessor.hxx)。 主要部分12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152inline vo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(八) 源码分析6  scan match">
+<meta property="og:url" content="http://example.com/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="先接上篇，不是第一帧激光数据的情况，上来是scanMatch函数，也就是GridSlamProcessor::scanMatch(在文件gridslamprocessor.hxx)。 主要部分12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152inline vo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/06/17/zGU6bgEwCnlRpr9.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/17/7TFuOJbjxSr9BNA.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/18/lDeLROQoaziNZrb.png">
+<meta property="article:published_time" content="2020-06-17T12:21:43.000Z">
+<meta property="article:modified_time" content="2020-06-25T04:46:11.710Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/17/zGU6bgEwCnlRpr9.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/gmapping/(八) 源码分析6  scan match" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/" class="article-date">
+  <time class="dt-published" datetime="2020-06-17T12:21:43.000Z" itemprop="datePublished">2020-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      (八) 源码分析6  scan match
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>先接上篇，不是第一帧激光数据的情况，上来是<code>scanMatch</code>函数，也就是<code>GridSlamProcessor::scanMatch</code>(在文件gridslamprocessor.hxx)。</p>
+<h2 id="主要部分"><a href="#主要部分" class="headerlink" title="主要部分"></a>主要部分</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">GridSlamProcessor::scanMatch</span><span class="params">(<span class="keyword">const</span> <span class="keyword">double</span>* plainReading)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// sample a new pose from each scan in the reference</span></span><br><span class="line">    <span class="comment">/* 每个粒子都要进行 scan-match */</span></span><br><span class="line">    <span class="keyword">double</span> sumScore=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> particle_number = m_particles.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">//可以用openMP的方式来进行并行化，因此这里不能用迭代器，只能用下标的方式</span></span><br><span class="line">    <span class="comment">//并行化之后，里面的循环会均匀分到各个不同的核里面</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; particle_number; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        OrientedPoint corrected;</span><br><span class="line">        <span class="keyword">double</span> score, l, s;</span><br><span class="line">        <span class="comment">/*进行scan-match 计算粒子的最优位姿，这是gmapping本来的做法*/</span></span><br><span class="line">        score = m_matcher.<span class="built_in">optimize</span>(corrected, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">        <span class="comment">/* 匹配成功则更新最优位姿 */</span></span><br><span class="line">	    <span class="keyword">if</span> (score&gt;m_minimumScore)</span><br><span class="line">	    &#123;</span><br><span class="line">	      m_particles[i].pose = corrected;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="comment">/*  扫描匹配不上,则使用里程计的数据,使用里程计数据不进行更新.</span></span><br><span class="line"><span class="comment">	          因为在进行扫描匹配之前 里程计已经更新过了*/</span></span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	    &#123;</span><br><span class="line">	        <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">	        &#123;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;Scan Matching Failed, using odometry. Likelihood=&quot;</span> &lt;&lt; l &lt;&lt;std::endl;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;lp:&quot;</span> &lt;&lt; m_lastPartPose.x &lt;&lt; <span class="string">&quot; &quot;</span>  &lt;&lt; m_lastPartPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_lastPartPose.theta &lt;&lt;std::endl;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;op:&quot;</span> &lt;&lt; m_odoPose.x &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; m_odoPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_odoPose.theta;</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="comment">// 粒子的最优位姿计算了之后，重新计算粒子的权重,相当于粒子滤波器中的观测步骤</span></span><br><span class="line">	    <span class="comment">/* 计算p(z|x,m)，粒子的权重由粒子的似然来表示, 计算粒子的得分和权重(似然)	</span></span><br><span class="line"><span class="comment">	        注意粒子的权重经过ScanMatch之后已经更新了</span></span><br><span class="line"><span class="comment">	     * 在论文中   粒子的权重不是用最优位姿的似然值来表示的</span></span><br><span class="line"><span class="comment">	     * 是用所有的似然值的和来表示的, s是得分  l是似然,也就是权重 */</span></span><br><span class="line">	    m_matcher.<span class="built_in">likelihoodAndScore</span>(s, l, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">	    sumScore+=score;</span><br><span class="line">	    m_particles[i].weight+= l;</span><br><span class="line">	    m_particles[i].weightSum+= l;</span><br><span class="line"></span><br><span class="line">	    <span class="comment">//set up the selective copy of the active area</span></span><br><span class="line">	    <span class="comment">//by detaching the areas that will be updated</span></span><br><span class="line">	    <span class="comment">/*计算出来最优的位姿之后，进行地图的扩充  这里不会进行内存分配</span></span><br><span class="line"><span class="comment">	     *不进行内存分配的原因是这些粒子进行重采样之后有可能会消失掉，因此在后面进行重采样的时候统一进行内存分配。</span></span><br><span class="line"><span class="comment">	     *理论上来说，这里的操作是没有必要的，因为后面的重采样的时候还会进行一遍</span></span><br><span class="line"><span class="comment">	     */</span></span><br><span class="line">	    m_matcher.<span class="built_in">invalidateActiveArea</span>();</span><br><span class="line">	    m_matcher.<span class="built_in">computeActiveArea</span>(m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;Average Scan Matching Score of all particles=&quot;</span> &lt;&lt; sumScore/m_particles.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>开始的都没意思，直接看<code>ScanMatcher::optimize</code>，在<code>scanmatcher.cpp</code>里，开头又是一个重要函数<code>score</code>，在<code>scanmatcher.h</code>里。它根据地图、激光数据、位姿迭代求解一个最优的新的位姿出来。</p>
+<p>代码比较复杂，直接看整个<code>scan</code>函数(包括了optimize和score)的评分算法的理论：</p>
+<p>对于栅格地图的环境地图模型，一般采用基于似然场模型（likelihood field range finder mode）的扫描匹配算法来进行激光雷达数据与地图的匹配。 该算法通过评估当前时刻位姿的激光雷达数据中每一个激光点与该时刻栅格地图的匹配程度，并将评估得到的每个激光点得分进行累加，得到当前时刻激光雷达数据与地图匹配的总分数，得分越高说明该时刻激光雷达信息与地图匹配程度越高，即机器人位姿越精确。由于该算法能够根据机器人当前时刻状态、 观测值和地图信息直接得到该时刻位姿的匹配程度，因而该算法常与基于粒子滤波的定位算法结合使用，用于选取各粒子中得分最高的位姿，并计算得分， 从而完成机器人位姿的确定，其原理如图：<br><img src="https://i.loli.net/2020/06/17/zGU6bgEwCnlRpr9.png" alt="基于似然场模型的扫描匹配示意图.png"></p>
+<p>黑色的格子代表前一时刻栅格地图中障碍物的位置， 圆形的点表示以里程计运动模型作为提议分布得到的机器人位姿估计为基础，将当前时刻激光雷达数据转换到栅格地图坐标系中的激光点的分布。把激光雷达的坐标转换到世界坐标系: 先旋转到机器人坐标系，然后再转换到世界坐标系。</p>
+<p>该位姿下观测信息与地图匹配得分的具体算法步骤如下：对于当前激光雷达数据中任意一个激光点，设其端点在世界坐标系中坐标为 <code>lp</code> ，则其对应栅格地图中坐标为 <code>phit</code> ，对 <code>phit</code>周围八个栅格进行障碍物判定，并计算这些障碍物的平均坐标 <code>pavr</code>， 求出 <code>pavr</code>与 phit 的距离 dist 。 该激光点的评分可由下式表示<br><img src="https://i.loli.net/2020/06/17/7TFuOJbjxSr9BNA.png" alt="评分公式.png"></p>
+<p>如果设置的<code>minimumScore</code>参数过大，一些粒子的匹配会失败，因为要求太高了，gmapping会出现下列信息：<br><img src="https://i.loli.net/2020/06/18/lDeLROQoaziNZrb.png" alt="scan match失败.png"><br>gmapping变成使用里程计进行位姿估计，这其实是不好的，因为从论文可知<strong>激光精度比里程计精确得多</strong>，但是注意粒子的权重计算还是调用<code>likelihoodAndScore</code>函数。</p>
+<p><code>ε</code>为基于扫描匹配概率的激光方差，对该时刻所有激光点进行上式的计算，并将评分进行求和，分数越高说明该位姿的可信度越高。 对当前时刻所有粒子位姿进行扫描匹配运算， 并根据得分实现粒子的权重更新，最后求出粒子群的平均评分<code>sumScore/m_particles.size()</code></p>
+<h3 id="试验小强的scan-match评分"><a href="#试验小强的scan-match评分" class="headerlink" title="试验小强的scan match评分"></a>试验小强的scan match评分</h3><p>直接修改<code>gridslamprocessor.hxx</code>的scanMatch函数。 小强的gmapping编译有问题，执行<code>catkin_make --pkg gmapping</code>之后，需要 <code>cp /home/xiaoqiang/Documents/ros/devel/lib/gmapping/slam_gmapping /home/xiaoqiang/Documents/ros/src/gmapping/launch</code>，否则roslaunch找不到节点文件</p>
+<p>根据测试，激光评分多数在<code>140~160</code>，有时也会超过160.</p>
+<h2 id="for循环剩下的部分"><a href="#for循环剩下的部分" class="headerlink" title="for循环剩下的部分"></a>for循环剩下的部分</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*矫正成功则更新位姿*/</span></span><br><span class="line"><span class="keyword">if</span> (score&gt;m_minimumScore)</span><br><span class="line">&#123;</span><br><span class="line">    m_particles[i].pose = corrected;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 扫描匹配不上,则使用里程计的数据,使用里程计数据不进行更新,因为扫描匹配之前,里程计已经更新过了</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//输出信息 这个在并行模式下可以会出现错位</span></span><br><span class="line">    <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">    &#123;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;Scan Matching Failed, using odometry. Likelihood=&quot;</span> &lt;&lt; l &lt;&lt;endl;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;lp:&quot;</span> &lt;&lt; m_lastPartPose.x &lt;&lt; <span class="string">&quot; &quot;</span>  &lt;&lt; m_lastPartPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_lastPartPose.theta &lt;&lt;endl;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;op:&quot;</span> &lt;&lt; m_odoPose.x &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; m_odoPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_odoPose.theta &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 粒子的最优位姿计算了之后，重新计算粒子的权重(相当于粒子滤波器中的观测步骤，</span></span><br><span class="line"><span class="comment">   计算p(z|x,m))，粒子的权重由粒子的似然来表示。</span></span><br><span class="line"><span class="comment">* 计算粒子的得分和权重(似然)   注意粒子的权重经过ScanMatch之后已经更新了</span></span><br><span class="line"><span class="comment">* 在论文中,例子的权重不是用最有位姿的似然值来表示的。</span></span><br><span class="line"><span class="comment">* 是用所有的似然值的和来表示的。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">m_matcher.<span class="built_in">likelihoodAndScore</span>(s, l, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line"></span><br><span class="line">sumScore+=score;</span><br><span class="line">m_particles[i].weight+=l;</span><br><span class="line">m_particles[i].weightSum+=l;</span><br><span class="line"><span class="comment">//set up the selective copy of the active area</span></span><br><span class="line"><span class="comment">//by detaching the areas that will be updated</span></span><br><span class="line"><span class="comment">/*计算出来最优的位姿之后，进行地图的扩充  这里不会进行内存分配</span></span><br><span class="line"><span class="comment">*不进行内存分配的原因是这些粒子进行重采样之后有可能会消失掉，因此在后面进行冲采样的时候统一进行内存分配。</span></span><br><span class="line"><span class="comment">*理论上来说，这里的操作是没有必要的，因为后面的重采样的时候还会进行一遍</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">m_matcher.<span class="built_in">invalidateActiveArea</span>();</span><br><span class="line">m_matcher.<span class="built_in">computeActiveArea</span>(m_particles[i].map, m_particles[i].pose, plainReading);</span><br></pre></td></tr></table></figure>
+
+<h2 id="重采样"><a href="#重采样" class="headerlink" title="重采样"></a>重采样</h2><p><code>resample</code>函数：该函数在gridslamprocessor.hxx。首先是备份老的粒子的轨迹，即保留叶子的节点。然后是需要重采样还是不需要重采样，如果不需要重采样，则权值不变。只为轨迹创建一个新的节点，每个粒子更新地图。当有效值小于阈值的时候需要重采样，通过resampleIndexes提取到需要删除的粒子。删除粒子后，保留当前的粒子并在保存的粒子的节点里新增一个节点。删除要删除粒子的节点，保留的粒子进行数据更新，将每个粒子的设置同一个权重。最后更新一下地图。</p>
+<p>​<code>resampleIndexes</code>：该函数在particlefilter.h中，使用轮盘赌算法，决定哪些粒子会保留，保留的粒子会返回下标，里面的下标可能会重复，因为有些粒子会重复采样,而另外的一些粒子会消失掉。</p>
+<p>首先计算总的权重，计算平均权重值（interval），根据权值进行采样,target是0-1分布随机选取的一数值，当总权重大于目标权重的，记录该粒子的索引，target在加上一个interval。如果某个粒子的权重比较大的话，就被采样多次。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简化声明</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">resampleIndexes</span><span class="params">(<span class="keyword">const</span> std::vector&lt;Particle&gt;&amp; particles, <span class="keyword">int</span> nparticles)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Numeric cweight=<span class="number">0</span>;</span><br><span class="line">	<span class="comment">/*计算总的权重*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">typename</span> std::vector&lt;Particle&gt;::const_iterator it=particles.<span class="built_in">begin</span>(); it!=particles.<span class="built_in">end</span>(); ++it)</span><br><span class="line">	&#123;</span><br><span class="line">		cweight+=(Numeric)*it;</span><br><span class="line">		n++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (nparticles&gt;<span class="number">0</span>)</span><br><span class="line">		n=nparticles;</span><br><span class="line">	<span class="comment">//compute the interval</span></span><br><span class="line">	Numeric interval=cweight/n;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// drand48 返回服从均匀分布的·[0.0, 1.0) 之间的double随机数</span></span><br><span class="line">	Numeric target=interval*::<span class="built_in">drand48</span>();</span><br><span class="line">    <span class="comment">// 如果某个粒子的区间为4*interval。那么它至少被采样3次。</span></span><br><span class="line">	cweight=<span class="number">0</span>;  n=<span class="number">0</span>;</span><br><span class="line">	<span class="function">std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; <span class="title">indexes</span><span class="params">(n)</span></span>;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">typename</span> std::vector&lt;Particle&gt;::const_iterator it=particles.<span class="built_in">begin</span>(); it!=particles.<span class="built_in">end</span>(); ++it, ++i)</span><br><span class="line">	&#123;</span><br><span class="line">		cweight+=(Numeric)* it;</span><br><span class="line">		<span class="keyword">while</span>(cweight&gt;target)</span><br><span class="line">		&#123;</span><br><span class="line">			indexes[n++]=i;</span><br><span class="line">			target+=interval;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> indexes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/" data-id="ckr28or0v00gkewlm3yut2sff" data-title="(八) 源码分析6  scan match" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/19/%E6%BF%80%E5%85%89SLAM/gmapping/OpenMP%E5%8A%A0%E9%80%9Fgmapping/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          OpenMP加速gmapping
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/06/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%B0%8F%E5%BC%BA%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%AF%B4%E6%98%8E/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">小强机器人的补充说明</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

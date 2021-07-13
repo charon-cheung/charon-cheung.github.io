@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>解析ros init（三） | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="param::initParameter是ROS系统运行所定义的全局变量，它由master节点的parameter server基于XML-RPC负责维护。它是全局可见的，因此可以运行时修改。ROS的namespace使得参数的命名具备非常清晰的层级结构，避免他们之间的冲突 12345678910111213141516171819202122232425262728293031323334353">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解析ros init（三）">
+<meta property="og:url" content="http://example.com/2019/06/18/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="param::initParameter是ROS系统运行所定义的全局变量，它由master节点的parameter server基于XML-RPC负责维护。它是全局可见的，因此可以运行时修改。ROS的namespace使得参数的命名具备非常清晰的层级结构，避免他们之间的冲突 12345678910111213141516171819202122232425262728293031323334353">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-06-18T12:37:35.000Z">
+<meta property="article:modified_time" content="2020-03-05T13:44:15.321Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROS/ROS程序和源码分析/解析ros init（三）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/18/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%89%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2019-06-18T12:37:35.000Z" itemprop="datePublished">2019-06-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      解析ros init（三）
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="param-init"><a href="#param-init" class="headerlink" title="param::init"></a>param::init</h3><p>Parameter是ROS系统运行所定义的全局变量，它由master节点的parameter server基于XML-RPC负责维护。它是全局可见的，因此可以运行时修改。ROS的namespace使得参数的命名具备非常清晰的层级结构，避免他们之间的冲突</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//./src/ros_comm/roscpp/src/libros/param.cpp</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">const</span> M_string&amp; remappings)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  M_string::const_iterator it = remappings.<span class="built_in">begin</span>();<span class="comment">//remappings变量的头元素</span></span><br><span class="line">  M_string::const_iterator end = remappings.<span class="built_in">end</span>();<span class="comment">//remappings变量的末元素</span></span><br><span class="line">  <span class="keyword">for</span> (; it != end; ++it)<span class="comment">//依次遍历remappings变量的所有元素</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">const</span> std::string&amp; name = it-&gt;first;<span class="comment">//提取键</span></span><br><span class="line">    <span class="keyword">const</span> std::string&amp; param = it-&gt;second;<span class="comment">//提取值</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (name.<span class="built_in">size</span>() &lt; <span class="number">2</span>)    <span class="comment">//跳过键的长度小于2的元素</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (name[<span class="number">0</span>] == <span class="string">&#x27;_&#x27;</span> &amp;&amp; name[<span class="number">1</span>] != <span class="string">&#x27;_&#x27;</span>)<span class="comment">//如果键以“__”开头</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">//为name赋予一个本地名称，用符号&quot;~&quot;代替“__”</span></span><br><span class="line">      std::string local_name = <span class="string">&quot;~&quot;</span> + name.<span class="built_in">substr</span>(<span class="number">1</span>);</span><br><span class="line">      <span class="keyword">bool</span> success = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">int32_t</span> i = boost::lexical_cast&lt;<span class="keyword">int32_t</span>&gt;(param);    <span class="comment">//尝试将param转化成整型</span></span><br><span class="line">        <span class="comment">//将local_name规整化</span></span><br><span class="line">        ros::param::<span class="built_in">set</span>(names::<span class="built_in">resolve</span>(local_name), i);</span><br><span class="line">        success = <span class="literal">true</span>;<span class="comment">//将成功标志置上</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in"><span class="keyword">catch</span></span> (boost::bad_lexical_cast&amp;)</span><br><span class="line">      &#123;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (success)    <span class="comment">//如果成功标志已被置上，则越过后续过程</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">continue</span>;     <span class="comment">//此时，即param成功被转化为整型</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="comment">//没能转化为整型，尝试将param转化成浮点型</span></span><br><span class="line">        <span class="keyword">double</span> d = boost::lexical_cast&lt;<span class="keyword">double</span>&gt;(param);</span><br><span class="line">        <span class="comment">//将local_name规整化</span></span><br><span class="line">        ros::param::<span class="built_in">set</span>(names::<span class="built_in">resolve</span>(local_name), d);</span><br><span class="line">        success = <span class="literal">true</span>;   <span class="comment">//将成功标志置上</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in"><span class="keyword">catch</span></span> (boost::bad_lexical_cast&amp;)</span><br><span class="line">      &#123;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (success)    <span class="comment">//如果成功标志已被置上，则越过后续过程</span></span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">continue</span>;    <span class="comment">//此时，即param成功被转化为浮点型</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 处理param为布尔型或其他的情况</span></span><br><span class="line">      <span class="keyword">if</span> (param == <span class="string">&quot;true&quot;</span> || param == <span class="string">&quot;True&quot;</span> || param == <span class="string">&quot;TRUE&quot;</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        ros::param::<span class="built_in">set</span>(names::<span class="built_in">resolve</span>(local_name), <span class="literal">true</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (param == <span class="string">&quot;false&quot;</span> || param == <span class="string">&quot;False&quot;</span> || param == <span class="string">&quot;FALSE&quot;</span>)</span><br><span class="line">      &#123;</span><br><span class="line">        ros::param::<span class="built_in">set</span>(names::<span class="built_in">resolve</span>(local_name), <span class="literal">false</span>);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">else</span></span><br><span class="line">      &#123;</span><br><span class="line">        ros::param::<span class="built_in">set</span>(names::<span class="built_in">resolve</span>(local_name), param);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">bind</span>(<span class="string">&quot;paramUpdate&quot;</span>, paramUpdateCallback);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ros::param::set()函数的定义也在文件./src/ros_comm/roscpp/src/libros/param.cpp中，有一系列的重载函数： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> XmlRpc::XmlRpcValue&amp; v)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> std::string&amp; s)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> <span class="keyword">char</span>* s)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">double</span> d)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">int</span> i)</span> </span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">bool</span> b)</span> </span></span><br></pre></td></tr></table></figure>
+
+<p>以转化为整型的重载函数为例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> std::map&lt;std::string, <span class="keyword">int</span>&gt;&amp; map)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">setImpl</span>(key, map);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 显然这个函数为模板函数比较合适，适用于多种情况</span></span><br><span class="line"><span class="comment">// 将第二个参数转化成相应了XmlRpcValue类型，然后调用第一个重载函数</span></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">setImpl</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> std::map&lt;std::string, T&gt;&amp; map)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">//  XmlRpcValue starts off as &quot;invalid&quot; and assertStruct turns it  into a struct type</span></span><br><span class="line">  XmlRpc::XmlRpcValue   xml_value;</span><br><span class="line">  xml_value.<span class="built_in">begin</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Copy the contents into the XmlRpcValue</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">typename</span> std::map&lt;std::string, T&gt;::const_iterator it = map.<span class="built_in">begin</span>(); </span><br><span class="line">    it != map.<span class="built_in">end</span>(); ++it)</span><br><span class="line">  &#123;</span><br><span class="line">    xml_value[it-&gt;first] = it-&gt;second;</span><br><span class="line">  &#125;</span><br><span class="line">  ros::param::<span class="built_in">set</span>(key, xml_value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>set第一个重载如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> std::string&amp; key, <span class="keyword">const</span> XmlRpc::XmlRpcValue&amp; v)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  std::string mapped_key = ros::names::<span class="built_in">resolve</span>(key);</span><br><span class="line"></span><br><span class="line">  XmlRpc::XmlRpcValue params, result, payload;</span><br><span class="line">  params[<span class="number">0</span>] = this_node::<span class="built_in">getName</span>();</span><br><span class="line">  params[<span class="number">1</span>] = mapped_key;</span><br><span class="line">  params[<span class="number">2</span>] = v;</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//Lock around the execute to the master in case we get a parameter update on this value between executing on the master and setting the parameter in the g_params list</span></span><br><span class="line">    boost::<span class="function">mutex::scoped_lock <span class="title">lock</span><span class="params">(g_params_mutex)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (master::<span class="built_in">execute</span>(<span class="string">&quot;setParam&quot;</span>, params, result, payload, <span class="literal">true</span>))</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// Update our cached params list now so that if get() is called immediately after param::set()</span></span><br><span class="line">      <span class="comment">// we already have the cached state and our value will be correct</span></span><br><span class="line">      <span class="keyword">if</span> (g_subscribed_params.<span class="built_in">find</span>(mapped_key) != g_subscribed_params.<span class="built_in">end</span>())</span><br><span class="line">      &#123;</span><br><span class="line">        g_params[mapped_key] = v;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">invalidateParentParams</span>(mapped_key);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数master::execute(“setParam”, params, result, payload, true)用于在master(节点管理器)上执行XML-RPC通信机制。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> ros::master::<span class="built_in">execute</span>(<span class="keyword">const</span> std::string&amp;  method,</span><br><span class="line">    <span class="keyword">const</span> XmlRpc::XmlRpcValue &amp;     request,</span><br><span class="line">    XmlRpc::XmlRpcValue &amp;   response,</span><br><span class="line">    XmlRpc::XmlRpcValue &amp;   payload,</span><br><span class="line">    <span class="keyword">bool</span>  wait_for_master </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>method：要调用的 RPC 方法</li>
+<li>request：The arguments to the RPC call   //传递给RPC的参数</li>
+<li>response：[out] The resonse that was received.   //接收到的回应</li>
+<li>payload： [out] The payload that was received</li>
+<li>wait_for_master： //是否一直循环等待与master建立连接</li>
+</ul>
+<p>函数的源码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">execute</span><span class="params">(<span class="keyword">const</span> std::string&amp; method, <span class="keyword">const</span> XmlRpc::XmlRpcValue&amp; request, XmlRpc::XmlRpcValue&amp; response, XmlRpc::XmlRpcValue&amp; payload, <span class="keyword">bool</span> wait_for_master)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::WallTime start_time = ros::WallTime::<span class="built_in">now</span>();</span><br><span class="line"></span><br><span class="line">  std::string  master_host = <span class="built_in">getHost</span>(); <span class="comment">//获取g_host的值</span></span><br><span class="line">  <span class="keyword">uint32_t</span>  master_port = <span class="built_in">getPort</span>();   <span class="comment">//获取g_port的值</span></span><br><span class="line">  <span class="comment">//根据 master_host, master_port 获取XMLRPC通信的客户端，这两个一般是根据环境变量所得</span></span><br><span class="line">  XmlRpc::XmlRpcClient *c = XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">getXMLRPCClient</span>(master_host, master_port, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">  <span class="keyword">bool</span> printed = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">bool</span> slept = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">bool</span> ok = <span class="literal">true</span>;</span><br><span class="line">  <span class="keyword">bool</span> b = <span class="literal">false</span>;</span><br><span class="line">  <span class="keyword">do</span></span><br><span class="line">  &#123;</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="meta">#<span class="meta-keyword">if</span> defined(__APPLE__)</span></span><br><span class="line">            boost::<span class="function">mutex::scoped_lock <span class="title">lock</span><span class="params">(g_xmlrpc_call_mutex)</span></span>;</span><br><span class="line">      <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">      <span class="comment">//c是根据master_host, master_port的值获取XMLRPC通信的客户端指针（XmlRpc::XmlRpcClient *c）</span></span><br><span class="line">      <span class="comment">// 循环不断执行execute，以保持和master的通信</span></span><br><span class="line">      b = c-&gt;<span class="built_in">execute</span>(method.<span class="built_in">c_str</span>(), request, response);</span><br><span class="line">    &#125;</span><br><span class="line">    ok = !ros::<span class="built_in">isShuttingDown</span>() &amp;&amp; !XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">isShuttingDown</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!b &amp;&amp; ok)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (!printed &amp;&amp; wait_for_master)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">ROS_ERROR</span>(<span class="string">&quot;[%s] Failed to contact master at [%s:%d].  %s&quot;</span>, method.<span class="built_in">c_str</span>(), master_host.<span class="built_in">c_str</span>(), master_port, wait_for_master ? <span class="string">&quot;Retrying...&quot;</span> : <span class="string">&quot;&quot;</span>);</span><br><span class="line">        printed = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (!wait_for_master)</span><br><span class="line">      &#123;</span><br><span class="line">        XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">releaseXMLRPCClient</span>(c);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (!g_retry_timeout.<span class="built_in">isZero</span>() &amp;&amp; (ros::WallTime::<span class="built_in">now</span>() - start_time) &gt;= g_retry_timeout)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">ROS_ERROR</span>(<span class="string">&quot;[%s] Timed out trying to connect to the master after [%f] seconds&quot;</span>, method.<span class="built_in">c_str</span>(), g_retry_timeout.<span class="built_in">toSec</span>());</span><br><span class="line">        XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">releaseXMLRPCClient</span>(c);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      ros::<span class="built_in">WallDuration</span>(<span class="number">0.05</span>).<span class="built_in">sleep</span>();</span><br><span class="line">      slept = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> (!XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">validateXmlrpcResponse</span>(method, response, payload))</span><br><span class="line">      &#123;</span><br><span class="line">        XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">releaseXMLRPCClient</span>(c);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 不断执行循环，除非调用ros::shutdown() 或 XMLRPCManager::shutdown()</span></span><br><span class="line">    ok = !ros::<span class="built_in">isShuttingDown</span>() &amp;&amp; !XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">isShuttingDown</span>();</span><br><span class="line">  &#125; <span class="keyword">while</span>(ok);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (ok &amp;&amp; slept)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Connected to master at [%s:%d]&quot;</span>, master_host.<span class="built_in">c_str</span>(), master_port);</span><br><span class="line">  &#125;</span><br><span class="line">  XMLRPCManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">releaseXMLRPCClient</span>(c);</span><br><span class="line">  <span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>函数主要就是基于XML-RPC进行<code>setParam</code>的远程调用，需要不断判断连接状态</p>
+<p>每个节点其实就是个XML-RPC服务端，在运行<code>ros::start()</code>时执行了<code>XMLRPCManager::instance()-&gt;start();——XmlRpcServer::bindAndListen</code>，在这个函数中又开启了一个线程依次调用：<code>XMLRPCManager::serverThreadFunc</code>——<code>server_.work(0.1);</code>，服务端的两个关键函数完成了。</p>
+<br>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>init()其实做很少工作，主要就是解析一下环境和命令行参数，init()不允许参与实际的连接，因而，用户可以手动检测像是master启动没有，有没有按自定义的行为启动这样的事</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/18/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E8%A7%A3%E6%9E%90ros%20init%EF%BC%88%E4%B8%89%EF%BC%89/" data-id="ckr28or0600evewlme5dx9ne1" data-title="解析ros init（三）" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/roscore%E6%BA%90%E7%A0%81/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          roscore源码
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/18/C++/Boost/Boost%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89%E8%AF%BB%E5%86%99JSON/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Boost教程（四）读写JSON</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

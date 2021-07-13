@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>融合Realsense+Laser的二维scan导航 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="因为二维雷达只能扫描一个平面，所以低于或高于这个平面的障碍物扫描不到，机器人也就难以进行建图和导航。当然可以用3D雷达，但是这个成本一下大了很多，对于室内环境太奢侈了。 由于kinect具有一定的水平和垂直视角，它的FOV可以覆盖不同高度的障碍。深度图可以转化为scan，这样就可以把障碍物投影到二维地图上了，把kinect和雷达融合，就可以解决这个问题了。 阅读了几篇论文，把这个方案总结了一下，但">
+<meta property="og:type" content="article">
+<meta property="og:title" content="融合Realsense+Laser的二维scan导航">
+<meta property="og:url" content="http://example.com/2020/06/01/%E8%A7%86%E8%A7%89SLAM/%E8%9E%8D%E5%90%88Realsense+Laser%E7%9A%84%E4%BA%8C%E7%BB%B4scan%E5%AF%BC%E8%88%AA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="因为二维雷达只能扫描一个平面，所以低于或高于这个平面的障碍物扫描不到，机器人也就难以进行建图和导航。当然可以用3D雷达，但是这个成本一下大了很多，对于室内环境太奢侈了。 由于kinect具有一定的水平和垂直视角，它的FOV可以覆盖不同高度的障碍。深度图可以转化为scan，这样就可以把障碍物投影到二维地图上了，把kinect和雷达融合，就可以解决这个问题了。 阅读了几篇论文，把这个方案总结了一下，但">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/06/09/9aZfunEO24BTUCQ.png">
+<meta property="article:published_time" content="2020-06-01T12:13:39.000Z">
+<meta property="article:modified_time" content="2020-09-14T12:02:19.218Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/09/9aZfunEO24BTUCQ.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-视觉SLAM/融合Realsense+Laser的二维scan导航" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/01/%E8%A7%86%E8%A7%89SLAM/%E8%9E%8D%E5%90%88Realsense+Laser%E7%9A%84%E4%BA%8C%E7%BB%B4scan%E5%AF%BC%E8%88%AA/" class="article-date">
+  <time class="dt-published" datetime="2020-06-01T12:13:39.000Z" itemprop="datePublished">2020-06-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      融合Realsense+Laser的二维scan导航
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>因为二维雷达只能扫描一个平面，所以低于或高于这个平面的障碍物扫描不到，机器人也就难以进行建图和导航。当然可以用3D雷达，但是这个成本一下大了很多，对于室内环境太奢侈了。</p>
+<p>由于kinect具有一定的水平和垂直视角，它的FOV可以覆盖不同高度的障碍。深度图可以转化为scan，这样就可以把障碍物投影到二维地图上了，把kinect和雷达融合，就可以解决这个问题了。</p>
+<p>阅读了几篇论文，把这个方案总结了一下，但是感觉没有多少可行性，那些论文只能用于研究。其实想想，kinect这么廉价的东西，跟雷达相比，它转换出的scan肯定不如雷达，这么一融合，恐怕够呛。</p>
+<p>基本的思路是这样:</p>
+<p><strong>Kinect —— 深度图 —— 降噪滤波 —— 转为scan —— 与雷达scan融合 —— 作为SLAM算法的输入 —— 建图</strong></p>
+<p>这里有两种方案：kinect和laser的安装朝向相同或者相反(呈180°)，结果发现存在以下问题：</p>
+<ol>
+<li>和雷达相同，kinect对透明或高反射性的表面也难以检测</li>
+<li>降噪滤波算法需要反复试验</li>
+<li>转为scan一般使用的是depthimage_to_laserscan包，但这个包存在<a target="_blank" rel="noopener" href="https://charon-cheung.github.io/2020/06/05/%E8%A7%86%E8%A7%89SLAM/depthimage_to_laserscan%20%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%ACscan/">scan_height难以调整的问题</a></li>
+<li>融合scan使用的是ira_laser_tools中的laser_multi_merger包，但是这个包是针对激光scan，不是针对kinect转出的scan，需要做一些修改。</li>
+<li>对于gmapping算法，当两个传感器反向安装时，低处的障碍物开始出现地图里，但是过了一会又消失了，因为雷达scan在Kinect-scan之后检测到了墙，gmapping会把之前的kinect-scan当做错误而把相应的区域又按free space处理。同向安装时，kinect-scan扫描的障碍物会变得不太清晰，原因跟反向安装时还是一样的。</li>
+<li>如果用的是kinect1，因为是基于结构光，所以不适合室外使用。不能感知小障碍物，深度图的深度值是<code>0.5~8</code>米，分辨率又太低，建图精度不行，以及FOV不大</li>
+</ol>
+<p>另外朝向相同时，建图精度不如朝向相反的情况。原因还是里程计误差，朝向相反时，两个传感器融合造成的扫描角度大于朝向相同的时候，所以机器人行走比较少。</p>
+<p>由于以上原因，这个方案的可行性大打折扣，尤其是3和5，除非自己修改现有的包和gmapping算法(降低地图cell被确定为<strong>占用</strong>的概率threshold)，但是这样要做的工作就更多了。</p>
+<p>论文提出了一个折中方案，结合个人思考，修改方案如下：</p>
+<ol>
+<li>使用realsense 435相机，它的深度值为<code>0.1~10m</code>，黑洞和噪点比较少。FOV和分辨率也比Kinect好多了</li>
+<li>调整<code>scan_height</code>为一个固定值，保证近距离的障碍物能正常识别，远处障碍不必太考虑。</li>
+<li>生成<code>/camera/scan</code>话题，把它用作costmap2D的单独一层，不再和雷达的scan合并</li>
+</ol>
+<p>值得注意的是，这个新的层不需要单独写C++，将下述代码复制到costmap_common_params.yaml:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">camera_layer:</span><br><span class="line">  enabled:              <span class="literal">true</span></span><br><span class="line">  max_obstacle_height:  2.2</span><br><span class="line">  origin_z:             0.0</span><br><span class="line">  z_resolution:         0.1</span><br><span class="line">  z_voxels:             22</span><br><span class="line">  unknown_threshold:    15</span><br><span class="line">  mark_threshold:       0</span><br><span class="line">  combination_method:   1</span><br><span class="line">  track_unknown_space:  <span class="literal">true</span>    <span class="comment">#true needed for disabling global path planning through unknown space</span></span><br><span class="line">  obstacle_range: 2.5</span><br><span class="line">  raytrace_range: 3.0</span><br><span class="line">  publish_voxel_map: <span class="literal">true</span></span><br><span class="line">  observation_sources:  scan</span><br><span class="line">  scan:</span><br><span class="line">    data_type: LaserScan</span><br><span class="line">    topic: camera/scan</span><br><span class="line">    marking: <span class="literal">true</span></span><br><span class="line">    clearing: <span class="literal">true</span></span><br><span class="line">    min_obstacle_height: 0.1</span><br><span class="line">    max_obstacle_height: 0.3</span><br></pre></td></tr></table></figure>
+<p>将下述代码分别复制到<code>global_costmap_params.yaml</code>和<code>local_costmap_param.yaml</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- &#123;name: camera_layer,            <span class="built_in">type</span>: <span class="string">&quot;costmap_2d::VoxelLayer&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>该行代码需要在障碍层代码的上部</p>
+<h2 id="depth-nav-tools"><a href="#depth-nav-tools" class="headerlink" title="depth_nav_tools"></a>depth_nav_tools</h2><p>ROS另有一套用于kinect的工具包：<a target="_blank" rel="noopener" href="https://github.com/mdrwiega/depth_nav_tools">depth_nav_tools</a>，不过懒得研究了</p>
+<ul>
+<li><p>laserscan_kinect: Converts a depth image coded with uint16 to laser scan 2D (sensor_msgs/LaserScan).</p>
+</li>
+<li><p>cliff_detector: 检测negative障碍物，比如悬崖或下楼</p>
+</li>
+<li><p>depth_sensor_pose: Detects ground plane in depth image and estimates height and tilt angle of depth sensor.</p>
+</li>
+<li><p>nav_layer_from_points: <strong>创建代价地图的一层</strong> based on received points coordinates in robot frame.</p>
+</li>
+<li><p>depth_nav_msgs: 用于其他packages的msg</p>
+</li>
+</ul>
+<p>还有这个 <a target="_blank" rel="noopener" href="https://github.com/marshallpowell97/laser_merge">第三方融合laser和kinect生成的scan</a></p>
+<h2 id="手持kinect建图"><a href="#手持kinect建图" class="headerlink" title="手持kinect建图"></a>手持kinect建图</h2><p>这才是<code>depthimage_to_laserscan</code>的常见用途</p>
+<p>流程:  kinect——深度图——scan——laser_scan_matcher——gmapping</p>
+<p><img src="https://i.loli.net/2020/06/09/9aZfunEO24BTUCQ.png" alt="rqt节点关系图"></p>
+<p>手持kinect没有里程计信息，可以用<code>laser_scan_matcher</code>做里程计估计器，它可以输出一个模拟的里程计信息，实际就是参数<code>fixed_frame</code>的值</p>
+<p>建图时要保证kinect的水平，如果有一定程度的倾斜或翻转，建的地图就有误差。gmapping算法的时间与kinect的移动速度和环境面积有关，所以不要移动太快。</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/ira_laser_tools">ira_laser_tools</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/anchuanxu/article/details/108235704">ROS机器人视觉避障部署流程</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/01/%E8%A7%86%E8%A7%89SLAM/%E8%9E%8D%E5%90%88Realsense+Laser%E7%9A%84%E4%BA%8C%E7%BB%B4scan%E5%AF%BC%E8%88%AA/" data-id="ckr28oqwc0065ewlm348hccik" data-title="融合Realsense+Laser的二维scan导航" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/06/02/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%9B%9B)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902%20%20initMapper%20%E7%AC%AC2%E9%83%A8%E5%88%86/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (四) 源码分析2 initMapper 第2部分
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E9%9D%99%E6%80%81%E5%B1%82/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">静态层</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

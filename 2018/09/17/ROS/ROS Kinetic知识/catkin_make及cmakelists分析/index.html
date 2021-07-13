@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>catkin_make及cmakelists分析 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="catkin_make编译时，对工作空间所有packages的编译顺序是按拓扑遍历的，不是按字母也不是按创建时间。修改任意一个CMakeLists.txt或者package.xml后，执行catkin_make会将工作空间的所有package的CMakeLists重新处理一遍 编译整个工作空间是这样的：先检查了slam_gmapping_nodelet的依赖项，然后是编译fake_localiza">
+<meta property="og:type" content="article">
+<meta property="og:title" content="catkin_make及cmakelists分析">
+<meta property="og:url" content="http://example.com/2018/09/17/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make%E5%8F%8Acmakelists%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="catkin_make编译时，对工作空间所有packages的编译顺序是按拓扑遍历的，不是按字母也不是按创建时间。修改任意一个CMakeLists.txt或者package.xml后，执行catkin_make会将工作空间的所有package的CMakeLists重新处理一遍 编译整个工作空间是这样的：先检查了slam_gmapping_nodelet的依赖项，然后是编译fake_localiza">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/06/18/26QqVEplDUFHJhb.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/10/V5k7wrxemoS6ZsJ.png">
+<meta property="og:image" content="https://i.loli.net/2020/06/18/xH2Qng4aOBG76AK.png">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4838/32572958638_8bc5783aa6.jpg">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4912/32572957958_47a65642b4_b.jpg">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4884/44358737780_3b4e27d5ce_b.jpg">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4841/44358737940_078f8896ab_b.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/11/21/aKyLUtC8z9WpAsi.png">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4888/45644368624_a037a0bcb9_b.jpg">
+<meta property="og:image" content="https://c1.staticflickr.com/5/4894/45644368834_71d2d0f3ed_b.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/04/24/4U5GvNgZkFXCHP6.png">
+<meta property="article:published_time" content="2018-09-17T13:56:00.000Z">
+<meta property="article:modified_time" content="2020-12-28T12:30:03.348Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="编译调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/18/26QqVEplDUFHJhb.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROS/ROS Kinetic知识/catkin_make及cmakelists分析" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/17/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make%E5%8F%8Acmakelists%E5%88%86%E6%9E%90/" class="article-date">
+  <time class="dt-published" datetime="2018-09-17T13:56:00.000Z" itemprop="datePublished">2018-09-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      catkin_make及cmakelists分析
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><code>catkin_make</code>编译时，对工作空间所有packages的编译顺序是按拓扑遍历的，不是按字母也不是按创建时间。修改任意一个<code>CMakeLists.txt</code>或者<code>package.xml</code>后，执行<code>catkin_make</code>会将工作空间的所有package的CMakeLists重新处理一遍</p>
+<p>编译整个工作空间是这样的：<br><img src="https://i.loli.net/2020/06/18/26QqVEplDUFHJhb.png" alt="catkin_make编译.png"><br>先检查了<code>slam_gmapping_nodelet</code>的依赖项，然后是编译fake_localization和depth_image_proc，然后又开始检查map_to_image_node，并不是按包的顺序编译<code>slam_gmapping_nodelet</code>，也就是并不是一个一个包按顺序编译，而是万箭齐发式的。因此，要看某一个包的问题时，不要编译整个工作空间，否则很难找。</p>
+<h3 id="其他编译命令"><a href="#其他编译命令" class="headerlink" title="其他编译命令"></a>其他编译命令</h3><p>指定编译类型Release，指定核数编译： <code>catkin_make -DCMAKE_BUILD_TYPE=Release -j8</code></p>
+<p>支持Ninja：<code>catkin_make --use-ninja</code>，从此多线程编译再也不死机了</p>
+<h3 id="不同package的类型"><a href="#不同package的类型" class="headerlink" title="不同package的类型"></a>不同package的类型</h3><p>编译时，catkin_make会显示各种包的情况<br><img src="https://i.loli.net/2020/03/10/V5k7wrxemoS6ZsJ.png" alt="plain cmake.png"><br><code>plain cmake</code>是纯cmake的包，不能用catkin_make</p>
+<p><code>metapackage</code>都是ROS官方的，自己不用写这种类型，它不安装任何文件(除了package.xml说明的)， 也不包含任何代码文件、test、launch文件，你会发现<code>navigation</code>这个包只有四个文件：<code>CHANGELOG.rst</code>,  <code>CMakeLists.txt</code>,  <code>package.xml</code>,  <code>README.rst</code></p>
+<p>它的<code>package.xml</code>会含有下面内容：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">export</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">metapackage</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">export</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>CMakeLists.txt</code>中还有一句<code>catkin_metapackage()</code></p>
+<h3 id="不同版本的package-xml"><a href="#不同版本的package-xml" class="headerlink" title="不同版本的package.xml"></a>不同版本的package.xml</h3><p>目前常用的package.xml开头是这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot;?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">package</span> <span class="attr">format</span>=<span class="string">&quot;2&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>旧版本的是这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">package</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>base_local_planner<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.14.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>旧版本的不能使用<code>exec_depend</code>，而是用<code>run_depend</code>，否则会报错<br><img src="https://i.loli.net/2020/06/18/xH2Qng4aOBG76AK.png"></p>
+<h3 id="单独编译某个package"><a href="#单独编译某个package" class="headerlink" title="单独编译某个package"></a>单独编译某个package</h3><p>以前一直认为单独编译某个package的命令是<code>catkin_make --pkg package1</code>，结果这样仍然会将工作空间中所有package的CMakeLists全检查一遍，花费时间相当长，实际的命令是这个:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">catkin_make -DCATKIN_WHITELIST_PACKAGES=&quot;package1;package2&quot;</span><br></pre></td></tr></table></figure>
+<p>可以编译一个或多个package，但是执行这个命令之后再<code>catkin_make</code>回发现它仍然只编译上次的package。恢复成编译所有package去掉引号里面的内容就行: </p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">catkin_make -DCATKIN_WHITELIST_PACKAGES=<span class="string">&quot;&quot;</span></span><br><span class="line"><span class="comment"># 对ninja编译的包</span></span><br><span class="line">catkin_make -DCATKIN_WHITELIST_PACKAGES=<span class="string">&quot;package&quot;</span>  --use-ninja</span><br></pre></td></tr></table></figure>
+
+<p><code>build</code>文件夹存放<code>cmake</code>和<code>make</code>相关的文件，<code>devel</code>文件夹存放编译生成的文件和目标，包括<code>setup.sh</code>。</p>
+<h3 id="clean命令"><a href="#clean命令" class="headerlink" title="clean命令"></a>clean命令</h3><p>跟<code>make clean</code>类似，也有个<code>catkin_make clean</code>命令，它会删除所有编译的可执行文件或库文件，但是不会删除删除头文件，例如msg和srv生成的头文件</p>
+<h3 id="INSTALL"><a href="#INSTALL" class="headerlink" title="INSTALL"></a>INSTALL</h3><p>现在执行<code>INSTALL</code>命令不再是<code>sudo make install</code>了，而是<code>catkin_make install</code>，它相当于:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd ~/catkin_ws/build</span><br><span class="line"># If cmake hasn&#x27;t already been called</span><br><span class="line">cmake ../src -DCMAKE_INSTALL_PREFIX=../install -DCATKIN_DEVEL_PREFIX=../devel</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+<p>这样执行完以后，工作空间会出现一个<code>install</code>文件夹，里面存放着编译生成的库文件，问题是它会把所有package的install都进行处理，如果想改变这个目录的位置，执行<code>catkin_make -DCMAKE_INSTALL_PREFIX=path install</code>。另外在CMakeLists中指定安装目录用<code>SET(CMAKE_INSTALL_PREFIX &lt; install_path &gt;)</code></p>
+<br>
+
+<p>结果会在<code>share/status_panel/cmake</code>中生成两个cmake文件<br><img src="https://c1.staticflickr.com/5/4838/32572958638_8bc5783aa6.jpg"></p>
+<p>这两个文件是做依赖包时必需的，比如roscpp就有相应的文件<br><img src="https://c1.staticflickr.com/5/4912/32572957958_47a65642b4_b.jpg"></p>
+<h3 id="链接ROS库"><a href="#链接ROS库" class="headerlink" title="链接ROS库"></a>链接ROS库</h3><p>如果想使用ROS的头文件，必须在CMakeLists里加入下面内容，也就是链接ROS的头文件和库:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">include_directories(</span><br><span class="line"><span class="comment"># include</span></span><br><span class="line"> <span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span></span><br><span class="line">)</span><br><span class="line">find_package(roscpp)</span><br><span class="line">target_link_libraries(foo</span><br><span class="line">   <span class="variable">$&#123;catkin_LIBRARIES&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>别忘了target_link_libraries在add_excutable之后。用message函数可以看到<code>include</code>文件夹和<code>libraries</code>文件夹如下:<br><img src="https://c1.staticflickr.com/5/4884/44358737780_3b4e27d5ce_b.jpg"></p>
+<p><img src="https://c1.staticflickr.com/5/4841/44358737940_078f8896ab_b.jpg"></p>
+<p>在CMakeLists中加入<code>catkin_package()</code>, 才能在执行<code>catkin_make</code>后，在<code>devel/lib</code>中生成可执行文件</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="内存不足"><a href="#内存不足" class="headerlink" title="内存不足"></a>内存不足</h3><p><code>catkin_make</code>之所以有时报错内存不足，有时正常，是因为编译是按拓扑顺序，可能同时编译了move_base和teb_local_planner这两个耗内存大的包，导致报错</p>
+<h3 id="so-file-truncated"><a href="#so-file-truncated" class="headerlink" title=".so file truncated"></a>.so file truncated</h3><ol>
+<li><code>catkin_make</code>中途 ctrl+C 造成</li>
+<li>运行程序时，直接从VMWare关闭虚拟机</li>
+</ol>
+<h3 id="Clock-skew-detected-Your-build-may-be-incomplete"><a href="#Clock-skew-detected-Your-build-may-be-incomplete" class="headerlink" title="Clock skew detected. Your build may be incomplete"></a>Clock skew detected. Your build may be incomplete</h3><p><img src="https://i.loli.net/2020/11/21/aKyLUtC8z9WpAsi.png"><br>出现这个警告是由于时钟不同步导致的，即系统时间比文件修改时间早，换到另一个Linux系统切换可能会出现这个问题。</p>
+<p>解决方案： 依次执行下列指令即可</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> f | xargs -n 5 touch</span><br><span class="line">catkin_make clean</span><br><span class="line">catkin_make</span><br></pre></td></tr></table></figure>
+<p>将所有文件都重新touch一遍，更新到本地系统的时间，再make就没问题了。 </p>
+<h3 id="新package放入工作空间无法识别"><a href="#新package放入工作空间无法识别" class="headerlink" title="新package放入工作空间无法识别"></a>新package放入工作空间无法识别</h3><p>一个新的package放入工作空间后，是不能直接识别的，无论source setup.bash还是<code>catkin_make --pkg</code>都不行，必须先对整个工作空间<code>catkin_make</code>，此时才会识别它</p>
+<h3 id="不同工作空间的同名package"><a href="#不同工作空间的同名package" class="headerlink" title="不同工作空间的同名package"></a>不同工作空间的同名package</h3><p>要尽量避免这种情况，否则会混乱。此时如果有问题，用<code>echo $ROS_PACKAGE_PATH</code>查看环境变量包含的ROS工作空间<br><img src="https://c1.staticflickr.com/5/4888/45644368624_a037a0bcb9_b.jpg"><br><img src="https://c1.staticflickr.com/5/4894/45644368834_71d2d0f3ed_b.jpg"></p>
+<h3 id="Could-not-find-GTest"><a href="#Could-not-find-GTest" class="headerlink" title="Could not find GTest"></a>Could not find GTest</h3><p>执行<code>catkin_make</code>时，有时会报错<code>Could not find GTest</code>，这是由于缺少测试模块，加<code>-DBUILD_TESTING=OFF</code>可以避免测试。</p>
+<h3 id="不要移植工作空间，只移植src"><a href="#不要移植工作空间，只移植src" class="headerlink" title="不要移植工作空间，只移植src"></a>不要移植工作空间，只移植src</h3><p>把ROS的工作空间转移到另一台电脑上会编译失败，build和devel里有很多文件会构成影响，即使二者的用户名一样也不行。所以每次只能复制src文件夹，放到另一台电脑的工作空间里。</p>
+<p>我的一个自定义msg，将整个工作空间移植到另一台电脑，编译没出错，但是echo出错，好像rostopic不被识别一样：<br><img src="https://i.loli.net/2020/04/24/4U5GvNgZkFXCHP6.png" alt="rostopic echo 出错.png"></p>
+<h3 id="find-package-catkin-无法识别catkin"><a href="#find-package-catkin-无法识别catkin" class="headerlink" title="find_package(catkin) 无法识别catkin"></a>find_package(catkin) 无法识别catkin</h3><p>使用<code>qt-ros-plugin</code>，不知怎么操作，导致<code>find_package(catkin)</code>无法识别catkin，不能在任何工作空间编译，其他命令都正常。利用<code>whereis catkin</code>找到路径，删除相应文件，然后重装ROS</p>
+<p>命令<code>catkin_init_workspace</code>：Initializes a catkin workspace by creating a top-level CMakeLists.txt.<br>这个命令最好不要用，创建工作空间还是新建文件夹，然后进入执行<code>catkin_make</code></p>
+<h3 id="程序“catkin-make”尚未安装"><a href="#程序“catkin-make”尚未安装" class="headerlink" title="程序“catkin_make”尚未安装"></a>程序“catkin_make”尚未安装</h3><p>执行<code>catkin_make</code>时，报错:，执行roscd等命令也提示没有安装，感觉就像是没有装ros一样。解决方法:  <code>source /opt/ros/kinetic/setup.bash</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/09/17/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make%E5%8F%8Acmakelists%E5%88%86%E6%9E%90/" data-id="ckr28oqyk00bdewlmfzoz1c8d" data-title="catkin_make及cmakelists分析" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/19/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%EF%BC%88%E4%BA%8C%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          ROS串口通信（二）
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">cmake教程（一）基本使用规则</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

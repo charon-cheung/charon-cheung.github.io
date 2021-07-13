@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>cmake教程（一）基本使用规则 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="查看cmake版本： cmake --version，Ubuntu自带的是3.5.1 cmake和qmake都用于产生Makefile，然后执行make命令进行编译，make还有其他参数，叫做make目标 常见的make目标123456789101112131415161718192021make all：编译程序、库、文档等（等同于make）make install：安装已经编译好的程序，会默认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cmake教程（一）基本使用规则">
+<meta property="og:url" content="http://example.com/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="查看cmake版本： cmake --version，Ubuntu自带的是3.5.1 cmake和qmake都用于产生Makefile，然后执行make命令进行编译，make还有其他参数，叫做make目标 常见的make目标123456789101112131415161718192021make all：编译程序、库、文档等（等同于make）make install：安装已经编译好的程序，会默认">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-17T13:51:59.000Z">
+<meta property="article:modified_time" content="2021-04-06T13:45:59.994Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="编译调试">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-cmake qmake/cmake教程（一）基本使用规则" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/" class="article-date">
+  <time class="dt-published" datetime="2018-09-17T13:51:59.000Z" itemprop="datePublished">2018-09-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cmake-qmake/">cmake/qmake</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      cmake教程（一）基本使用规则
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>查看cmake版本： <code>cmake --version</code>，Ubuntu自带的是3.5.1</p>
+<p>cmake和qmake都用于产生Makefile，然后执行<code>make</code>命令进行编译，make还有其他参数，叫做make目标</p>
+<h3 id="常见的make目标"><a href="#常见的make目标" class="headerlink" title="常见的make目标"></a>常见的make目标</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">make all：编译程序、库、文档等（等同于make）</span><br><span class="line"></span><br><span class="line">make install：安装已经编译好的程序，会默认把程序安装至 /usr/<span class="built_in">local</span>/bin</span><br><span class="line"></span><br><span class="line">make unistall：卸载已经安装的程序。</span><br><span class="line"></span><br><span class="line">make clean：删除由make命令产生的文件(例如object file，*.o)</span><br><span class="line"></span><br><span class="line">make -j N : 同时允许N个任务进行，如果不指定N则进行无限个任务，结果会将CPU性能榨干。N的最大值取决于CPU性能，不要把N设置太大，更不要不指定，否则可能死机。</span><br><span class="line"></span><br><span class="line">make distclean：删除由./configure产生的文件</span><br><span class="line"></span><br><span class="line">make check：测试刚刚编译的软件（某些程序可能不支持，有时会测试很长时间，这就没有必要）</span><br><span class="line"></span><br><span class="line">make installcheck：检查安装的库和程序（某些程序可能不支持）</span><br><span class="line"></span><br><span class="line">make dist：重新打包成packname-version.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 有时碰到这样的情况，第一次make会出错，再次make却能成功，以下命令用于这种情况</span></span><br><span class="line">make -i: 忽略指令执行错误，并继续执行，且如果出错的话就会生成目标文件。这个一般用在调试的时候。</span><br><span class="line">make -k: 出错也不停止运行，不仅可以忽略指令错误，而且还能忽略makefile规则错误</span><br></pre></td></tr></table></figure>
+
+<p><strong>注释方法</strong>： CMake 3.0以上版本的多行注释：从<code>#[[</code>开始，在块注释的另一端以<code>]]</code>结束。</p>
+<br>
+语法规则：
+
+<ul>
+<li>变量使用${}方式取值, 但是在IF控制语句中是直接使用变量名</li>
+<li>环境变量使用$ENV{}方式取值, 使用SET(ENV{VAR} VALUE)赋值</li>
+<li>指令(参数1 参数2…) 参数使用括弧括起, 参数之间使用空格或分号分开</li>
+</ul>
+<h3 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h3><p>预定义变量，设置方式是<code>set(VARIABLE value)</code>，大小写都是敏感的，可以用message函数查看：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PROJECT_NAME   <span class="comment">#通过PROJECT指令定义的项目名称</span></span><br><span class="line">PROJECT_SOURCE_DIR   <span class="comment">#工程的根目录</span></span><br><span class="line">PROJECT_BINARY_DIR      <span class="comment">#运行cmake命令的目录,通常是$&#123;PROJECT_SOURCE_DIR&#125;/build</span></span><br><span class="line">CMAKE_CURRENT_SOURCE_DIR    <span class="comment">#当前处理的CMakeLists.txt所在的路径</span></span><br><span class="line">EXECUTABLE_OUTPUT_PATH     <span class="comment">#目标可执行文件的存放位置</span></span><br><span class="line">LIBRARY_OUTPUT_PATH        <span class="comment">#目标链接库文件的存放位置</span></span><br><span class="line"></span><br><span class="line">CMAKE_MAJOR_VERSION 	<span class="comment">#cmake主版本号,如2.8.6中的2</span></span><br><span class="line">CMAKE_MINOR_VERSION 	<span class="comment">#cmake次版本号,如2.8.6中的8</span></span><br><span class="line">CMAKE_PATCH_VERSION 	<span class="comment">#cmake补丁等级,如2.8.6中的6</span></span><br><span class="line">CMAKE_SYSTEM  			<span class="comment">#系统名称，包含内核版本，例如Linux-2.6.22</span></span><br><span class="line">CAMKE_SYSTEM_NAME 		<span class="comment">#不包含版本的系统名,如Linux</span></span><br><span class="line">UNIX   		<span class="comment">#在所有的类UNIX平台为TRUE,包括OS X和cygwin</span></span><br><span class="line">WIN32  		<span class="comment">#在所有的win32平台为TRUE,包括cygwin</span></span><br><span class="line"></span><br><span class="line">BUILD_SHARED_LIBS  		<span class="comment">#控制默认的库编译方式,默认编译生成的库都是静态库</span></span><br><span class="line">CMAKE_C_COMPILER/CMAKE_CXX_COMPILER    <span class="comment">#指定C/C++编译器</span></span><br><span class="line">CMAKE_CXX_FLAGS   	<span class="comment"># 设置C++编译选项</span></span><br><span class="line">CMAKE_BUILD_TYPE  	<span class="comment"># 常用的编译类型 Debug  Release </span></span><br><span class="line">BUILD_SHARED_LIBS   <span class="comment"># 编译动态链接库(ON,OFF)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="add-compile-options"><a href="#add-compile-options" class="headerlink" title="add_compile_options"></a>add_compile_options</h3><p>下面的代码里，<code>foo</code>不会按照<code>-Wall</code>编译,但是<code>bar</code>会。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">add_library(foo ...)</span><br><span class="line">add_compile_options(-Wall 03)</span><br><span class="line">add_library(bar ...)</span><br></pre></td></tr></table></figure>
+<p><code>-Wall</code>显示所有警告。<br><code>O3</code>(字母O)是编译优化的程度选择，有O1 O2 O3。数字越大编译优化越多，程序执行速度越快 但编译时间越长，不过一般程序看不出来。</p>
+<h3 id="CMAKE-CXX-STANDARD"><a href="#CMAKE-CXX-STANDARD" class="headerlink" title="CMAKE_CXX_STANDARD"></a>CMAKE_CXX_STANDARD</h3><p>CMake 3.1或者更高版本可使用<code>set(CMAKE_CXX_STANDARD 11)</code>，不能用17</p>
+<h3 id="configure命令"><a href="#configure命令" class="headerlink" title="./configure命令"></a>./configure命令</h3><p>一般第三方库里都有个<code>configure</code>文件，它是个Shell脚本，内容很多．./configure 是用来检测你的安装平台的目标特征的，比如它会检测你是不是有CC或GCC。主要功能是生成 Makefile，为下一步的编译做准备，你可以通过在<code>./configure</code>后加上参数来对安装进行控制，比如<code>./configure --prefix=/usr</code>是将该软件安装在 /usr 下面，执行文件就会安装在<code> /usr/bin</code>（而不是默认的 <code>/usr/local/bin</code>)，资源文件就会安装在 <code>/usr/share</code>（而不是默认的/usr/local/share）</p>
+<h3 id="message函数"><a href="#message函数" class="headerlink" title="message函数"></a>message函数</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">message(STATUS  <span class="string">&quot;12345&quot;</span>)   <span class="comment">#如果不加STATUS，不会在前面加--标志</span></span><br><span class="line">message(STATUS <span class="string">&quot; include dirs:　<span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span>&quot;</span>　)     <span class="comment">#有一个--开头</span></span><br><span class="line">message(STATUS <span class="string">&quot; include dirs:&quot;</span>　<span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span>　)     <span class="comment"># 同上面等价</span></span><br></pre></td></tr></table></figure>
+<p>如果在执行cmake时，遇到一个错误情况需要停止执行，可以用<code>FATAL_ERROR</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if( SOME_COND )</span><br><span class="line">  message( FATAL_ERROR &quot;You can not do this at all, CMake will exit.&quot; )</span><br><span class="line">endif()</span><br></pre></td></tr></table></figure>
+<p>如果出现这种情况还要继续编译，那么就换成<code>SEND_ERROR</code><br><br><br>指令最好全用大写<br>路径名中不要用\，而是用/，例如<code>include_directories(F:/Eigen)</code></p>
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 这必须是CMakeLists的第一行，限定cmake版本，Catkin需要2.8.3或更高版本</span></span><br><span class="line"><span class="keyword">CMAKE_MINIMUM_REQUIRED</span>(VERSION <span class="number">3.3</span>)  </span><br><span class="line"></span><br><span class="line"><span class="keyword">PROJECT</span>		<span class="comment">#指定工程名称</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">add_compile_options</span>(-std=c++<span class="number">11</span>)		<span class="comment"># 支持C++ 11</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span>(CMAKE_BUILD_TYPE <span class="string">&quot;Release&quot;</span>)		<span class="comment"># 指定cmake版本为Release，或者用Debug</span></span><br><span class="line"><span class="keyword">if</span>(CMAKE_BUILD_TYPE <span class="keyword">STREQUAL</span> <span class="string">&quot;Release&quot;</span>)</span><br><span class="line">	<span class="keyword">message</span>(STATUS <span class="string">&quot;build type is Release&quot;</span>)</span><br><span class="line"><span class="keyword">endif</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">#SET	定义变量,可定义多个变量，例如: set(SRC_FILES main.cpp mainwindow.cpp mainwindow.h)</span></span><br><span class="line"><span class="comment">#MESSAGE 	输出用户定义的信息</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">include_directories</span>   	<span class="comment">#指定头文件的搜索路径</span></span><br><span class="line"><span class="keyword">link_directories</span>      	<span class="comment">#指定动态链接库的搜索路径</span></span><br><span class="line"><span class="keyword">ADD_EXECUTABLE</span>(bin_file_name <span class="variable">$&#123;SRC_FILES&#125;</span>)   	<span class="comment">#生成可执行文件</span></span><br><span class="line"><span class="keyword">add_definitions</span>   	<span class="comment">#添加编译参数 add_definitions(&quot;-Wall -g&quot;)</span></span><br><span class="line"><span class="keyword">ADD_LIBRARY</span>   		<span class="comment">#生成动态库或静态库</span></span><br><span class="line"><span class="keyword">link_libraries</span>(lib1 lib2)   <span class="comment">#所有编译目标链接相同的库</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SET_TARGET_PROPERTIES</span>  		<span class="comment">#设置输出的名称,设置动态库的版本和API版本</span></span><br><span class="line"><span class="keyword">ADD_SUBDIRECTORY</span>   			<span class="comment">#向当前工程添加存放源文件的子目录</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="获取环境变量"><a href="#获取环境变量" class="headerlink" title="获取环境变量"></a>获取环境变量</h3><p>获取bash.rc中的环境变量，通过ENV前缀来访问环境变量，读取环境变量使用<code>$ENV&#123;JAVA_HOME&#125;</code>，查看环境变量：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">message(STATUS &quot; java home:　$ENV&#123;JAVA_HOME&#125;&quot;　)</span><br></pre></td></tr></table></figure>
+
+<p>写环境变量如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set( ENV&#123;PATH&#125; /home/martink )</span><br></pre></td></tr></table></figure>
+
+<h3 id="cmake判断操作系统"><a href="#cmake判断操作系统" class="headerlink" title="cmake判断操作系统:"></a>cmake判断操作系统:</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">MESSAGE(STATUS &quot;operation system is $&#123;CMAKE_SYSTEM&#125;&quot;)         #输出系统内核版本</span><br><span class="line"></span><br><span class="line">IF (WIN32)</span><br><span class="line">    MESSAGE(STATUS &quot;Now is windows&quot;)</span><br><span class="line">ELSEIF (UNIX)</span><br><span class="line">    MESSAGE(STATUS &quot;Now is UNIX-like OS&#x27;s.&quot;)</span><br><span class="line">ENDIF ()</span><br></pre></td></tr></table></figure>
+
+<h3 id="指定生成文件的输出路径"><a href="#指定生成文件的输出路径" class="headerlink" title="指定生成文件的输出路径"></a>指定生成文件的输出路径</h3><p>使用SET命令重新定义<code>EXECUTABLE_OUTPUT_PATH</code>和<code>LIBRARY_OUTPUT_PATH</code>变量来指定最终的二进制文件的位置</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SET(EXECUTABLE_OUTPUT_PATH $&#123;PROJECT_BINARY_DIR&#125;/bin)</span><br><span class="line">SET(LIBRARY_OUTPUT_PATH $&#123;PROJECT_BINARY_DIR&#125;/lib)</span><br></pre></td></tr></table></figure>
+<p>上面的两条命令通常紧跟<code>ADD_EXECUTABLE</code>和<code>ADD_LIBRARY</code>,与其写在同一个CMakeLists.txt即可</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hgl868/article/details/72236547">CMake基本教程</a><br><a target="_blank" rel="noopener" href="https://qtdream.com/topic/1056/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E8%AE%B0%E5%BD%95qt-creator%E6%9E%84%E5%BB%BAcmake%E9%A1%B9%E7%9B%AE-%E5%9B%9B">子工程和链接静态库</a><br><a target="_blank" rel="noopener" href="https://linghutf.github.io/2016/06/16/cmake/#">CMake使用进阶</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/09/17/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99/" data-id="ckr28oqul001wewlm0ya5dsox" data-title="cmake教程（一）基本使用规则" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/09/17/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/catkin_make%E5%8F%8Acmakelists%E5%88%86%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          catkin_make及cmakelists分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/09/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/ROS%E4%B8%B2%E5%8F%A3%E9%80%9A%E4%BF%A1%EF%BC%88%E4%B8%80%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">ROS串口通信（一）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>全局路径规划(一) global_planner | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="概述ROS 的navigation官方功能包提供了三种全局路径规划器：carrot_planner、global_planner、navfn，默认使用的是navfn。  carrot_planner检查需要到达的目标是不是一个障碍物，如果是一个障碍物，它就将目标点替换成一个附近可接近的点。因此，这个模块其实并没有做任何全局规划的工作。在复杂的室内环境中，这个模块并不实用。  navfn使用Dijk">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全局路径规划(一) global_planner">
+<meta property="og:url" content="http://example.com/2020/05/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%20-%20global_planner/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="概述ROS 的navigation官方功能包提供了三种全局路径规划器：carrot_planner、global_planner、navfn，默认使用的是navfn。  carrot_planner检查需要到达的目标是不是一个障碍物，如果是一个障碍物，它就将目标点替换成一个附近可接近的点。因此，这个模块其实并没有做任何全局规划的工作。在复杂的室内环境中，这个模块并不实用。  navfn使用Dijk">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/11/23/inPtpOCTwoc6LkS.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/ZNkmoExnYM3dyWF.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/M2gkuxmWELVeAGj.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/15/tI8c3KMZzLaWfdh.png">
+<meta property="article:published_time" content="2020-05-01T11:47:50.000Z">
+<meta property="article:modified_time" content="2021-01-21T13:30:02.028Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/23/inPtpOCTwoc6LkS.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-路径规划/move_base 分析/全局路径规划 - global_planner" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/05/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%20-%20global_planner/" class="article-date">
+  <time class="dt-published" datetime="2020-05-01T11:47:50.000Z" itemprop="datePublished">2020-05-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      全局路径规划(一) global_planner
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>ROS 的navigation官方功能包提供了三种全局路径规划器：carrot_planner、global_planner、navfn，默认使用的是navfn。<br><img src="https://i.loli.net/2020/11/23/inPtpOCTwoc6LkS.png" alt="继承关系 1.png"></p>
+<ul>
+<li><p><code>carrot_planner</code>检查需要到达的目标是不是一个障碍物，如果是一个障碍物，它就将目标点替换成一个附近可接近的点。因此，这个模块其实并没有做任何全局规划的工作。在复杂的室内环境中，这个模块并不实用。</p>
+</li>
+<li><p>navfn使用Dijkstra算法找到最短路径。</p>
+</li>
+<li><p>global planner是navfn的升级版。它支持<code>A*</code>算法； 可以切换二次近似； 切换网格路径；</p>
+</li>
+</ul>
+<p>目前常用的是<code>global_planner</code>，需要先设定<code>move_base</code>的参数： <code>base_global_planner: &quot;global_planner/GlobalPlanner&quot; </code></p>
+<p><code>global_planner</code>根据给定的目标位置进行总体路径的规划，只处理全局代价地图中的数据。提供快速的、内插值的全局规划，目前已经取代<code>navfn</code>。遵循<font color = blue size= 3>navcore::navcore </font>包中指定的BaseGlobalPlanner接口。它接受costmap生成的全局代价地图规划出从起始点到目标点的路径，为<code>local_planner</code>规划路径作出参考。</p>
+<p><code>global_planner</code>没有提供类似<code>D*</code>这样的动态方法，而是用了<strong>定时规划路径</strong>，ROS是启动了一个线程，在移动过程中对路径不断的重新规划。这个feature是可以去掉的，特别是当你的运算负载很高，处理器又有限的情况下。还有<strong>重新规划</strong>(当找不到路径，也就是走着走着新扫描到未知区域的障碍或者动态增加的障碍)两种办法。加上了定时规划和重新规划之后的<code>A*</code>和<code>D*</code>几乎是一模一样的。</p>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><p>move_base是通过plugin调用全局规划器的，文件<code>bgp_plugin.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">library</span> <span class="attr">path</span>=<span class="string">&quot;lib/libglobal_planner&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">class</span> <span class="attr">name</span>=<span class="string">&quot;global_planner/GlobalPlanner&quot;</span> <span class="attr">type</span>=<span class="string">&quot;global_planner::GlobalPlanner&quot;</span> <span class="attr">base_class_type</span>=<span class="string">&quot;nav_core::BaseGlobalPlanner&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span></span><br><span class="line">      A implementation of a grid based planner using Dijkstras or A*</span><br><span class="line">    <span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">library</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在package.xml的配置中，加入如下行：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">export</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">nav_core</span> <span class="attr">plugin</span>=<span class="string">&quot;$&#123;prefix&#125;/bgp_plugin.xml&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">export</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h3><ul>
+<li><p>allow_unknown: true  # 是否允许规划器规划在未知区域创建规划，只设置该参数为true还不行,还要在<code>costmap_commons_params.yaml</code>中设置 <code>track_unknown_space</code> 参数也为true才行，</p>
+</li>
+<li><p>default_tolerance: 0.0  # 当设置的目的地被障碍物占据时，需要以该参数为半径寻找到最近的点作为新目的地点.</p>
+</li>
+<li><p>visualize_potential: false # 是否显示从PointCloud2计算得到的势区域. 这个参数可以让你看见<code>potential array</code>的图像，看计算出的cost是怎么样子(颜色深浅代表距离起始点的远近)</p>
+</li>
+<li><p>use_dijkstra: true    # 设置为true,将使用dijkstra算法, 否则使用<code>A*算法</code></p>
+</li>
+<li><p>use_quadratic: true   # 设置为true,将使用二次函数近似函数计算<code>potential</code>，否则使用更加简单的计算方式，这样节省硬件资源</p>
+</li>
+<li><p>use_grid_path: false # 默认使用梯度下降法，路径更为光滑，从周围八个栅格中找到下降梯度最大的点。 如果为true，使用栅格路径，从终点开始找上下或左右4个中最小的栅格直到起点，会规划一条沿着网格边界的路径,偏向于直线穿越网格</p>
+</li>
+<li><p>old_navfn_behavior: false # navfn是非常旧的ROS系统中使用的，现在已经都用<code>global_planner</code>代替navfn了，所以不建议设置为true.</p>
+</li>
+<li><p>lethal_cost: 253  # 致命代价值,默认是设置为253,可以动态来配置该参数.</p>
+</li>
+<li><p>neutral_cost: 50  # 中等代价值,默认设置是50,可以动态配置该参数.</p>
+</li>
+<li><p>cost_factor: 3.0  # 代价地图与每个代价值相乘的因子.</p>
+</li>
+<li><p>publish_potential: true   # 是否发布costmap的势函数.</p>
+</li>
+<li><p>orientation_mode: 0   # 如何设置每个点的方向<code>（None = 0,Forward = 1,Interpolate = 2,ForwardThenInterpolate = 3,Backward = 4,Leftward = 5,Rightward = 6）</code>（可动态重新配置）</p>
+</li>
+<li><p>orientation_window_size: 1  # 根据<code>orientation_mode</code>指定的位置积分来得到使用窗口的方向.默认值1,可以动态重新配置.</p>
+</li>
+</ul>
+<h3 id="A-和Dijkstra两种算法"><a href="#A-和Dijkstra两种算法" class="headerlink" title="A*和Dijkstra两种算法"></a><code>A*</code>和Dijkstra两种算法</h3><p>两种算法的效果对比<br><img src="https://i.loli.net/2020/05/01/ZNkmoExnYM3dyWF.png" alt="A.png"><br><img src="https://i.loli.net/2020/05/01/M2gkuxmWELVeAGj.png" alt="Dijkstra.png"></p>
+<p><code>A*</code>比<code>Dijkstra</code>少计算很多，但可能不会产生相同路径。另外，在global_planner的<code>A*</code>里，the potentials are computed using 4-connected grid squares, while the path found by tracing the potential gradient from the goal back to the start uses the same grid in an 8-connected fashion. Thus, the actual path found may not be fully optimal in an 8-connected sense. (Also, no visited-state set is tracked while computing potentials, as in a more typical A* implementation, because such is unnecessary for 4-connected grids).</p>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>发布的话题是<code>~&lt;name&gt;/plan(nav_msgs/Path)</code>，即最新规划出的路径，每次规划出新路径就要发布一次，主要用于观测。</p>
+<p><code>Orientation filter</code>使用的<code>orientation_mode</code>还不清楚什么意思</p>
+<p>跟导航最相关的几个进程是<code>laser_node</code>，<code>move_base</code>，<code>amcl</code>，CPU占用情况如下：<br><img src="https://i.loli.net/2019/08/15/tI8c3KMZzLaWfdh.png"></p>
+<h2 id="调用流程"><a href="#调用流程" class="headerlink" title="调用流程"></a>调用流程</h2><h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><h3 id="GlobalPlanner-initialize"><a href="#GlobalPlanner-initialize" class="headerlink" title="GlobalPlanner::initialize"></a>GlobalPlanner::initialize</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!initialized_)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">ros::NodeHandle <span class="title">private_nh</span><span class="params">(<span class="string">&quot;~/&quot;</span> + name)</span></span>;</span><br><span class="line">    costmap_ = costmap;</span><br><span class="line">    frame_id_ = frame_id;   <span class="comment">//costmap_ros-&gt;getGlobalFrameID()</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> cx = costmap-&gt;<span class="built_in">getSizeInCellsX</span>(), cy = costmap-&gt;<span class="built_in">getSizeInCellsY</span>();</span><br><span class="line">    <span class="comment">// 参数赋值, 默认false</span></span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;old_navfn_behavior&quot;</span>, old_navfn_behavior_, <span class="literal">false</span>);</span><br><span class="line">    <span class="keyword">if</span>(!old_navfn_behavior_)</span><br><span class="line">        convert_offset_ = <span class="number">0.5</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        convert_offset_ = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> use_quadratic;   <span class="comment">// 二次方的</span></span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;use_quadratic&quot;</span>, use_quadratic, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// p_calc_声明为PotentialCalculator指针</span></span><br><span class="line">    <span class="comment">// QuadraticCalculator是它的派生类, 唯一区别是覆盖了calculatePotential函数</span></span><br><span class="line">    <span class="keyword">if</span> (use_quadratic)    <span class="comment">// 默认使用二次</span></span><br><span class="line">        p_calc_ = <span class="keyword">new</span> <span class="built_in">QuadraticCalculator</span>(cx, cy);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        p_calc_ = <span class="keyword">new</span> <span class="built_in">PotentialCalculator</span>(cx, cy);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> use_dijkstra;</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;use_dijkstra&quot;</span>, use_dijkstra, <span class="literal">true</span>);</span><br><span class="line">    <span class="comment">//DijkstraExpansion 和 AStarExpansion 都继承 Expander类</span></span><br><span class="line">    <span class="keyword">if</span> (use_dijkstra)</span><br><span class="line">    &#123;</span><br><span class="line">        DijkstraExpansion* de = <span class="keyword">new</span> <span class="built_in">DijkstraExpansion</span>(p_calc_, cx, cy);</span><br><span class="line">        <span class="keyword">if</span>(!old_navfn_behavior_)</span><br><span class="line">            de-&gt;<span class="built_in">setPreciseStart</span>(<span class="literal">true</span>);</span><br><span class="line">        planner_ = de;      <span class="comment">// Expander* planner_;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>   <span class="comment">// 如果不用dijkstra,就用A星算法.</span></span><br><span class="line">        planner_ = <span class="keyword">new</span> <span class="built_in">AStarExpansion</span>(p_calc_, cx, cy);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">bool</span> use_grid_path;</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;use_grid_path&quot;</span>, use_grid_path, <span class="literal">false</span>);</span><br><span class="line">    <span class="comment">// GradientPath 和 GridPath都继承了Traceback</span></span><br><span class="line">    <span class="keyword">if</span> (use_grid_path)</span><br><span class="line">        path_maker_ = <span class="keyword">new</span> <span class="built_in">GridPath</span>(p_calc_);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        path_maker_ = <span class="keyword">new</span> <span class="built_in">GradientPath</span>(p_calc_);</span><br><span class="line">        </span><br><span class="line">    orientation_filter_ = <span class="keyword">new</span> <span class="built_in">OrientationFilter</span>();</span><br><span class="line">    <span class="comment">// NavfnROS::initialize中也注册此话题</span></span><br><span class="line">    plan_pub_ = private_nh.advertise&lt;nav_msgs::Path&gt;(<span class="string">&quot;plan&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    potential_pub_ = private_nh.advertise&lt;nav_msgs::OccupancyGrid&gt;(<span class="string">&quot;potential&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="comment">// 一系列参数赋值</span></span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;allow_unknown&quot;</span>, allow_unknown_, <span class="literal">true</span>);</span><br><span class="line">    planner_-&gt;<span class="built_in">setHasUnknown</span>(allow_unknown_);</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;planner_window_x&quot;</span>, planner_window_x_, <span class="number">0.0</span>);</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;planner_window_y&quot;</span>, planner_window_y_, <span class="number">0.0</span>);</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;default_tolerance&quot;</span>, default_tolerance_, <span class="number">0.0</span>);</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;publish_scale&quot;</span>, publish_scale_, <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">double</span> costmap_pub_freq;</span><br><span class="line">    private_nh.<span class="built_in">param</span>(<span class="string">&quot;planner_costmap_publish_frequency&quot;</span>, costmap_pub_freq, <span class="number">0.0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//get the tf prefix</span></span><br><span class="line">    ros::NodeHandle prefix_nh;</span><br><span class="line">    tf_prefix_ = tf::<span class="built_in">getPrefixParam</span>(prefix_nh);</span><br><span class="line"></span><br><span class="line">    make_plan_srv_ = private_nh.<span class="built_in">advertiseService</span>(<span class="string">&quot;make_plan&quot;</span>, &amp;GlobalPlanner::makePlanService, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line">    dsrv_ = <span class="keyword">new</span> dynamic_reconfigure::Server&lt;global_planner::GlobalPlannerConfig&gt;(ros::<span class="built_in">NodeHandle</span>(<span class="string">&quot;~/&quot;</span> + name));</span><br><span class="line">    dynamic_reconfigure::Server&lt;global_planner::GlobalPlannerConfig&gt;::CallbackType cb = boost::<span class="built_in">bind</span>(</span><br><span class="line">            &amp;GlobalPlanner::reconfigureCB, <span class="keyword">this</span>, _1, _2);</span><br><span class="line">    dsrv_-&gt;<span class="built_in">setCallback</span>(cb);</span><br><span class="line"></span><br><span class="line">    initialized_ = <span class="literal">true</span>;</span><br><span class="line">&#125; <span class="keyword">else</span></span><br><span class="line">    <span class="built_in">ROS_WARN</span>(<span class="string">&quot;This planner has already been initialized, you can&#x27;t call it twice, doing nothing&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/global_planner">ROS- global_panner</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/heyijia0327/article/details/45030929?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-3">global_planner历史背景和概述</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/05/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92%20-%20global_planner/" data-id="ckr28or1y00joewlm3et3flg6" data-title="全局路径规划(一) global_planner" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/13/Matlab/Matlab%E5%8A%A0%E8%BD%BD%E6%A0%85%E6%A0%BC%E5%9C%B0%E5%9B%BE/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Matlab加载栅格地图
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/Dijkstra%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Dijkstra算法</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

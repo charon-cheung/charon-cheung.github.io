@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>智能指针(一) unique_ptr | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="智能指针三个优点:  明确资源的ownership 避免忘记delete这种人类容易犯的错误 更好地handle exception (Effective C++ 中的条款)  无所有权语义的指针的行为方式应该是：它必须不能out-live它所指向的资源，当它还活着的时候，程序员必须保证它指向的资源必须是活着的，并且当原生指针结束生命周期的时候，不需要做任何操作。 智能指针类重载了解除引用运算符（">
+<meta property="og:type" content="article">
+<meta property="og:title" content="智能指针(一) unique_ptr">
+<meta property="og:url" content="http://example.com/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%B8%80)%20unique_ptr/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="智能指针三个优点:  明确资源的ownership 避免忘记delete这种人类容易犯的错误 更好地handle exception (Effective C++ 中的条款)  无所有权语义的指针的行为方式应该是：它必须不能out-live它所指向的资源，当它还活着的时候，程序员必须保证它指向的资源必须是活着的，并且当原生指针结束生命周期的时候，不需要做任何操作。 智能指针类重载了解除引用运算符（">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49476286518_bd22217c4c_z.jpg">
+<meta property="article:published_time" content="2020-02-12T05:41:16.000Z">
+<meta property="article:modified_time" content="2021-04-06T13:38:36.590Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://live.staticflickr.com/65535/49476286518_bd22217c4c_z.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-C++/C++  面向对象/智能指针(一) unique_ptr" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%B8%80)%20unique_ptr/" class="article-date">
+  <time class="dt-published" datetime="2020-02-12T05:41:16.000Z" itemprop="datePublished">2020-02-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      智能指针(一) unique_ptr
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>智能指针三个优点:</p>
+<ul>
+<li>明确资源的ownership</li>
+<li>避免忘记delete这种人类容易犯的错误</li>
+<li>更好地handle exception (Effective C++ 中的条款)</li>
+</ul>
+<p>无所有权语义的指针的行为方式应该是：它必须不能out-live它所指向的资源，当它还活着的时候，程序员必须保证它指向的资源必须是活着的，并且当原生指针结束生命周期的时候，不需要做任何操作。</p>
+<p>智能指针类重载了解除引用运算符<code>（*）</code>和成员选择运算符<code>（-&gt;）</code>,同时为了能够在堆中管理各种类型，几乎所有的智能指针都是模板类，包含其功能的泛型实现。</p>
+<p>C++11 中的<code>auto_ptr</code>已经废弃.现有的unique_ptr，shared_ptr，weak_ptr和原生指针加起来构成了指针的完整四件套。它们都在头文件<code>&lt;memory&gt;</code>里面,最常用的是原生指针（没所有权语义的时候），其次是<code>unique_ptr</code>，后两个除非特定场合需求，能不用就不用。 拷贝shared_ptr、lock weak_ptr都涉及到<code>atomic</code>操作，其开销比起拷贝、解引用一个指针都是大很多的。</p>
+<h2 id="unique-ptr"><a href="#unique-ptr" class="headerlink" title="unique_ptr"></a>unique_ptr</h2><p><code>unique_ptr</code>代表的是专属所有权，之所以叫这个名字，是因为它只能指向一个对象，即当它指向其他对象时，之前所指向的对象会被摧毁,不能进行复制操作只能进行移动操作。两个<code>unique_ptr</code>也不能指向一个对象. 看源码发现，拷贝构造函数和赋值运算符都加了delete:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">unique_ptr</span>(<span class="keyword">const</span> unique_ptr&amp;) = <span class="keyword">delete</span>;</span><br><span class="line">unique_ptr&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> unique_ptr&amp;) = <span class="keyword">delete</span>;</span><br></pre></td></tr></table></figure>
+<p>强行使用会报错: <img src="https://live.staticflickr.com/65535/49476286518_bd22217c4c_z.jpg"></p>
+<p>这里需要注意:  <font color = blue>  <font size= 3> 既然不能拷贝, 就不能在函数中将unique_ptr作为参数了,因为传参是一个产生副本的过程 </font> </font></p>
+<p>如果想要把一个<code>unique_ptr</code>的内存交给另外一个<code>unique_ptr</code>对象管理, 只能使用<code>std::move</code>转移当前对象的所有权。转移之后，当前对象不再持有此内存，新的对象将获得专属所有权</p>
+<p><code>unique_ptr</code>在默认情况下和原生指针的大小是一样的,内存上没有任何的额外消耗，性能是最优的</p>
+<p>如果没有为<code>unique_ptr</code>指定指向对象，get()返回0</p>
+<h3 id="常用方法"><a href="#常用方法" class="headerlink" title="常用方法"></a>常用方法</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Test</span>() &#123; cout&lt;&lt; <span class="string">&quot;construct&quot;</span> &lt;&lt;endl; &#125;</span><br><span class="line">    ~<span class="built_in">Test</span>() &#123; cout&lt;&lt; <span class="string">&quot;destruct&quot;</span> &lt;&lt;endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">std::unique_ptr&lt;Test&gt; <span class="title">p1</span><span class="params">(<span class="keyword">new</span> Test())</span></span>;</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p1: &quot;</span>&lt;&lt;p1.<span class="built_in">get</span>()&lt;&lt;endl;      <span class="comment">// 0x19b7c20</span></span><br><span class="line"><span class="comment">// std::unique_ptr&lt;Test&gt; p2(p1)   // 错误用法, 不支持拷贝构造函数</span></span><br><span class="line">std::unique_ptr&lt;Test&gt; p2 = std::<span class="built_in">move</span>(p1);</span><br><span class="line"><span class="comment">// 转移所有权到p2</span></span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p1: &quot;</span>&lt;&lt;p1.<span class="built_in">get</span>()&lt;&lt;endl;   <span class="comment">// 0</span></span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p2: &quot;</span>&lt;&lt;p2.<span class="built_in">get</span>()&lt;&lt;endl&lt;&lt;endl;    <span class="comment">// 0x19b7c20</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// p2释放所有权, 只剩p3原生指针</span></span><br><span class="line"><span class="comment">// release并不会摧毁其指向的对象，不执行析构,与reset不同</span></span><br><span class="line">Test* p3 = p2.<span class="built_in">release</span>();</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;after release &quot;</span>&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p2: &quot;</span>&lt;&lt;p2.<span class="built_in">get</span>()&lt;&lt;endl;      <span class="comment">// 0</span></span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p3: &quot;</span>&lt;&lt;p3 &lt;&lt;endl&lt;&lt;endl;    <span class="comment">// 0x19b7c20</span></span><br></pre></td></tr></table></figure>
+<p><code>move</code>不执行析构，否则新的智能指针无法指向对象了.</p>
+<h3 id="reset"><a href="#reset" class="headerlink" title="reset"></a>reset</h3><p><code>reset</code>有两种用法,如果不加参数,就会销毁对象(执行析构函数),重置智能指针; 如果加原生指针做参数,就会先销毁原来指向的对象,然后指向原生指针指向的对象</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Test* p3 = <span class="keyword">new</span> <span class="built_in">Test</span>();</span><br><span class="line"><span class="function">std::unique_ptr&lt;Test&gt; <span class="title">p4</span><span class="params">(<span class="keyword">new</span> Test())</span></span>;</span><br><span class="line">cout&lt;&lt;<span class="string">&quot;p4: &quot;</span>&lt;&lt;p4.<span class="built_in">get</span>()&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">p4.<span class="built_in">reset</span>(p3);</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;after reset &quot;</span>&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p4: &quot;</span>&lt;&lt;p4.<span class="built_in">get</span>()&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;p3: &quot;</span>&lt;&lt;p3 &lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">construct   // p3</span><br><span class="line">construct   // p4</span><br><span class="line">p4: 0x7adc50</span><br><span class="line">destruct   // </span><br><span class="line">after reset </span><br><span class="line">p4: 0x7acc20</span><br><span class="line">p3: 0x7acc20</span><br><span class="line">destruct</span><br></pre></td></tr></table></figure>
+
+<p>需要注意:  <font color = blue>  <font size= 3> release不执行析构, reset执行析构 </font> </font></p>
+<h3 id="自定义删除器"><a href="#自定义删除器" class="headerlink" title="自定义删除器"></a>自定义删除器</h3><p>unique_ptr的定义删除器方式和shared_ptr不同,因为模板的参数不同,前者还需要指定删除器类型. </p>
+<p>原型有:</p>
+<ul>
+<li>std::unique_ptr&lt;T,D&gt; up(t,d);</li>
+<li>std::unique_ptr&lt;T,D&gt; up(d);  // 空的指针</li>
+</ul>
+<p>T为指针管理的对象类型, D为删除器类型, t为管理的对象, d为删除器函数名称</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">myclose</span><span class="params">(Test* t)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout&lt;&lt; <span class="string">&quot;close func&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Test t;</span><br><span class="line"><span class="function">std::unique_ptr&lt;Test, <span class="title">decltype</span><span class="params">(myclose)</span>*&gt; <span class="title">p1</span><span class="params">(&amp;t, myclose)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">construct</span><br><span class="line">close func</span><br><span class="line">destruct</span><br></pre></td></tr></table></figure>
+<p><code>decltype</code>用于获取myclose的类型, <code>*</code>表面它是一个指针类型,即函数指针.</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><font color = orange size=4>make_unique’不是‘std’的成员 </font>， 原因是<code>make_unique</code>为C++14才特有的, 如果使用gcc版本小于6.2，编译就会报错，vs2015  msvc 也可以</p>
+<p>参考: <a target="_blank" rel="noopener" href="https://www.cyhone.com/articles/right-way-to-use-cpp-smart-pointer/">C++ 智能指针的正确使用方式</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%B8%80)%20unique_ptr/" data-id="ckr28oqy0009zewlmfg7shsnv" data-title="智能指针(一) unique_ptr" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/union%E5%92%8C%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          union和大端小端
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/21/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/%E9%93%BE%E8%A1%A8%E7%A8%8B%E5%BA%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">链表程序</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

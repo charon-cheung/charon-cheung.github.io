@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>单例模式的多种形态 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="应用实例 线程池  日志类，一个应用往往只对应一个日志实例  Windows 是多进程多线程的，在操作一个文件的时候，就不可避免地出现多个进程或线程同时操作一个文件的现象，所以所有文件的处理必须通过唯一的实例来进行  windows系统的任务管理器就是一个例子，总是只有一个管理器的实例。   优点  在内存里只有一个实例，减少了内存的开销，尤其是频繁的创建和销毁实例  随时调用   缺点：没有接口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单例模式的多种形态">
+<meta property="og:url" content="http://example.com/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="应用实例 线程池  日志类，一个应用往往只对应一个日志实例  Windows 是多进程多线程的，在操作一个文件的时候，就不可避免地出现多个进程或线程同时操作一个文件的现象，所以所有文件的处理必须通过唯一的实例来进行  windows系统的任务管理器就是一个例子，总是只有一个管理器的实例。   优点  在内存里只有一个实例，减少了内存的开销，尤其是频繁的创建和销毁实例  随时调用   缺点：没有接口">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-23T14:16:23.000Z">
+<meta property="article:modified_time" content="2020-03-05T04:06:52.812Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-C++/C++  面向对象/单例模式" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="article-date">
+  <time class="dt-published" datetime="2018-07-23T14:16:23.000Z" itemprop="datePublished">2018-07-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      单例模式的多种形态
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="应用实例"><a href="#应用实例" class="headerlink" title="应用实例"></a>应用实例</h2><ul>
+<li><p>线程池</p>
+</li>
+<li><p>日志类，一个应用往往只对应一个日志实例</p>
+</li>
+<li><p>Windows 是多进程多线程的，在操作一个文件的时候，就不可避免地出现多个进程或线程同时操作一个文件的现象，所以所有文件的处理必须通过唯一的实例来进行</p>
+</li>
+<li><p>windows系统的任务管理器就是一个例子，总是只有一个管理器的实例。</p>
+</li>
+</ul>
+<p>优点</p>
+<ul>
+<li><p>在内存里只有一个实例，减少了内存的开销，尤其是频繁的创建和销毁实例</p>
+</li>
+<li><p>随时调用</p>
+</li>
+</ul>
+<p>缺点：没有接口，不能继承，与单一职责原则冲突，一个类应该只关心内部逻辑，而不关心外面怎么样来实例化。</p>
+<p>一个单例模式应具备以下特征：</p>
+<ol>
+<li>只能实例化同一个对象</li>
+<li>提供全局访问点</li>
+<li>禁止拷贝</li>
+<li>线程安全</li>
+</ol>
+<p>针对第一条，可以将构造函数权限设为private，如果是public那么每次实例化调用构造函数，对象的内存地址都不同，也就是说只准调用一次构造函数。那问题来了，构造函数都private了，怎么实例化对象？显然要用某个public方法来调用，这又有问题：都没实例化对象，怎么调用public方法？所以这个public方法只能是静态的了。</p>
+<p>针对第二条，全局性很容易想到静态函数，它是属于类的，而不是属于某个对象的。</p>
+<p>第三条很容易，将拷贝构造函数和复制运算符声明为private即可。</p>
+<p>综上，单例类的雏形应该是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 单例方法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:    <span class="comment">//构造函数或析构函数为私有函数，所以该类是无法被继承的，</span></span><br><span class="line">    <span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例构造&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    ~<span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例析构&quot;</span>&lt;&lt;endl;  &#125;</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="keyword">const</span> Singleton &amp;);</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Singleton&amp;);</span><br><span class="line">    <span class="keyword">static</span> Singleton* m;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>关键就是怎么实现public static方法。</p>
+<h3 id="测试1"><a href="#测试1" class="headerlink" title="测试1"></a>测试1</h3><p>首先想到这样的方法:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Singleton <span class="title">instance</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Singleton s;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果报错<code>构造函数和析构函数是private</code>，第一行就编译不过</p>
+<h3 id="测试2"><a href="#测试2" class="headerlink" title="测试2"></a>测试2</h3><p>测试下面这种方法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> Singleton* <span class="title">instance1</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Singleton *s = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line">Singleton* s1 = Singleton::<span class="built_in">instance1</span>();</span><br><span class="line">Singleton *s2 = Singleton::<span class="built_in">instance1</span>();</span><br><span class="line"><span class="keyword">delete</span> s1;</span><br><span class="line"><span class="keyword">delete</span> s2;</span><br></pre></td></tr></table></figure>
+<p>结果发现有两个构造函数，而且无法析构。</p>
+<h3 id="有缺陷的懒汉模式"><a href="#有缺陷的懒汉模式" class="headerlink" title="有缺陷的懒汉模式"></a>有缺陷的懒汉模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Singleton</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Singleton* <span class="title">LazyInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(!m)</span><br><span class="line">            m = <span class="keyword">new</span> <span class="built_in">Singleton</span>();</span><br><span class="line">        <span class="keyword">return</span> m;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例析构&quot;</span>&lt;&lt;endl;  &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">Singleton</span>()&#123;std::cout&lt;&lt;<span class="string">&quot;单例构造&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    <span class="built_in">Singleton</span>(<span class="keyword">const</span> Singleton &amp;)=<span class="keyword">delete</span>;</span><br><span class="line">    Singleton&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> Singleton&amp;)=<span class="keyword">delete</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> Singleton* m;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>测试：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类外要初始化静态变量： SingleTon* SingleTon::instance = nullptr;</span></span><br><span class="line">Singleton* s = Singleton::<span class="built_in">LazyInstance</span>();</span><br><span class="line">std::cout&lt;&lt;s&lt;&lt;endl;</span><br><span class="line">Singleton* s2 = s;</span><br><span class="line">std::cout&lt;&lt;s2&lt;&lt;endl;</span><br><span class="line"><span class="keyword">delete</span> s;</span><br><span class="line"><span class="comment">// delete s2;   不能这样，否则二次析构</span></span><br></pre></td></tr></table></figure>
+<p>s和s2的内存地址相同，说明是单例。但类中只负责new出对象，却没有负责delete对象，结果发现只调用一次构造函数，还需要手动<code>delete s</code>。可以用智能指针修正</p>
+<p>如果有两个线程，假设pthread_1刚判断完 intance 为NULL 为真，准备创建实例的时候，切换到了pthread_2, 此时pthread_2也判断intance为NULL为真，创建了一个实例，再切回pthread_1的时候继续创建一个实例返回，那么此时就不再满足单例模式的要求</p>
+<h3 id="升级版的懒汉模式"><a href="#升级版的懒汉模式" class="headerlink" title="升级版的懒汉模式"></a>升级版的懒汉模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">typedef</span> boost::shared_ptr&lt;SingleTon&gt; Ptr;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> Ptr <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(instance==<span class="literal">nullptr</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lk</span><span class="params">(m_mutex)</span></span>;</span><br><span class="line">            <span class="keyword">if</span>(instance==<span class="literal">nullptr</span>)</span><br><span class="line">                instance = boost::shared_ptr&lt;SingleTon&gt;(<span class="keyword">new</span> SingleTon);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> instance;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">SingleTon</span>()&#123; <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;destruct&quot;</span>; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="built_in">SingleTon</span>()&#123; <span class="built_in">qDebug</span>()&lt;&lt;<span class="string">&quot;construct&quot;</span>; &#125;</span><br><span class="line">    <span class="built_in">SingleTon</span>(<span class="keyword">const</span> SingleTon&amp; s)&#123;&#125;</span><br><span class="line">    SingleTon&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> SingleTon&amp; s)&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> std::mutex m_mutex;</span><br><span class="line">    <span class="keyword">static</span> Ptr instance;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>改用智能指针做静态类型，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在类外要初始化静态变量: SingleTon::Ptr SingleTon::instance = nullptr;</span></span><br><span class="line">SingleTon::Ptr s = SingleTon::<span class="built_in">getInstance</span>();</span><br><span class="line"><span class="built_in">qDebug</span>() &lt;&lt; s.<span class="built_in">get</span>();</span><br><span class="line"></span><br><span class="line">SingleTon::Ptr s1 = SingleTon::<span class="built_in">getInstance</span>();</span><br><span class="line"><span class="built_in">qDebug</span>() &lt;&lt; s1.<span class="built_in">get</span>();</span><br></pre></td></tr></table></figure>
+<p>结果二者地址相同，也运行了析构函数。  加了锁，使用互斥量来达到线程安全。这里使用了两个 if判断语句的技术称为<strong>双检锁</strong>；好处是，只有判断指针为空的时候才加锁，避免每次调用<code>getInstance</code>的方法都加锁，锁的开销毕竟还是有点大的。</p>
+<p>不足之处在于：使用智能指针会要求用户也得使用智能指针，非必要不应该提出这种约束；使用锁也有开销; 同时代码量也增多了；在某些平台，双检锁会失效</p>
+<h3 id="Meyers模式"><a href="#Meyers模式" class="headerlink" title="Meyers模式"></a>Meyers模式</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> App SingleTon::MeyersInstance()</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> SingleTon&amp; <span class="title">MeyersInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> SingleTon s;</span><br><span class="line">    <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式所用到的特性是在C++11标准中的<strong>Magic Static</strong>特性。如果当变量在初始化的时候，并发同时进入声明语句，并发线程将会阻塞等待初始化结束。这样保证了并发线程在获取静态局部变量的时候一定是初始化过的，所以具有线程安全性。</p>
+<p>在 MeyersInstance() 函数内定义局部静态变量的好处是,构造函数只会在第一次调用MeyersInstance() 时被初始化, 保证了成员变量和 Singleton 本身的初始化顺序。<br>它还有一个潜在的安全措施, MeyersInstance() 返回的是对局部静态变量的引用, 如果返回的是指针, MeyersInstance() 的调用者很可能会误认为他要检查指针的有效性, 并负责销毁。</p>
+<h3 id="Qt中的全局指针"><a href="#Qt中的全局指针" class="headerlink" title="Qt中的全局指针"></a>Qt中的全局指针</h3><p>Qt里有一个全局指针<code>qApp</code>，在任意地方都能使用，看看是不是单例模式。</p>
+<p>QApplication中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> qApp (static_cast<span class="meta-string">&lt;QApplication *&gt;</span>(QCoreApplication::instance()))</span></span><br></pre></td></tr></table></figure>
+
+<p>QCoreapplication中：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//头文件中</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span>  qApp  QCoreApplication::instance()</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> QCoreApplication  *<span class="title">instance</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> self; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> QCoreApplication  *self;</span><br><span class="line"></span><br><span class="line"><span class="comment">//源文件中</span></span><br><span class="line">QCoreApplication *QCoreApplication::self = <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 构造函数</span></span><br><span class="line">QCoreApplication::<span class="built_in">QCoreApplication</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">d_func</span>()-&gt;q_ptr = <span class="keyword">this</span>;</span><br><span class="line">    <span class="built_in">d_func</span>()-&gt;<span class="built_in">init</span>();</span><br><span class="line">    QCoreApplicationPrivate::eventDispatcher-&gt;<span class="built_in">startingUp</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 就是 d_func()-&gt;init();</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">QCoreApplicationPrivate::init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ......</span><br><span class="line">    <span class="built_in">Q_ASSERT_X</span>(!QCoreApplication::self, <span class="string">&quot;QCoreApplication&quot;</span>, <span class="string">&quot;there should be only one application object&quot;</span>);</span><br><span class="line">    QCoreApplication::self = q;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>从QCoreapplication来看，qApp是个宏，实际是函数<code>QCoreApplication::instance()</code>，QCoreApplication这个类十分关键，构造函数肯定不能是private。从这个self来看，特别像懒汉模式，self是在QCoreApplication构造函数里赋值，赋给它的q指针实际就是QCoreApplication的this指针。</p>
+<p>但是在程序里使用qApp，你会发现其地址都一样，也就是同一个全局指针，这就在于Q_ASSERT_X这句限定了只能有一个QCoreApplication对象，再加上拷贝构造函数和赋值运算符都在QObject限定为private，因此<strong>qApp也是一种单例模式</strong>。所以我们可以说单例模式不一定限定构造和析构是private，这个使用了Qt特有的d指针和q指针，技巧性太高，还是用meyers模式吧</p>
+<h3 id="ROS中的单例模式"><a href="#ROS中的单例模式" class="headerlink" title="ROS中的单例模式"></a>ROS中的单例模式</h3><p>看ROS源码中的类<code>TopicManager</code>，它用到了单例模式，我模仿写了一个类如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span>;</span></span><br><span class="line"><span class="keyword">typedef</span> boost::shared_ptr&lt;SingleTon&gt; SingleTonPtr;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Ptr SingleTon::getInstance()</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">SingleTon</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">const</span> SingleTonPtr&amp; <span class="title">getInstance</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">static</span> SingleTonPtr f = boost::make_shared&lt;SingleTon&gt;();</span><br><span class="line">        <span class="keyword">return</span> f;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">out</span><span class="params">()</span> </span>&#123; cout&lt;&lt;<span class="string">&quot; out put &quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m_num;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>结果发现构造函数只能是public，如果是private，就会报错，原因在<code>make_shared</code>中。这样一来就不能实现单例了，看来这种做法不可行。</p>
+<br>
+
+<p>参考:<a target="_blank" rel="noopener" href="https://blog.csdn.net/crayondeng/article/details/24853471">探究 C++ Singleton（单例模式）</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" data-id="ckr28oqxw009newlm5umr9z0h" data-title="单例模式的多种形态" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/07/26/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E7%B1%BB%E7%9A%84%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F%E5%92%8C%E9%9D%99%E6%80%81%E5%87%BD%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          类的静态变量和静态函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">五大cast转型</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>源码分析(二) handleMapMessage 函数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="实际用的是requstMap这一支 准备工作参数是const nav_msgs::OccupancyGrid&amp; msg 123456789101112131415161718boost::recursive_mutex::scoped_lock cfl(configuration_mutex_);&#x2F;&#x2F; 地图的宽高，分辨率ROS_INFO(&quot;Received a %d X %d m">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分析(二) handleMapMessage 函数">
+<meta property="og:url" content="http://example.com/2020/04/01/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)handleMapMessage/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="实际用的是requstMap这一支 准备工作参数是const nav_msgs::OccupancyGrid&amp; msg 123456789101112131415161718boost::recursive_mutex::scoped_lock cfl(configuration_mutex_);&#x2F;&#x2F; 地图的宽高，分辨率ROS_INFO(&quot;Received a %d X %d m">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/04/05/cnvuR2O9MefyXg7.png">
+<meta property="article:published_time" content="2020-04-01T12:24:07.000Z">
+<meta property="article:modified_time" content="2020-04-05T01:45:07.908Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/04/05/cnvuR2O9MefyXg7.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/amcl和粒子滤波/源码分析(二)handleMapMessage" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/04/01/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)handleMapMessage/" class="article-date">
+  <time class="dt-published" datetime="2020-04-01T12:24:07.000Z" itemprop="datePublished">2020-04-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      源码分析(二) handleMapMessage 函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="https://i.loli.net/2020/04/05/cnvuR2O9MefyXg7.png" alt="调用关系.png"><br>实际用的是<code>requstMap</code>这一支</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>参数是<code>const nav_msgs::OccupancyGrid&amp; msg</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">boost::<span class="function">recursive_mutex::scoped_lock <span class="title">cfl</span><span class="params">(configuration_mutex_)</span></span>;</span><br><span class="line"><span class="comment">// 地图的宽高，分辨率</span></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;Received a %d X %d map @ %.3f m/pix\n&quot;</span>,</span><br><span class="line">         msg.info.width,</span><br><span class="line">         msg.info.height,</span><br><span class="line">         msg.info.resolution);</span><br><span class="line"><span class="comment">// 如果目前的全局坐标系不是map</span></span><br><span class="line"><span class="keyword">if</span>(msg.header.frame_id != global_frame_id_)</span><br><span class="line">  <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Frame_id of map received:&#x27;%s&#x27; doesn&#x27;t match global_frame_id:&#x27;%s&#x27;. This could cause issues with reading published topics&quot;</span>,</span><br><span class="line">           msg.header.frame_id.<span class="built_in">c_str</span>(),</span><br><span class="line">           global_frame_id_.<span class="built_in">c_str</span>()  );</span><br><span class="line"></span><br><span class="line"><span class="comment">//free相应的指针</span></span><br><span class="line"><span class="built_in">freeMapDependentMemory</span>();</span><br><span class="line"><span class="comment">// Clear queued laser objects because they hold pointers to the existing map</span></span><br><span class="line">lasers_.<span class="built_in">clear</span>();</span><br><span class="line">lasers_update_.<span class="built_in">clear</span>();</span><br><span class="line">frame_to_laser_.<span class="built_in">clear</span>();</span><br></pre></td></tr></table></figure>
+
+<h2 id="处理获得的地图"><a href="#处理获得的地图" class="headerlink" title="处理获得的地图"></a>处理获得的地图</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AMCL所用的地图类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="comment">// Map origin; the map is a viewport onto a conceptual larger map.</span></span><br><span class="line">  <span class="keyword">double</span> origin_x, origin_y;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">double</span> scale;  <span class="comment">// Map scale (m/cell)</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Map dimensions (number of cells)</span></span><br><span class="line">  <span class="keyword">int</span> size_x, size_y;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// The map data, stored as a grid</span></span><br><span class="line">  <span class="keyword">map_cell_t</span> *cells;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Max distance at which we care about obstacles, for constructing</span></span><br><span class="line">  <span class="comment">// likelihood field</span></span><br><span class="line">  <span class="keyword">double</span> max_occ_dist;</span><br><span class="line">&#125; <span class="keyword">map_t</span>;</span><br></pre></td></tr></table></figure>
+
+<p>转换为AMCL的地图信息</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//转换成AMCL的标准地图，0-&gt;-1(不是障碍);100-&gt;+1（障碍）;else-&gt;0（不明）</span></span><br><span class="line">map_ = <span class="built_in">convertMap</span>(msg);  <span class="comment">// 类型map_t</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//将不是障碍的点的坐标保存下来, 构成地图栅格的空闲区域</span></span><br><span class="line">free_space_indices.<span class="built_in">resize</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; map_-&gt;size_x; i++)</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; map_-&gt;size_y; j++)</span><br><span class="line">    <span class="keyword">if</span>(map_-&gt;cells[<span class="built_in">MAP_INDEX</span>(map_,i,j)].occ_state == <span class="number">-1</span>)</span><br><span class="line">      free_space_indices.<span class="built_in">push_back</span>(std::<span class="built_in">make_pair</span>(i,j));</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="从参数服务器获取初始位姿及方差放到pf中"><a href="#从参数服务器获取初始位姿及方差放到pf中" class="headerlink" title="从参数服务器获取初始位姿及方差放到pf中"></a>从参数服务器获取初始位姿及方差放到pf中</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">updatePoseFromServer</span>();</span><br></pre></td></tr></table></figure>
+<p>其实就是rosparam把6个参数放到<code>init_pose_</code>和<code>init_cov_</code>两个数组中，供下面进一步赋值</p>
+<h2 id="创建粒子滤波器并初始化"><a href="#创建粒子滤波器并初始化" class="headerlink" title="创建粒子滤波器并初始化"></a>创建粒子滤波器并初始化</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">pf_ = <span class="built_in">pf_alloc</span>(min_particles_, max_particles_,</span><br><span class="line">               alpha_slow_, alpha_fast_,</span><br><span class="line">               (<span class="keyword">pf_init_model_fn_t</span>)AmclNode::uniformPoseGenerator,</span><br><span class="line">               (<span class="keyword">void</span> *)map_);</span><br><span class="line">pf_-&gt;pop_err = pf_err_;</span><br><span class="line">pf_-&gt;pop_z = pf_z_;</span><br><span class="line"></span><br><span class="line"><span class="keyword">pf_vector_t</span> pf_init_pose_mean = <span class="built_in">pf_vector_zero</span>();</span><br><span class="line">pf_init_pose_mean.v[<span class="number">0</span>] = init_pose_[<span class="number">0</span>];</span><br><span class="line">pf_init_pose_mean.v[<span class="number">1</span>] = init_pose_[<span class="number">1</span>];</span><br><span class="line">pf_init_pose_mean.v[<span class="number">2</span>] = init_pose_[<span class="number">2</span>];</span><br><span class="line"><span class="keyword">pf_matrix_t</span> pf_init_pose_cov = <span class="built_in">pf_matrix_zero</span>();</span><br><span class="line">pf_init_pose_cov.m[<span class="number">0</span>][<span class="number">0</span>] = init_cov_[<span class="number">0</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">1</span>][<span class="number">1</span>] = init_cov_[<span class="number">1</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">2</span>][<span class="number">2</span>] = init_cov_[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="built_in">pf_init</span>(pf_, pf_init_pose_mean, pf_init_pose_cov);</span><br><span class="line">pf_init_ = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p><code>pf_alloc</code>和<code>pf_init</code>是两个重要函数。  <code>pf_alloc</code>只在这里调用了一次，<code>pf_init</code>在这里和<code>applyInitialPose</code>里调用</p>
+<p><a href="">专门分析pf_alloc</a></p>
+<p><a href="">专门分析pf_init</a></p>
+<h2 id="定义里程计与激光雷达并初始化数据"><a href="#定义里程计与激光雷达并初始化数据" class="headerlink" title="定义里程计与激光雷达并初始化数据"></a>定义里程计与激光雷达并初始化数据</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">delete</span> odom_;</span><br><span class="line">odom_ = <span class="keyword">new</span> <span class="built_in">AMCLOdom</span>();</span><br><span class="line"><span class="built_in">ROS_ASSERT</span>(odom_);</span><br><span class="line"><span class="comment">// 设置里程计参数</span></span><br><span class="line">odom_-&gt;<span class="built_in">SetModel</span>( odom_model_type_, alpha1_, alpha2_, alpha3_, alpha4_, alpha5_ );</span><br><span class="line"></span><br><span class="line"><span class="comment">// Laser</span></span><br><span class="line"><span class="keyword">delete</span> laser_;</span><br><span class="line"><span class="comment">// max_beams_就是参数laser_max_beams</span></span><br><span class="line"><span class="comment">// map_ 是AMCL所用的地图格式, 在上面获得</span></span><br><span class="line">laser_ = <span class="keyword">new</span> <span class="built_in">AMCLLaser</span>(max_beams_, map_);</span><br><span class="line"><span class="built_in">ROS_ASSERT</span>(laser_);</span><br><span class="line"><span class="comment">// 4个形参为似然域模型的参数</span></span><br><span class="line">laser_-&gt;<span class="built_in">SetModelLikelihoodField</span>(z_hit_, z_rand_, sigma_hit_,</span><br><span class="line">                                  laser_likelihood_max_dist_);</span><br></pre></td></tr></table></figure>
+<p><code>SetModelLikelihoodField</code>函数就是使用前三个形参用于赋值, 然后调用 <code>map_update_cspace(this-&gt;map, laser_likelihood_max_dist_);</code>，<font color = blue size =3> 这个是似然域模型中最复杂的函数 </font><br>它的专门分析在<a href="">这里</a></p>
+<p>参数<code>laser_likelihood_max_dist</code>默认为2，是地图上做障碍物膨胀的最大距离，用于似然域模型 </p>
+<p>这几个参数没有用在似然域模型: laser_z_short, laser_z_max, laser_lambda_short, laser_likelihood_max_dist</p>
+<h2 id="applyInitialPose"><a href="#applyInitialPose" class="headerlink" title="applyInitialPose()"></a>applyInitialPose()</h2><p>// In case the initial pose message arrived before the first map,<br>  // try to apply the initial pose now that the map has arrived.<br>可能初始位姿的信息比第一个map先到达，map到达后apply初始位姿</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">boost::<span class="function">recursive_mutex::scoped_lock <span class="title">cfl</span><span class="params">(configuration_mutex_)</span></span>;</span><br><span class="line"><span class="keyword">if</span>( initial_pose_hyp_ != <span class="literal">NULL</span> &amp;&amp; map_ != <span class="literal">NULL</span> ) &#123;</span><br><span class="line">  <span class="built_in">pf_init</span>(pf_, initial_pose_hyp_-&gt;pf_pose_mean, initial_pose_hyp_-&gt;pf_pose_cov);</span><br><span class="line">  pf_init_ = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">delete</span> initial_pose_hyp_;</span><br><span class="line">  initial_pose_hyp_ = <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/04/01/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C)handleMapMessage/" data-id="ckr28or0p00g2ewlmf1x70c5d" data-title="源码分析(二) handleMapMessage 函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/04/01/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++11%E5%88%A4%E6%96%ADinf,%20nan/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          C++11判断inf, nan
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/04/01/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E5%87%BD%E6%95%B0%E6%8C%87%E9%92%88/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">函数指针</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

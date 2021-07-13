@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>tf2的学习 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="现在的ROS提倡使用tf2 tf2经过重新设计，只提供tf的关键功能，不涉及转换等函数。 tf_conversions.transformations.quaternion_from_euler(roll, pitch, yaw) 每个listener都有一个buffer储存所有tf广播发出的transforms，当广播发出transform时，需要花点时间(毫秒级)才会进入buffer，所以请求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tf2的学习">
+<meta property="og:url" content="http://example.com/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="现在的ROS提倡使用tf2 tf2经过重新设计，只提供tf的关键功能，不涉及转换等函数。 tf_conversions.transformations.quaternion_from_euler(roll, pitch, yaw) 每个listener都有一个buffer储存所有tf广播发出的transforms，当广播发出transform时，需要花点时间(毫秒级)才会进入buffer，所以请求">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/4Gu9rg6FiszSJpn.png">
+<meta property="og:image" content="https://i.loli.net/2020/07/13/iyVx1GD7vpYdEuh.png">
+<meta property="article:published_time" content="2020-07-11T13:29:41.000Z">
+<meta property="article:modified_time" content="2021-03-27T11:51:38.691Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/13/4Gu9rg6FiszSJpn.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROS/ROS Kinetic知识/tf2的学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2020-07-11T13:29:41.000Z" itemprop="datePublished">2020-07-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      tf2的学习
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><strong>现在的ROS提倡使用tf2</strong></p>
+<p><code>tf2</code>经过重新设计，只提供tf的关键功能，不涉及转换等函数。</p>
+<p>tf_conversions.transformations.quaternion_from_euler(roll, pitch, yaw)</p>
+<p>每个listener都有一个buffer储存所有tf广播发出的transforms，当广播发出transform时，需要花点时间(毫秒级)才会进入buffer，所以请求now的transform时，会有一小段时间差。</p>
+<p>使用<code>tf2_ros::Buffer</code>的<code>lookupTransform()</code>函数可以获得tf树的指定时间的转换。常用的指定时间是<code>ros::Time(0)</code>和<code>ros::Time::now</code>，前者是<strong>缓冲区中最新可用的转换</strong>，后者就是当前的时间。对于now，由于时间差，可能出现报警<br><img src="https://i.loli.net/2020/07/13/4Gu9rg6FiszSJpn.png"></p>
+<p>有时会出现报警： <font size=4 color = orange >Lookup would require extrapolation into the past </font></p>
+<p>对于这个报警，我们有四种解决方法：</p>
+<ol>
+<li>完善lookupTransform的参数，增加ros::Duration(sec)，sec大于报警中的时间差即可</li>
+<li>使用tf2_ros::Buffer的canTransform函数，有可用的变换了再获得</li>
+<li>使用tf message filter</li>
+<li>忽视这个报警，未成功获取的新transform会放弃</li>
+</ol>
+<p>一个比较优雅的程序是这样的:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// #include &lt;ros/ros.h&gt;</span></span><br><span class="line"><span class="comment">// #include &lt;tf2_ros/transform_listener.h&gt;</span></span><br><span class="line"><span class="comment">// #include &lt;geometry_msgs/TransformStamped.h&gt;</span></span><br><span class="line"></span><br><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;tf_node&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">tf2_ros::Buffer buff;</span><br><span class="line"><span class="function">tf2_ros::TransformListener <span class="title">listener</span><span class="params">(buff)</span></span>;</span><br><span class="line">ros::Publisher pub = nh.advertise&lt;geometry_msgs::TransformStamped&gt;(<span class="string">&quot;transform&quot;</span>,<span class="number">10</span>);</span><br><span class="line"><span class="function">ros::Rate <span class="title">rate</span><span class="params">(<span class="number">400</span>)</span></span>;</span><br><span class="line"><span class="keyword">while</span>(nh.<span class="built_in">ok</span>())</span><br><span class="line">&#123;</span><br><span class="line">    geometry_msgs::TransformStamped trans;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ros::Time now = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">       <span class="comment">// if(buff.canTransform(&quot;base_footprint&quot;,&quot;imu&quot;,now,</span></span><br><span class="line">        <span class="comment">// ros::Duration(0.03),NULL)</span></span><br><span class="line">        <span class="comment">// 30毫秒应该足够了</span></span><br><span class="line">        trans = buff.<span class="built_in">lookupTransform</span>(<span class="string">&quot;base_footprint&quot;</span>,</span><br><span class="line">                         <span class="string">&quot;imu&quot;</span>, now, </span><br><span class="line">                         ros::<span class="built_in">Duration</span>(<span class="number">0.03</span>) );</span><br><span class="line">       <span class="comment">// else</span></span><br><span class="line">           <span class="comment">// ROS_WARN(&quot;no transform in buffer&quot;);</span></span><br><span class="line">    &#125; <span class="built_in"><span class="keyword">catch</span></span> (tf2::TransformException &amp; ex) &#123;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;%s&quot;</span>, ex.<span class="built_in">what</span>());</span><br><span class="line">        ros::<span class="built_in">Duration</span>(<span class="number">1.0</span>).<span class="built_in">sleep</span>();</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    pub.<span class="built_in">publish</span>(trans);</span><br><span class="line">    rate.<span class="built_in">sleep</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建listener后，会接受tf2 transformations，对其缓存10秒。TransformListener对象应当是persist，否则cache不能填充。常见方法是让TransformListener对象作为类的成员变量。</p>
+<p><code>lookupTransform</code>获取的是TransformStamped消息，最后发布出来。因为加了Duration，try catch可以去掉。</p>
+<p>由于实际上加了Duration，所以得到的不是当前的，而是上一个“当前”。换句话说，想得到当前最新的transform其实是没有意义的，一般都用<code>ros::Time(0)</code>，Wiki上也是这么说的</p>
+<p>怎么才知道我们修改后的程序有效了？一个是看程序运行后是否报警，还有就是echo transform话题，结果可以看到头部<br><img src="https://i.loli.net/2020/07/13/iyVx1GD7vpYdEuh.png"><br>只看seq和时间，如果增长一直很流畅，那就是修改生效了。如果修改还有问题，比如Duration时间太短，seq在增长一会后会有停顿，然后继续增长，这就是buffer里面空了，tf数据还没有插入到里面</p>
+<h2 id="已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标"><a href="#已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标" class="headerlink" title="已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标"></a>已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标</h2><table><tr><td bgcolor=yellow> 用tf::transformPose更方便 </td></tr></table>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">geometry_msgs::PointStamped point_in, point_out;</span><br><span class="line">point_in.header.frame_id = <span class="string">&quot;child&quot;</span>;</span><br><span class="line">point_in.header.seq = <span class="number">0</span>;</span><br><span class="line">point_in.header.stamp = ros::<span class="built_in">Time</span>(<span class="number">0</span>);</span><br><span class="line">point_in.point.x = <span class="number">2</span>;</span><br><span class="line">point_in.point.y = <span class="number">1</span>;</span><br><span class="line">point_in.point.z = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// buff跟上面的使用一样， 返回的point_out是point_in在 parent坐标系 的坐标</span></span><br><span class="line">point_out = buff.<span class="built_in">transform</span>(point_in, point_out, <span class="string">&quot;parent&quot;</span>, ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>使用这段程序前，必须在<code>find_package</code>里添加 <code>tf2-geometry-msgs</code>，否则编译不成功。如果没有，需要先安装这两个包：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖库，  即使目前有，也要安装，可能需要更新</span></span><br><span class="line">sudo apt-get install ros-kinetic-orocos-kdl</span><br><span class="line">sudo apt-get install ros-kinetic-tf2-geometry-msgs</span><br></pre></td></tr></table></figure>
+
+<h2 id="手动实现-tf2-ros-Buffer-transform函数"><a href="#手动实现-tf2-ros-Buffer-transform函数" class="headerlink" title="手动实现 tf2_ros::Buffer::transform函数"></a>手动实现 tf2_ros::Buffer::transform函数</h2><p>也就是用程序实现上面的转换</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;test_tf&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">tf2_ros::Buffer buff;</span><br><span class="line"><span class="function">tf2_ros::TransformListener <span class="title">listener</span><span class="params">(buff)</span></span>;</span><br><span class="line">geometry_msgs::TransformStamped transform =</span><br><span class="line">        buff.<span class="built_in">lookupTransform</span>(<span class="string">&quot;parent&quot;</span>,<span class="string">&quot;child&quot;</span>,ros::<span class="built_in">Time</span>(<span class="number">0</span>),ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  x: %f&quot;</span>,transform.transform.translation.x);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  y: %f&quot;</span>,transform.transform.translation.y);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  z: %f\n&quot;</span>,transform.transform.translation.z);</span><br><span class="line"></span><br><span class="line">geometry_msgs::PointStamped point_in, point_out;</span><br><span class="line">point_in.header.frame_id = <span class="string">&quot;child&quot;</span>;</span><br><span class="line">point_in.header.seq = <span class="number">0</span>;</span><br><span class="line">point_in.header.stamp = ros::<span class="built_in">Time</span>(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 在 child 坐标系中的点</span></span><br><span class="line">point_in.point.x = <span class="number">2</span>;</span><br><span class="line">point_in.point.y = <span class="number">1</span>;</span><br><span class="line">point_in.point.z = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point in child: 2, 1, 4\n&quot;</span>);</span><br><span class="line">point_out = buff.<span class="built_in">transform</span>(point_in, point_out, <span class="string">&quot;parent&quot;</span>, ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, x: %f&quot;</span>,point_out.point.x);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, y: %f&quot;</span>,point_out.point.y);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, z: %f\n&quot;</span>,point_out.point.z);</span><br><span class="line"></span><br><span class="line">cout&lt;&lt;fixed&lt;&lt;<span class="built_in">setprecision</span>(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="function">Eigen::Quaterniond <span class="title">quaternion</span><span class="params">(transform.transform.rotation.w,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.x,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.y,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.z</span></span></span><br><span class="line"><span class="params"><span class="function">                              )</span></span>;</span><br><span class="line">Eigen::Matrix3d rotation = quaternion.<span class="built_in">matrix</span>();</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;rotation matrix: &quot;</span> &lt;&lt;endl&lt;&lt; rotation &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">Eigen::Matrix4d m;</span><br><span class="line">m.<span class="built_in">block</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">3</span>) = rotation;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d Vcol, Vrow;</span><br><span class="line">Vcol &lt;&lt; transform.transform.translation.x,</span><br><span class="line">        transform.transform.translation.y,</span><br><span class="line">        transform.transform.translation.z, <span class="number">1</span>;</span><br><span class="line">m.<span class="built_in">col</span>(<span class="number">3</span>) = Vcol;</span><br><span class="line"></span><br><span class="line">Vrow &lt;&lt; <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>;</span><br><span class="line">m.<span class="built_in">row</span>(<span class="number">3</span>) = Vrow.<span class="built_in">transpose</span>();</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;transform matrix: &quot;</span>&lt;&lt;endl&lt;&lt; m&lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d point;</span><br><span class="line">point &lt;&lt; point_in.point.x,</span><br><span class="line">         point_in.point.y,</span><br><span class="line">         point_in.point.z, <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d transformed_point = m * point;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;transformed point: &quot;</span>&lt;&lt;endl&lt;&lt;transformed_point.<span class="built_in">head</span>(<span class="number">3</span>) &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+<p>我们已知parent-child的变换，首先需要从位移和欧拉角获得<strong>齐次变换矩阵</strong>，把point_in变换为齐次坐标，然后左乘齐次矩阵，再取结果的前三个元素。  <font color = blue size=4>tf变换的本质就是左乘变换矩阵 </font></p>
+<h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> tf2::Transform::<span class="built_in">setIdentity</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Matrix3x3 m_basis;</span></span><br><span class="line">    m_basis.<span class="built_in">setIdentity</span>();   <span class="comment">// 单位矩阵</span></span><br><span class="line">    <span class="comment">// Vector3   m_origin;</span></span><br><span class="line">    m_origin.<span class="built_in">setValue</span>(<span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>), <span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>), <span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Transform::<span class="keyword">operator</span>*(<span class="keyword">const</span> Transform&amp; t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Transform</span>(m_basis * t.m_basis, </span><br><span class="line">               (*<span class="keyword">this</span>)(t.m_origin)  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>参考：<br><a target="_blank" rel="noopener" href="http://docs.ros.org/indigo/api/tf2_ros/html/c++/classtf2__ros_1_1Buffer.html">tf2_ros::Buffer Class</a><br><a target="_blank" rel="noopener" href="http://wiki.ros.org/tf2/Tutorials/Using%20stamped%20datatypes%20with%20tf2%3A%3AMessageFilter">tf2_ros::MessageFilter</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/melodic/api/tf2_ros/html/c++/classtf2__ros_1_1BufferInterface.html#a221071b82eb6a887fcea5c0223a25b1f">tf2_ros::BufferInterface</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhchp-blog/p/7203079.html">using “tf2” to transform coordinates</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.guyuehome.com/4463">古月学院：位置角度平移旋转，“乱七八糟”的坐标变换</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/" data-id="ckr28oqyp00btewlm08666hvm" data-title="tf2的学习" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E5%85%AD)%20pose_graph.lua%20%E5%8F%82%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (六) 后端 pose_graph.lua 参数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/11/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%94)%20trajectory_builder_2d%E5%8F%82%E6%95%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">(五) 前端 trajectory_builder_2d.lua 参数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

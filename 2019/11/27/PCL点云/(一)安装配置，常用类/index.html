@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>(一) 概述，安装配置(避免找不到库文件)，常用类 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="深度信息的引入能够使机器人更好地对环境进行认知、辨识，与图像信息在机器人领域的应用一样，需要强大智能软件算法支撑，PCL就为此而生，最重要的是PCL本身就是为机器人而发起的开源项目，PCL中不仅提供了对现有的RGBD信息的获取设备的支持，还提供了高效的分割、特征提取、识别、追踪等最新的算法，最重要的是它可以移植到android、ubuntu等主流Linux平台上 PCL包括多个子模块库。最重要的P">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(一) 概述，安装配置(避免找不到库文件)，常用类">
+<meta property="og:url" content="http://example.com/2019/11/27/PCL%E7%82%B9%E4%BA%91/(%E4%B8%80)%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%EF%BC%8C%E5%B8%B8%E7%94%A8%E7%B1%BB/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="深度信息的引入能够使机器人更好地对环境进行认知、辨识，与图像信息在机器人领域的应用一样，需要强大智能软件算法支撑，PCL就为此而生，最重要的是PCL本身就是为机器人而发起的开源项目，PCL中不仅提供了对现有的RGBD信息的获取设备的支持，还提供了高效的分割、特征提取、识别、追踪等最新的算法，最重要的是它可以移植到android、ubuntu等主流Linux平台上 PCL包括多个子模块库。最重要的P">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/06/11/EKuW3qNpCchOmI7.png">
+<meta property="article:published_time" content="2019-11-27T02:24:04.000Z">
+<meta property="article:modified_time" content="2021-01-18T11:28:02.124Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/06/11/EKuW3qNpCchOmI7.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-PCL点云/(一)安装配置，常用类" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/11/27/PCL%E7%82%B9%E4%BA%91/(%E4%B8%80)%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%EF%BC%8C%E5%B8%B8%E7%94%A8%E7%B1%BB/" class="article-date">
+  <time class="dt-published" datetime="2019-11-27T02:24:04.000Z" itemprop="datePublished">2019-11-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      (一) 概述，安装配置(避免找不到库文件)，常用类
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>深度信息的引入能够使机器人更好地对环境进行认知、辨识，与图像信息在机器人领域的应用一样，需要强大智能软件算法支撑，PCL就为此而生，最重要的是PCL本身就是为机器人而发起的开源项目，PCL中不仅提供了对现有的RGBD信息的获取设备的支持，还提供了高效的分割、特征提取、识别、追踪等最新的算法，最重要的是它可以移植到android、ubuntu等主流Linux平台上</p>
+<p>PCL包括多个子模块库。最重要的PCL模块库有如下：过滤器Filters、特征Features、关键点Keypoints、配准Registration、Kd树Kd-tree、八叉树Octree、切分Segmentation、Sample Consensus、Surface、Range Image、文件读写I/O、Visualization、通用库Common、Search<br><img src="https://i.loli.net/2020/06/11/EKuW3qNpCchOmI7.png" alt="PCL框架.png"></p>
+<p><strong>PCL中的所有模块和算法都是通过Boost共享指针来传送数据的</strong>，因而避免了多次复制系统中已存在的数据的需要</p>
+<p>ROS中已经安装了pcl，不必再安装了，而且网上给的那个源一直添加失败，服务器在国外。但是ROS的pcl缺工具包，比如查看点云图片的<code>pcl_viewer</code>。它的安装命令是：<code>sudo apt-get install  pcl-tools</code></p>
+<p>优点:</p>
+<ul>
+<li><p>可以表达物体的空间轮廓和具体位置</p>
+</li>
+<li><p>点云本身和视角无关，也就是你可以任意旋转，可以从不同角度和方向观察一个点云，而且不同的点云只要在同一个坐标系下就可以直接融合</p>
+</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li><p>点云并不是稠密的表达，一般比较稀疏，放大了看，会看到一个个孤立的点。它的周围是黑的，也就是没有信息。所以在空间很多位置其实没有点云，这部分的信息是缺失的。</p>
+</li>
+<li><p>点云的分辨率和离相机的距离有关。离近了看不清是个什么东西，只能拉的很远才能看个大概。</p>
+</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>编译pcl-1.8</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line"><span class="comment"># 配置cmake</span></span><br><span class="line">cmake -DCMAKE_BUILD_TYPE=None -DCMAKE_INSTALL_PREFIX=/usr \ -DBUILD_GPU=ON-DBUILD_apps=ON -DBUILD_examples=ON \ -DCMAKE_INSTALL_PREFIX=/usr ..</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="cmake配置"><a href="#cmake配置" class="headerlink" title="cmake配置"></a>cmake配置</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 2.6)</span><br><span class="line">project(pcl_test)</span><br><span class="line"></span><br><span class="line">find_package(PCL 1.7 REQUIRED)</span><br><span class="line"><span class="comment"># 可选的工具包</span></span><br><span class="line">find_package(catkin REQUIRED COMPONENTS</span><br><span class="line">  pcl_conversions</span><br><span class="line">  pcl_ros</span><br><span class="line">)</span><br><span class="line">include_directories(<span class="variable">$&#123;PCL_INCLUDE_DIRS&#125;</span>)</span><br><span class="line">link_directories(<span class="variable">$&#123;PCL_LIBRARY_DIRS&#125;</span>)</span><br><span class="line">add_definitions(<span class="variable">$&#123;PCL_DEFINITIONS&#125;</span>)</span><br><span class="line"></span><br><span class="line">add_executable(pcl_test main.cpp)</span><br><span class="line">target_link_libraries (pcl_test <span class="variable">$&#123;PCL_LIBRARIES&#125;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="PCL中常见的PointT类型"><a href="#PCL中常见的PointT类型" class="headerlink" title="PCL中常见的PointT类型"></a>PCL中常见的PointT类型</h2><p><code>PointXYZ</code>是使用最常见的一个点数据类型，因为他之包含三维XYZ坐标信息，这三个浮点数附加一个浮点数来满足存储对齐，可以通过<code>points[i].data[0]</code>或者<code>points[i].x</code>访问点X的坐标值</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">float</span> data[<span class="number">4</span>];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">	&#123;</span></span><br><span class="line">		<span class="keyword">float</span> x;</span><br><span class="line">		<span class="keyword">float</span> y;</span><br><span class="line">		<span class="keyword">float</span> z;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p><code>PointXYZRGB</code>也是个union，成员如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span>&#123;</span></span><br><span class="line">	<span class="keyword">float</span> data[<span class="number">4</span>];</span><br><span class="line">	<span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">	&#123;</span></span><br><span class="line">		<span class="keyword">float</span> x;</span><br><span class="line">		<span class="keyword">float</span> y;</span><br><span class="line">		<span class="keyword">float</span> z;</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">union</span>&#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">		<span class="keyword">float</span> rgb;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="keyword">float</span> data_c[<span class="number">4</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<p>在使用PCL库的时候，经常需要显示点云，可以用下面这段代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/visualization/cloud_viewer.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> pcl::PointXYZRGB PointT;</span><br><span class="line"><span class="keyword">typedef</span> pcl::PointCloud&lt;PointT&gt; PointCloudT;</span><br><span class="line"></span><br><span class="line"><span class="function">PointCloudT::Ptr <span class="title">cloud</span><span class="params">(<span class="keyword">new</span> PointCloudT)</span></span>;</span><br><span class="line"></span><br><span class="line">cloud-&gt;is_dense = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">// 打开点云文件，获取的是vertex</span></span><br><span class="line"><span class="keyword">if</span>(pcl::io::<span class="built_in">loadPLYFile</span>(<span class="string">&quot;file.ply&quot;</span>, *cloud) &lt;<span class="number">0</span> )</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">PCL_ERROR</span>(<span class="string">&quot;loading cloud failed !&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line">cout&lt;&lt; <span class="string">&quot;点云共有： &quot;</span>&lt;&lt; cloud-&gt;<span class="built_in">size</span>()&lt;&lt;<span class="string">&quot;个点&quot;</span>&lt;&lt;endl;   <span class="comment">//文件中vertex的个数</span></span><br><span class="line"></span><br><span class="line">pcl::<span class="function">visualization::CloudViewer <span class="title">viewer</span> <span class="params">(<span class="string">&quot;Viewer&quot;</span>)</span></span>;</span><br><span class="line">viewer.<span class="built_in">showCloud</span>(cloud);</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (!viewer.<span class="built_in">wasStopped</span> ())</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="变换点云"><a href="#变换点云" class="headerlink" title="变换点云"></a>变换点云</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pcl::<span class="built_in">transformPointCloud</span> (*cloud_in, *cloud_out, matrix);</span><br></pre></td></tr></table></figure>
+<p><code>cloud_in</code>为源点云，<code>cloud_out</code>为变换后的点云，注意这里的matrix是4X4的欧拉矩阵，也就是第一行为R,t；第二行为0,1的矩阵</p>
+<h2 id="PCLVisualizer类与CloudViewer类"><a href="#PCLVisualizer类与CloudViewer类" class="headerlink" title="PCLVisualizer类与CloudViewer类"></a>PCLVisualizer类与CloudViewer类</h2><p>对于CloudViewer类来说，其方法有大致以下几类</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">showCloud</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">wasStopped</span><span class="params">()</span>  <span class="comment">// 关闭窗口</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">runOnVisualizationThread</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">runOnVisualizationThreadOnce</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">removeVisualizationCallable</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="comment">// 键盘鼠标的响应</span></span></span><br><span class="line"><span class="function">boost::signals2::connection <span class="title">registerKeyboardCallback</span><span class="params">()</span></span></span><br><span class="line"><span class="function">boost::signals2::connection <span class="title">registerMouseCallback</span><span class="params">()</span></span></span><br><span class="line"><span class="function">boost::signals2::connection <span class="title">registerPointPickingCallback</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+
+<p>常用代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">pcl::<span class="function">visualization::CloudViewer <span class="title">viewer</span><span class="params">(<span class="string">&quot;3D Point Cloud Viewer&quot;</span>)</span></span>;</span><br><span class="line"><span class="comment">// 除了显示什么都不能干</span></span><br><span class="line">viewer.<span class="built_in">showCloud</span>(m_cloud);</span><br><span class="line"><span class="keyword">while</span>(!viewer.<span class="built_in">wasStopped</span>())</span><br><span class="line">&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<br>
+
+<p>如果只是简单显示点云，调用CloudViewer就可以了。<code>PCLVisualizer</code>更加强大，可以改变窗口背景，还可以添加球体，设置文本，功能特别丰富</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boost::shared_ptr&lt;pcl::visualization::PCLVisualizer&gt; <span class="title">viewer</span><span class="params">(<span class="keyword">new</span> pcl::visualization::PCLVisualizer(<span class="string">&quot;3D Viewer&quot;</span>))</span></span>;</span><br><span class="line">viewer-&gt;<span class="built_in">setBackgroundColor</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">v1</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">v1</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line"><span class="comment">// 视窗的x轴最小值，y轴最小值，x轴最大值，y轴最大值</span></span><br><span class="line">viewer-&gt;<span class="built_in">createViewPort</span>(<span class="number">0.0</span>, <span class="number">0</span>, <span class="number">0.5</span>, <span class="number">1.0</span>, v1); <span class="comment">//创建左视窗</span></span><br><span class="line">viewer-&gt;<span class="built_in">createViewPort</span>(<span class="number">0.5</span>, <span class="number">0</span>, <span class="number">1.0</span>, <span class="number">1.0</span>, v2); <span class="comment">//创建右视窗</span></span><br><span class="line">viewer-&gt;addPointCloud&lt;pcl::PointXYZ&gt;(cloud, <span class="string">&quot;sample cloud&quot;</span>);</span><br><span class="line">viewer-&gt;<span class="built_in">setPointCloudRenderingProperties</span>(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, <span class="number">1</span>, <span class="string">&quot;sample cloud&quot;</span>);</span><br><span class="line">viewer-&gt;<span class="built_in">addCoordinateSystem</span>(<span class="number">1.0</span>);</span><br><span class="line">viewer-&gt;<span class="built_in">initCameraParameters</span>();</span><br><span class="line"><span class="comment">// 代码最后，都会出现这样一个while循环，在spinOnce中为界面刷新保留了时间</span></span><br><span class="line"><span class="keyword">while</span> (!viewer-&gt;<span class="built_in">wasStopped</span>())</span><br><span class="line">&#123;</span><br><span class="line">	viewer-&gt;<span class="built_in">spinOnce</span>(<span class="number">100</span>);   <span class="comment">// 多长时间调用内部渲染一次</span></span><br><span class="line">	boost::this_thread::<span class="built_in">sleep</span>(boost::posix_time::<span class="built_in">microseconds</span>(<span class="number">100000</span>));  <span class="comment">//延时0.1秒</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>addPointCloud</code>函数将点云添加到视窗对象中，并定义一个唯一的字符串作为ID号，利用此字符串保证在其他成员方法中也能标识引用该点云，多次调用addPointCloud()，可以实现多个点云的添加，每调用一次就创建一个新的ID号。如果想更新一个已经显示的点云，可以使用<code>updatePointCloud</code>函数。删除有<code>removePointCloud(ID号)</code>和<code>removeAllPointClouds</code>。  这里使用的是最简单的一个重载，此外可以在第二个参数添加<code>PointCloudColorHandler</code>或<code> PointCloudColorHandler</code></p>
+<h3 id="PCLVisualizer类的键盘事件"><a href="#PCLVisualizer类的键盘事件" class="headerlink" title="PCLVisualizer类的键盘事件"></a>PCLVisualizer类的键盘事件</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> next_iteration = <span class="literal">false</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">keyboardEventOccurred</span><span class="params">(<span class="keyword">const</span> pcl::visualization::KeyboardEvent&amp; event, <span class="keyword">void</span>* nothing)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>(event.<span class="built_in">getKeySym</span>() == <span class="string">&quot;space&quot;</span> &amp;&amp; event.<span class="built_in">keyDown</span>())&#123;</span><br><span class="line">      next_iteration = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  pcl::visualization::PCLVisualizer *viewer;</span><br><span class="line">  <span class="comment">// 必须要给PCLVisualizer指针赋值实例化对象</span></span><br><span class="line">  viewer = <span class="keyword">new</span> pcl::visualization::<span class="built_in">PCLVisualizer</span>(<span class="string">&quot;PCL Windows&quot;</span>);</span><br><span class="line">  viewer-&gt;<span class="built_in">registerKeyboardCallback</span>(&amp;keyboardEventOccurred, (<span class="keyword">void</span>*)<span class="literal">NULL</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span>(!viewer-&gt;<span class="built_in">wasStopped</span>())</span><br><span class="line">  &#123;</span><br><span class="line">	viewer-&gt;<span class="built_in">spinOnce</span>(<span class="number">100</span>);</span><br><span class="line">    boost::this_thread::<span class="built_in">sleep</span>(boost::posix_time::<span class="built_in">microseconds</span> (<span class="number">100000</span>));</span><br><span class="line">    <span class="keyword">if</span>(next_iteration)</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他常用函数"><a href="#其他常用函数" class="headerlink" title="其他常用函数"></a>其他常用函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化相机参数</span></span><br><span class="line"><span class="built_in">initCameraParameters</span>();</span><br><span class="line"><span class="built_in">setCameraPosition</span>(</span><br><span class="line">        <span class="number">0</span>, <span class="number">0</span>, <span class="number">5</span>,                                <span class="comment">// camera位置</span></span><br><span class="line">        <span class="number">0</span>, <span class="number">0</span>, <span class="number">4</span>,                                <span class="comment">// view向量--相机朝向</span></span><br><span class="line">        <span class="number">0</span>, <span class="number">1</span>, <span class="number">5</span>                                 <span class="comment">// up向量</span></span><br><span class="line">        );</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>还可以对不同的视窗添加文字和背景颜色</p>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/li-yao7758258/p/6441763.html">PCL库简要说明</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/li-yao7758258/p/6433445.html">PCL中可用的PointT类型</a><br><a target="_blank" rel="noopener" href="http://pointclouds.org/documentation/tutorials/pcl_visualizer.php#pcl-visualizer">PCLVisualizer</a><br><a target="_blank" rel="noopener" href="https://www.bbsmax.com/A/Gkz1lKygdR/">PCLVisualizer可视化类</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/11/27/PCL%E7%82%B9%E4%BA%91/(%E4%B8%80)%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%EF%BC%8C%E5%B8%B8%E7%94%A8%E7%B1%BB/" data-id="ckr28oqu8000wewlmhw6n4z2h" data-title="(一) 概述，安装配置(避免找不到库文件)，常用类" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/03/PCL%E7%82%B9%E4%BA%91/%E5%B0%86%E9%9B%B7%E8%BE%BE%E7%9A%84%E6%89%AB%E6%8F%8F%E5%8F%91%E5%B8%83%E4%B8%BA%E7%82%B9%E4%BA%91/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          laser_geometry将雷达scan发布为点云(scan to PointCloud2)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%B8%80)%20%E5%AE%89%E8%A3%85%E6%B5%8B%E8%AF%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">(一) 安装测试</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

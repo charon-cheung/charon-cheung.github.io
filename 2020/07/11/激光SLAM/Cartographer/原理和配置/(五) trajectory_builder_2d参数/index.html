@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>(五) 前端 trajectory_builder_2d.lua 参数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Local SLAM的工作是建立一系列的子图。每一个子图是局部一致的，但是可以接受它随着时间会发生漂移。 when the scan matching is bad, nothing much will save you.  本文件中，距离的单位： 米， 角度的单位： 度，时间的单位： 秒 基本1234567891011use_imu_data &#x3D; true,min_range &#x3D; 0.,max_">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(五) 前端 trajectory_builder_2d.lua 参数">
+<meta property="og:url" content="http://example.com/2020/07/11/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%94)%20trajectory_builder_2d%E5%8F%82%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Local SLAM的工作是建立一系列的子图。每一个子图是局部一致的，但是可以接受它随着时间会发生漂移。 when the scan matching is bad, nothing much will save you.  本文件中，距离的单位： 米， 角度的单位： 度，时间的单位： 秒 基本1234567891011use_imu_data &#x3D; true,min_range &#x3D; 0.,max_">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/07/23/OK4GiwDsgtEUvaN.png">
+<meta property="og:image" content="https://i.loli.net/2020/09/09/IolnedbQ7mrCRhD.png">
+<meta property="article:published_time" content="2020-07-11T09:00:58.000Z">
+<meta property="article:modified_time" content="2021-07-07T04:50:56.810Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/07/23/OK4GiwDsgtEUvaN.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/Cartographer/原理和配置/(五) trajectory_builder_2d参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/11/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%94)%20trajectory_builder_2d%E5%8F%82%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-07-11T09:00:58.000Z" itemprop="datePublished">2020-07-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      (五) 前端 trajectory_builder_2d.lua 参数
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Local SLAM的工作是建立一系列的子图。每一个子图是局部一致的，但是可以接受它随着时间会发生漂移。</p>
+<p>when the scan matching is bad, nothing much will save you. </p>
+<p>本文件中，距离的单位： 米， 角度的单位： 度，时间的单位： 秒</p>
+<h2 id="基本"><a href="#基本" class="headerlink" title="基本"></a>基本</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">use_imu_data = <span class="literal">true</span>,</span><br><span class="line">min_range = 0.,</span><br><span class="line">max_range = 30.,</span><br><span class="line"><span class="comment"># 设置雷达数据在z轴上的滤波将3d数据转成2d的</span></span><br><span class="line">min_z = -0.8,</span><br><span class="line">max_z = 2.,</span><br><span class="line"></span><br><span class="line">missing_data_ray_length = 5.,</span><br><span class="line">num_accumulated_range_data = 1,</span><br><span class="line"><span class="comment"># 使用voxel滤波时立方体边长的大小，这个值是固定的</span></span><br><span class="line">voxel_filter_size = 0.025,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>use_imu_data： 进行2D SLAM时，Cartographer的默认配置是使用imu的，如果不想要imu就要<code>TRAJECTORY_BUILDER_2D.use_imu_data = false</code>。在源码<code>LocalTrajectoryBuilder2D::AddRangeData</code>中可以看到，如果设置为false，会直接初始化位姿估计器；如果设置为true，会等收到imu数据后初始化位姿估计器，如果没有启动imu程序，Cartographer会一直等待imu的数据而无法进行。</li>
+</ul>
+<p>如果不用imu的话，构图的时候一定要移动的很慢，使用了imu就可以让小车飞快的跑。</p>
+<p>3D SLAM必须使用imu，因为它提供了重力的精确方向和激光方向的一个初始猜测值，巨大地减少了scan matching的复杂度</p>
+<ul>
+<li>从min_range到max_z： 相当于带通滤波，减少传感器的噪声，z用于3D SLAM，在源码的<code>sensor::CropRangeData</code>函数。<code>min_range</code>和<code>max_range</code>用于局部地图下的激光点测量范围。</li>
+</ul>
+<ul>
+<li>missing_data_ray_length: 官方的解释是 <font color = blue size=4> Points beyond ‘max_range’ will be inserted with this length as empty space.</font>这是用于处理miss集合的，但是我看了源码之后，有所疑惑。源码部分：</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Eigen::Vector3f delta = hit_in_local.position - origin_in_local;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">float</span> range = delta.<span class="built_in">norm</span>();</span><br></pre></td></tr></table></figure>
+<p>用<code>range</code>跟min_range和max_range比较，在范围内的插入<code>accumulated_range_data_.returns</code>；超出max_range的进行处理：<code>hit_in_local.position = origin_in_local + options_.missing_data_ray_length() / range * delta;</code>。 </p>
+<p>也就是相当于把<code>hit_in_local = origin + delta</code>变成了<code>hit_in_local = origin + missing_data_ray_length/delta.norm()  *  delta</code>，delta多了个因子。没看明白为什么这样计算，暂时让<code>missing_data_ray_length</code>小于<code>max_range</code>，这个参数显然跟雷达相关。</p>
+<ul>
+<li><p>num_accumulated_range_data： 每当累积的传感器数据数量超过了这个值，Cartographer才执行前端部分。从现象上看这和减少运动带来的雷达数据的畸变有关。Cartographer把<strong>num_accumulated_range_data</strong>个帧集合 (accumulate) 成一个大帧作为算法的输入。<br>Cartographer认为这每一帧都是独立的，以帧为单位补偿运动导致的激光雷达数据产生的畸变，然后再把这些帧集合到一块去。所以Cartographer接收到的数据帧的频率越高，Cartographer 的补偿效果越好，算法的输入数据质量越高。<br>当我设置为10后，雷达的scan更新很慢，跟不上机器人的运动，所以对2D雷达一般都设置为1。如果同时用两个雷达，每个的一帧激光用1个ROS消息，那么设置为2。 在源码中的<code>LocalTrajectoryBuilder2D::AddRangeData</code><br><img src="https://i.loli.net/2020/07/23/OK4GiwDsgtEUvaN.png"></p>
+</li>
+<li><p>voxel_filter_size: 离雷达较近的表面 (如路面) 经常得到更多采样点, 而远处的物体的采样点比较稀少。为了降低计算量，需要对点云数据进行下采样，简单的随机采样仍然会导致低密度区的点更少，而高密度区的点仍然比较多。<br>因此 cartographer 采用 voxel_filter (体素滤波) 的方法。通过输入的点云数据创建一个三维体素栅格（可把体素栅格想象为微小的空间三维立方体的集合），然后在每个体素内，用体素中所有点的重心来近似显示体素中其他点，这样该体素内所有点就用一个重心点表示，点云滤波后仍然保持之前的几何特征。<code>voxel_filter_size</code>即为立方体的大小。如果立方体较小的话会导致密集的数据，所耗的计算量更大。较大的话可能会导致数据丢失，但是计算速度会更快。</p>
+</li>
+</ul>
+<h2 id="自适应的voxel滤波"><a href="#自适应的voxel滤波" class="headerlink" title="自适应的voxel滤波"></a>自适应的voxel滤波</h2><p>使用固定的voxel滤波之后，再使用自适应的voxel滤波，voxel_filter用于生成稀疏点云，以进行扫描匹配</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">adaptive_voxel_filter = &#123; </span><br><span class="line">	max_length = 0.5,       <span class="comment"># 尝试确定最佳的立方体边长，边长最大为0.5</span></span><br><span class="line">	<span class="comment"># 如果存在较多点，并且大于min_num_points，则减小体素长度以尝试获得该最小点数</span></span><br><span class="line">  <span class="comment"># 如果point_cloud.size()小于该参数则返回，说明点云已经够稀疏了</span></span><br><span class="line">	min_num_points = 200,</span><br><span class="line">	max_range = 50.,        <span class="comment"># 距远离原点超过max_range 的点被移除 </span></span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment"># 用于生成稀疏点云 以进行 闭环检测</span></span><br><span class="line">loop_closure_adaptive_voxel_filter = &#123;</span><br><span class="line">	max_length = 0.9,       </span><br><span class="line">	min_num_points = 100,</span><br><span class="line">	max_range = 50.,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>在提供了定大小的 voxel_filter, Cartographer 还提供了一个<code>adaptive_voxel_filter</code>, 可以在最大边长<code>adaptive_voxel_filter.max_length</code>的限制下优化确定<code>voxel_filter_size</code>来实现目标的points数<code>adaptive_voxel_filter.min_num_points</code>。在3D中，使用两个自适应的体素滤波器来生成一个更高分辨率和一个低分辨率的点云，其使用方法在Local SLAM.</p>
+<p><code>adaptive_voxel_filter</code>的参数不是没用，我调整<code>max_length=3</code>之后，地图中出现了这样的情况：<br><img src="https://i.loli.net/2020/09/09/IolnedbQ7mrCRhD.png" alt="错位.png"><br>改成2就好了，默认的1也行</p>
+<h2 id="两个scan-matcher"><a href="#两个scan-matcher" class="headerlink" title="两个scan matcher"></a>两个scan matcher</h2><p>一旦从大量雷达数据中经过assemble和两个filter得到scan，就可以用于Local SLAM。Local SLAM从<code>pose extrapolator</code>获得一个<strong>初值</strong>，通过scan matching把一个新的scan插入到当前的子图中。<code>pose extrapolator</code>的原理就是使用雷达外的其他传感器(即里程计和IMU)预测下一个scan应该被插入到submap的位置。</p>
+<p>有2种解决scan match问题的方法：</p>
+<ul>
+<li><p><code>CeresScanMatcher</code>以初值作为先验，并找到最佳的点，该点就是通过scan match获得的在子地图中的位置，实现方式是interpolating the submap and sub-pixel aligning the scan. 这种方式的速度很快，计算复杂度高，鲁棒性好，但不能修正比子图分辨率大很多的误差。如果你的传感器和时间戳是合理的，只使用CeresScanMatcher通常是最好的选择。</p>
+</li>
+<li><p>如果你没有其他传感器或你不信任它们的精度，Cartographer还提供了一个<code>RealTimeCorrelativeScanMatcher</code>。它使用类似于在回环检测中激光与子地图匹配的方式，但是它是与当前子地图进行匹配，然后最好的匹配用作CeresScanMatcher的先验。这个scan matcher非常消耗资源，基本上会override雷达之外的其他传感器的信号，但它在特征丰富的环境中是很鲁棒。</p>
+</li>
+</ul>
+<h3 id="real-time-correlative-scan-matcher"><a href="#real-time-correlative-scan-matcher" class="headerlink" title="real_time_correlative_scan_matcher"></a>real_time_correlative_scan_matcher</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">use_online_correlative_scan_matching = <span class="literal">false</span>,</span><br><span class="line">real_time_correlative_scan_matcher = </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment"># 找到最佳扫描匹配的  最小线性搜索窗口</span></span><br><span class="line">  linear_search_window = 0.1,</span><br><span class="line">  <span class="comment"># 找到最佳扫描匹配的  最小角度搜索窗口</span></span><br><span class="line">  angular_search_window = math.rad(20.),</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 用于计算各部分score的权重，如果一个平台的瞬间平移很少，</span></span><br><span class="line">  <span class="comment"># 则可以降低平移的权重，旋转也是一样</span></span><br><span class="line">  <span class="comment"># 源码在 ScoreCandidates</span></span><br><span class="line">  translation_delta_cost_weight = 1e-1,</span><br><span class="line">  rotation_delta_cost_weight = 1e-1,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>use_online_correlative_scan_matching = true</code>，这一项配置很重要，如果不配置这项得到的建图效果将非常差。如果这项为false，则扫描匹配使用的是通过前一帧位置的先验，将当前scan与之前做对比，使用<strong>高斯牛顿法</strong> 迭代地求解最小二乘问题，求得当前scan的坐标变换；如果这项为true，则使用<strong>实时的闭环检测</strong>的方法进行前端的扫描匹配，将当前scan在一定的搜索范围内搜索，范围为设定的平移距离及角度大小，然后在将scan插入到匹配的最优位置处。设置为true后，建图的效果非常好，<strong>即使建图有漂移也能够修正回去</strong>，但是计算复杂度非常高，很耗CPU</p>
+<p>在一个搜索窗口里搜索相似的scans，这个窗口由最大线性距离和最大角度定义。对窗口里发现的scans进行scan matching时，线性平移和旋转都有相应的权重值。</p>
+<h3 id="ceres-scan-matcher"><a href="#ceres-scan-matcher" class="headerlink" title="ceres_scan_matcher"></a>ceres_scan_matcher</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将前一时刻的位姿作为先验，使用odom或者imu的数据提供初值，以确定scan的最优位姿</span></span><br><span class="line">ceres_scan_matcher = </span><br><span class="line">&#123;</span><br><span class="line">  occupied_space_weight = 1.,   <span class="comment"># 每个Cost因素的 尺度因子</span></span><br><span class="line">  translation_weight = 10., </span><br><span class="line">  rotation_weight = 40.,    </span><br><span class="line">  ceres_solver_options = &#123;</span><br><span class="line">    use_nonmonotonic_steps = <span class="literal">false</span>,</span><br><span class="line">    max_num_iterations = 20,</span><br><span class="line">    num_threads = 1,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>CeresScanMatcher</code>可以针对它的输入设置权重，体现了对数据的信任程度，这可以看作静态协方差，彼此之间不能相互比较。某种数据的权重越大，Cartographer在做scan matching时就更重视这种数据。数据有：<code>occupied space</code>(来自scan中的点), 来自<code>pose extrapolator</code>(或者RealTimeCorrelativeScanMatcher)的平移和旋转</p>
+<p><code>CeresScanMatcher</code>的名称来自<code>Ceres Solver</code>，scan matching问题可以建模为两个scan之间的运动(变换矩阵表示)的非线性最小二乘问题。Ceres根据给定的迭代次数优化运动模型，还可以配置其收敛速度</p>
+<h2 id="motion-filter"><a href="#motion-filter" class="headerlink" title="motion_filter"></a>motion_filter</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 只有当scan的平移、旋转或者时间 超过阈值时，才会被加入到 submap 中，不超过则舍弃</span></span><br><span class="line">  motion_filter = &#123;</span><br><span class="line">    max_time_seconds = 5.,</span><br><span class="line">    max_distance_meters = 0.2,</span><br><span class="line">    max_angle_radians = math.rad(1.),</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment"># 移动时通过imu观测10s，以确定重力的平均方向</span></span><br><span class="line">  imu_gravity_time_constant = 10.,</span><br></pre></td></tr></table></figure>
+<p>为了避免每个子图插入太多的scan，一旦scan matcher发现两个scan之间有motion，它就会进入motion filter. 只要scan的motion达到一个参数要求，就会插入到<strong>当前子图</strong>，否则被抛弃。</p>
+<p>代码在<code>LocalTrajectoryBuilder2D::InsertIntoSubmap</code>的开头，只调用一个函数<code>MotionFilter::IsSimilar</code></p>
+<p>建图时会发现，如果机器人停着不动，过一段时间图会逐渐形成轮廓，边界变黑变粗，这就是<code>max_time_seconds</code>决定的，可以稍微降低。</p>
+<p><code>imu_gravity_time_constant</code>为align重力的时间间隔，也是IMU一阶低通滤波中的滤波器常数，调用在<code>ImuTracker::AddImuLinearAccelerationObservation</code>，平时不必修改，如果要认真修改，最好使用Matlab理解一阶滤波算法</p>
+<h2 id="submaps"><a href="#submaps" class="headerlink" title="submaps"></a>submaps</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 平时可能修改的只有 num_range_data</span></span><br><span class="line">submaps = </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment"># 每个submap的scan总数为num_range_data的2倍，前一半进行初始化而不匹配，后一半进行匹配</span></span><br><span class="line">  num_range_data = 90,</span><br><span class="line">  grid_options_2d = &#123;</span><br><span class="line">    grid_type = <span class="string">&quot;PROBABILITY_GRID&quot;</span>,</span><br><span class="line">    resolution = 0.05,   <span class="comment"># 栅格的尺寸</span></span><br><span class="line">  &#125;,</span><br><span class="line">  range_data_inserter = </span><br><span class="line">  &#123;</span><br><span class="line">    range_data_inserter_type = <span class="string">&quot;PROBABILITY_GRID_INSERTER_2D&quot;</span>,</span><br><span class="line">    probability_grid_range_data_inserter = &#123;</span><br><span class="line">      insert_free_space = <span class="literal">true</span>,</span><br><span class="line">      hit_probability = 0.55,   <span class="comment"># 占用,  &gt;= 0.5</span></span><br><span class="line">      miss_probability = 0.49,  <span class="comment"># 空闲,  &lt;= 0.5</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>num_range_data： 子图由多少scan构成。<strong>这个参数对建图效果有很大影响，</strong> 可以试试<code>50~70</code>。当Local SLAM收到足够的雷达数据后，子图才算完整。Local SLAM会随时间而漂移，这就需要Global SLAM来解决了。</li>
+</ul>
+<p>子图必须足够小，<strong>使其内部的漂移低于分辨率</strong>，以便它们是局部正确的。另一方面，它们应该足够大以使loop closure能够正常工作。 对应得源码在<code>ActiveSubmaps2D::InsertRangeData</code></p>
+<p>这个值与CPU有这样一种关系：值比较小(10)，CPU使用率比较稳定，但整体偏高；值大时，CPU平时使用率低，但会短暂爆增。如果再增大(140)，CPU长时间占用低，偶尔才出现一两次高峰。所以可以认为<font color = orange size=4> num_range_data越小，CPU占用的高峰越多，可能就是插入子图完成的时候增大CPU占用</font></p>
+<ul>
+<li><p>grid_type：submap存储雷达数据的格式，最常用的是概率栅格。在2D中，另一种是<strong>Truncated Signed Distance Fields (TSDF)</strong>. 源码在<code>ActiveSubmaps2D::CreateGrid</code></p>
+</li>
+<li><p>resolution: 栅格尺寸，常常是0.05。并不是越小越好，我在2000米的环境下设置为0.02，结果建图严重错位，全局优化也没有纠正过来，应该是算力不够了。设置为0.05，对后端参数不必特别设置，建图效果也很好。</p>
+</li>
+<li><p>range_data_inserter： 概率栅格把空间剪切成一个2D或者3D的表格，该表格的每一个cell有一个固定的大小，并包含了被构造(obstructed)的可能性。可能性是根据hits(测量范围数据)和misses(传感器和测量点之间的自由空间)来进行更新，hits和misses二者在占据概率计算中可能有不同的权重，该占据概率计算或多或少相信占据或者自由空间的测量。</p>
+</li>
+<li><p><code>insert_free_space</code>对应的源码在<code>CastRays</code>函数，是否处理miss事件，如果为 false，则free的栅格不会改变占用网格中的概率。  后两个参数在<code>ProbabilityGridRangeDataInserter2D</code>的构造函数中使用。</p>
+</li>
+</ul>
+<p>概率栅格地图的Odds are updated according to “hits” (where the range data is measured) and “misses” (the free space between the sensor and the measured points)。可以根据对被占据 occupied 和 free space 的雷达数据的置信度，加减 hits 和 misses 的 weight 值（Both hits and misses can have a different weight in occupancy probability calculations giving more or less trust to occupied or free space measurements）。</p>
+<p>在2D中，每个子图只有一个概率栅格地图被存储。在3D中，由于scan matching性能的原因，两个混合的概率栅格被使用，并分别应用了一个adaptive_voxel_filter。对于远距离测量，使用一个低分辨率的混合栅格；对于近距离测量，使用一个高分辨率的混合栅格；scan matching先使用低分辨率的点云来与低分辨率的栅格进行对齐，然后通过高分辨率的近处点云与高分辨率的 hybrid grid 对齐来 refine pose。</p>
+<p>RViz插件可以观察子图，可以根据索引选择子图</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/11/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%94)%20trajectory_builder_2d%E5%8F%82%E6%95%B0/" data-id="ckr28or2o00mdewlmedbt1pqq" data-title="(五) 前端 trajectory_builder_2d.lua 参数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          tf2的学习
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/11/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AE%E5%B0%8F%E5%BC%BA%E7%9A%84vncserver/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">配置小强的vncserver</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

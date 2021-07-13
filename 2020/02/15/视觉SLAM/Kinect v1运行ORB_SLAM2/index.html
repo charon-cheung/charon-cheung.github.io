@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>KinectV1运行 ORB_SLAM2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ORB_SLAM2是一个基于深度相机、Pose graph （图优化）的程序，后端用的是g2o。第一个版本仅仅是单目SLAM，第二个版本在原来的单目基础上增加了双目和RGBD的接口，尽管地图还是单目常见的稀疏特征点图，但是我们能通过各种传感器来玩ORB_SLAM2了 编译安装只要按照Github上的安装指导进行就可以 需要先安装Eigen3和Pangolin，后者也按Github上的说明安装即可，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KinectV1运行 ORB_SLAM2">
+<meta property="og:url" content="http://example.com/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ORB_SLAM2是一个基于深度相机、Pose graph （图优化）的程序，后端用的是g2o。第一个版本仅仅是单目SLAM，第二个版本在原来的单目基础上增加了双目和RGBD的接口，尽管地图还是单目常见的稀疏特征点图，但是我们能通过各种传感器来玩ORB_SLAM2了 编译安装只要按照Github上的安装指导进行就可以 需要先安装Eigen3和Pangolin，后者也按Github上的说明安装即可，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/02/19/wHf4Kgm2eQ7LBpl.png">
+<meta property="article:published_time" content="2020-02-15T14:32:29.000Z">
+<meta property="article:modified_time" content="2020-02-21T11:37:39.347Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/02/19/wHf4Kgm2eQ7LBpl.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-视觉SLAM/Kinect v1运行ORB_SLAM2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/" class="article-date">
+  <time class="dt-published" datetime="2020-02-15T14:32:29.000Z" itemprop="datePublished">2020-02-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      KinectV1运行 ORB_SLAM2
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ORB_SLAM2是一个基于深度相机、Pose graph （图优化）的程序，后端用的是g2o。第一个版本仅仅是单目SLAM，第二个版本在原来的单目基础上增加了双目和RGBD的接口，尽管地图还是单目常见的稀疏特征点图，但是我们能通过各种传感器来玩ORB_SLAM2了</p>
+<h2 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h2><p>只要按照<a target="_blank" rel="noopener" href="https://github.com/raulmur/ORB_SLAM2">Github上的安装指导</a>进行就可以</p>
+<p>需要先安装Eigen3和Pangolin，后者也按Github上的说明安装即可，不必安装Recommended Dependencies和Optional Dependencies，只要执行<code>Building</code>就行。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/raulmur/ORB_SLAM2.git ORB_SLAM2</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ORB_SLAM2</span><br><span class="line">chmod +x build.sh</span><br><span class="line">./build.sh</span><br></pre></td></tr></table></figure>
+<p>这会编译产生<code>libORB_SLAM2.so</code>到<code>lib</code>文件夹，以及<code>Examples/Monocular</code>文件夹中生成<code>mono_euroc</code>,<code>mono_tum</code>, <code>mono_kitti</code>; <code>RGB-D</code>文件夹中生成<code>rgbd_tum</code>; <code>Stereo</code>文件夹中生成<code>stereo_kitti</code>和<code>stereo_euroc</code></p>
+<p>第一次编译忘了<code>build_ros.sh</code>，也就是少编译了几个核心文件，结果无法运行运行后又产生了问题</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>编译报错<code>ros_rgbd.cc.o: undefined reference to symbol &#39;_ZN5boost6system15system_categoryEv&#39;</code>，解决方法是在<code>/ORB_SLAM2/Examples/ROS/ORB_SLAM2/CMakeLists.txt</code>中添加boost_system库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">set(LIBS</span><br><span class="line">	$&#123;OpenCV_LIBS&#125;</span><br><span class="line">	$&#123;EIGEN3_LIBS&#125;</span><br><span class="line">	$&#123;Pangolin_LIBRARIES&#125;</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../Thirdparty/DBoW2/lib/libDBoW2.so</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../Thirdparty/g2o/lib/libg2o.so</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../lib/libORB_SLAM2.so</span><br><span class="line">	-lboost_system</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="RGB-D例子"><a href="#RGB-D例子" class="headerlink" title="RGB-D例子"></a>RGB-D例子</h2><p>从<a target="_blank" rel="noopener" href="http://vision.in.tum.de/data/datasets/rgbd-dataset/download">序列下载</a>下载一个序列并解压。</p>
+<p>使用<code>associate.py</code> associate RGB images and depth images. We already provide associations for some of the sequences in Examples/RGB-D/associations/. 你可以生成自己的associations文件:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python associate.py PATH_TO_SEQUENCE/rgb.txt PATH_TO_SEQUENCE/depth.txt &gt; associations.txt</span><br></pre></td></tr></table></figure>
+
+<p>将<code>TUMX.yaml</code>换成TUM1.yaml,TUM2.yaml or TUM3.yaml for freiburg1, freiburg2 and freiburg3 sequences respectively. 填好<code>PATH_TO_SEQUENCE_FOLDER</code>和<code>ASSOCIATIONS_FILE</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUMX.yaml PATH_TO_SEQUENCE_FOLDER ASSOCIATIONS_FILE</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行自己的RGBD节点"><a href="#运行自己的RGBD节点" class="headerlink" title="运行自己的RGBD节点"></a>运行自己的RGBD节点</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun ORB_SLAM2 RGBD ORB_SLAM2/Vocabulary/ORBvoc.txt ~/path/kinect_calibration.yaml</span><br></pre></td></tr></table></figure>
+<p><code>ORBvoc.txt</code>还是下载的那个，<code>kinect_calibration.yaml</code>就是我们自己的相机标定文件，这里有个问题，之前标定得到的yaml文件和这里要求的yaml文件格式不同，我们需要的可以参考<code>~/ORB_SLAM2-master/Examples/ROS/ORB_SLAM2/Asus.yaml</code>，只需要修改相机矩阵和畸变系数即可。</p>
+<p>之前标定的yaml文件部分：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">camera_matrix:</span><br><span class="line">  rows: <span class="number">3</span></span><br><span class="line">  cols: <span class="number">3</span></span><br><span class="line">  data: [<span class="number">519.7959964940057</span>, <span class="number">0</span>, <span class="number">311.8351165024031</span>, <span class="number">0</span>, <span class="number">520.264653178918</span>, <span class="number">260.4976776521158</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">distortion_model: plumb_bob</span><br><span class="line">distortion_coefficients:</span><br><span class="line">  rows: <span class="number">1</span></span><br><span class="line">  cols: <span class="number">5</span></span><br><span class="line">  data: [<span class="number">0.1316145046090376</span>, -<span class="number">0.2008704147933575</span>, <span class="number">0.002009131405045224</span>, <span class="number">0.0002143881752906817</span>, <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>参数解释如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#内参数矩阵</span></span><br><span class="line">|        fx          0             cx     |</span><br><span class="line">|         0          fy            cy     |</span><br><span class="line">|         0          0             1      |</span><br><span class="line"></span><br><span class="line">fx : focal length <span class="keyword">in</span> direction of camera<span class="string">&#x27;s x axis </span></span><br><span class="line"><span class="string">fy : focal length in direction of camera&#x27;</span>s y axis </span><br><span class="line">cx,cy  : Principal point <span class="keyword">in</span> image</span><br><span class="line"></span><br><span class="line">distortion_coefficients (1x5):   <span class="comment">#畸变相关系数，是一个1x5的矩阵</span></span><br><span class="line">[k1    k2     p1     p2     k3]</span><br><span class="line"></span><br><span class="line">k1,k2,k3 : Radial distortion coefficients    <span class="comment"># 径向畸变</span></span><br><span class="line">p1, p2 : Tangential distortion coefficinets  <span class="comment"># 切向畸变</span></span><br><span class="line">k3 - <span class="built_in">set</span> to zero (only applicable <span class="keyword">for</span> fish-eyed lens)</span><br></pre></td></tr></table></figure>
+
+<p>根据说明将需要的参数对<code>Asus.yaml</code>进行修改：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Camera calibration and distortion parameters (OpenCV) </span><br><span class="line">Camera.fx: 519.7959964940057</span><br><span class="line">Camera.fy: 520.264653178918</span><br><span class="line">Camera.cx: 311.8351165024031</span><br><span class="line">Camera.cy: 260.4976776521158</span><br><span class="line"></span><br><span class="line">Camera.k1: 0.1316145046090376</span><br><span class="line">Camera.k2: -0.2008704147933575</span><br><span class="line">Camera.p1: 0.002009131405045224</span><br><span class="line">Camera.p2: 0.0002143881752906817</span><br></pre></td></tr></table></figure>
+
+<p>现在运行节点，终端一切正常，出现两个窗口<code>Current Frame</code>和<code>Map Viewer</code>，但是前者一片黑，后者没有内容。发现<code>Current Frame</code>状态是<code>Waiting for images</code>，节点需要的是话题<code>/camera/rgb/image_raw</code>和<code>/camera/depth_registered/image_raw</code>，使用<code>rostopic info</code>发现话题发布订阅都正常，但是<code>rostopic echo</code>后者却没有数据。</p>
+<p>默认情况下，对于深度图，选择<code>/camera/depth/XXXX</code>的话题才会显示出来图像，因为没有设置<code>depth_registered</code>，如果在显示的过程中，在新的终端里使用<code>rosrun rqt_reconfiguration rqt_reconfiguration</code>，之后在<strong>camera-&gt;driver</strong>中勾选了<em>depth_registered</em>，此时rqt窗口就不会进行图像刷新了，此时切换至<code>/camera/depth_registered/XXXX</code>的话题后，继续会刷新图像。   <strong>但问题是好像重启freenect之后又要设置</strong><br><img src="https://i.loli.net/2020/02/19/wHf4Kgm2eQ7LBpl.png" alt="rqt_reconfigure"><br>再次启动节点，就能看到结果了。在<code>MapViewer</code>上，鼠标左键是移动，右键旋转，滚轮放大缩小。</p>
+<h2 id="SLAM-和-Localization-模式"><a href="#SLAM-和-Localization-模式" class="headerlink" title="SLAM 和 Localization 模式"></a>SLAM 和 Localization 模式</h2><p>你可以使用<code>map viewer</code>在SLAM和Localization模式之间切换</p>
+<p>SLAM Mode：默认模式，有三个线程: Tracking, Local Mapping 和 Loop Closing. 对相机定位，建立新地图并close loops</p>
+<p>Localization Mode：如果当前区域一个比较好的地图，可以用这个模式。Local Mapping 和 Loop Closing 线程没有启动. 定位地图中的相机(which is no longer updated), 有必要的话会重定位</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/" data-id="ckr28oqw5005kewlmbtrh6qgp" data-title="KinectV1运行 ORB_SLAM2" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/21/SLAM%E5%B7%A5%E5%85%B7/%E6%AC%A7%E6%B0%8F%E5%8F%98%E6%8D%A2%EF%BC%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%8CSVD/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          欧氏变换，最小二乘，cholesky
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E6%A0%87%E5%AE%9A/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Kinect v1的标定</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

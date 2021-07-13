@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/17/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-激光SLAM/Cartographer/源码解读/3. MapBuilder类" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/" class="article-date">
+  <time class="dt-published" datetime="2020-08-01T12:07:54.000Z" itemprop="datePublished">2020-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/">(三) MapBuilder类</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>MapBuilder继承了抽象类MapBuilderInterface，是cartographer算法的核心类.MapBuilder包括了两个部分，其中TrajectoryBuilder用于Local Submap的建立与维护；PoseGraph部分用于Loop Closure.</p>
+<p><img src="https://i.loli.net/2020/08/01/ehp79sbUc6FgOvJ.png"></p>
+<p>源码中使用的变量是<code>map_builder_</code>，属于MapBuilder类型，它的赋值在MapBuilderBridge的构造函数；变量<code>map_builder_bridge_</code>的赋值又在Node的构造函数；最终是在<code>node_main.cc</code>中的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> map_builder =</span><br><span class="line">  cartographer::common::make_unique&lt;cartographer::mapping::MapBuilder&gt;(</span><br><span class="line">      node_options.map_builder_options );</span><br></pre></td></tr></table></figure>
+<p>具体怎么实现不用管，知道这是个智能指针就行</p>
+<h2 id="成员变量"><a href="#成员变量" class="headerlink" title="成员变量"></a>成员变量</h2><p><code>MapBuilder</code>私有成员变量</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proto::MapBuilderOptions options_;	<span class="comment">//MapBuilder的配置项</span></span><br><span class="line">common::ThreadPool thread_pool_;	<span class="comment">//线程池，应该是为每一条trajectory都单独开辟一个线程</span></span><br><span class="line"><span class="comment">// 一个PoseGraph的智能指针</span></span><br><span class="line">std::unique_ptr&lt;PoseGraph&gt; pose_graph_; </span><br><span class="line"><span class="comment">//收集传感器数据的智能指针</span></span><br><span class="line">std::unique_ptr&lt;sensor::CollatorInterface&gt; sensor_collator_;</span><br><span class="line"><span class="comment">//一个向量，管理所有的TrajectoryBuilderInterface;应该是每一个trajectory对应了该向量的一个元素</span></span><br><span class="line"><span class="comment">// 每一个TrajectoryBuilder对应了机器人运行了一圈，这个向量列表就管理了整个图中的所有submap</span></span><br><span class="line">std::vector&lt;std::unique_ptr&lt;mapping::TrajectoryBuilderInterface&gt;&gt; trajectory_builders_;</span><br><span class="line"><span class="comment">//与每个TrajectoryBuilderInterface相对应的配置项</span></span><br><span class="line">std::vector&lt;proto::TrajectoryBuilderOptionsWithSensorIds&gt; all_trajectory_builder_options_;</span><br></pre></td></tr></table></figure>
+<p>trajectory是机器人跑一圈时的轨迹，在这其中需要记录和维护传感器的数据。根据这个trajectory上传感器收集的数据，我们可以逐步构建出栅格化的地图Submap，但这个submap会随着时间或trajectory的增长而产生误差累积。另外trajectory增长到超过一个阈值，则会新增一个submap。<br>PoseGraph是用来进行全局优化，将所有的Submap紧紧tie在一起，构成一个全局的Map，消除误差累积。</p>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><p>省略3D的情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">MapBuilder::<span class="built_in">MapBuilder</span>(<span class="keyword">const</span> proto::MapBuilderOptions&amp; options)</span><br><span class="line">    : <span class="built_in">options_</span>(options), <span class="built_in">thread_pool_</span>(options.<span class="built_in">num_background_threads</span>()) </span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 加载配置</span></span><br><span class="line">  pose_graph_ = absl::make_unique&lt;PoseGraph2D&gt;(</span><br><span class="line">    options_.<span class="built_in">pose_graph_options</span>(),</span><br><span class="line">    absl::make_unique&lt;optimization::OptimizationProblem2D&gt;(</span><br><span class="line">        options_.<span class="built_in">pose_graph_options</span>().<span class="built_in">optimization_problem_options</span>()),</span><br><span class="line">    &amp;thread_pool_);</span><br><span class="line">  <span class="comment">// 构建修正器</span></span><br><span class="line">  <span class="keyword">if</span> (options.<span class="built_in">collate_by_trajectory</span>())</span><br><span class="line">    sensor_collator_ = absl::make_unique&lt;sensor::TrajectoryCollator&gt;();</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    sensor_collator_ = absl::make_unique&lt;sensor::Collator&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在lua文件中找不到<code>collate_by_trajectory</code>这一项，但在<code>map_builder_options.proto</code>中可以找到，如果我们想要配置这个选项，只需要在lua文件中添加<code>MAP_BUILDER.collate_by_trajectory = true</code></p>
+<h2 id="AddTrajectoryBuilder"><a href="#AddTrajectoryBuilder" class="headerlink" title="AddTrajectoryBuilder"></a>AddTrajectoryBuilder</h2><p>这个函数可以说是cartographer中最重要的函数之一，</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">MapBuilder::AddTrajectoryBuilder</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> std::set&lt;SensorId&gt;&amp; expected_sensor_ids,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> proto::TrajectoryBuilderOptions&amp; trajectory_options,</span></span></span><br><span class="line"><span class="params"><span class="function">    LocalSlamResultCallback local_slam_result_callback)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 当有一个新的trajectory时，以向量的size值作为新的trajectory，加入到trajectory_builders_中</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> trajectory_id = trajectory_builders_.<span class="built_in">size</span>();</span><br><span class="line">  <span class="comment">// 省略 3D 部分</span></span><br><span class="line">  <span class="comment">// LocalTrajectoryBuilder2D是不带Loop Closure的Local Slam, 包含了Pose Extrapolator, Scan Matching等</span></span><br><span class="line">  <span class="comment">// 这个类并没有继承TrajectoryBuilderInterface, 并不是一个TrajectoryBuilderInterface的实现</span></span><br><span class="line">  <span class="comment">// 而只是一个工具类，构造函数全是配置的赋值</span></span><br><span class="line">  std::unique_ptr&lt;LocalTrajectoryBuilder2D&gt;  local_trajectory_builder;</span><br><span class="line">  <span class="keyword">if</span> (trajectory_options.<span class="built_in">has_trajectory_builder_2d_options</span>() )</span><br><span class="line">  &#123;</span><br><span class="line">    local_trajectory_builder = absl::make_unique&lt;LocalTrajectoryBuilder2D&gt;(</span><br><span class="line">        trajectory_options.<span class="built_in">trajectory_builder_2d_options</span>(),</span><br><span class="line">        <span class="comment">// 找出expected_sensor_ids中的雷达的话题，比如scan1,scan2</span></span><br><span class="line">        <span class="built_in">SelectRangeSensorIds</span>(expected_sensor_ids) );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">DCHECK</span>(<span class="keyword">dynamic_cast</span>&lt;PoseGraph2D*&gt;(pose_graph_.<span class="built_in">get</span>())  );</span><br><span class="line">  <span class="comment">// 类CollatedTrajectoryBuilder继承了接口 TrajectoryBuilderInterface，这个才是真正的</span></span><br><span class="line">  <span class="comment">// 轨迹跟踪器，使用sensor::CollatorInterface接口来收集传感器数据，具体的类在MapBuilder构造函数最后</span></span><br><span class="line">  <span class="comment">//  CollatedTrajectoryBuilder是 sensor_bridges_构造函数中的对应最后一个参数的类型</span></span><br><span class="line">  trajectory_builders_.<span class="built_in">push_back</span>( absl::make_unique&lt;CollatedTrajectoryBuilder&gt;(</span><br><span class="line">      trajectory_options, sensor_collator_.<span class="built_in">get</span>(), trajectory_id,</span><br><span class="line">      expected_sensor_ids,</span><br><span class="line">      <span class="comment">// 函数返回类型实际是 std::unique_ptr&lt;GlobalTrajectoryBuilder&gt;，它实际上是一个模板类</span></span><br><span class="line">      <span class="comment">// 其模板列表中的LocalTrajectoryBuilder2D和PoseGraph2D分别是前端和后端的两个核心类型</span></span><br><span class="line">      <span class="comment">// 前者负责接收来自激光雷达的数据，进行扫描匹配，估计机器人位姿，并将传感器数据插入子图中，更新子图</span></span><br><span class="line">      <span class="comment">// 后者在后台进行闭环检测全局优化</span></span><br><span class="line">      <span class="comment">// local_slam_result_callback 前端数据更新后的回调函数</span></span><br><span class="line">      <span class="built_in">CreateGlobalTrajectoryBuilder2D</span>(</span><br><span class="line">          std::<span class="built_in">move</span>(local_trajectory_builder), trajectory_id,</span><br><span class="line">          <span class="keyword">static_cast</span>&lt;PoseGraph2D*&gt;(pose_graph_.<span class="built_in">get</span>()),</span><br><span class="line">          local_slam_result_callback)  )  );</span><br><span class="line">  <span class="comment">// 如果开启了纯定位模式，详见文章 ： (四) 纯定位模式</span></span><br><span class="line">  <span class="built_in">MaybeAddPureLocalizationTrimmer</span>(trajectory_id, trajectory_options, pose_graph_.<span class="built_in">get</span>());</span><br><span class="line">  <span class="comment">// 如果开始建图之前已经有了初始位置，将初始位置提供给pose_graph_对象</span></span><br><span class="line">  <span class="comment">// 比如说，我们检测到了一个Landmark。那么这时，我们可以新增加一条trajectory</span></span><br><span class="line">  <span class="comment">// 然后根据机器人与Landmark之间的相对位姿推算机器人相对于世界坐标系的相对位姿</span></span><br><span class="line">  <span class="comment">// 以该位姿作为新增加的trajectory的初始位姿。这样在检测到Landmark时就能有效降低累积误差</span></span><br><span class="line">  <span class="keyword">if</span> (trajectory_options.<span class="built_in">has_initial_trajectory_pose</span>())</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; initial_trajectory_pose =</span><br><span class="line">        trajectory_options.<span class="built_in">initial_trajectory_pose</span>();</span><br><span class="line">    pose_graph_-&gt;<span class="built_in">SetInitialTrajectoryPose</span>(</span><br><span class="line">        trajectory_id, initial_trajectory_pose.<span class="built_in">to_trajectory_id</span>(),</span><br><span class="line">        transform::<span class="built_in">ToRigid3</span>(initial_trajectory_pose.<span class="built_in">relative_pose</span>()),</span><br><span class="line">        common::<span class="built_in">FromUniversal</span>(initial_trajectory_pose.<span class="built_in">timestamp</span>()) );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 将轨迹跟踪器的配置信息和传感器配置信息保存到容器all_trajectory_builder_options_中</span></span><br><span class="line">  proto::TrajectoryBuilderOptionsWithSensorIds  options_with_sensor_ids_proto;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sensor_id : expected_sensor_ids)</span><br><span class="line">  &#123;</span><br><span class="line">    *options_with_sensor_ids_proto.<span class="built_in">add_sensor_id</span>() = <span class="built_in">ToProto</span>(sensor_id);</span><br><span class="line">  &#125;</span><br><span class="line">  *options_with_sensor_ids_proto.<span class="built_in">mutable_trajectory_builder_options</span>() =</span><br><span class="line">      trajectory_options;</span><br><span class="line">  all_trajectory_builder_options_.<span class="built_in">push_back</span>(options_with_sensor_ids_proto);</span><br><span class="line">  <span class="built_in">CHECK_EQ</span>(trajectory_builders_.<span class="built_in">size</span>(), all_trajectory_builder_options_.<span class="built_in">size</span>());</span><br><span class="line">  <span class="keyword">return</span> trajectory_id;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个MapBuilder的类对应了一次建图过程，在整个建图过程中，用于全局优化的PoseGraph的对象只有一个，即<code>pose_graph_</code>，而这个变量是在构造函数中就生成了。一个<code>trajectory</code>对应了机器人运行一圈。在图建好后机器人可能多次运行。每一次运行都是新增一条trajectory，因此，需要动态地维护一个trajectory的列表。每生成一个trajectory时都是调用<code>AddTrajectoryBuilder</code>来创建的。</p>
+<p><code>has_initial_trajectory_pose</code>应该是跟LandMark有关</p>
+<h2 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h2><ul>
+<li><p><code>SerializeState</code>： 保存地图到pbstream，序列化当前状态到一个proto流中</p>
+</li>
+<li><p><code>LoadState</code>： 加载pbstream地图，从一个proto流中加载SLAM状态，逐条trajectory恢复，恢复trajectory上的节点间的约束，恢复Submap</p>
+</li>
+<li><p><code>FinishTrajectory</code>： 结束指定id的轨迹，调用<code>sensor_collator_-&gt;FinishTrajectory</code>和<code>pose_graph_-&gt;FinishTrajectory</code></p>
+</li>
+<li><p><code>SubmapToProto</code>: 根据指定的submap_id来查询submap，把结果放到SubmapQuery::Response中。如果出现错误，返回error string; 成功则返回empty string. 对应服务<code>kSubmapQueryServiceName</code>， 调用关系如下：</p>
+</li>
+</ul>
+<p>Node::HandleSubmapQuery<br>&amp;nbsp&amp;nbsp&amp;nbsp|<br>MapBuilderBridge::HandleSubmapQuery<br>&amp;nbsp&amp;nbsp&amp;nbsp|<br>MapBuilder::SubmapToProto</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/" data-id="ckr28or3100ndewlmheqf80le" data-title="(三) MapBuilder类" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/源码解读/2. Node的AddTrajectory函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-08-01T11:32:24.000Z" itemprop="datePublished">2020-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/">(二) Node的AddTrajectory函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>先看流程图:<br><img src="https://i.loli.net/2020/08/01/76XmnCOHpFjbhWr.png" alt="AddTrajectory.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> std::set&lt;cartographer::mapping::TrajectoryBuilderInterface::SensorId&gt;</span><br><span class="line">    expected_sensor_ids = <span class="built_in">ComputeExpectedSensorIds</span>(options, topics);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> trajectory_id = </span><br><span class="line">    map_builder_bridge_.<span class="built_in">AddTrajectory</span>(expected_sensor_ids, options);</span><br><span class="line"><span class="built_in">AddExtrapolator</span>(trajectory_id, options);</span><br><span class="line"><span class="built_in">AddSensorSamplers</span>(trajectory_id, options);</span><br><span class="line"><span class="built_in">LaunchSubscribers</span>(options, topics, trajectory_id);</span><br><span class="line">is_active_trajectory_[trajectory_id] = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sensor_id : expected_sensor_ids)</span><br><span class="line">&#123;  <span class="comment">// unordered_set</span></span><br><span class="line">  subscribed_topics_.<span class="built_in">insert</span>(sensor_id.id);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> trajectory_id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="map-builder-bridge-AddTrajectory"><a href="#map-builder-bridge-AddTrajectory" class="headerlink" title="map_builder_bridge_.AddTrajectory"></a>map_builder_bridge_.AddTrajectory</h2><p>两个参数是<code>const std::set&lt;TrajectoryBuilderInterface::SensorId&gt;&amp;  expected_sensor_ids</code> 和 <code>const TrajectoryOptions&amp; trajectory_options</code></p>
+<p><code>expected_sensor_ids</code>记录了用于建图的所有传感器名称和类型</p>
+<p><code>MapBuilderBridge</code>的构造函数就是加载配置和map_builder</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加一个轨迹跟踪器，同时将构建成功的索引返回</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> trajectory_id = map_builder_-&gt;<span class="built_in">AddTrajectoryBuilder</span>(</span><br><span class="line">  expected_sensor_ids, trajectory_options.trajectory_builder_options,</span><br><span class="line">  <span class="comment">// 这个参数相当于注册了一个回调函数 OnLocalSlamResult ,  用于响应map_builder_完成</span></span><br><span class="line">  <span class="comment">// 一个局部SLAM或者说是成功构建一个子图的事件</span></span><br><span class="line">  ::std::<span class="built_in">bind</span>(&amp;MapBuilderBridge::OnLocalSlamResult, <span class="keyword">this</span>,</span><br><span class="line">              ::std::placeholders::_1, ::std::placeholders::_2,</span><br><span class="line">              ::std::placeholders::_3, ::std::placeholders::_4,</span><br><span class="line">              ::std::placeholders::_5) );</span><br><span class="line"></span><br><span class="line"><span class="built_in">LOG</span>(INFO) &lt;&lt; <span class="string">&quot;Added trajectory with ID &#x27;&quot;</span> &lt;&lt; trajectory_id &lt;&lt; <span class="string">&quot;&#x27;.&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 检查trajectory_id 确保之前没有使用过</span></span><br><span class="line"><span class="built_in">CHECK_EQ</span>(sensor_bridges_.<span class="built_in">count</span>(trajectory_id), <span class="number">0</span>);</span><br><span class="line"><span class="comment">// SensorBridge将ROS的消息转换成Cartographer中的传感器数据类型</span></span><br><span class="line"><span class="comment">// 最后的参数是Cartographer的核心对象，TrajectoryBuilderInterface指针</span></span><br><span class="line"><span class="comment">// 通过sensor_bridge对象转换后的数据都是通过它喂给Cartographer的</span></span><br><span class="line">sensor_bridges_[trajectory_id] =</span><br><span class="line">  cartographer::common::make_unique&lt;SensorBridge&gt;(</span><br><span class="line">      trajectory_options.num_subdivisions_per_laser_scan,</span><br><span class="line">      trajectory_options.tracking_frame,</span><br><span class="line">      node_options_.lookup_transform_timeout_sec, tf_buffer_,</span><br><span class="line">      <span class="comment">// 实际类型是 CollatedTrajectoryBuilder</span></span><br><span class="line">      map_builder_-&gt;<span class="built_in">GetTrajectoryBuilder</span>(trajectory_id)  );</span><br><span class="line"><span class="comment">// 轨迹的配置保存到容器对象 trajectory_options_</span></span><br><span class="line"><span class="keyword">auto</span> emplace_result = trajectory_options_.<span class="built_in">emplace</span>(trajectory_id, trajectory_options);</span><br><span class="line"><span class="keyword">return</span> trajectory_id;</span><br></pre></td></tr></table></figure>
+
+<h3 id="回调函数-OnLocalSlamResult"><a href="#回调函数-OnLocalSlamResult" class="headerlink" title="回调函数 OnLocalSlamResult"></a>回调函数 OnLocalSlamResult</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">MapBuilderBridge::OnLocalSlamResult</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> <span class="keyword">int</span> trajectory_id,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> ::cartographer::common::Time time,  <span class="comment">// 更新子图的时间</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Rigid3d local_pose,       <span class="comment">// 子图的参考位置</span></span></span></span><br><span class="line"><span class="params"><span class="function">    ::cartographer::sensor::RangeData range_data_in_local,   <span class="comment">// 参考位置下的扫描数据</span></span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> std::unique_ptr&lt;<span class="keyword">const</span> ::cartographer::mapping::</span></span></span><br><span class="line"><span class="params"><span class="function">                              TrajectoryBuilderInterface::InsertionResult&gt; )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// LocalSlamData是定义在MapBuilderBridge内部的结构体，用于记录局部SLAM反馈的状态</span></span><br><span class="line">  std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryState::LocalSlamData&gt; local_slam_data =</span><br><span class="line">      std::make_shared&lt;TrajectoryState::LocalSlamData&gt;(</span><br><span class="line">          TrajectoryState::LocalSlamData&#123;time, local_pose,</span><br><span class="line">                                         std::<span class="built_in">move</span>(range_data_in_local)&#125; );</span><br><span class="line">  cartographer::<span class="function">common::MutexLocker <span class="title">lock</span><span class="params">(&amp;mutex_)</span></span>;</span><br><span class="line">  trajectory_state_data_[trajectory_id] = std::<span class="built_in">move</span>(local_slam_data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Node-ComputeExpectedSensorIds"><a href="#Node-ComputeExpectedSensorIds" class="headerlink" title="Node::ComputeExpectedSensorIds"></a>Node::ComputeExpectedSensorIds</h2><p>函数返回的是<code>std::set&lt;TrajectoryBuilderInterface::SensorId&gt;</code>类型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">SensorId</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="keyword">class</span> <span class="title">SensorType</span> &#123;</span></span><br><span class="line">      RANGE = <span class="number">0</span>,</span><br><span class="line">      IMU,</span><br><span class="line">      ODOMETRY,</span><br><span class="line">      FIXED_FRAME_POSE,</span><br><span class="line">      LANDMARK,</span><br><span class="line">      LOCAL_SLAM_RESULT</span><br><span class="line">    &#125;;</span><br><span class="line">    SensorType type;</span><br><span class="line">    std::string id;</span><br><span class="line">    <span class="comment">// operator</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>它记录的是使用的所有传感器的类型和对应id，id是一个字符串记录了传感器所对应的ROS主题名称。如果有多个雷达，id就是<code>scan1</code>,<code>scan2</code>……</p>
+<h2 id="Node-AddExtrapolator"><a href="#Node-AddExtrapolator" class="headerlink" title="Node::AddExtrapolator"></a>Node::AddExtrapolator</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="keyword">double</span> kExtrapolationEstimationTimeSec = <span class="number">0.001</span>;  <span class="comment">// 1 ms</span></span><br><span class="line"><span class="comment">// 把lua文件的 imu_gravity_time_constant 参数赋给变量 gravity_time_constant</span></span><br><span class="line">extrapolators_.<span class="built_in">emplace</span>(</span><br><span class="line">  std::piecewise_construct, std::forward_as_tuple(trajectory_id),</span><br><span class="line">  std::forward_as_tuple(</span><br><span class="line">      ::cartographer::common::<span class="built_in">FromSeconds</span>(kExtrapolationEstimationTimeSec),</span><br><span class="line">      gravity_time_constant)  );</span><br></pre></td></tr></table></figure>
+<p>添加用于位姿插值的对象<code>extrapolators_</code>， 类型<code>std::map&lt;int, PoseExtrapolator&gt; extrapolators_;</code></p>
+<h2 id="Node-AddSensorSamplers"><a href="#Node-AddSensorSamplers" class="headerlink" title="Node::AddSensorSamplers"></a>Node::AddSensorSamplers</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sensor_samplers_.<span class="built_in">emplace</span>(</span><br><span class="line">  std::piecewise_construct, std::forward_as_tuple(trajectory_id),</span><br><span class="line">  std::forward_as_tuple(</span><br><span class="line">      options.rangefinder_sampling_ratio, options.odometry_sampling_ratio,</span><br><span class="line">      options.fixed_frame_pose_sampling_ratio, options.imu_sampling_ratio,</span><br><span class="line">      options.landmarks_sampling_ratio)  );</span><br></pre></td></tr></table></figure>
+<p>类型<code>std::unordered_map&lt;int, TrajectorySensorSamplers&gt; sensor_samplers_;</code></p>
+<p>对cartographer中的采样器(fixed_ratio_sampler.h, fixed_ratio_sampler.cc)的封装，用一个计数器来按照一个指定的频率对原始的数据进行降采样，采样频率可以通过轨迹参数文件来配置</p>
+<h2 id="LaunchSubscribers"><a href="#LaunchSubscribers" class="headerlink" title="LaunchSubscribers"></a>LaunchSubscribers</h2><p>完成传感器消息的订阅,在传感器数据的作用下驱动系统运转，进而完成位姿估计和建图的任务。详细分析见第四篇</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/" data-id="ckr28or3000nbewlmhvhg0pqn" data-title="(二) Node的AddTrajectory函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/源码解读/1. 从node_main.cc开始" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/1.%20%E4%BB%8Enode_main.cc%E5%BC%80%E5%A7%8B/" class="article-date">
+  <time class="dt-published" datetime="2020-08-01T11:30:43.000Z" itemprop="datePublished">2020-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/1.%20%E4%BB%8Enode_main.cc%E5%BC%80%E5%A7%8B/">(一) 从node_main.cc开始</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>先看main函数，省略google库的部分：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">::ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;cartographer_node&quot;</span>);</span><br><span class="line">::ros::<span class="built_in">start</span>();</span><br><span class="line"></span><br><span class="line">cartographer_ros::ScopedRosLogSink ros_log_sink;</span><br><span class="line">cartographer_ros::<span class="built_in">Run</span>();</span><br><span class="line">::ros::<span class="built_in">shutdown</span>();</span><br></pre></td></tr></table></figure>
+
+<p>实际上就是Run函数，流程如下：<br><img src="https://i.loli.net/2020/08/01/fKkHBTCSFNuEO6y.png" alt="Run函数流程.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">constexpr</span> <span class="keyword">double</span> kTfBufferCacheTimeInSeconds = <span class="number">10.</span>;</span><br><span class="line">tf2_ros::Buffer tf_buffer&#123;::ros::<span class="built_in">Duration</span>(kTfBufferCacheTimeInSeconds)&#125;;</span><br><span class="line"><span class="function">tf2_ros::TransformListener <span class="title">tf</span><span class="params">(tf_buffer)</span></span>;</span><br><span class="line"><span class="comment">// 从lua文件加载配置</span></span><br><span class="line">NodeOptions node_options;</span><br><span class="line">TrajectoryOptions trajectory_options;</span><br><span class="line">std::<span class="built_in">tie</span>(node_options, trajectory_options) =</span><br><span class="line">    <span class="built_in">LoadOptions</span>(FLAGS_configuration_directory, FLAGS_configuration_basename);</span><br><span class="line"><span class="comment">// 核心变量： Cartographer的地图构建器</span></span><br><span class="line"><span class="keyword">auto</span> map_builder =</span><br><span class="line">    cartographer::common::make_unique&lt;cartographer::mapping::MapBuilder&gt;(</span><br><span class="line">        node_options.map_builder_options);</span><br><span class="line"><span class="function">Node <span class="title">node</span><span class="params">(node_options, std::move(map_builder), &amp;tf_buffer)</span></span>;</span><br><span class="line"><span class="comment">// 加载现有地图的情况</span></span><br><span class="line"><span class="keyword">if</span> (!FLAGS_load_state_filename.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">  node.<span class="built_in">LoadState</span>(FLAGS_load_state_filename, FLAGS_load_frozen_state);</span><br><span class="line">&#125;</span><br><span class="line">  <span class="comment">// 核心函数</span></span><br><span class="line"><span class="keyword">if</span> (FLAGS_start_trajectory_with_default_topics) &#123;</span><br><span class="line">  node.<span class="built_in">StartTrajectoryWithDefaultTopics</span>(trajectory_options);</span><br><span class="line">&#125;</span><br><span class="line">::ros::<span class="built_in">spin</span>();</span><br><span class="line"></span><br><span class="line">node.<span class="built_in">FinishAllTrajectories</span>();</span><br><span class="line">node.<span class="built_in">RunFinalOptimization</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!FLAGS_save_state_filename.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">  node.<span class="built_in">SerializeState</span>(FLAGS_save_state_filename);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然我们需要看的函数是<code>StartTrajectoryWithDefaultTopics</code></p>
+<h2 id="proto机制"><a href="#proto机制" class="headerlink" title="proto机制"></a>proto机制</h2><p>编写应用程序的时候，往往需要将程序的某些数据存储在内存中，然后将其写入某个文件或是将它传输到网络中的另一台计算机上以实现通讯。这个将程序数据转化成能被存储并传输的格式的过程被称为序列化，而它的逆过程则可被称为反序列化。简单来说，序列化：将对象变成字节流的形式传出去。反序列化：从字节流恢复成原来的对象。</p>
+<p>为什么要序列化：假如你有一个数据结构，里面存储的数据是经过很多其它数据通过非常复杂的算法生成的，由于数据量很大，算法又复杂，因此生成该数据结构所用数据的时间可能要很久（也许几个小时），生成该数据结构后又要用作其它的计算，那么你在调试阶段，每次运行个程序，就光生成数据结构就要花上这么长的时间，无疑代价是非常大的。如果你确定生成数据结构的算法不会变，那么就可以通过序列化技术生成数据结构数据存储到磁盘上，下次重新运行程序时只需要从磁盘上读取该对象数据即可，所花时间只有读一个文件的时间，节省了我们的开发时间。</p>
+<p>Protobuf性能好，效率高；拥有代码生成机制，数据解析类自动生成；支持很多语言，包括C++、Java、Python；同时也是跨平台的，所以得到了广泛的应用。正常情况下你需要定义proto文件，然后使用IDL编译器编译成你需要的语言。目前proto存在2和3两个版本，最好用3.与2相比，3的改变有：移除了required字段、移除了缺省值等</p>
+<p>proto的语法见<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6a6dbff2b5cd">proto文件语法</a> 和 <a target="_blank" rel="noopener" href="https://colobu.com/2019/10/03/protobuf-ultimate-tutorial-in-go/">Protobuf 终极教程</a></p>
+<p>生成C++代码的命令是： <code>protoc -I=. --cpp_out=.   test.proto</code>. <code>-I</code>指定protoc的搜索import的proto的文件夹,<code>cpp_out</code>是生成的目录，生成的文件类型是<code>pb.h</code>和<code>pb.cc</code>。 对于Cartographer，proto文件在源码的<code>cartographer/cartographer/</code>，生成的pb.h文件在<code>/usr/local/include/cartographer</code></p>
+<p>以后会发现有些参数不在lua里，但在proto里，proto是 Cartographer原本的参数描述的方式，lua是catographer_ros的封装。proto定义了参数，lua具体描述参数的数值，他俩就跟class和实例化的对象一样</p>
+<p>我尝试在lua中添加proto中特有的参数，比如<code>collate_by_trajectory</code>，结果运行Cartographer还是失败，可能还是不兼容。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/1.%20%E4%BB%8Enode_main.cc%E5%BC%80%E5%A7%8B/" data-id="ckr28or2z00n9ewlmhmlm18zs" data-title="(一) 从node_main.cc开始" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS程序和源码分析/ROS中的lazy发布和订阅" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/21/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E4%B8%AD%E7%9A%84lazy%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" class="article-date">
+  <time class="dt-published" datetime="2020-07-21T01:55:47.000Z" itemprop="datePublished">2020-07-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/21/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E4%B8%AD%E7%9A%84lazy%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/">ROS中的Lazy发布和订阅</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>之前看<code>depthimage_to_laserscan</code>包，发现它的订阅发布采用的是所谓 <font color = blue size=4> lazy模式</font>。今天研究了一下，发现并不复杂。先看<code>advertise</code>函数的一个原型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Publisher ros::NodeHandle::<span class="built_in">advertise</span>(<span class="keyword">const</span> std::string&amp; topic,</span><br><span class="line">	<span class="keyword">uint32_t</span> 	queue_size,</span><br><span class="line">	<span class="keyword">const</span>  SubscriberStatusCallback &amp; 	connect_cb,</span><br><span class="line">	<span class="keyword">const</span>  SubscriberStatusCallback &amp; 	disconnect_cb = <span class="built_in">SubscriberStatusCallback</span>(),</span><br><span class="line">	<span class="keyword">const</span>  VoidConstPtr &amp; 	tracked_object = <span class="built_in">VoidConstPtr</span>(),</span><br><span class="line">	<span class="keyword">bool</span>   latch = <span class="literal">false</span> </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>原来有三个原型，我们常用的是第一个，这个是第二个，第三个就极其罕见了，形参是个AdvertiseOptions类型。</p>
+<p>话题有订阅者时，发布者会触发<code>connect_cb</code>函数，停止订阅时又触发<code>disconnect_cb</code>函数。如果让它们做类成员函数，就使用<code>Boost::bind</code>形式，<code>tracked_object</code>暂时不用。所以程序可以这样写：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">connectCb</span><span class="params">(<span class="keyword">const</span> ros::SingleSubscriberPublisher&amp; singlePub)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Subscriber Name: %s&quot;</span>, singlePub.<span class="built_in">getSubscriberName</span>().<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">disconnectCb</span><span class="params">(<span class="keyword">const</span> ros::SingleSubscriberPublisher&amp; singlePub)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">ROS_INFO</span>(<span class="string">&quot;disconnectCb&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">......</span><br><span class="line">  ros::Publisher pub = nh.advertise&lt;std_msgs::Int8&gt;(<span class="string">&quot;topic&quot;</span>, <span class="number">50</span>, connectCb,disconnectCb);</span><br></pre></td></tr></table></figure>
+<p>可以用<code>rostopic echo topic</code>测试</p>
+<br>
+
+<p>再来看<code>depthimage_to_laserscan</code>的程序，构造函数里是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pub_ = n.advertise&lt;sensor_msgs::LaserScan&gt;(<span class="string">&quot;scan&quot;</span>, <span class="number">10</span>, </span><br><span class="line">	boost::<span class="built_in">bind</span>(&amp;DepthImageToLaserScanROS::connectCb, <span class="keyword">this</span>, _1), </span><br><span class="line">	boost::<span class="built_in">bind</span>(&amp;DepthImageToLaserScanROS::disconnectCb, <span class="keyword">this</span>, _1)</span><br><span class="line">	);</span><br></pre></td></tr></table></figure>
+<p>它是把两个函数用成员函数的形式，<code>connectCb</code>是这样的：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!sub_ &amp;&amp; pub_.<span class="built_in">getNumSubscribers</span>() &gt; <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Connecting to depth topic.&quot;</span>);</span><br><span class="line">	<span class="function">image_transport::TransportHints <span class="title">hints</span><span class="params">(<span class="string">&quot;raw&quot;</span>, ros::TransportHints(), pnh_)</span></span>;</span><br><span class="line">	sub_ = it_.<span class="built_in">subscribeCamera</span>(<span class="string">&quot;/camera/depth/image_raw&quot;</span>, <span class="number">10</span>, &amp;DepthImageToLaserScanROS::depthCb, <span class="keyword">this</span>, hints);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而<code>depthCb</code>是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sensor_msgs::LaserScanPtr scan_msg = dtl_.<span class="built_in">convert_msg</span>(depth_msg, info_msg);</span><br><span class="line">    pub_.<span class="built_in">publish</span>(scan_msg);</span><br></pre></td></tr></table></figure>
+<p>显然逻辑是这样的：有其他节点订阅<code>scan</code>话题时，发布者里才订阅<code>image_raw</code>话题，然后才会发布<code>scan</code>话题的实际消息，所谓的lazy就是<code>scan</code>话题的消息发布</p>
+<p><code>disconnectCb</code>里，如果另一个节点不再订阅<code>scan</code>话题，本节点就会<code>sub_.shutdown();</code>；如果再有订阅<code>scan</code>，又可以通过<code>connectCb</code>使用<code>sub_</code>，设计确实很巧妙</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://mirror-ap.docs.ros.org/lunar/api/roscpp/html/classros_1_1NodeHandle.html#ae4711ef282892176ba145d02f8f45f8d">Publisher     advertise</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/indigo/api/roscpp/html/classros_1_1SingleSubscriberPublisher.html">SingleSubscriberPublisher</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/21/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/ROS%E4%B8%AD%E7%9A%84lazy%E5%8F%91%E5%B8%83%E5%92%8C%E8%AE%A2%E9%98%85/" data-id="ckr28oqzt00e8ewlm6ov2hdln" data-title="ROS中的Lazy发布和订阅" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-其他/职场经验" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/20/%E5%85%B6%E4%BB%96/%E8%81%8C%E5%9C%BA%E7%BB%8F%E9%AA%8C/" class="article-date">
+  <time class="dt-published" datetime="2020-07-20T00:58:59.000Z" itemprop="datePublished">2020-07-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/20/%E5%85%B6%E4%BB%96/%E8%81%8C%E5%9C%BA%E7%BB%8F%E9%AA%8C/">职场经验</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="从姜歌得到的教训："><a href="#从姜歌得到的教训：" class="headerlink" title="从姜歌得到的教训："></a>从姜歌得到的教训：</h2><ul>
+<li><p>你离失业永远只有一个月</p>
+</li>
+<li><p>对公司的发展趋势没有掌握，对各种反常迹象没有多注意，嗅觉不够敏锐</p>
+</li>
+<li><p>与老板接触不够，虽然老板也不善于听别人的意见，但应该让他知道自己的进展和困难</p>
+</li>
+<li><p>一个公司的节奏是变化的，在变快的时候一定要跟上。</p>
+</li>
+<li><p>对项目进度把握不够，跟各方沟通不够，没有时间紧张的意识，在不该松懈的时候松懈了</p>
+</li>
+<li><p>如果脑子经常一团乱麻，负面情绪明显增加时，应当尽快调整，比如去开阔的地方走走，和不同的人交流</p>
+</li>
+</ul>
+<h2 id="从华龄得到的教训"><a href="#从华龄得到的教训" class="headerlink" title="从华龄得到的教训"></a>从华龄得到的教训</h2><ul>
+<li><p>老板的能力决定了公司发展的上限，很多公司的早期崛起靠的是创始人的魄力</p>
+</li>
+<li><p>判断上级对部门和岗位的了解程度，如果他认为比较简单，那么他不会重视你，即使你能力再好，也不会有前途了。如果你的上级水平不如你，甚至智商不如你，火速换工作</p>
+</li>
+<li><p>如果跟某人合不来，要么你水平低，要么他水平低。这种情况就不要来往了</p>
+</li>
+<li><p>注意不要暴露自己底线，否则容易被强过自己的人看穿，反过来要多试探对方底线</p>
+</li>
+<li><p>如果在当前环境没有干劲，总是想到周边逛，那么你该换环境了</p>
+</li>
+<li><p>搞清楚自己职位所要求的下限和能发挥的上限，以及公司是否明白这两点，自己对此的看法与公司相符是最理想的</p>
+</li>
+<li><p>当职场天花板的时候尽早跳出去，这时候会处于一种非常迷茫的状态，自我怀疑，曾经因为这种状态而轻度抑郁症过。</p>
+</li>
+<li><p>加班的公司不一定有前途，不加班的基本上都没前途</p>
+</li>
+</ul>
+<h2 id="从金智得到的教训"><a href="#从金智得到的教训" class="headerlink" title="从金智得到的教训"></a>从金智得到的教训</h2><ul>
+<li><p>一些事务性工作只会耗费时间</p>
+</li>
+<li><p>对于触动自己利益的人，一定要心黑手辣，千万不要手软</p>
+</li>
+<li><p>大公司里做专业性很强的工作，人到中年失业，很容易崩塌式降薪</p>
+</li>
+<li><p>很多工作三五年的人，甚至和工作一年的人在能力方面并没有什么太大的差别，所以当他们的职业想向上突破时，会遇到很多的阻力</p>
+</li>
+</ul>
+<p>使用企业微信的TAPD进行项目问题管理，对责任人和紧急程度、完成日期都可以有清楚的规定。缺点是常常责任人写的过多，比如负责某问题实际解决的只有一个人，但是把同岗位的人都写上了。这就需要项目管理的人与研发做好沟通</p>
+<p>某个项目所涉及的人都建了群，钉钉群比微信好。</p>
+<p>日报和周报管理不善，没有说明二者是否都要写，也没说明是否所有人都要写，很多人不写日报甚至周报。老板有时顾不上看，看了也没有什么反馈，久而久之让人养成了惰性。</p>
+<hr>
+<ul>
+<li><p>面试也要摸清面试官的水平，对方可能比自己强不了多少，以及自己将来常接触的几个人的情况。</p>
+</li>
+<li><p>多年不联系的老同学突然联系你没啥好事</p>
+</li>
+<li><p>警惕沉浸在舒适区里，每天会做着无效的努力</p>
+</li>
+<li><p>不要觉得老实是美德，社会上容易欺负老实的人。</p>
+</li>
+<li><p>两种情况很危险： 频繁跳槽或改变方向，导致在一个方向没有足够积累；虽然长期向一个方向努力，但是后面几年都是重复劳动</p>
+</li>
+<li><p>当你在状态时，就多干点；不然就好好休息：有时候会连着几天不是工作状态，有时在工作状态时却又能天天忙活 12 小时，这都很正常的</p>
+</li>
+<li><p>进入高效状态后，记下灵光乍现的想法、新点子等等。如果你把它们记下来，它就不会再蹦来蹦去了</p>
+</li>
+<li><p>年轻时候的一段弯路，对于某些资质平平、心智未开的人来说，不但成为不了所谓的学问和财富，却会成为僵化的毒药。</p>
+</li>
+</ul>
+<h2 id="求职"><a href="#求职" class="headerlink" title="求职"></a>求职</h2><ul>
+<li><p>千万要问HR，简历是否给面试人员看过，经常有一些愚蠢的HR通知面试，去了告知简历不合适。也要问面试人是否是看简历的那个人</p>
+</li>
+<li><p>如果岗位描述太宽泛，可能是从其他公司抄的，要问HR到底招什么样的人，公司的需求是什么</p>
+</li>
+<li><p>如果面试时出现冷场尴尬的情况，很可能是不合适</p>
+</li>
+<li><p>如果面试时，对方对简历上的项目问的很少或者有时不说话，很可能他是个领导或者他不是这个岗位的，也就是这个岗位空缺，这时可以提前结束</p>
+</li>
+<li><p>如果是创业公司招聘，岗位描述很可能比较宽泛，因为发展路线和组织架构还不清晰</p>
+</li>
+<li><p>如果对方问的很浅很不正规，只问做过什么，说明公司缺人而且水平不高</p>
+</li>
+<li><p>招聘基本有几种情况：团队工作比较忙，需要加一个人；突然走了一个人，需要招一个人补上；遇到一个棘手难题，需要挖一个人来解决，这种一般不紧急；团队未成形，需要一个人来带头</p>
+</li>
+</ul>
+<hr>
+<p>年龄问题：</p>
+<ol>
+<li>毕业时间晚，但是心态仍然年轻。</li>
+<li>没有家庭负担也没有女朋友，身体一直很健康</li>
+<li>技术水平仍能增长，未达到天花板，每天保持自我学习</li>
+</ol>
+<p>辞职原因<br>姜歌：<br>公司形势恶化，降低五险一金<br>和老板有些矛盾，老板认为我反光板项目花时间太长，但主要原因是没有反光板专用的雷达，很多时间都花在处理数据和测试上</p>
+<p>华龄：</p>
+<ol>
+<li>有过拖欠工资的记录，拖欠三个月，虽然后来补上了，但心有余悸</li>
+<li>没有发展前途，到后面招不到人，算法和业务逻辑都是我一个人，不可能忙得过来</li>
+<li>其实19年年底就考虑辞职，但是考虑到不容易找工作，又坚持到过年，碰上疫情，又推迟几个月</li>
+</ol>
+<hr>
+<h2 id="我需要问的问题"><a href="#我需要问的问题" class="headerlink" title="我需要问的问题"></a>我需要问的问题</h2><h3 id="面试前"><a href="#面试前" class="headerlink" title="面试前"></a>面试前</h3><ul>
+<li>对方到底招聘的什么岗位，需要哪方面的人</li>
+<li>是否面试前要填复杂的表格</li>
+</ul>
+<h3 id="面试后"><a href="#面试后" class="headerlink" title="面试后"></a>面试后</h3><ul>
+<li>职责范围</li>
+<li>当前岗位有多少人，经常接触的都是谁，向谁汇报</li>
+<li>试用期多长？待遇同是否正式一样？</li>
+<li>加班情况？</li>
+<li>有没有定期开会的习惯？</li>
+<li>年终奖怎么定？过节有没有福利？</li>
+</ul>
+<h3 id="入职后"><a href="#入职后" class="headerlink" title="入职后"></a>入职后</h3><ul>
+<li>要不要打卡，上班迟到怎么办？</li>
+<li>能不能午休？</li>
+<li>有没有班车？</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/20/%E5%85%B6%E4%BB%96/%E8%81%8C%E5%9C%BA%E7%BB%8F%E9%AA%8C/" data-id="ckr28oqv10034ewlmf4bfguej" data-title="职场经验" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/原理和配置/landmark的使用 (一) 原理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/18/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/landmark%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%8E%9F%E7%90%86/" class="article-date">
+  <time class="dt-published" datetime="2020-07-18T04:58:16.000Z" itemprop="datePublished">2020-07-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/18/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/landmark%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%8E%9F%E7%90%86/">landmark的使用 (一) 原理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>landmark是路标点，apriltag、二维码等强特征，static landmark 的作用是用于快速定位的。</p>
+<p>对landmark的观测是相对于Cartographer的<code>tracking frame</code>，用户负责发布话题<code>landmark</code>，类型<code>cartographer_ros_msgs/LandmarkList</code>. cartographer订阅<code>landmark</code>之后，会发布话题<code>/landmark_poses_list</code>，类型<code>visualization_msgs/MarkerArray</code>，在rviz上显示出来，用于确认cartographer计算出landmark在map坐标系中的坐标。  Cartographer负责建立landmark的约束，与栅格地图一起优化。</p>
+<p>机器人应当一直运动以产生trajectory优化，如果机器人不动，无法触发优化，landmark无法加入图优化框架。<font color = orange size=4>存疑: landmark的观测应当是相对于 tracking frame</font></p>
+<h2 id="lua-设置"><a href="#lua-设置" class="headerlink" title="lua 设置"></a>lua 设置</h2><p>设置 <code>use_landmarks = true</code>，话题<code>landmark</code>应具备一定频率，默认要求最低10Hz。话题的消息可以是空的，但必须提供，因为Cartographer严格给传感器数据按时间排序，使landmarks <code>deterministic</code>. 但是也可以设置<code>TRAJECTORY_BUILDER.collate_landmarks = false</code>，这样landmark就是<code>non-deterministic</code>而且是非阻塞的。GPS也是同理。</p>
+<p><code>landmarks_sampling_ratio = 1</code> landmark观测的权重比，当某个观测不太靠谱的时候，可以把1改为较小的权重，例如0.5，从而减小对整体优化的错误影响。</p>
+<table><tr><td bgcolor=yellow> 每个landmark的ID和坐标应当是unique和一一对应 </td></tr></table>
+
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Node::HandleLandmarkMessage</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> <span class="keyword">int</span> trajectory_id,  <span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> cartographer_ros_msgs::LandmarkList::ConstPtr&amp;  msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="function">absl::MutexLock <span class="title">lock</span><span class="params">(&amp;mutex_)</span></span>;</span><br><span class="line">  <span class="keyword">if</span> (!sensor_samplers_.<span class="built_in">at</span>(trajectory_id).landmark_sampler.<span class="built_in">Pulse</span>())</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">  map_builder_bridge_.<span class="built_in">sensor_bridge</span>(trajectory_id)-&gt;<span class="built_in">HandleLandmarkMessage</span>(sensor_id, msg);</span><br><span class="line">  <span class="comment">// 添加下面代码</span></span><br><span class="line">  geometry_msgs::TransformStamped stamped_transform;</span><br><span class="line"></span><br><span class="line">  stamped_transform.header.stamp = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">  stamped_transform.header.frame_id = <span class="string">&quot;base_link&quot;</span>;</span><br><span class="line">  stamped_transform.child_frame_id = <span class="string">&quot;QR_Code&quot;</span>;</span><br><span class="line">  stamped_transform.transform =  <span class="built_in">ToGeometryMsgTransform</span>(<span class="built_in">ToRigid3d</span>(msg-&gt;landmarks[<span class="number">0</span>].tracking_from_landmark_transform).<span class="built_in">inverse</span>() );</span><br><span class="line"></span><br><span class="line">  tf_broadcaster_.<span class="built_in">sendTransform</span>(stamped_transform);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Node::PublishLandmarkPosesList</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> ::ros::WallTimerEvent&amp; unused_timer_event)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="comment">// landmark话题必须有订阅者，一般是rviz</span></span><br><span class="line">  <span class="keyword">if</span> (landmark_poses_list_publisher_.<span class="built_in">getNumSubscribers</span>() &gt; <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="function">absl::MutexLock <span class="title">lock</span><span class="params">(&amp;mutex_)</span></span>;</span><br><span class="line">    landmark_poses_list_publisher_.<span class="built_in">publish</span>(</span><br><span class="line">        map_builder_bridge_.<span class="built_in">GetLandmarkPosesList</span>() );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">visualization_msgs::MarkerArray <span class="title">MapBuilderBridge::GetLandmarkPosesList</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  visualization_msgs::MarkerArray landmark_poses_list;</span><br><span class="line">  <span class="keyword">const</span> std::map&lt;std::string, Rigid3d&gt; landmark_poses =</span><br><span class="line">      map_builder_-&gt;<span class="built_in">pose_graph</span>()-&gt;<span class="built_in">GetLandmarkPoses</span>();</span><br><span class="line">  <span class="built_in">LOG</span>(INFO)&lt;&lt;<span class="string">&quot; landmark pose size: &quot;</span>&lt;&lt; landmark_poses.<span class="built_in">size</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; id_to_pose : landmark_poses) &#123;</span><br><span class="line">    landmark_poses_list.markers.<span class="built_in">push_back</span>(<span class="built_in">CreateLandmarkMarker</span>(</span><br><span class="line">        <span class="built_in">GetLandmarkIndex</span>(id_to_pose.first, &amp;landmark_to_index_),</span><br><span class="line">        id_to_pose.second, node_options_.map_frame));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> landmark_poses_list;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考:<br><a target="_blank" rel="noopener" href="https://github.com/cartographer-project/cartographer_ros/issues/1067">Understanding the Landmark Observation Concept</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/50511558">Cartographer源码阅读——带Landmark的demo运行和测试</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/18/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/landmark%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%80)%20%E5%8E%9F%E7%90%86/" data-id="ckr28or2q00mhewlmapi0cxqz" data-title="landmark的使用 (一) 原理" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/USB和串口的设备号绑定" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/17/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/USB%E5%92%8C%E4%B8%B2%E5%8F%A3%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%BB%91%E5%AE%9A/" class="article-date">
+  <time class="dt-published" datetime="2020-07-17T11:28:20.000Z" itemprop="datePublished">2020-07-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/17/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/USB%E5%92%8C%E4%B8%B2%E5%8F%A3%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%BB%91%E5%AE%9A/">USB和串口的设备号绑定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/czm-/p/6113475.html">这篇博客</a></p>
+<p>realsense的安装包里面包含了udev的文件，即realsense udev的deb。所以使用过realsense的系统，自己没编辑，也会有一个<code>99-realsense-libusb.rules</code></p>
+<p><code>70-snap.core.rules</code>是系统自带的</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/17/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/USB%E5%92%8C%E4%B8%B2%E5%8F%A3%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%B7%E7%BB%91%E5%AE%9A/" data-id="ckr28oqzb00d3ewlmbym51unz" data-title="USB和串口的设备号绑定" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/ROS运行和调试利器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E8%BF%90%E8%A1%8C%E5%92%8C%E8%B0%83%E8%AF%95%E5%88%A9%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2020-07-15T13:32:08.000Z" itemprop="datePublished">2020-07-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E8%BF%90%E8%A1%8C%E5%92%8C%E8%B0%83%E8%AF%95%E5%88%A9%E5%99%A8/">ROS运行和调试利器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p><code>rosed</code>: 可以直接编辑某个package当中的文件，格式是<code>rosed package file</code>，还可以用tab补全名称，如果文件名在package里不是唯一的，那么会呈现出一个列表，让你选择编辑哪一个文件。</p>
+</li>
+<li><p>roswtf: 检查ROS各节点联系是否有错；检查环节变量等系统设置</p>
+</li>
+</ul>
+<h2 id="rostopic"><a href="#rostopic" class="headerlink" title="rostopic"></a>rostopic</h2><ul>
+<li><p>rostopic echo -b BAGFILE -a, 显示bag文件的所有消息。但是所有消息一次显示，没什么意义。</p>
+</li>
+<li><p>rostopic echo -n1， 只echo一段消息</p>
+</li>
+<li><p>rostopic echo -p –nostr –noarr /topic_name， 不显示话题中的string和array部分</p>
+</li>
+<li><p>rostopic echo /odom/pose/pose/position， 直接显示odom话题中的position部分</p>
+</li>
+</ul>
+<p>以下命令可以组合使用：</p>
+<ul>
+<li><p>rostopic list -p,     只显示发布的话题</p>
+</li>
+<li><p>rostopic list -s,     只显示订阅的话题</p>
+</li>
+<li><p>rostopic list -v,     显示话题细节，有几个发布者和订阅者</p>
+</li>
+<li><p>rostopic list –host,     根据host名分组</p>
+</li>
+</ul>
+<h2 id="rosmsg-rosnode"><a href="#rosmsg-rosnode" class="headerlink" title="rosmsg  rosnode"></a>rosmsg  rosnode</h2><ul>
+<li><p>rosmsg package [package_name], 显示所有在这个包里面的消息</p>
+</li>
+<li><p>rosmsg md5 [message],  显示某个消息的md5sum</p>
+</li>
+<li><p>rosnode cleanup，清除僵尸节点, 也就是清除那些实际关闭但能用<code>rosnode list</code>查看到的节点</p>
+</li>
+<li><p>rospack find turtlesim, 输出指定package的路径, 输出<code>/opt/ros/kinetic/share/turtlesim</code></p>
+</li>
+<li><p>rospack depends turtlesim, 查看package的依赖项</p>
+</li>
+</ul>
+<h2 id="roslaunch"><a href="#roslaunch" class="headerlink" title="roslaunch"></a>roslaunch</h2><ul>
+<li><code>--wait</code>, 延迟launch直到检测到roscore</li>
+</ul>
+<p>roslaunch启动的时候，会尝试获得已有的rosmaster的id，如果没有获得，将会创建一个自己的。假如同时也有一个roslaunch和roscore启动，可能会导致run_id冲突。比如<img src="https://i.loli.net/2020/07/15/GY58KdaCkFNWu6l.png" alt="roslaunch启动太快.png"></p>
+<p>可以使用<code>roslaunch --wait rplidar_ros a2.launch</code>，它会输出这样的信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">roscore/master is not yet running, will wait for it to start</span><br><span class="line">master has started, initiating launch</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>--screen</code>, 输出所有节点的日志，用于debugging.</p>
+</li>
+<li><p><code>--dump-params</code>, 以YAML格式输出launch文件中的所有参数</p>
+</li>
+</ul>
+<p>参考：<a target="_blank" rel="noopener" href="http://wiki.ros.org/roslaunch/Commandline%20Tools#Launch_syntax">roslaunch Commandline Tools</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/15/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E8%BF%90%E8%A1%8C%E5%92%8C%E8%B0%83%E8%AF%95%E5%88%A9%E5%99%A8/" data-id="ckr28oqyi00b8ewlmfdy45nmc" data-title="ROS运行和调试利器" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/原理和配置/(六) pose_graph.lua 参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E5%85%AD)%20pose_graph.lua%20%E5%8F%82%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-07-13T03:28:25.000Z" itemprop="datePublished">2020-07-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E5%85%AD)%20pose_graph.lua%20%E5%8F%82%E6%95%B0/">(六) 后端 pose_graph.lua 参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Local SLAM生成一系列子图时，一个global优化（通常被称为“优化问题”或者“sparse pose adjustment”）在后台运行，其主要工作是找到回环约束。它是通过scan-matching的方法用节点中收集到的scans与子地图进行匹配。它用于重新整理子地图，以便他们可以内联成一个全局地图。比如改变当前建成的轨迹以适应于回环检测的子地图对齐(align submaps with regards to loop closures)</p>
+<p>简单地讲，本地SLAM的工作是生成良好的子图，而全局SLAM的工作是将它们最一致地绑定在一起。</p>
+<ul>
+<li>optimize_every_n_nodes: 一旦一定的trajectory nodes插入，就会分批执行优化，由你决定多么频繁的运行优化和调整大小。如果设置为0，是手动关闭全局SLAM，主要精力集中于局部SLAM。<strong>这是调试cartographer的第一件事情。</strong></li>
+</ul>
+<p>全局SLAM是一种基于图优化的SLAM，本质上是位姿图优化，其是通过构建节点之间的约束，子地图之间的约束，然后优化产生的约束图。约束可以认为是一根连接所有节点的绳子。<code>sparse pose adjustment</code>加速这些绳子的结合。产生的网称为位姿图(Pose Graph)</p>
+<p>约束可以在rviz中观察，这样调整global SLAM很方便</p>
+<h2 id="constraint-builder"><a href="#constraint-builder" class="headerlink" title="constraint_builder"></a>constraint_builder</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POSE_GRAPH = &#123;</span><br><span class="line">  optimize_every_n_nodes = 90, <span class="comment"># 每几个节点执行一次优化，设为0会关闭后端优化</span></span><br><span class="line">  constraint_builder = &#123;</span><br><span class="line">    sampling_ratio = 0.3,    <span class="comment"># 如果添加的约束与潜在约束的比例低于 此比例，则将添加约束。</span></span><br><span class="line">    max_constraint_distance = 15., <span class="comment"># 在子图附近考虑姿势的阈值</span></span><br><span class="line">    min_score = 0.55,        <span class="comment"># 扫描匹配分数的阈值，低于该阈值时不考虑匹配。 低分表示扫描和地图看起来不相似</span></span><br><span class="line">    global_localization_min_score = 0.6,    <span class="comment"># 阈值，低于该阈值的全局定位不受信任</span></span><br><span class="line">    loop_closure_translation_weight = 1.1e4, <span class="comment"># 优化问题中的 闭环约束 的 平移 的权重</span></span><br><span class="line">    loop_closure_rotation_weight = 1e5,      <span class="comment"># 优化问题中的 闭环约束 的 旋转 的权重</span></span><br><span class="line">    log_matches = <span class="literal">true</span>,     <span class="comment"># 闭环约束的直方图统计报告</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>log_matches: 得到constraints builder(闭环约束)的直方图形式的报告，默认是true</p>
+</li>
+<li><p>min_score: 决定了哪些constraint哪些添加到节点间，这个会很大影响CPU。可以稍微增大到0.75   The histograms printed while Cartographer is running shows that you have a ton of loop closures constraints already, so lowering the score (which will raise the number of constraints) is probably not too useful. I’d rather ramp it up.</p>
+</li>
+<li><p>global_localization_min_score: This should have no effect without multi trajectory.</p>
+</li>
+</ul>
+<p>非全局约束（也称为子地图内部约束）是在节点之间自动建立，这些节点是轨迹上相对较近的节点。直观上，这些非全局约束保持了轨迹的内连关系。</p>
+<p>全局约束（也称为回环检测约束或者子地图之间的约束）通常是在一个新的子地图和先前的节点之间进行搜索，那些先前的节点在空间上是足够的近（部分是在某个搜索window）。直观上，这些全局约束在结构上引进了一个结（打结），固定把两股子地图靠拢。<br><br></p>
+<p>以下几项均为<code>constraint_builder</code>的子项</p>
+<h3 id="fast-correlative-scan-matcher"><a href="#fast-correlative-scan-matcher" class="headerlink" title="fast_correlative_scan_matcher"></a>fast_correlative_scan_matcher</h3><p>闭环检测的第一步</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fast_correlative_scan_matcher = </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment"># 这里的window大小明显比前端 real_time_correlative_scan_matcher 的大</span></span><br><span class="line">  linear_search_window = 7.,      <span class="comment"># 依靠“分支定界”机制在不同的网格分辨率下工作，并有效地消除不正确的匹配</span></span><br><span class="line">  angular_search_window = math.rad(30.), <span class="comment"># 一旦找到足够好的分数（高于最低匹配分数），它（scan）就会被送入Ceres扫描匹配器以优化姿势。</span></span><br><span class="line">  branch_and_bound_depth = 7,    <span class="comment"># 至少为1，应当是值越大，后端的作用越强</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>PrecomputationGridStack2D</code>类的构造函数使用 vector 保存了7个不同分辨率的栅格。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">PrecomputationGridStack2D::<span class="built_in">PrecomputationGridStack2D</span>(</span><br><span class="line">    <span class="keyword">const</span> Grid2D&amp; grid,</span><br><span class="line">    <span class="keyword">const</span> proto::FastCorrelativeScanMatcherOptions2D&amp; options)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">CHECK_GE</span>(options.<span class="built_in">branch_and_bound_depth</span>(), <span class="number">1</span>);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 根据配置文件中 branch_and_bound_depth 的值，默认为7，确定 最大的分辨率，也就是64个栅格合成一个格子。</span></span><br><span class="line">  <span class="keyword">const</span> <span class="keyword">int</span> max_width = <span class="number">1</span> &lt;&lt; (options.<span class="built_in">branch_and_bound_depth</span>() - <span class="number">1</span>); <span class="comment">// 64</span></span><br><span class="line"> </span><br><span class="line">  <span class="comment">// 7个不同分辨率的地图</span></span><br><span class="line">  precomputation_grids_.<span class="built_in">reserve</span>(options.<span class="built_in">branch_and_bound_depth</span>());</span><br><span class="line"> </span><br><span class="line">  std::vector&lt;<span class="keyword">float</span>&gt; reusable_intermediate_grid;</span><br><span class="line">  <span class="keyword">const</span> CellLimits limits = grid.<span class="built_in">limits</span>().<span class="built_in">cell_limits</span>();</span><br><span class="line">  <span class="comment">// 经过滑窗后产生的栅格地图会变宽，比原地图多了width-1个格子</span></span><br><span class="line">  reusable_intermediate_grid.<span class="built_in">reserve</span>((limits.num_x_cells + max_width - <span class="number">1</span>) *</span><br><span class="line">                                     limits.num_y_cells);</span><br><span class="line"> </span><br><span class="line">  <span class="comment">// emplace_back会生成一个临时的变量，会调用PrecomputationGrid2D的构造函数</span></span><br><span class="line">  <span class="comment">// 分辨率逐渐变大，i=0时就是默认分辨率（0.05），</span></span><br><span class="line">  <span class="comment">// i=6时，width=64,也就是64个格子合成一个值</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i != options.<span class="built_in">branch_and_bound_depth</span>(); ++i) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> width = <span class="number">1</span> &lt;&lt; i;</span><br><span class="line">    precomputation_grids_.<span class="built_in">emplace_back</span>(grid, limits, width,</span><br><span class="line">                                       &amp;reusable_intermediate_grid);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="ceres-scan-matcher"><a href="#ceres-scan-matcher" class="headerlink" title="ceres_scan_matcher"></a>ceres_scan_matcher</h3><p>闭环检测的第二步，优化位姿图</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ceres_scan_matcher = </span><br><span class="line">&#123;</span><br><span class="line">  occupied_space_weight = 20.,</span><br><span class="line">  translation_weight = 10.,</span><br><span class="line">  rotation_weight = 1.,</span><br><span class="line">  ceres_solver_options = &#123;</span><br><span class="line">    use_nonmonotonic_steps = <span class="literal">true</span>,</span><br><span class="line">    max_num_iterations = 10,</span><br><span class="line">    num_threads = 1,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="fast-correlative-scan-matcher-3d"><a href="#fast-correlative-scan-matcher-3d" class="headerlink" title="fast_correlative_scan_matcher_3d"></a>fast_correlative_scan_matcher_3d</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">fast_correlative_scan_matcher_3d = </span><br><span class="line">&#123;</span><br><span class="line">  branch_and_bound_depth = 8,</span><br><span class="line">  full_resolution_depth = 3,</span><br><span class="line">  min_rotational_score = 0.77,</span><br><span class="line">  min_low_resolution_score = 0.55,</span><br><span class="line">  linear_xy_search_window = 5.,</span><br><span class="line">  linear_z_search_window = 1.,</span><br><span class="line">  angular_search_window = math.rad(15.),</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<h3 id="ceres-scan-matcher-3d"><a href="#ceres-scan-matcher-3d" class="headerlink" title="ceres_scan_matcher_3d"></a>ceres_scan_matcher_3d</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ceres_scan_matcher_3d = </span><br><span class="line">&#123;</span><br><span class="line">  occupied_space_weight_0 = 5.,</span><br><span class="line">  occupied_space_weight_1 = 30.,</span><br><span class="line">  translation_weight = 10.,</span><br><span class="line">  rotation_weight = 1.,</span><br><span class="line">  only_optimize_yaw = <span class="literal">false</span>,</span><br><span class="line">  ceres_solver_options = &#123;</span><br><span class="line">    use_nonmonotonic_steps = <span class="literal">false</span>,</span><br><span class="line">    max_num_iterations = 10,</span><br><span class="line">    num_threads = 1,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">  matcher_translation_weight = 5e2,</span><br><span class="line">  matcher_rotation_weight = 1.6e3,</span><br><span class="line"> </span><br><span class="line">  optimization_problem = &#123; <span class="comment"># 残差方程的参数配置</span></span><br><span class="line">  <span class="comment"># Huber损失函数的尺度因子，用于filter outliers。该值越大，</span></span><br><span class="line">  <span class="comment"># (potential) outliers（潜在）异常值 的影响越大。</span></span><br><span class="line">    huber_scale = 1e1, </span><br><span class="line">    acceleration_weight = 1e3, <span class="comment"># IMU加速度的权重</span></span><br><span class="line">    rotation_weight = 3e5,     <span class="comment"># IMU旋转项的权重</span></span><br><span class="line">    <span class="comment"># 基于local SLAM的姿势在连续节点之间进行平移的权重</span></span><br><span class="line">    local_slam_pose_translation_weight = 1e5,</span><br><span class="line">    <span class="comment"># 基于里程计的姿势在连续节点之间进行平移的权重</span></span><br><span class="line">    local_slam_pose_rotation_weight = 1e5,    </span><br><span class="line">    odometry_translation_weight = 1e5,</span><br><span class="line">    odometry_rotation_weight = 1e5,</span><br><span class="line"></span><br><span class="line">    fixed_frame_pose_translation_weight = 1e1, </span><br><span class="line">    fixed_frame_pose_rotation_weight = 1e2,</span><br><span class="line">    <span class="comment"># 可以记录Ceres全局优化的结果并用于改进您的外部校准</span></span><br><span class="line">    log_solver_summary = <span class="literal">false</span>,</span><br><span class="line">    <span class="comment"># 作为IMU残差的一部分</span></span><br><span class="line">    use_online_imu_extrinsics_in_3d = <span class="literal">true</span>, </span><br><span class="line">    fix_z_in_3d = <span class="literal">false</span>,</span><br><span class="line">    ceres_solver_options = &#123;</span><br><span class="line">      use_nonmonotonic_steps = <span class="literal">false</span>,</span><br><span class="line">      max_num_iterations = 50,</span><br><span class="line">      num_threads = 7,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  max_num_final_iterations = 200, <span class="comment"># 在建图结束之后会运行一个新的全局优化，不要求实时性，迭代次数多</span></span><br><span class="line">  global_sampling_ratio = 0.003,</span><br><span class="line">  log_residual_histograms = <span class="literal">true</span>,</span><br><span class="line">  global_constraint_search_after_n_seconds = 10.,</span><br><span class="line">  --  overlapping_submaps_trimmer_2d = &#123;</span><br><span class="line">  --    fresh_submaps_count = 1,</span><br><span class="line">  --    min_covered_area = 2,</span><br><span class="line">  --    min_added_submaps_count = 5,</span><br><span class="line">  --  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="全局优化中的里程计"><a href="#全局优化中的里程计" class="headerlink" title="全局优化中的里程计"></a>全局优化中的里程计</h2><p>如果local SLAM 使用了单独的里程计(<code>use_odometry</code> = true), 我们可以相应地调整全局SLAM</p>
+<p>有四个参数允许我们在优化中调整局部SLAM和里程计的各个权重:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POSE_GRAPH.optimization_problem.local_slam_pose_translation_weight</span><br><span class="line">POSE_GRAPH.optimization_problem.local_slam_pose_rotation_weight</span><br><span class="line">POSE_GRAPH.optimization_problem.odometry_translation_weight</span><br><span class="line">POSE_GRAPH.optimization_problem.odometry_rotation_weight</span><br></pre></td></tr></table></figure>
+<p>可以根据我们对本地SLAM或odometry的信任程度来设置这些权重。默认情况下，里程计被加权到类似于本地slam（扫描匹配）姿势的全局优化中。然而，来自车轮里程计的旋转通常具有很高的不确定性，因此，旋转权重可以减小，甚至降低到0</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E5%85%AD)%20pose_graph.lua%20%E5%8F%82%E6%95%B0/" data-id="ckr28or2p00meewlmf9s14991" data-title="(六) 后端 pose_graph.lua 参数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/tf2的学习" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/" class="article-date">
+  <time class="dt-published" datetime="2020-07-11T13:29:41.000Z" itemprop="datePublished">2020-07-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/">tf2的学习</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><strong>现在的ROS提倡使用tf2</strong></p>
+<p><code>tf2</code>经过重新设计，只提供tf的关键功能，不涉及转换等函数。</p>
+<p>tf_conversions.transformations.quaternion_from_euler(roll, pitch, yaw)</p>
+<p>每个listener都有一个buffer储存所有tf广播发出的transforms，当广播发出transform时，需要花点时间(毫秒级)才会进入buffer，所以请求now的transform时，会有一小段时间差。</p>
+<p>使用<code>tf2_ros::Buffer</code>的<code>lookupTransform()</code>函数可以获得tf树的指定时间的转换。常用的指定时间是<code>ros::Time(0)</code>和<code>ros::Time::now</code>，前者是<strong>缓冲区中最新可用的转换</strong>，后者就是当前的时间。对于now，由于时间差，可能出现报警<br><img src="https://i.loli.net/2020/07/13/4Gu9rg6FiszSJpn.png"></p>
+<p>有时会出现报警： <font size=4 color = orange >Lookup would require extrapolation into the past </font></p>
+<p>对于这个报警，我们有四种解决方法：</p>
+<ol>
+<li>完善lookupTransform的参数，增加ros::Duration(sec)，sec大于报警中的时间差即可</li>
+<li>使用tf2_ros::Buffer的canTransform函数，有可用的变换了再获得</li>
+<li>使用tf message filter</li>
+<li>忽视这个报警，未成功获取的新transform会放弃</li>
+</ol>
+<p>一个比较优雅的程序是这样的:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// #include &lt;ros/ros.h&gt;</span></span><br><span class="line"><span class="comment">// #include &lt;tf2_ros/transform_listener.h&gt;</span></span><br><span class="line"><span class="comment">// #include &lt;geometry_msgs/TransformStamped.h&gt;</span></span><br><span class="line"></span><br><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;tf_node&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">tf2_ros::Buffer buff;</span><br><span class="line"><span class="function">tf2_ros::TransformListener <span class="title">listener</span><span class="params">(buff)</span></span>;</span><br><span class="line">ros::Publisher pub = nh.advertise&lt;geometry_msgs::TransformStamped&gt;(<span class="string">&quot;transform&quot;</span>,<span class="number">10</span>);</span><br><span class="line"><span class="function">ros::Rate <span class="title">rate</span><span class="params">(<span class="number">400</span>)</span></span>;</span><br><span class="line"><span class="keyword">while</span>(nh.<span class="built_in">ok</span>())</span><br><span class="line">&#123;</span><br><span class="line">    geometry_msgs::TransformStamped trans;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        ros::Time now = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">       <span class="comment">// if(buff.canTransform(&quot;base_footprint&quot;,&quot;imu&quot;,now,</span></span><br><span class="line">        <span class="comment">// ros::Duration(0.03),NULL)</span></span><br><span class="line">        <span class="comment">// 30毫秒应该足够了</span></span><br><span class="line">        trans = buff.<span class="built_in">lookupTransform</span>(<span class="string">&quot;base_footprint&quot;</span>,</span><br><span class="line">                         <span class="string">&quot;imu&quot;</span>, now, </span><br><span class="line">                         ros::<span class="built_in">Duration</span>(<span class="number">0.03</span>) );</span><br><span class="line">       <span class="comment">// else</span></span><br><span class="line">           <span class="comment">// ROS_WARN(&quot;no transform in buffer&quot;);</span></span><br><span class="line">    &#125; <span class="built_in"><span class="keyword">catch</span></span> (tf2::TransformException &amp; ex) &#123;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;%s&quot;</span>, ex.<span class="built_in">what</span>());</span><br><span class="line">        ros::<span class="built_in">Duration</span>(<span class="number">1.0</span>).<span class="built_in">sleep</span>();</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    pub.<span class="built_in">publish</span>(trans);</span><br><span class="line">    rate.<span class="built_in">sleep</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建listener后，会接受tf2 transformations，对其缓存10秒。TransformListener对象应当是persist，否则cache不能填充。常见方法是让TransformListener对象作为类的成员变量。</p>
+<p><code>lookupTransform</code>获取的是TransformStamped消息，最后发布出来。因为加了Duration，try catch可以去掉。</p>
+<p>由于实际上加了Duration，所以得到的不是当前的，而是上一个“当前”。换句话说，想得到当前最新的transform其实是没有意义的，一般都用<code>ros::Time(0)</code>，Wiki上也是这么说的</p>
+<p>怎么才知道我们修改后的程序有效了？一个是看程序运行后是否报警，还有就是echo transform话题，结果可以看到头部<br><img src="https://i.loli.net/2020/07/13/iyVx1GD7vpYdEuh.png"><br>只看seq和时间，如果增长一直很流畅，那就是修改生效了。如果修改还有问题，比如Duration时间太短，seq在增长一会后会有停顿，然后继续增长，这就是buffer里面空了，tf数据还没有插入到里面</p>
+<h2 id="已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标"><a href="#已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标" class="headerlink" title="已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标"></a>已知点在子坐标系中的坐标和父子坐标系的变换，求点在父坐标系的坐标</h2><table><tr><td bgcolor=yellow> 用tf::transformPose更方便 </td></tr></table>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">geometry_msgs::PointStamped point_in, point_out;</span><br><span class="line">point_in.header.frame_id = <span class="string">&quot;child&quot;</span>;</span><br><span class="line">point_in.header.seq = <span class="number">0</span>;</span><br><span class="line">point_in.header.stamp = ros::<span class="built_in">Time</span>(<span class="number">0</span>);</span><br><span class="line">point_in.point.x = <span class="number">2</span>;</span><br><span class="line">point_in.point.y = <span class="number">1</span>;</span><br><span class="line">point_in.point.z = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// buff跟上面的使用一样， 返回的point_out是point_in在 parent坐标系 的坐标</span></span><br><span class="line">point_out = buff.<span class="built_in">transform</span>(point_in, point_out, <span class="string">&quot;parent&quot;</span>, ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>使用这段程序前，必须在<code>find_package</code>里添加 <code>tf2-geometry-msgs</code>，否则编译不成功。如果没有，需要先安装这两个包：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 依赖库，  即使目前有，也要安装，可能需要更新</span></span><br><span class="line">sudo apt-get install ros-kinetic-orocos-kdl</span><br><span class="line">sudo apt-get install ros-kinetic-tf2-geometry-msgs</span><br></pre></td></tr></table></figure>
+
+<h2 id="手动实现-tf2-ros-Buffer-transform函数"><a href="#手动实现-tf2-ros-Buffer-transform函数" class="headerlink" title="手动实现 tf2_ros::Buffer::transform函数"></a>手动实现 tf2_ros::Buffer::transform函数</h2><p>也就是用程序实现上面的转换</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;test_tf&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">tf2_ros::Buffer buff;</span><br><span class="line"><span class="function">tf2_ros::TransformListener <span class="title">listener</span><span class="params">(buff)</span></span>;</span><br><span class="line">geometry_msgs::TransformStamped transform =</span><br><span class="line">        buff.<span class="built_in">lookupTransform</span>(<span class="string">&quot;parent&quot;</span>,<span class="string">&quot;child&quot;</span>,ros::<span class="built_in">Time</span>(<span class="number">0</span>),ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  x: %f&quot;</span>,transform.transform.translation.x);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  y: %f&quot;</span>,transform.transform.translation.y);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;transform from parent to child  z: %f\n&quot;</span>,transform.transform.translation.z);</span><br><span class="line"></span><br><span class="line">geometry_msgs::PointStamped point_in, point_out;</span><br><span class="line">point_in.header.frame_id = <span class="string">&quot;child&quot;</span>;</span><br><span class="line">point_in.header.seq = <span class="number">0</span>;</span><br><span class="line">point_in.header.stamp = ros::<span class="built_in">Time</span>(<span class="number">0</span>);</span><br><span class="line"><span class="comment">// 在 child 坐标系中的点</span></span><br><span class="line">point_in.point.x = <span class="number">2</span>;</span><br><span class="line">point_in.point.y = <span class="number">1</span>;</span><br><span class="line">point_in.point.z = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point in child: 2, 1, 4\n&quot;</span>);</span><br><span class="line">point_out = buff.<span class="built_in">transform</span>(point_in, point_out, <span class="string">&quot;parent&quot;</span>, ros::<span class="built_in">Duration</span>(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, x: %f&quot;</span>,point_out.point.x);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, y: %f&quot;</span>,point_out.point.y);</span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;point int parent, z: %f\n&quot;</span>,point_out.point.z);</span><br><span class="line"></span><br><span class="line">cout&lt;&lt;fixed&lt;&lt;<span class="built_in">setprecision</span>(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="function">Eigen::Quaterniond <span class="title">quaternion</span><span class="params">(transform.transform.rotation.w,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.x,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.y,</span></span></span><br><span class="line"><span class="params"><span class="function">                              transform.transform.rotation.z</span></span></span><br><span class="line"><span class="params"><span class="function">                              )</span></span>;</span><br><span class="line">Eigen::Matrix3d rotation = quaternion.<span class="built_in">matrix</span>();</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;rotation matrix: &quot;</span> &lt;&lt;endl&lt;&lt; rotation &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">Eigen::Matrix4d m;</span><br><span class="line">m.<span class="built_in">block</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">3</span>,<span class="number">3</span>) = rotation;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d Vcol, Vrow;</span><br><span class="line">Vcol &lt;&lt; transform.transform.translation.x,</span><br><span class="line">        transform.transform.translation.y,</span><br><span class="line">        transform.transform.translation.z, <span class="number">1</span>;</span><br><span class="line">m.<span class="built_in">col</span>(<span class="number">3</span>) = Vcol;</span><br><span class="line"></span><br><span class="line">Vrow &lt;&lt; <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>;</span><br><span class="line">m.<span class="built_in">row</span>(<span class="number">3</span>) = Vrow.<span class="built_in">transpose</span>();</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;transform matrix: &quot;</span>&lt;&lt;endl&lt;&lt; m&lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d point;</span><br><span class="line">point &lt;&lt; point_in.point.x,</span><br><span class="line">         point_in.point.y,</span><br><span class="line">         point_in.point.z, <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">Eigen::Vector4d transformed_point = m * point;</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;transformed point: &quot;</span>&lt;&lt;endl&lt;&lt;transformed_point.<span class="built_in">head</span>(<span class="number">3</span>) &lt;&lt; endl;</span><br></pre></td></tr></table></figure>
+<p>我们已知parent-child的变换，首先需要从位移和欧拉角获得<strong>齐次变换矩阵</strong>，把point_in变换为齐次坐标，然后左乘齐次矩阵，再取结果的前三个元素。  <font color = blue size=4>tf变换的本质就是左乘变换矩阵 </font></p>
+<h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> tf2::Transform::<span class="built_in">setIdentity</span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// Matrix3x3 m_basis;</span></span><br><span class="line">    m_basis.<span class="built_in">setIdentity</span>();   <span class="comment">// 单位矩阵</span></span><br><span class="line">    <span class="comment">// Vector3   m_origin;</span></span><br><span class="line">    m_origin.<span class="built_in">setValue</span>(<span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>), <span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>), <span class="built_in">tf2Scalar</span>(<span class="number">0.0</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Transform::<span class="keyword">operator</span>*(<span class="keyword">const</span> Transform&amp; t) <span class="keyword">const</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Transform</span>(m_basis * t.m_basis, </span><br><span class="line">               (*<span class="keyword">this</span>)(t.m_origin)  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>参考：<br><a target="_blank" rel="noopener" href="http://docs.ros.org/indigo/api/tf2_ros/html/c++/classtf2__ros_1_1Buffer.html">tf2_ros::Buffer Class</a><br><a target="_blank" rel="noopener" href="http://wiki.ros.org/tf2/Tutorials/Using%20stamped%20datatypes%20with%20tf2%3A%3AMessageFilter">tf2_ros::MessageFilter</a><br><a target="_blank" rel="noopener" href="http://docs.ros.org/melodic/api/tf2_ros/html/c++/classtf2__ros_1_1BufferInterface.html#a221071b82eb6a887fcea5c0223a25b1f">tf2_ros::BufferInterface</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhchp-blog/p/7203079.html">using “tf2” to transform coordinates</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.guyuehome.com/4463">古月学院：位置角度平移旋转，“乱七八糟”的坐标变换</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/11/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/tf2%E7%9A%84%E5%AD%A6%E4%B9%A0/" data-id="ckr28oqyp00btewlm08666hvm" data-title="tf2的学习" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/16/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><span class="page-number current">17</span><a class="page-number" href="/page/18/">18</a><a class="page-number" href="/page/19/">19</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/18/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/24/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-第三方库/MQTT(一) 配置服务器和Qt库" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/21/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/MQTT(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8CQt%E5%BA%93/" class="article-date">
+  <time class="dt-published" datetime="2020-03-21T02:50:07.000Z" itemprop="datePublished">2020-03-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/21/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/MQTT(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8CQt%E5%BA%93/">MQTT (一) 配置服务器和Qt库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="安装服务器"><a href="#安装服务器" class="headerlink" title="安装服务器"></a>安装服务器</h2><p>配置安装看<a target="_blank" rel="noopener" href="https://www.qingtingip.com/h_298196.html">ubuntu安装MQTT服务器 + windows安装MQTT客户端</a>，主要是三个安装命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装服务端</span></span><br><span class="line">sudo apt-get install mosquitto</span><br><span class="line"><span class="comment">#安装客户端 （订阅sub  与 发布pub）</span></span><br><span class="line">sudo apt-get install mosqutitto-client</span><br><span class="line"><span class="comment">#安装调试器</span></span><br><span class="line">sudo apt-get install mosquitto-dbg </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>订阅话题test: mosquitto_sub -t test </li>
+<li>发布消息到话题test: mosquitto_pub -t test -m “hello world” </li>
+</ul>
+<h2 id="编译Qt库QtMqtt"><a href="#编译Qt库QtMqtt" class="headerlink" title="编译Qt库QtMqtt"></a>编译Qt库QtMqtt</h2><p>Qt现在支持MQTT了， 但是很坑的是还需要自己编译，我用的是Qt5.14，从网上找了好几个版本都编译出问题，看了不知道多少博客，最后终于编译成功了。</p>
+<p>从<a target="_blank" rel="noopener" href="https://github.com/qt/qtmqtt">Github官方仓库</a>下载5.14.0，解压到<code>F:\MyCpp\qtmqtt-5.14.0</code>，打开后编译，结果会报错，这是因为头文件的问题。在<code>qtmqtt-5.14.0\src\mqtt\mqtt.pro</code>中添加一行<font color = blue size =3> INCLUDEPATH += F:\MyCpp\qtmqtt-5.14.0 </font>，然后qmake, 编译。应该就成功了。</p>
+<p>新建的测试程序<code>MQTT_Client</code>，然后将<code>qtmqtt-5.14.0\src\mqtt</code>文件夹中的所有头文件放到一个文件夹<code>QtMqtt</code>，然后放到程序的根目录。到编译生成的文件夹，将<code>lib</code>和<code>include</code>文件夹也放到<code>MQTT_Client</code>根目录，其中的文件Qt5Mqtt.dll.debug可以删除。</p>
+<p>编辑<code>MQTT_Client.pro</code>，添加下面内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INCLUDEPATH += $<span class="variable">$PWD</span></span><br><span class="line">DEPENDPATH += $<span class="variable">$PWD</span>/include</span><br><span class="line"></span><br><span class="line">win32:CONFIG(release, debug|release): LIBS += -L$<span class="variable">$PWD</span>/lib/ -lQt5Mqtt</span><br><span class="line"><span class="keyword">else</span>:win32:CONFIG(debug, debug|release): LIBS += -L$<span class="variable">$PWD</span>/lib/ -lQt5Mqtt</span><br></pre></td></tr></table></figure>
+
+<p>现在程序就可以用QtMqtt了，但是最好能让mqtt跟Qt自身库一样使用，也就是在pro文件中添加<code>QT += mqtt</code>即可，这样才叫优雅。参考<a href="">如何让第三方库和Qt自身库一样使用</a></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_29350001/article/details/76680646">搭建MQTT服务器及测试</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yexiaopeng/p/8542894.html">Qt官方MQTT库的配置</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/21/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/MQTT(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8CQt%E5%BA%93/" data-id="ckr28oqvv004rewlm6dco5vwk" data-title="MQTT (一) 配置服务器和Qt库" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/雷达/雷达的设备参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-03-18T08:23:26.000Z" itemprop="datePublished">2020-03-18</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/">雷达的设备参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>大多数雷达都是TOF测量法，只有深度信息，没有相机那样的纹理信息。但是没有视觉SLAM的运算负荷</p>
+<p>目前常见的激光雷达都是旋转扫描式的，内部长期处于旋转中的机械结构会给系统带来不稳定性，在颠簸震动时影响尤其明显。固态激光雷达的逐步成熟可能会为激光SLAM扳回这项劣势。</p>
+<p>激光雷达的使用寿命问题已经被解决，能够保证长时间使用不会出现故障。比如在连续工作情况下，RPLIDAR-A2的设计使用寿命可长达5年以上。</p>
+<h2 id="工作状态"><a href="#工作状态" class="headerlink" title="工作状态"></a>工作状态</h2><ul>
+<li>空闲状态： 雷达上电时默认为空闲状态， 此时激光雷达处于待命状态， 电机不转， 激光发射器不工作，<br>不进行扫描</li>
+<li>扫描状态： 雷达获取运行命令， 电机旋转， 激光发射器开始工作，不断扫描采样，记录测量数据。</li>
+<li>停机状态： 当雷达运行有错误时，雷达会停止工作，此时电机不转， 激光发射器不工作， 并会通过通讯线反馈错误代码。</li>
+</ul>
+<h2 id="误差源"><a href="#误差源" class="headerlink" title="误差源"></a>误差源</h2><ul>
+<li><p>发送和接收激光束的精确耗时误差，也就是计时设备的精度问题</p>
+</li>
+<li><p>目标材质的反射值特性，比如全黑的材料吸收了光的大部分能量，使得反射量极低；或者像镜子一样的材料会将大部分光反射到其它地方</p>
+</li>
+<li><p>运动畸变：由于激光雷达在跟随自动驾驶车辆前进的同时，对周围环境进行扫描建模，也就是说车辆相对于周围的环境是运动的，导致对环境测量的实际位置与真实位置存在偏差。但是扫描频率高，速度低时，可以不必考虑。</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2021/05/07/ICpiBQHvzquXkJj.png"></p>
+<h2 id="测距范围"><a href="#测距范围" class="headerlink" title="测距范围"></a>测距范围</h2><p>指雷达能够测量的距离范围。如果实际障碍距离超出最大值，那么雷达数据会标记为无效点（不是距离为0）。</p>
+<p>实际情况下，雷达测距的最大值有可能因为工作环境而产生变化。雷达要想测距，需要接收到反射的激光。所以官方在测距范围这一项上添加了备注：“基于白色70%反射率物体”。</p>
+<p>如果是吸收激光比较厉害的物体，例如黑色的表面又几乎不反光的物体，会导致反射光强度很弱，那么距离稍微远点，可能就测距失败了，这时候，该物体即使在标出的12米范围内同样无法测出。针对类似这样的物体，相当于实际测距的最大值变小了。透明的玻璃也是同样原因。</p>
+<p>不过因为不同的物体和环境差异太大了，所以厂商也不太可能将全部情况测试一遍，更多的时候需要靠自己来实验，看是否能够适用实际的工作环境。</p>
+<h2 id="扫描角度"><a href="#扫描角度" class="headerlink" title="扫描角度"></a>扫描角度</h2><p>思岚雷达是360°扫描的。有些雷达例如SICK的一些雷达，扫描角度只有220°。 实际使用，通常也不需要完全的360°，特别是雷达放在结构的中间层，因为有结构固定装置的存在，必然会有遮挡。</p>
+<h2 id="测距分辨率"><a href="#测距分辨率" class="headerlink" title="测距分辨率"></a>测距分辨率</h2><p>分辨率和精度是两个不同的概念，按照上述参数的意思，更准确来说应该指的是测距精度。</p>
+<p>RPLIDAR的精度并不是恒定的一个百分比，简单的解释是，距离越远，反射光受到的干扰越大，自然精度下降了。实际上，不同批次的雷达精度之间也有一定的差异。正因为这些不确定性，官方文档给的是较保守的值。</p>
+<p>1.5m范围内小于0.5mm的精度还是可以的，1.5米处约为万分之三点三。<br>当在最大距离12米的时候，如果精度下降到最差的1%，则误差为0.12m，也能接受。</p>
+<h2 id="扫描频率"><a href="#扫描频率" class="headerlink" title="扫描频率"></a>扫描频率</h2><p><img src="https://i.loli.net/2020/03/18/6tNElCuaoWwJhcG.png" alt="扫描频率.png"><br>衡量雷达一秒钟能转多少圈，直接改叫雷达转速也是可以的。</p>
+<p>转速实际上跟雷达数据更新周期是挂钩的，比如说典型的10Hz，那就是说转一圈的时间大概是100ms，那么雷达数据差不多也是100ms一帧。 要跟<code>scan</code>话题的发布频率区分开，后者跟计算机性能有关。</p>
+<p><code>LMS1xx</code>系列的扫描频率是25～50Hz，角度分辨率为<code>0.25°～0.50°</code><br><code>LMS5xx</code>系列的扫描频率是25～100Hz，角度分辨率为<code>0.1667°～1°</code></p>
+<p>雷达自身的旋转是有方向的，大部分雷达都是逆时针旋转，与ROS中规定的一样，也有少部分雷达是顺时针旋转的，只不过使用起来有点不方便。</p>
+<h2 id="角度分辨率"><a href="#角度分辨率" class="headerlink" title="角度分辨率"></a>角度分辨率</h2><p>正常来说，雷达转一圈，这一圈得到的测量点是均匀分布的，每个点之间间隔的角度就是所谓的角度分辨率了。</p>
+<p>角度分辨率越小说明雷达转一圈得到的点数越多。例如，角度分辨率是0.45，则一圈是800个点，角度分辨率是0.9，则一圈是400个点。</p>
+<p>不过，实际的角度分辨率其实不一定是固定的，即两个点之间的间距不一定是相同的，不过都在给出的分辨率范围内。在ROS中，雷达数据的标准格式认为角度分辨率是固定的，为了符合ROS标准，雷达的ROS驱动实际上做了角度补偿，将输出点修正为均匀分布的。</p>
+<h2 id="数据的强度"><a href="#数据的强度" class="headerlink" title="数据的强度"></a>数据的强度</h2><p>激光雷达的激光点是有能量的，不同品牌激光点的能量也不同。当能量太小时，远距离情况下可能存在返回不了数据的情况。</p>
+<p>可以等阳光或者使用光束照射到墙面上，激光雷达再去看被光照射到的墙面，对比这时的点云效果。可以用照度仪测量此时的光强度。倍加福雷达的点云效果在高强度情况下非常好，不愧是用于反光板的雷达。<br><img src="https://i.loli.net/2021/05/07/kvqoJwYV3ItgWmd.png"></p>
+<h2 id="数据的精度"><a href="#数据的精度" class="headerlink" title="数据的精度"></a>数据的精度</h2><p>这是最重要的一个指标，表示激光雷达的数据跳动情况。现在一般厂商的雷达的精度都是2%。也就是100m的情况下，点的跳动幅度为2cm。但是，实际感觉能达到这个精度的雷达不是很多。</p>
+<h2 id="multi-echo"><a href="#multi-echo" class="headerlink" title="multi-echo"></a>multi-echo</h2><p>multi-echo可以分析每个测量光束的两个回波信号，这样在雨雪天可以提供可靠的测量结果。一般激光打到玻璃上会有部分穿透，导致测量不准，multi-echo使激光从玻璃上返回来，还能从玻璃后面的墙上返回来。</p>
+<p>有的雷达具备这种特性，比如<code>SICK-LMS111</code></p>
+<br>
+
+<p><img src="https://i.loli.net/2020/07/17/hifrG8DxmdnAXTJ.png" alt="A2雷达.png"></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/tiancailx/article/details/110141867">从零开始搭二维激光SLAM — 激光雷达数据效果对比</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/" data-id="ckr28or1900hiewlm26ssgzwn" data-title="雷达的设备参数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  模板与STL/STL总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/16/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/STL%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2020-03-16T13:43:20.000Z" itemprop="datePublished">2020-03-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/16/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/STL%E6%80%BB%E7%BB%93/">STL总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="查找速度"><a href="#查找速度" class="headerlink" title="查找速度"></a>查找速度</h3><p>对序列式容器，如果元素已经排好序，那么查找速度可以达到logN的时间复杂度；如果是无序，只能是N</p>
+<p>对关联容器，底层是红黑树，总能达到logN</p>
+<h3 id="有在任意位置插入元素的需求；-大量添加新元素的需求"><a href="#有在任意位置插入元素的需求；-大量添加新元素的需求" class="headerlink" title="有在任意位置插入元素的需求； 大量添加新元素的需求"></a>有在任意位置插入元素的需求； 大量添加新元素的需求</h3><p>最好用list，不要使用vector, deque</p>
+<h3 id="元素的排序"><a href="#元素的排序" class="headerlink" title="元素的排序"></a>元素的排序</h3><p>遍历元素的时候，序列容器输出的顺序和插入的顺序是一致的，关联容器就不一定了</p>
+<p>sort()函数是快速排序的分段递归</p>
+<p>关联容器的插入删除效率一般比用其他序列容器高(list除外)，因为不需要做内存拷贝和内存移动</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/16/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/STL%E6%80%BB%E7%BB%93/" data-id="ckr28oqxa008cewlmaivy9thc" data-title="STL总结" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/C++对象模型之RTTI" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/16/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E4%B9%8BRTTI/" class="article-date">
+  <time class="dt-published" datetime="2020-03-16T12:35:54.000Z" itemprop="datePublished">2020-03-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/16/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E4%B9%8BRTTI/">C++对象模型之RTTI</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><code>typeid</code>的主要作用是获得object变量的类型；它将返回一个<code>type_info</code>对象的引用，type_info用于描述对象。如果object是对一个NULL指针的解引用，那么将抛出std::bad_typeid异常。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/16/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/C++%E5%AF%B9%E8%B1%A1%E6%A8%A1%E5%9E%8B%E4%B9%8BRTTI/" data-id="ckr28oqxh008xewlmd8xad9bw" data-title="C++对象模型之RTTI" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/多线程/detach和join" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/15/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/detach%E5%92%8Cjoin/" class="article-date">
+  <time class="dt-published" datetime="2020-03-15T13:07:38.000Z" itemprop="datePublished">2020-03-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/15/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/detach%E5%92%8Cjoin/">detach和join</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>声明一个std::thread对象之后，都可以使用detach和join函数来启动被调线程，区别在于两者是否阻塞主调线程。</p>
+<ul>
+<li><p>当使用join()函数时，主调线程阻塞，等待被调线程终止，然后主调线程回收被调线程资源，并继续运行</p>
+</li>
+<li><p>当使用detach()函数时，主调线程继续运行，被调线程驻留后台运行，主调线程无法再取得该被调线程的控制权。当主调线程结束时，由运行时库负责清理与被调线程相关的资源</p>
+</li>
+</ul>
+<p>如果两个都没使用，一般会报错<font color = orange>  <font size= 3> terminate called without an active exception </font> </font>，这是因为工作线程还没结束，主线程就退出了，销毁了一些资源，导致工作线程的异常。但是boost的线程库没有这个问题，看来还是C++11更保险。</p>
+<h2 id="保证线程结束前，工作线程可访问数据的有效性"><a href="#保证线程结束前，工作线程可访问数据的有效性" class="headerlink" title="保证线程结束前，工作线程可访问数据的有效性"></a>保证线程结束前，工作线程可访问数据的有效性</h2><p>比如下面的程序，工作线程访问主线程的局部变量、指针或引用:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">hello</span><span class="params">(<span class="keyword">int</span> count)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(count--)</span><br><span class="line">        cout &lt;&lt;<span class="string">&quot;Hello: &quot;</span>&lt;&lt; count &lt;&lt;endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">5000</span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">th</span><span class="params">(hello, a)</span></span>;</span><br><span class="line">    th.<span class="built_in">detach</span>();</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;main after&quot;</span> &lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>工作线程会访问主线程中的a,<font color = blue size =3> 而两线程独立运行 </font>,工作线程耗时长,等它再访问a时,主线程已经结束了,所以不会完整运行工作线程.结果可能是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">main afterHello: </span><br><span class="line">4999</span><br><span class="line">Hello: 4998</span><br><span class="line">Hello: 4997</span><br><span class="line">Hello: 4996</span><br><span class="line">Hello: 4996</span><br><span class="line">Hello: 4995</span><br><span class="line">Hello: 4994</span><br><span class="line">Hello: 4993</span><br><span class="line">Hello: 4992</span><br><span class="line">Hello: 4991</span><br><span class="line">Hello: 4991</span><br><span class="line">Hello: 4990</span><br></pre></td></tr></table></figure>
+
+<p>甚至就一句 <code>main after</code>.如果在<code>detach</code>后面加一句<code>sleep_for</code>,让主线程等工作线程几秒钟,那么肯定正常了,几秒钟对工作线程是很长的时间了.</p>
+<h2 id="线程对象和join-detach之间最好不加语句"><a href="#线程对象和join-detach之间最好不加语句" class="headerlink" title="线程对象和join/detach之间最好不加语句"></a>线程对象和join/detach之间最好不加语句</h2><p>再看这个程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::thread <span class="title">th</span><span class="params">(hello, <span class="number">5</span>)</span></span>;</span><br><span class="line">cout &lt;&lt;<span class="string">&quot;main before&quot;</span>&lt;&lt; endl;</span><br><span class="line">th.<span class="built_in">join</span>();</span><br><span class="line">cout &lt;&lt;<span class="string">&quot;main after&quot;</span> &lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>我们希望是这样:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main before</span><br><span class="line">Hello: 4</span><br><span class="line">Hello: 3</span><br><span class="line">Hello: 2</span><br><span class="line">Hello: 1</span><br><span class="line">Hello: 0</span><br><span class="line">main after</span><br></pre></td></tr></table></figure>
+
+<p>结果可能会这样:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main beforeHello: 4</span><br><span class="line"></span><br><span class="line">Hello: 3</span><br><span class="line">Hello: 2</span><br><span class="line">Hello: 1</span><br><span class="line">Hello: 0</span><br><span class="line">main after</span><br></pre></td></tr></table></figure>
+
+<p>也可能这样:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Hello: main before</span><br><span class="line">4</span><br><span class="line">Hello: 3</span><br><span class="line">Hello: 2</span><br><span class="line">Hello: 1</span><br><span class="line">Hello: 0</span><br><span class="line">main after</span><br></pre></td></tr></table></figure>
+<p>不要像这样在线程对象和join之间加语句,难以确定所加语句和工作线程的顺序</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/15/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/detach%E5%92%8Cjoin/" data-id="ckr28oqy900ajewlmblwlddh8" data-title="detach和join" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  模板与STL/set" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/15/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/set/" class="article-date">
+  <time class="dt-published" datetime="2020-03-15T02:30:03.000Z" itemprop="datePublished">2020-03-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/15/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/set/">set和map</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><p>set的元素有序不重复，而且能根据元素的值自动进行排序。set中的键值不能直接修改，只能先删除再插入。底层采用红黑树。</p>
+<p>set不支持随机访问，只能使用迭代器去访问。由于set放入一个元素就会调整这个元素的位置，把它放到合适的位置，所以set中只有一个insert插入操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">set&lt;<span class="keyword">int</span>&gt; s;</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">5</span>);</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">2</span>);</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">3</span>);</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">1</span>);</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">2</span>);</span><br><span class="line">s.<span class="built_in">insert</span>(<span class="number">4</span>);</span><br><span class="line">cout&lt;&lt;<span class="string">&quot;set 的 size：&quot;</span>&lt;&lt;  s.<span class="built_in">size</span>() &lt;&lt;endl;  <span class="comment">// 5</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;set 中的第一个元素是 ：&quot;</span>&lt;&lt;  *s.<span class="built_in">begin</span>()&lt;&lt;endl;  <span class="comment">// 1</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;set 中的最后一个元素是:&quot;</span>&lt;&lt;  *s.<span class="built_in">end</span>()&lt;&lt;endl;   <span class="comment">// 5</span></span><br><span class="line">set&lt;<span class="keyword">int</span>&gt;::iterator it;</span><br><span class="line"><span class="keyword">for</span>(it=s.<span class="built_in">begin</span>(); it!=s.<span class="built_in">end</span>(); it++)</span><br><span class="line">&#123;</span><br><span class="line">    cout&lt;&lt; *it &lt;&lt;endl;</span><br><span class="line">&#125;    <span class="comment">// 1  2  3  4  5</span></span><br><span class="line"><span class="comment">//    s.clear();</span></span><br><span class="line">s.<span class="built_in">erase</span>(++s.<span class="built_in">begin</span>());</span><br><span class="line">cout &lt;&lt; <span class="string">&quot;       after erase begin&quot;</span>&lt;&lt;endl;</span><br><span class="line"><span class="keyword">for</span>(it=s.<span class="built_in">begin</span>(); it!=s.<span class="built_in">end</span>(); it++)</span><br><span class="line">&#123;</span><br><span class="line">    cout&lt;&lt; *it &lt;&lt;endl;</span><br><span class="line">&#125;	 <span class="comment">// 1  3  4  5</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;lower bound: &quot;</span>&lt;&lt;*s.<span class="built_in">lower_bound</span>(<span class="number">5</span>)&lt;&lt;endl;  <span class="comment">// 5</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;upper bound: &quot;</span>&lt;&lt;*s.<span class="built_in">upper_bound</span>(<span class="number">5</span>)&lt;&lt;endl;  <span class="comment">// 4</span></span><br><span class="line"><span class="keyword">if</span>(s.<span class="built_in">empty</span>())</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;set is empty !&quot;</span> &lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>multiset底层也是红黑树，但允许有重复数据</p>
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>map适合存储一个数据字典，并要求方便地根据key找value。</p>
+<p>Map节点有一个Key和Value两个元素,Key不重复,Value可以重复。map可以通过key改变value的值</p>
+<p>底层也是红黑树，插入删除查找的时间复杂度为O(logN)</p>
+<p>map支持<code>at</code>函数和<code>[]</code>下标访问，这是set没有的</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/15/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/set/" data-id="ckr28oqxc008hewlm4pblb9s8" data-title="set和map" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/多线程/线程间传参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/14/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E9%97%B4%E4%BC%A0%E5%8F%82%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-03-14T14:41:33.000Z" itemprop="datePublished">2020-03-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/14/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E9%97%B4%E4%BC%A0%E5%8F%82%E6%95%B0/">线程间传参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="子线程里给参数a赋值，然后回传给主线程"><a href="#子线程里给参数a赋值，然后回传给主线程" class="headerlink" title="子线程里给参数a赋值，然后回传给主线程"></a>子线程里给参数a赋值，然后回传给主线程</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Foo</span>(<span class="keyword">int</span> data):</span><br><span class="line">        <span class="built_in">m</span>(data)  &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getData</span><span class="params">()</span></span>&#123; <span class="keyword">return</span> m;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setData</span><span class="params">(<span class="keyword">int</span> data)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        m = data;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> m;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">resetPtr</span><span class="params">(std::shared_ptr&lt;Foo&gt; ptr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ptr-&gt;<span class="built_in">setData</span>(<span class="number">9</span>);</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;use count: &quot;</span>&lt;&lt;ptr.<span class="built_in">use_count</span>() &lt;&lt;endl;</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;ptr: &quot;</span>&lt;&lt; ptr &lt;&lt;endl;</span><br><span class="line">    ptr.<span class="built_in">reset</span>();</span><br><span class="line"></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;after reset&quot;</span>&lt;&lt;endl;</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;ptr: &quot;</span>&lt;&lt; ptr &lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">std::shared_ptr&lt;Foo&gt; <span class="title">a</span><span class="params">(<span class="keyword">new</span> Foo(<span class="number">1</span>))</span></span>;</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;a address: &quot;</span>&lt;&lt; a &lt;&lt;endl;</span><br><span class="line">    <span class="function">std::thread <span class="title">th1</span><span class="params">(resetPtr, a)</span> </span>;</span><br><span class="line">    th1.<span class="built_in">join</span>();</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;main thread: &quot;</span>&lt;&lt; a.<span class="built_in">use_count</span>() &lt;&lt;endl;</span><br><span class="line">    cout &lt;&lt;<span class="string">&quot;address: &quot;</span>&lt;&lt;a&lt;&lt;<span class="string">&quot;    data: &quot;</span>&lt;&lt; a-&gt;<span class="built_in">getData</span>() &lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a address: 0xf6cce0</span><br><span class="line">use count:  2</span><br><span class="line">ptr:   0xf6cce0</span><br><span class="line">after reset</span><br><span class="line">ptr:  0</span><br><span class="line">main thread:   1</span><br><span class="line">address:  0xf6cce0		data:  9</span><br></pre></td></tr></table></figure>
+<p>程序里智能指针a指向一个对象(数据1的地址)，<font color = blue size =3> 我们传到函数里是传了个副本，也就是有第二个智能指针ptr指向了对象(同一个内存地址) </font>，所以这时的use_count是2。</p>
+<p>接下来ptr把对象修改为9，随后ptr就释放了，没有ptr的事了。</p>
+<p>回到主线程，use_count变成1了，a指向地址没变，但是指向的对象变成了9</p>
+<p>注意这里是两个指针，ptr的销毁跟a没有关系，a没有销毁。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/14/C++/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E7%BA%BF%E7%A8%8B%E9%97%B4%E4%BC%A0%E5%8F%82%E6%95%B0/" data-id="ckr28oqya00akewlmhrtu4kq3" data-title="线程间传参数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/Cartographer/原理和配置/(二) 综述, 话题和服务" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%8C)%20%E7%BB%BC%E8%BF%B0,%20%E8%AF%9D%E9%A2%98%E5%92%8C%E6%9C%8D%E5%8A%A1/" class="article-date">
+  <time class="dt-published" datetime="2020-03-13T00:50:19.000Z" itemprop="datePublished">2020-03-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%8C)%20%E7%BB%BC%E8%BF%B0,%20%E8%AF%9D%E9%A2%98%E5%92%8C%E6%9C%8D%E5%8A%A1/">(二) 综述, 话题和服务</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Cartographer是基于图优化的SLAM，采用误差累计少，计算成本低的<code>Scan to Map</code>匹配方式，而不是造成误差快速累积和计算成本高的scan to scan匹配。整个算法分为局部SLAM和全局SLAM，两部分都对雷达观测的位姿进行了优化。</p>
+<p>虽然cartographer适用于2D和3D两种情况，但3D情况下，cartographer用的不如LOAM多<br><a target="_blank" rel="noopener" href="https://i.loli.net/2020/09/11/74zb8JEmlksc3ud.png">Cartographer源码架构图</a></p>
+<h2 id="订阅的话题"><a href="#订阅的话题" class="headerlink" title="订阅的话题"></a>订阅的话题</h2><p>节点<code>cartographer_node</code>订阅的话题是：<code>scan</code>, <code>tf</code>, <code>tf_static</code>。 <code>cartographer_node</code>的launch需要增加remap，因为它接受的话题名称和我们现有的话题可能不一致：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;scan&quot;</span>  <span class="attr">to</span>=<span class="string">&quot;/scan&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;odom&quot;</span>  <span class="attr">to</span>=<span class="string">&quot;/xqserial_server/Odom&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;imu&quot;</span>   <span class="attr">to</span>=<span class="string">&quot;/xqserial_server/IMU&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>所有相关的话题名称都定义在<code>node_constants.h</code></p>
+<h2 id="cartographer-node-发布的话题"><a href="#cartographer-node-发布的话题" class="headerlink" title="cartographer_node 发布的话题"></a>cartographer_node 发布的话题</h2><ul>
+<li><p>scan_matched_points2, 类型<code>sensor_msgs/PointCloud2</code>, <code>scan-to-submap</code>匹配的2D点云数据，这个云可以根据配置进行滤波和投影</p>
+</li>
+<li><p>submap_list, 类型<code>cartographer_ros_msgs/SubmapList</code>，所有轨迹的所有submaps的列表，成员：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">std_msgs/Header header</span><br><span class="line">cartographer_ros_msgs/SubmapEntry[] submap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其中submap的类型如下</span></span><br><span class="line">int32 trajectory_id</span><br><span class="line">int32 submap_index</span><br><span class="line">int32 submap_version</span><br><span class="line">geometry_msgs/Pose pose</span><br></pre></td></tr></table></figure>
+<p>话题包括一个子图的ID list(包括轨迹ID和子图index)，以及子图的全局位姿。To get the probability grids you could call into our ROS Submap service with the ID of the submap you want to retrieve the grid for.</p>
+</li>
+</ul>
+<p>发布话题的源码流程是 <code>Node::PublishSubmapList</code> —— <code>MapBuilderBridge::GetSubmapList()</code> —— <code>PoseGraph2D::GetAllSubmapPoses()</code>  —— <code>PoseGraph2D::GetSubmapDataUnderLock</code> —— <code>PoseGraph2D::ComputeLocalToGlobalTransform</code></p>
+<ul>
+<li><code>trajectory_node_list</code>，类型为<code>visualization_msgs/MarkerArray</code>，即轨迹路径node列表，代码是</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Node::PublishTrajectoryNodeList</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> ::ros::WallTimerEvent&amp; unused_timer_event)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (trajectory_node_list_publisher_.<span class="built_in">getNumSubscribers</span>() &gt; <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    carto::<span class="function">common::MutexLocker <span class="title">lock</span><span class="params">(&amp;mutex_)</span></span>;</span><br><span class="line">    trajectory_node_list_publisher_.<span class="built_in">publish</span>(</span><br><span class="line">        map_builder_bridge_.<span class="built_in">GetTrajectoryNodeList</span>()  );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>constraint_list: 类型为<code>visualization_msgs/MarkerArray</code>，约束列表</p>
+</li>
+<li><p>landmark_poses_list: 类型为<code>visualization_msgs/MarkerArray</code>，路标点位姿列表</p>
+</li>
+</ul>
+<p>节点<code>cartographer_occupancy_grid_node</code>发布话题 <code>map</code>(栅格地图)， 订阅<code>submap_list [cartographer_ros_msgs/SubmapList]</code>。 <code>cartographer_occupancy_grid_node</code> 节点将子图转换为ROS的地图格式</p>
+<h2 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h2><ul>
+<li>submap_query (cartographer_ros_msgs/SubmapQuery) 查询submap的服务，获取到request的submap<br><img src="https://i.loli.net/2020/08/03/j4FWEl8GIfer2dJ.png" alt="call submap_query"><br><img src="https://i.loli.net/2020/08/03/EkAOlJWTapY6x7D.png"></li>
+</ul>
+<h3 id="start-trajectory"><a href="#start-trajectory" class="headerlink" title="start_trajectory"></a>start_trajectory</h3><p>类型<code>cartographer_ros_msgs/StartTrajectory</code>，通过将其传感器主题和轨迹选项指定为二进制编码的原型来启动另一个轨迹。返回指定的轨迹ID。</p>
+<p><code>StartTrajectory.srv</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">string   configuration_directory</span><br><span class="line">string   configuration_basename</span><br><span class="line">bool   use_initial_pose</span><br><span class="line">geometry_msgs/Pose   initial_pose</span><br><span class="line">int32   relative_to_trajectory_id</span><br><span class="line">---</span><br><span class="line">cartographer_ros_msgs/StatusResponse   status</span><br><span class="line">int32   trajectory_id</span><br></pre></td></tr></table></figure>
+
+<p>命令稍微长了点:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">rosservice call /start_trajectory <span class="string">&quot;configuration_directory: &#x27;/home/user/carto_ws/src/cartographer_ros/cartographer_ros/configuration_files&#x27;</span></span><br><span class="line"><span class="string">configuration_basename: &#x27;localization.lua&#x27;</span></span><br><span class="line"><span class="string">use_initial_pose: true</span></span><br><span class="line"><span class="string">initial_pose:</span></span><br><span class="line"><span class="string">  position: &#123;x: 5.211, y: 5.617, z: 0.0&#125;</span></span><br><span class="line"><span class="string">  orientation: &#123;x: 0.0, y: 0.0, z: 0.689, w: 0.725&#125;</span></span><br><span class="line"><span class="string">relative_to_trajectory_id: 0&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>出错的地方可能会在<code>relative_to_trajectory_id</code>：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">status:</span><br><span class="line">  code: 5</span><br><span class="line">  message: <span class="string">&quot;Trajectory 6 doesn&#x27;t exist.&quot;</span></span><br><span class="line"></span><br><span class="line">status:</span><br><span class="line">  code: 3</span><br><span class="line">  message: <span class="string">&quot;Trajectory 5 is in &#x27;DELETED&#x27; state.&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>加载 frozen state 意味着不插入no pose graph constraints. 一条frozen trajectory和它的子图不受 optimization影响</p>
+<h3 id="finish-trajectory"><a href="#finish-trajectory" class="headerlink" title="finish_trajectory"></a>finish_trajectory</h3><p>类型<code>cartographer_ros_msgs/FinishTrajectory</code>: Finish 一个给定ID的轨迹，方式是运行最终的图优化。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int32 trajectory_id</span><br><span class="line">---</span><br><span class="line">cartographer_ros_msgs/StatusResponse status</span><br></pre></td></tr></table></figure>
+<p>命令<code>rosservice call finish_trajectory &quot;trajectory_id: 5&quot;</code>，得到这样的结果:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">status:</span><br><span class="line">  code: 3</span><br><span class="line">  message: <span class="string">&quot;Topics are already used by another trajectory.&quot;</span></span><br><span class="line">trajectory_id: 0</span><br></pre></td></tr></table></figure>
+
+<h3 id="trajectory-query"><a href="#trajectory-query" class="headerlink" title="trajectory_query"></a>trajectory_query</h3><ul>
+<li>get_trajectory_states (cartographer_ros_msgs/GetTrajectoryStates):  返回所有轨迹的ID和状态， 可以用于从单独的节点观察Cartographer的状态。<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">---</span><br><span class="line">cartographer_ros_msgs/StatusResponse   status</span><br><span class="line">cartographer_ros_msgs/TrajectoryStates  trajectory_states</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>命令<code>rosservice call /get_trajectory_states &quot;&#123;&#125;&quot;</code>，比如得到这样的结果：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">status:</span><br><span class="line">  code: 0</span><br><span class="line">  message: <span class="string">&#x27;&#x27;</span></span><br><span class="line">trajectory_states:</span><br><span class="line">  header:</span><br><span class="line">    seq: 0</span><br><span class="line">    stamp:</span><br><span class="line">      secs: 1612232712</span><br><span class="line">      nsecs:  41338148</span><br><span class="line">    frame_id: <span class="string">&#x27;&#x27;</span></span><br><span class="line">  trajectory_id: [0, 1, 2, 3, 4, 5]</span><br><span class="line">  trajectory_state: [2, 2, 2, 2, 2, 0]</span><br></pre></td></tr></table></figure>
+
+<p><code>trajectory_state</code>的枚举值也就是<font color = blue size=4> 轨迹的四种状态对应:  ACTIVE, FINISHED, FROZEN, DELETED</font></p>
+<ul>
+<li>write_state (cartographer_ros_msgs/WriteState): 将当前内部状态写入磁盘到文件名。用于保存pbstream文件，此文件可用作<code>assets_writer_main</code>的输入，以生成概率网格，X-Rays或PLY文件等资源</li>
+</ul>
+<h3 id="read-metrics"><a href="#read-metrics" class="headerlink" title="read_metrics"></a>read_metrics</h3><p>类型<code>(cartographer_ros_msgs/ReadMetrics)</code>， 返回Cartographer的所有内部指标的最新值。运行时度量标准的集合(collection of runtime metrics)是可选的，必须使用节点中的<code>-collect_metrics</code>命令行标志激活:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">name</span>=<span class="string">&quot;cartographer_node&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;cartographer_ros&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">type</span>=<span class="string">&quot;cartographer_node&quot;</span> <span class="attr">args</span>=<span class="string">&quot;</span></span></span><br><span class="line"><span class="string"><span class="tag">          -configuration_directory $(find cartographer_ros)/configuration_files</span></span></span><br><span class="line"><span class="string"><span class="tag">          -configuration_basename map.lua</span></span></span><br><span class="line"><span class="string"><span class="tag">          -collect_metrics true&quot;</span></span></span><br><span class="line"><span class="tag">      <span class="attr">output</span>=<span class="string">&quot;screen&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;scan&quot;</span> <span class="attr">to</span>=<span class="string">&quot;/scan_rectified&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;odom&quot;</span> <span class="attr">to</span>=<span class="string">&quot;/odom&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有加<code>-collect_metrics</code>标志，<code>rosservice call /read_metrics &quot;&#123;&#125;&quot;</code>的结果:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">status:</span><br><span class="line">  code: 14</span><br><span class="line">  message: <span class="string">&quot;Collection of runtime metrics is not activated.&quot;</span></span><br><span class="line">metric_families: []</span><br><span class="line">timestamp:</span><br><span class="line">  secs: 1612333336</span><br><span class="line">  nsecs: 359502516</span><br></pre></td></tr></table></figure>
+
+<p>加上之后，call read_metrics的结果特别长，省略了。</p>
+<h2 id="需要的tf变换"><a href="#需要的tf变换" class="headerlink" title="需要的tf变换"></a>需要的tf变换</h2><p>必须提供从所有传入传感器数据帧到配置的<code>tracking_frame</code>和<code>published_frame</code>的转换。通常，这些是由robot_state_publisher或static_transform_publisher定期发布的。</p>
+<h2 id="发布的tf变换"><a href="#发布的tf变换" class="headerlink" title="发布的tf变换"></a>发布的tf变换</h2><p>提供<code>map_frame</code>和 <code>published_frame</code>之间的转换。如果在Lua中启用了<code>provide_odom_frame</code>，则将提供配置的<code>odom_frame</code>和<code>published_frame</code>之间的连续（不受循环闭包影响）转换。</p>
+<h2 id="其他节点"><a href="#其他节点" class="headerlink" title="其他节点"></a>其他节点</h2><p><img src="https://i.loli.net/2020/07/20/yG6YpBRhMjvrVWS.png" alt="cartographer_ros的所有节点.png"></p>
+<ul>
+<li>cartographer_rosbag_validate</li>
+</ul>
+<p>可以检测bag中的错误，使用：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun cartographer_ros cartographer_rosbag_validate -bag_filename &lt;bag filename&gt;</span><br></pre></td></tr></table></figure>
+<p>比如会有这样的结果：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">E0722 <span class="number">22</span>:<span class="number">11</span>:<span class="number">01.138546</span>  <span class="number">3442</span> rosbag_validate_main.cc:<span class="number">389</span>] IMU data (frame_id: <span class="string">&quot;imu&quot;</span>) has a large gap, largest <span class="keyword">is</span> <span class="number">0.064731</span> s, recommended <span class="keyword">is</span> [<span class="number">0.0005</span>, <span class="number">0.005</span>]s <span class="keyword">with</span> no jitter.</span><br><span class="line">I0722 <span class="number">22</span>:<span class="number">11</span>:<span class="number">01.139314</span>  <span class="number">3442</span> rosbag_validate_main.cc:<span class="number">398</span>] Time delta histogram <span class="keyword">for</span> consecutive messages on topic <span class="string">&quot;/IMU_data&quot;</span> (frame_id: <span class="string">&quot;imu&quot;</span>):</span><br><span class="line">Count: <span class="number">27679</span>  Min: <span class="number">0.000144</span>  Max: <span class="number">0.064731</span>  Mean: <span class="number">0.005027</span></span><br><span class="line">[<span class="number">0.000144</span>, <span class="number">0.006602</span>)    					    Count: <span class="number">27445</span> (<span class="number">99.154594</span>%)    Total: <span class="number">27445</span> (<span class="number">99.154594</span>%)</span><br><span class="line">[<span class="number">0.006602</span>, <span class="number">0.013061</span>)                            Count: <span class="number">181</span> (<span class="number">0.653925</span>%)  Total: <span class="number">27626</span> (<span class="number">99.808517</span>%)</span><br><span class="line">[<span class="number">0.013061</span>, <span class="number">0.019520</span>)                            Count: <span class="number">42</span> (<span class="number">0.151740</span>%)   Total: <span class="number">27668</span> (<span class="number">99.960258</span>%)</span><br><span class="line">[<span class="number">0.019520</span>, <span class="number">0.025979</span>)                            Count: <span class="number">7</span> (<span class="number">0.025290</span>%)    Total: <span class="number">27675</span> (<span class="number">99.985550</span>%)</span><br><span class="line">[<span class="number">0.025979</span>, <span class="number">0.032437</span>)                            Count: <span class="number">3</span> (<span class="number">0.010839</span>%)    Total: <span class="number">27678</span> (<span class="number">99.996384</span>%)</span><br><span class="line">[<span class="number">0.032437</span>, <span class="number">0.038896</span>)                            Count: <span class="number">0</span> (<span class="number">0.000000</span>%)    Total: <span class="number">27678</span> (<span class="number">99.996384</span>%)</span><br><span class="line">[<span class="number">0.038896</span>, <span class="number">0.045355</span>)                            Count: <span class="number">0</span> (<span class="number">0.000000</span>%)    Total: <span class="number">27678</span> (<span class="number">99.996384</span>%)</span><br><span class="line">[<span class="number">0.045355</span>, <span class="number">0.051814</span>)                            Count: <span class="number">0</span> (<span class="number">0.000000</span>%)    Total: <span class="number">27678</span> (<span class="number">99.996384</span>%)</span><br><span class="line">[<span class="number">0.051814</span>, <span class="number">0.058272</span>)                            Count: <span class="number">0</span> (<span class="number">0.000000</span>%)    Total: <span class="number">27678</span> (<span class="number">99.996384</span>%)</span><br><span class="line">[<span class="number">0.058272</span>, <span class="number">0.064731</span>]                            Count: <span class="number">1</span> (<span class="number">0.003613</span>%)    Total: <span class="number">27679</span> (<span class="number">100.000000</span>%)</span><br></pre></td></tr></table></figure>
+<p>需要的时间范围是[0.0005, 0.005]，但是看给出的范围列表，只有第一个还算在这个范围里，剩下约1%不合要求。</p>
+<ul>
+<li>cartographer_pbstream_map_publisher</li>
+</ul>
+<p>一个简单的节点，它从序列化的Cartographer状态（pbstream格式）创建静态占用网格。如果实时更新不重要，它是占用网格节点的有效替代方案。  发布话题：map (nav_msgs/OccupancyGrid)，只发布一次</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%BA%8C)%20%E7%BB%BC%E8%BF%B0,%20%E8%AF%9D%E9%A2%98%E5%92%8C%E6%9C%8D%E5%8A%A1/" data-id="ckr28or2o00mbewlm98d598kv" data-title="(二) 综述, 话题和服务" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Linux基础/Linux的启动过程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/11/Linux%E5%9F%BA%E7%A1%80/Linux%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2020-03-11T14:15:26.000Z" itemprop="datePublished">2020-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/11/Linux%E5%9F%BA%E7%A1%80/Linux%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/">Linux的启动过程</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>几个重要文件的启动顺序：</p>
+<ol>
+<li><p>通过/boot/vm进行启动 vmlinuz</p>
+</li>
+<li><p>init /etc/inittab</p>
+</li>
+<li><p>启动相应的脚本，并且打开终端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rc.sysinit</span><br><span class="line"></span><br><span class="line">rc.d(里面的脚本)</span><br><span class="line"></span><br><span class="line">rc.local</span><br></pre></td></tr></table></figure></li>
+<li><p>启动login登录界面</p>
+</li>
+<li><p>登录，此时执行sh脚本的顺序，每次登录的时候都会完全执行的</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/etc/profile.d/file</span><br><span class="line"></span><br><span class="line">/etc/profile</span><br><span class="line"></span><br><span class="line">/etc/bashrc</span><br><span class="line"></span><br><span class="line">/root/.bashrc</span><br><span class="line"></span><br><span class="line">/root/.bash_profile</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>这里就清楚了，如果不登录还要加载环境变量，就只能把环境变量放到<code>rc.local</code>里</p>
+<p>添加开机启动项： <code>sudo vim /etc/profile.d/apps-bin-path.sh</code>， 在其中放入可执行文件</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/11/Linux%E5%9F%BA%E7%A1%80/Linux%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/" data-id="ckr28oqtr0003ewlme6542cph" data-title="Linux的启动过程" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  基础/static关键字" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/11/C++/C++%20%20%E5%9F%BA%E7%A1%80/static%E5%85%B3%E9%94%AE%E5%AD%97/" class="article-date">
+  <time class="dt-published" datetime="2020-03-11T12:44:41.000Z" itemprop="datePublished">2020-03-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/11/C++/C++%20%20%E5%9F%BA%E7%A1%80/static%E5%85%B3%E9%94%AE%E5%AD%97/">static关键字</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>函数在栈上分配的空间在此函数执行结束时会释放掉，这样就产生了一个问题:  <font color = blue>  <font size= 3>如果想将函数中此变量的值保存至下一次调用时，如何实现？  </font> </font>最容易想到的方法是定义为全局的变量，但这样最明显的缺点是<em>破坏了此变量的访问范围</em>(使得在此函数中定义的变量，不仅仅只受此函数控制). 当程序想要使用全局变量的时候应该先考虑使用 static</p>
+<p>全局变量和静态变量的存储都放在内存的<strong>全局区</strong>，初始化的全局变量和静态变量在一块区域， 未初始化的全局变量和未初始化的静态变量在相邻的另一块区域</p>
+<h3 id="全局变量和全局静态变量的区别"><a href="#全局变量和全局静态变量的区别" class="headerlink" title="全局变量和全局静态变量的区别"></a>全局变量和全局静态变量的区别</h3><ul>
+<li><p>全局变量默认是有外部链接性的，作用域是整个工程，在一个文件内定义的全局变量，可以在另一个文件中使用。比较规范的方法是：在A.h中声明，比如<code>extern int a;</code>，但不能赋值，否则报错。在A.cpp中定义，<code>int a=1;</code>。然后在B.cpp中使用，<code>cout &lt;&lt; a &lt;&lt;endl;</code></p>
+</li>
+<li><p>全局静态变量是显式用 static 修饰的全局变量，作用域仅在声明此变量的文件，其他的文件即使用 extern 声明也不能使用。这样即使两个不同的源文件都定义了相同名字的static全局变量，它们也是不同的变量。</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test_static</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">    n++ ;</span><br><span class="line">    cout &lt;&lt; n &lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line">    <span class="built_in">test_static</span>();</span><br><span class="line">    <span class="built_in">test_static</span>();</span><br><span class="line">    <span class="built_in">test_static</span>();</span><br></pre></td></tr></table></figure>
+<p>运行结果是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+
+<p>静态局部变量有以下特点：</p>
+<ol>
+<li>该变量在全局数据区分配内存；</li>
+<li>静态局部变量在程序执行到该对象的声明处时，被首次初始化，即以后的函数调用不再进行初始化。即上面的<code>static int n=0;</code></li>
+<li>静态局部变量一般在声明处初始化，如果没有显式初始化，会被程序自动初始化为 0；比如上面的n可以不初始化为0</li>
+<li>始终驻留在全局数据区，直到程序运行结束。但其作用域为局部作用域，当定义它的函数或语句块结束时，其作用域随之结束。</li>
+<li>它和全局变量的区别:全局变量对所有的函数都是可见的，而static局部变量只对定义自己的函数体可见。</li>
+</ol>
+<p>把局部变量改变为static变量后是改变了它的存储方式和生存期。把全局变量改变为static变量是改变了它的作用域，限制了它的使用范围。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/11/C++/C++%20%20%E5%9F%BA%E7%A1%80/static%E5%85%B3%E9%94%AE%E5%AD%97/" data-id="ckr28oqx0007mewlmfcnr0arw" data-title="static关键字" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/23/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="page-number current">24</span><a class="page-number" href="/page/25/">25</a><a class="page-number" href="/page/26/">26</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/25/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

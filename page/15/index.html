@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/15/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-数学基础/坐标系空间转换" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/" class="article-date">
+  <time class="dt-published" datetime="2020-09-20T12:00:16.000Z" itemprop="datePublished">2020-09-20</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/">坐标系空间转换</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="Censi-公式"><a href="#Censi-公式" class="headerlink" title="Censi 公式"></a>Censi 公式</h2><p><img src="https://i.loli.net/2020/09/20/hsubLed7priFZmS.jpg" alt="坐标系示意图.jpg"><br><img src="https://i.loli.net/2020/09/20/YzpFTi8yEwqHhf5.jpg" alt="圆加和圆减.jpg"><br><img src="https://i.loli.net/2020/09/20/WbSvxUlGwCHNzgF.png"><br><img src="https://i.loli.net/2021/04/28/sbLxYg1oUdRaNkT.jpg"></p>
+<p>左乘是行变换，右乘是列变换。这是因为习惯上来说，空间中的向量用列向量表示，用矩阵左乘列向量，就是把它在空间当中变换。</p>
+<p>若绕静坐标系（世界坐标系）旋转，则左乘，也是<strong>变换矩阵 X 坐标矩阵</strong></p>
+<p>若是绕动坐标系旋转（自身建立一个坐标系），则右乘，也就是<strong>坐标矩阵 X 变换矩阵</strong>。 </p>
+<p>即左乘是相对于坐标值所在的坐标系（世界坐标系）下的三个坐标轴进行旋转变换，右乘则是以当前点为旋转中心，进行旋转变换。</p>
+<p><a target="_blank" rel="noopener" href="https://www.pianshen.com/article/17351558785/">cartographer中公式的推导</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/20/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%9D%90%E6%A0%87%E7%B3%BB%E7%A9%BA%E9%97%B4%E8%BD%AC%E6%8D%A2/" data-id="ckr28oqvj0047ewlmdqv929am" data-title="坐标系空间转换" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/ICP/laser_scan_matcher 源码解读" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" class="article-date">
+  <time class="dt-published" datetime="2020-09-19T13:44:12.000Z" itemprop="datePublished">2020-09-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">laser_scan_matcher 源码解读</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>主要是<code>LaserScanMatcher</code>的构造函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;LaserScanMatcher&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line"><span class="function">ros::NodeHandle <span class="title">nh_private</span><span class="params">(<span class="string">&quot;~&quot;</span>)</span></span>;</span><br><span class="line"><span class="function">scan_tools::LaserScanMatcher <span class="title">laser_scan_matcher</span><span class="params">(nh, nh_private)</span></span>;</span><br><span class="line">ros::<span class="built_in">spin</span>();</span><br></pre></td></tr></table></figure>
+
+<p>构造函数里初始化一系列参数，重点就是回调函数<code>scanCallback</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一帧scan, cache the tf from base to the scanner</span></span><br><span class="line"><span class="keyword">if</span> (!initialized_)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">createCache</span>(scan_msg);    <span class="comment">// caches the sin and cos of all angles</span></span><br><span class="line">  <span class="comment">// cache the static tf from base to laser</span></span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">getBaseToLaserTf</span>(scan_msg-&gt;header.frame_id))</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Skipping scan&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 保存scan数据到  LDP  prev_ldp_scan_;</span></span><br><span class="line">  <span class="built_in">laserScanToLDP</span>(scan_msg, prev_ldp_scan_);</span><br><span class="line">  last_icp_time_ = scan_msg-&gt;header.stamp;</span><br><span class="line">  initialized_ = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 第二帧及以后的scan</span></span><br><span class="line">index++;		<span class="comment">// static unsigned int index;</span></span><br><span class="line"><span class="built_in">ROS_INFO</span>(<span class="string">&quot;scan index: %d&quot;</span>, index);</span><br><span class="line">LDP  curr_ldp_scan;</span><br><span class="line"><span class="built_in">laserScanToLDP</span>(scan_msg, curr_ldp_scan);</span><br><span class="line"><span class="built_in">processScan</span>(curr_ldp_scan, scan_msg-&gt;header.stamp);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/09/20/VTNfbxGYmPqK3Li.png" alt="流程.png"></p>
+<h2 id="公式计算"><a href="#公式计算" class="headerlink" title="公式计算"></a>公式计算</h2><h2 id="newKeyframeNeeded"><a href="#newKeyframeNeeded" class="headerlink" title="newKeyframeNeeded"></a>newKeyframeNeeded</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">fabs</span>(tf::<span class="built_in">getYaw</span>(d.<span class="built_in">getRotation</span>())) &gt; kf_dist_angular_)</span><br><span class="line">   <span class="keyword">return</span>   <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">double</span> x = d.<span class="built_in">getOrigin</span>().<span class="built_in">getX</span>();</span><br><span class="line"><span class="keyword">double</span> y = d.<span class="built_in">getOrigin</span>().<span class="built_in">getY</span>();</span><br><span class="line"><span class="keyword">if</span> (x*x + y*y &gt; kf_dist_linear_sq_)</span><br><span class="line">   <span class="keyword">return</span>  <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p>优先判断相对旋转</p>
+<p>调用是这样：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 交换新旧frame, key frame 的意思应该是当前配准时的参考帧</span></span><br><span class="line"><span class="comment">// 这个在机器人一直走直线或原地旋转时很难发生</span></span><br><span class="line"><span class="keyword">if</span> (<span class="built_in">newKeyframeNeeded</span>(corr_ch))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// generate  a  keyframe</span></span><br><span class="line">	<span class="built_in">ld_free</span>(prev_ldp_scan_);</span><br><span class="line">	prev_ldp_scan_ = curr_ldp_scan;</span><br><span class="line">	<span class="comment">// 更新下一个时间段的 f2b_kf</span></span><br><span class="line">	f2b_kf_ = f2b_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>prev_ldp_scan_</code>之前是第一帧scan的数据，只有需要 key frame时，才会更新它，但在<code>processScan</code>开头又会把估计位姿和真值初始化为0。  如果没有达到运动阈值，<code>prev_ldp_scan_</code>还是第一帧scan，时间也是第一帧的时间，仍以第一帧为基准进行ICP配准</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/19/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/" data-id="ckr28or0k00fqewlm2byrbqrz" data-title="laser_scan_matcher 源码解读" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/AGV综述" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/15/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/AGV%E7%BB%BC%E8%BF%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-09-15T14:23:40.000Z" itemprop="datePublished">2020-09-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/15/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/AGV%E7%BB%BC%E8%BF%B0/">AGV综述</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>定位类型有辅助定位和自主定位两种，主要根据两个方面来区分：（1）是否需要在环境中设立标签；（2）是否需要已知环境地图。从表中可以看出，除了视觉导航，其他几种都是辅助定位，这表明，在智能化的 AGV 中，视觉定位能做到较好的柔性和自主性。但是视觉也存在较大的缺点，环境要求高，技术难度高，定位精度达不到</p>
+<p>使用的比较多的是基于激光导航的 AGV，需要对运行环境周围布设反光板，运行稳定，定位精度高，不足之处是依赖反光板，不能自主运行，激光传感器价格和铺设反光板成本也较高。</p>
+<p><img src="https://i.loli.net/2020/09/15/Uz3rQEkNXhcxnmK.png" alt="导航方式对比.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/15/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/AGV%E7%BB%BC%E8%BF%B0/" data-id="ckr28oqz300ckewlm5ewrcr2s" data-title="AGV综述" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/配置Firefly-RK3399平台" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AEFirefly-RK3399%E5%B9%B3%E5%8F%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-09-14T13:28:58.000Z" itemprop="datePublished">2020-09-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AEFirefly-RK3399%E5%B9%B3%E5%8F%B0/">配置Firefly-RK3399平台</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>整个系统的构建过程如下：</p>
+<ol>
+<li>操作系统是ARM架构处理器的Ubuntu mate16.04 LTS 系 统；</li>
+<li>使用ROS-kinetic版本；</li>
+<li>进行网络配置，把处理器平台上的WiFi模块配置成Access Point (AP)模式，让上位机接入AP与Cortex-A53 处理器平台通信，这样就可以在个人计算机上通过远程登录来操控机器人</li>
+<li>把上位机配置成时间服务器，让Cortex-A53平台每次上电后能与上位机的时间保持同步</li>
+</ol>
+<p>移动底座和激光雷达与Cortex-A53平台都是通过串口来通信的。在基于Cortex-A53处理器的平台上处理激光雷达的扫描数据以及底座中采集的里程计数据。</p>
+<p>在Cortex-A53平台上使用的局部路径规划算法无法实现局部路径规划，因为计算量太大，在路径规划过程中处理器CPU占用率达到100%。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/14/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AEFirefly-RK3399%E5%B9%B3%E5%8F%B0/" data-id="ckr28oqzr00e5ewlmeef7aywr" data-title="配置Firefly-RK3399平台" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/图优化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/13/%E6%BF%80%E5%85%89SLAM/%E5%9B%BE%E4%BC%98%E5%8C%96/" class="article-date">
+  <time class="dt-published" datetime="2020-09-13T02:56:42.000Z" itemprop="datePublished">2020-09-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/13/%E6%BF%80%E5%85%89SLAM/%E5%9B%BE%E4%BC%98%E5%8C%96/">图优化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>滤波类算法最大的问题，是无法处理大尺度场景的建图。由于滤波类算法是基于递归计算的，下一时刻的估计值依赖于上一时刻的估计，因而在大尺度场景下，由于系统参数和传感器观测数据的不准确性，会造成误差慢慢累积，一旦当前时刻的估计出现偏差，无法修正该误差， 最终导致无法获得一致性的地图。而且使用滤波方法对计算量和内存消耗都很大，使用图优化方法则效率较高，这种方法位姿不是实时纠正，而是将数据记录下来，最后进行计算优化。</p>
+<p>如果说滤波类SLAM是属于序惯估计的话，基于图优化则是属于批处理。前端负责从里程计和激光雷达数据中求得位姿，后端采用回环检测，构造闭环约束，通过最小化观测和估计残差求得优化后的位姿。</p>
+<p>前端方面，先从里程计获得初始的位姿，之后通过激光雷达数据连续帧匹配，求得激光约束后的位姿（注意这里使用了一次观测信息）。在连续帧匹配上，有 ICP、NDT、暴力匹配等算法。Cartographer 采用暴力匹配作为前端方法，即使用激光扫描匹配，在机器人运动中，通过匹配前后两帧的激光变化，求得机器人的相对运动。而其中的一个关键模块是三维窗口遍历寻优。这是一种穷举搜索算法，针对平面运动的机器人，可以将位姿分解为三个维度，即 X 轴， Y 轴，角度轴。通过构建三层循环，分别对 X 方向、 Y方向、旋转角度方向进行遍历搜索，寻找到最优的位姿匹配作为估计结果。</p>
+<p>平时说的图优化是针对因子图的优化，因子图是概率图模型的一种，概率图模型除了因子图还有贝叶斯网络、马尔科夫随机场</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/13/%E6%BF%80%E5%85%89SLAM/%E5%9B%BE%E4%BC%98%E5%8C%96/" data-id="ckr28oqvm004eewlm57cf6pmk" data-title="图优化" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/深入探究虚函数 (二) " class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6%E8%99%9A%E5%87%BD%E6%95%B0%20(%E4%BA%8C)%20/" class="article-date">
+  <time class="dt-published" datetime="2020-09-08T03:08:40.000Z" itemprop="datePublished">2020-09-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6%E8%99%9A%E5%87%BD%E6%95%B0%20(%E4%BA%8C)%20/">深入探究虚函数 (二) 虚函数表vtbl和虚表指针vptr</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>虚函数表是通过一块内存来存储虚函数的地址，它实际是一个函数指针数组，每一个元素都是虚函数的指针，虚函数表的最后一个元素是一个空指针。假如虚函数类型为int，函数指针就是<code>int*</code>类型．<font color = orange size=4>虚函数表将被该类的所有对象共享，每个对象内部包含了一个虚表指针，来指向类的虚表 </font></p>
+<p>有虚函数的类的最开始部分就是虚函数表指针，它指向虚函数表起始地址，类型为<code>int**</code>（如果虚函数类型int），表中存放虚函数的地址。通过这个指针可以获取到该类对象的所有虚函数，包括父类的。 </p>
+<p><font color = blue size=4>在编译期，编译器完成了虚表的创建，而虚指针在构造函数期间被初始化 </font></p>
+<p><strong>因为派生类会继承基类的虚函数表，</strong>所以通过虚函数表，我们就可以知道该类对象的父类，在转换的时候就可以用来判断对象有无继承关系。派生类中增加的虚函数，如果覆盖了基类的虚函数，虚函数表中会替换相应的基类虚函数，地址换成派生类的；如果没有覆盖基类的虚函数，就添加到原虚函数表后面，以空指针结尾． 所以说派生类的虚函数表中的函数地址不是连续的，基类的是连续的。</p>
+<p>虚指针地址是否与this指针相同</p>
+<p>类Base的虚表如下图：<br><img src="https://i.loli.net/2020/09/08/gjM4aP5xL8YQGDd.png" alt="Base.png"><br>如果派生类Derived没有覆盖基类的虚函数，它的虚函数表如下图：<br><img src="https://i.loli.net/2020/09/08/KUrxlAep59sbkqy.png" alt="2020-09-08_171319.png"></p>
+<p>如果覆盖vFunc1，则替换Base的vFunc1；如果还定义了一个虚函数vFunc3，那么继续往虚函数表之后填，最后一个数组成员还是空指针</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.dzwspace.com/article/cpp-vtbl/">C++ 虚函数表</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/LF_2016/article/details/52311227">深入C++对象模型&amp;虚函数表</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/08/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%B7%B1%E5%85%A5%E6%8E%A2%E7%A9%B6%E8%99%9A%E5%87%BD%E6%95%B0%20(%E4%BA%8C)%20/" data-id="ckr28oqy400a8ewlme69iavdl" data-title="深入探究虚函数 (二) 虚函数表vtbl和虚表指针vptr" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/发布者的latch机制" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/03/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%91%E5%B8%83%E8%80%85%E7%9A%84latch%E6%9C%BA%E5%88%B6/" class="article-date">
+  <time class="dt-published" datetime="2020-09-03T10:46:23.000Z" itemprop="datePublished">2020-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/03/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%91%E5%B8%83%E8%80%85%E7%9A%84latch%E6%9C%BA%E5%88%B6/">发布者的latch机制</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>这个就是最常用的advertise函数的最后一个参数，原型： <code>advertise (const std::string &amp;topic, uint32_t queue_size, bool latch=false)</code></p>
+<p>是否锁存。某些话题并不是会以某个频率发布，比如<code>/map</code>这个topic，只有在初次订阅或者地图更新这两种情况下，才会向<code>/map</code>发布消息，这里就用到了锁存。</p>
+<p>锁存的作用就是，将发布者最后一次发布的消息保存下来，然后把它自动发送给后来的订阅者。这种方式非常适合变动较慢、相对固定的数据（例如地图），然后只发布一次，相比于同样的消息不定的发布，锁存的方式既可以减少通信中对带宽的占用，也可以减少消息资源维护的开销。</p>
+<p>查看gmapping中的函数<code>SlamGMapping::startLiveSlam()</code>，发现三个话题都是 latched：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">entropy_publisher_ = private_nh_.advertise&lt;std_msgs::Float64&gt;(<span class="string">&quot;entropy&quot;</span>, <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line">sst_ = node_.advertise&lt;nav_msgs::OccupancyGrid&gt;(<span class="string">&quot;map&quot;</span>, <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line">sstm_ = node_.advertise&lt;nav_msgs::MapMetaData&gt;(<span class="string">&quot;map_metadata&quot;</span>, <span class="number">1</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p><code>latch=true</code>，发布消息一次或几次，然后设法阻塞程序(常常用spin()，这里只是阻塞，跟订阅无关)，订阅者仍然能收到阻塞之前发布的消息。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ros::<span class="built_in">init</span>(argc,argv, <span class="string">&quot;Pub&quot;</span>);</span><br><span class="line">ros::NodeHandle nh;</span><br><span class="line">ros::Publisher pub_latch_true = nh.advertise&lt;std_msgs::Int8&gt;(<span class="string">&quot;topic_latch_true&quot;</span>, <span class="number">50</span>, <span class="literal">true</span>);</span><br><span class="line">ros::Publisher pub_latch_false = nh.advertise&lt;std_msgs::Int8&gt;(<span class="string">&quot;topic_latch_false&quot;</span>, <span class="number">50</span>, <span class="literal">false</span>);</span><br><span class="line"><span class="function">ros::Rate <span class="title">rate</span><span class="params">(<span class="number">1</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">std_msgs::Int8 msg;</span><br><span class="line">msg.data = <span class="number">2</span>;</span><br><span class="line">pub_latch_true.<span class="built_in">publish</span>(msg);</span><br><span class="line">pub_latch_false.<span class="built_in">publish</span>(msg);</span><br><span class="line"><span class="keyword">while</span>(ros::<span class="built_in">ok</span>())</span><br><span class="line">&#123;</span><br><span class="line">  ros::<span class="built_in">spinOnce</span>();</span><br><span class="line">  rate.<span class="built_in">sleep</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>运行程序后等一会，运行<code>rostopic echo topic_latch_false</code>，什么也没有。运行<code>rostopic echo topic_latch_true</code>，会收到<code>data=2</code>的消息。  即使先运行两个echo，再运行发布者，结果也是如此</p>
+<p><code>bool Publisher::isLatched () const</code> 用于判断是否latch</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/03/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%8F%91%E5%B8%83%E8%80%85%E7%9A%84latch%E6%9C%BA%E5%88%B6/" data-id="ckr28oqyt00c4ewlm7zew4xhy" data-title="发布者的latch机制" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-数学基础/协方差矩阵" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/03/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5/" class="article-date">
+  <time class="dt-published" datetime="2020-09-03T08:59:42.000Z" itemprop="datePublished">2020-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/03/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5/">协方差矩阵</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>我们机器人用到的向量是<code>(x,y,roll,pitch,yaw)</code>，协方差就是一个6x6的矩阵，对角线的元素为各个随机变量的方差，非对角线的元素就是两两随机变量之间的协方差。AMCL中所用的协方差矩阵，由于z,pitch,roll都是0，矩阵的第1,8和最后的元素，分别是x,y,yaw的方差。另外还有x和y的协方差</p>
+<p>如果协方差矩阵是单位矩阵，那么就是标准的多元高斯分布。由于协方差矩阵是对称矩阵，所以可以做特征分解 <font color = blue size=4> covariance = cr* cd * cr<sup>T </sup> </font> ，cd是对角矩阵。其实可以变成 covariance = (cr * cd<sup>1/2</sup>) (cr * cd<sup>1/2</sup>)<sup>T</sup> = AA<sup>T</sup>。</p>
+<p>也就是可以表示为旋转矩阵乘以尺度矩阵的形式，所以任意一个协方差矩阵可以看做三维变换的结果，概率密度函数是由协方差矩阵的特征向量<code>cr</code>控制旋转，特征值(cd对角线元素)控制尺度。协方差矩阵其实就是根据这两项对标准高斯分布进行变换。</p>
+<p>AMCL中的<code>pf_ran_gaussian</code>函数是以cd的对角线元素为标准差，生成一个高斯分布。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/03/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E5%8D%8F%E6%96%B9%E5%B7%AE%E7%9F%A9%E9%98%B5/" data-id="ckr28oqvi0043ewlm37qubp0q" data-title="协方差矩阵" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-视觉SLAM/八叉树地图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/03/%E8%A7%86%E8%A7%89SLAM/%E5%85%AB%E5%8F%89%E6%A0%91%E5%9C%B0%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2020-09-03T05:36:16.000Z" itemprop="datePublished">2020-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/03/%E8%A7%86%E8%A7%89SLAM/%E5%85%AB%E5%8F%89%E6%A0%91%E5%9C%B0%E5%9B%BE/">八叉树地图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>八叉树地图基于Octtree，可以是多分辨率的地图<br><img src="https://i.loli.net/2020/09/03/1fKaz4ZpHdjEeRS.png" alt="八叉树"></p>
+<p>Voxel Grid就像3D的占用地图，分辨率是固定的<br><img src="https://i.loli.net/2020/09/03/jHnJtO7UfkPmIRx.jpg" alt="VoxelGrid"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/03/%E8%A7%86%E8%A7%89SLAM/%E5%85%AB%E5%8F%89%E6%A0%91%E5%9C%B0%E5%9B%BE/" data-id="ckr28oqw9005wewlmgyv86ei7" data-title="八叉树地图" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/代价地图/代价地图的层 2  向代价地图添加自定义的层" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/09/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%202%20%20%E5%90%91%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B1%82/" class="article-date">
+  <time class="dt-published" datetime="2020-09-03T02:13:56.000Z" itemprop="datePublished">2020-09-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/09/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%202%20%20%E5%90%91%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B1%82/">代价地图的层(二)  向代价地图添加自定义的层</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>自定义层是在需要特殊应用的场合，比如要求将代价地图某块区域屏蔽。对于多一个激光扫描的情况，不需要自定义层，因为它可以用<code> costmap_2d::VoxelLayer</code>类型的层</p>
+<br>
+
+<p>进入<code>costmap_2d</code>这个包，查看<code>costmap_2d\costmap_plugins.xml</code>文件，可以看到目前所拥有的层，基类都是<code>costmap_2d::Layer</code>。</p>
+<h2 id="costmap-prohibition-layer"><a href="#costmap-prohibition-layer" class="headerlink" title="costmap_prohibition_layer"></a>costmap_prohibition_layer</h2><p>我们看一个自定义的层<a target="_blank" rel="noopener" href="https://github.com/rst-tu-dortmund/costmap_prohibition_layer">costmap_prohibition_layer</a></p>
+<p><code>CMakeLists</code>里可以看到<code>add_library(costmap_prohibition_layer src/costmap_prohibition_layer.cpp)</code>， 结果在<code>lib/libcostmap_prohibition_layer.so</code></p>
+<p>看文件<code>package.xml</code>，最后有一句：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">export</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">costmap_2d</span> <span class="attr">plugin</span>=<span class="string">&quot;$&#123;prefix&#125;/costmap_plugins.xml&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">export</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>costmap_plugins.xml</code>如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">library</span> <span class="attr">path</span>=<span class="string">&quot;lib/libcostmap_prohibition_layer&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">class</span> <span class="attr">type</span>=<span class="string">&quot;costmap_prohibition_layer_namespace::CostmapProhibitionLayer&quot;</span> <span class="attr">base_class_type</span>=<span class="string">&quot;costmap_2d::Layer&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>ROS-Package that implements a costmap layer to add prohibited areas to the costmap-2D by a user configuration.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">library</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上几项缺一不可，放到工作空间编译后，在终端中输入<code>rospack plugins --attrib=plugin costmap_2d</code>，这个命令是显示当前<code>costmap_2d</code>能接受的所有插件，如果出现</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">costmap_prohibition_layer /home/user/plan_ws/src/costmap_prohibition_layer/costmap_plugins.xml</span><br></pre></td></tr></table></figure>
+<p>说明prohibition_layer已经是一个可供使用的地图插件了。</p>
+<br>
+
+<p>在自己的代价地图参数配置文件夹中找到<code>global_costmap_params.yaml</code>　和　<code>local_costmap_params.yaml</code>，打开这两个文档，分别在两个文档的末尾做修改，修改后应该是下面的内容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plugins:</span><br><span class="line">     - &#123;name: static_map,       <span class="built_in">type</span>: <span class="string">&quot;costmap_2d::StaticLayer&quot;</span>&#125;</span><br><span class="line">     - &#123;name: obstacles,        <span class="built_in">type</span>: <span class="string">&quot;costmap_2d::VoxelLayer&quot;</span>&#125;</span><br><span class="line">     - &#123;name: costmap_prohibition_layer,   <span class="built_in">type</span>: <span class="string">&quot;costmap_prohibition_layer_namespace::CostmapProhibitionLayer&quot;</span>&#125;     </span><br><span class="line">     - &#123;name: inflation_layer,        <span class="built_in">type</span>: <span class="string">&quot;costmap_2d::InflationLayer&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>最后是设置禁止区域坐标参数，首先需要在参数配置文件夹（<code>global_costmap_params.yaml</code>所在的文件夹）中创建新的文档，命名为<code>prohibition_areas.yaml</code>,然后输入:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">prohibition_areas:</span><br><span class="line"><span class="comment">#定义一个禁止点</span></span><br><span class="line"> - [17.09, -6.388]</span><br><span class="line"><span class="comment"># 定义一个禁止通行的线</span></span><br><span class="line"> - [[8.33, 2.11],</span><br><span class="line">    [8.26, 5.11]]</span><br><span class="line"><span class="comment"># 定义一个禁止通行的区域</span></span><br><span class="line"> - [[-11.15, -15.614],</span><br><span class="line">    [-12.35, -13.89],</span><br><span class="line">    [-10.05, -12.218]]</span><br></pre></td></tr></table></figure>
+
+
+<p>注意事项：</p>
+<ol>
+<li>一定要严格按照上述格式来设置坐标，格式错误导致不能识别禁止区域坐标情形有: (1)坐标前的短横线没对齐 (2) 定义禁止区域或者禁止线，两坐标之间缺少了逗号</li>
+<li>可以同时定义多个禁止点／多个禁止线／多个禁止区域，或者混合定义多个点／线／区域．</li>
+<li>禁止区域的坐标如何设置就需要你根据自己建的图来测量，这里就不赘述了．</li>
+</ol>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41995710/article/details/88750354">在Costmap_2d里面插入Prohibition_layer</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%84%E5%B1%82%202%20%20%E5%90%91%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E6%B7%BB%E5%8A%A0%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%B1%82/" data-id="ckr28or2800kqewlmepph8ilm" data-title="代价地图的层(二)  向代价地图添加自定义的层" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/14/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/16/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

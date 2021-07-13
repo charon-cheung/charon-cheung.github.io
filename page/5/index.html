@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/5/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-ROS/ROS Kinetic知识/欧拉角和四元数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%AC%A7%E6%8B%89%E8%A7%92%E5%92%8C%E5%9B%9B%E5%85%83%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-03-27T11:50:26.000Z" itemprop="datePublished">2021-03-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%AC%A7%E6%8B%89%E8%A7%92%E5%92%8C%E5%9B%9B%E5%85%83%E6%95%B0/">欧拉角和四元数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>欧拉角其实就是表示向三个方向旋转的角度，比较形象直观。四元数是等价的另一种表示方法，不能直观体现，但是具备一些优点。数学理论实在太复杂，只需要记住以下几条：</p>
+<ul>
+<li>欧拉角就是绕Z轴、Y轴、X轴的旋转角度，记做ψ、θ、φ，分别为Yaw（偏航）、Pitch（俯仰）、Roll（翻滚）</li>
+<li>四元数是w,x,y,z，它们的平方和是1</li>
+<li>欧拉角会出现万向节死锁，比如三维空间中有一个平行于 X 轴的向量，将它绕 Y 轴旋转直到它平行于 Z 轴，这时任何绕 Z 轴的旋转都改变不了该向量的方向</li>
+</ul>
+<p>三个旋转方向如图所示：<br><img src="https://c2.staticflickr.com/8/7837/32275880597_29a3feb6b5_b.jpg"></p>
+<p>欧拉角到四元数的转换:<br><img src="https://c2.staticflickr.com/8/7868/32274385957_c047544640_z.jpg"></p>
+<p>四元数到欧拉角的转换:<br><img src="https://c2.staticflickr.com/8/7809/32274385747_b8a5653042.jpg"></p>
+<p>描述机器人转弯的角就是绕Z轴的旋转，按照右手法则可以知道机器人向左转为正，右转为负。</p>
+<h2 id="ROS中的欧拉角-四元数"><a href="#ROS中的欧拉角-四元数" class="headerlink" title="ROS中的欧拉角 四元数"></a>ROS中的欧拉角 四元数</h2><p><code>geometry_msgs/Quaternion</code>消息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">float64 x</span><br><span class="line">float64 y</span><br><span class="line">float64 z</span><br><span class="line">float64 w</span><br></pre></td></tr></table></figure>
+
+<p><code>geometry_msgs/Transform</code>消息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">geometry_msgs/Vector3 translation</span><br><span class="line">geometry_msgs/Quaternion rotation</span><br></pre></td></tr></table></figure>
+<p>这两个各自有一个加时间戳的消息类型。</p>
+<br>
+
+<p>除了<code>geometry_msgs/Quaternion</code>，还有一个<code>tf::Quaternion</code>类，重要函数：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Vector3  <span class="title">getAxis</span> <span class="params">()</span> <span class="keyword">const</span>    <span class="comment">//Return the axis of the rotation represented by this quaternion. </span></span></span><br><span class="line"><span class="function"><span class="comment">//Set the quaternion using fixed axis RPY. </span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> 	<span class="title">setRPY</span> <span class="params">(<span class="keyword">const</span> tfScalar &amp;roll, <span class="keyword">const</span> tfScalar &amp;pitch, <span class="keyword">const</span> tfScalar &amp;yaw)</span>    </span></span><br><span class="line"><span class="function"><span class="comment">//Return an identity quaternion.</span></span></span><br><span class="line"><span class="function">tf::Quaternion <span class="title">createIdentityQuaternion</span><span class="params">()</span>  </span></span><br></pre></td></tr></table></figure>
+
+<p>还有一个有点特殊的函数，直接返回yaw，但是范围是**[0, 2Pi]**，所以尽量不要使用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tf::Quaternion::<span class="built_in">getAngle</span> () <span class="keyword">const</span></span><br></pre></td></tr></table></figure>
+
+<table><tr><td bgcolor=yellow>     geometry_msgs::Quaternion —— tf::Quaternion 转换如下 </td></tr></table>
+ 
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// [inline, static]</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">tf::quaternionMsgToTF</span><span class="params">(<span class="keyword">const</span> geometry_msgs::Quaternion&amp; msg, tf::Quaternion&amp; bt)</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="四元数——欧拉角"><a href="#四元数——欧拉角" class="headerlink" title="四元数——欧拉角"></a>四元数——欧拉角</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tf::Quaternion quat;</span><br><span class="line"><span class="keyword">double</span> roll, pitch, yaw;</span><br><span class="line"><span class="comment">// 赋值给quat，getRPY函数 将quat转为欧拉角</span></span><br><span class="line">tf::<span class="built_in">Matrix3x3</span>(quat).<span class="built_in">getRPY</span>(roll, pitch, yaw);</span><br></pre></td></tr></table></figure>
+<p>orientation是表示朝向的消息成员，也就是四元数，类型<code>const geometry_msgs::Quaternion &amp;</code>。 常常配合<code>tf::quaternionMsgToTF</code>函数使用，因为我们一般是先获得<code>geometry_msgs::Quaternion</code>类型</p>
+<p>或者用tf2的方式</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> “tf2/LinearMath/Matrix3x3.h”</span></span><br><span class="line"></span><br><span class="line"><span class="function">tf2::Matrix3x3 <span class="title">mat</span><span class="params">(tf2::Quaternion( x, y, z, w) )</span></span>;</span><br><span class="line">mat.<span class="built_in">getEulerYPR</span>(tf2Scalar&amp;  yaw,</span><br><span class="line">tf2Scalar&amp;  pitch,</span><br><span class="line">tf2Scalar&amp; 	roll,</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> 	solution_number = <span class="number">1</span>); </span><br></pre></td></tr></table></figure>
+
+
+<h2 id="欧拉角-——-四元数"><a href="#欧拉角-——-四元数" class="headerlink" title="欧拉角 —— 四元数"></a>欧拉角 —— 四元数</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//只通过yaw计算四元数，用于平面小车</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> geometry_msgs::Quaternion  <span class="title">tf::createQuaternionMsgFromYaw</span><span class="params">(<span class="keyword">double</span> yaw)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> tf::Quaternion  <span class="title">createQuaternionFromYaw</span> <span class="params">(<span class="keyword">double</span> yaw)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> tf::Quaternion  <span class="title">createQuaternionFromRPY</span><span class="params">(<span class="keyword">double</span> roll, <span class="keyword">double</span> pitch, <span class="keyword">double</span> yaw)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">static</span> geometry_msgs::Quaternion  <span class="title">createQuaternionMsgFromRollPitchYaw</span><span class="params">( <span class="keyword">double</span> roll, </span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="keyword">double</span> pitch,   <span class="keyword">double</span> yaw)</span></span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012700322/article/details/52252305">四元数与欧拉角（Yaw、Pitch、Roll）的转换</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E6%AC%A7%E6%8B%89%E8%A7%92%E5%92%8C%E5%9B%9B%E5%85%83%E6%95%B0/" data-id="ckr28oqz200cjewlm5xxvbp64" data-title="欧拉角和四元数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/实际导航问题的积累" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%AE%9E%E9%99%85%E5%AF%BC%E8%88%AA%E9%97%AE%E9%A2%98%E7%9A%84%E7%A7%AF%E7%B4%AF/" class="article-date">
+  <time class="dt-published" datetime="2021-03-17T13:55:18.000Z" itemprop="datePublished">2021-03-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%AE%9E%E9%99%85%E5%AF%BC%E8%88%AA%E9%97%AE%E9%A2%98%E7%9A%84%E7%A7%AF%E7%B4%AF/">实际导航问题的积累</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="导航时的明显卡顿"><a href="#导航时的明显卡顿" class="headerlink" title="导航时的明显卡顿"></a>导航时的明显卡顿</h2><p>按工作流程测试，车210先到扫框区入口，再到出口。从出口到A区拣货，一直是正常的。但是如果是到C区，车行走时会非常卡顿，<code>echo cmd_vel</code>会发现每两个正常的速度命令之间都有两三个零速度，所以车会极其卡顿。关掉点云程序，发现仍然卡顿，可见与低矮障碍导航无关。<br><img src="https://i.loli.net/2021/01/12/wo8fRBbYxEGSKD4.png" alt="速度呈锯齿形.png"></p>
+<p>用车202测试，发现一切正常。将210的<code>libteb_planner.so</code>和<code>move_base</code>换成202的，再次测试，结果仍然卡顿。只好反过来，先把210的程序全换成202的，然后把<code>libteb_planner.so</code>换成低矮避障的，再次测试不卡顿了。 </p>
+<p>使用203在A区加上单通道之后，发现卡顿又出现了，看来问题肯定在单通道了。<font color = blue size=4>最后终于确定是全局路径的规划频率过大，与单通道发生了冲突。</font>如果改小，没有卡顿现象了。之前210的不卡顿应当是使用旧版本的单通道所致。</p>
+<h2 id="车在作业时总想撞墙，之后停止"><a href="#车在作业时总想撞墙，之后停止" class="headerlink" title="车在作业时总想撞墙，之后停止"></a>车在作业时总想撞墙，之后停止</h2><p>车在拣货结束后，要前往入口点时，总往墙方向转弯，结果发现是<code>queue_follow</code>导致的。它也往<code>cmd_vel</code>发消息，和路径规划冲突了。可以看此时的queue_follow的status<br><img src="https://i.loli.net/2021/01/07/OXw2FYVUmrlDszj.png" alt="在排队的状态"></p>
+<h2 id="恰好撞到障碍边缘导致的导航失败"><a href="#恰好撞到障碍边缘导致的导航失败" class="headerlink" title="恰好撞到障碍边缘导致的导航失败"></a>恰好撞到障碍边缘导致的导航失败</h2><p>在某处转弯时撞到一个角，基本是临界状态，而且此位置多次碰撞<br><img src="https://i.loli.net/2021/01/14/SQXsyDxHA9Ldew3.png"><br><img src="https://i.loli.net/2021/01/14/kzfbqChDy3lMvQj.png"><br>装上后，车不再行走。echo <code>move_base/status</code>发现已经失败，已经使用过所有的恢复行为。代码对应<code>move_base.cpp</code>的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<p>但是话题<code>nopath_status</code>和<code>trapped/status</code>都是false，iPad上没有上报任何故障。原因是代码里发布了零速度</p>
+<h2 id="车行走很慢，对明显的障碍也会撞"><a href="#车行走很慢，对明显的障碍也会撞" class="headerlink" title="车行走很慢，对明显的障碍也会撞"></a>车行走很慢，对明显的障碍也会撞</h2><p>CPU占用到极限，发现是一个不太重要的程序占CPU太大，甚至超过<code>move_base</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%AE%9E%E9%99%85%E5%AF%BC%E8%88%AA%E9%97%AE%E9%A2%98%E7%9A%84%E7%A7%AF%E7%B4%AF/" data-id="ckr28oqwn006pewlmczst1vzn" data-title="实际导航问题的积累" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/反光板/反光板定位 (二) 建图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%BA%8C)%20%E5%BB%BA%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2021-03-17T13:01:41.000Z" itemprop="datePublished">2021-03-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%BA%8C)%20%E5%BB%BA%E5%9B%BE/">反光板定位 (二) 建图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>上一篇的最后已经发布了反光板在雷达坐标系中的位姿，下面可以建图了。</p>
+<p>地图文件不是pgm了，而是文本文件<code>reflectorMap.txt</code>，每行是反光板索引和对应的全局位姿，索引是从1开始的。</p>
+<p>全局位姿还是来自AMCL。在之前用gmapping建好区域的地图之后，<code>map</code>坐标系就是固定的，那么<code>map</code>和<code>laser_link</code>的tf转换也是固定的，既然我们已经有了反光板在<code>laser_link</code>中的位姿，那么用函数<code>tf2_ros::Buffer::transform</code>就能得到反光板的全局位姿了，但没有朝向，也不需要朝向。同时发布到话题<code>global_reflector_poses</code></p>
+<p>再写一个程序，订阅话题<code>global_reflector_poses</code>，保存所有位姿点到文件<code>reflectorMap.txt</code>，索引从1开始即可。由于建图时会同时检测多个反光板，所以无法确定每个反光板的索引</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="输出的反光板全局位姿出现nan，结果在rviz里无法显示-PoseArray"><a href="#输出的反光板全局位姿出现nan，结果在rviz里无法显示-PoseArray" class="headerlink" title="输出的反光板全局位姿出现nan，结果在rviz里无法显示 PoseArray"></a>输出的反光板全局位姿出现nan，结果在rviz里无法显示 PoseArray</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">header:</span><br><span class="line">  seq: 2163</span><br><span class="line">  stamp:</span><br><span class="line">    secs: 1615947451</span><br><span class="line">    nsecs: 110626927</span><br><span class="line">  frame_id: <span class="string">&quot;map&quot;</span></span><br><span class="line">poses:</span><br><span class="line">  -</span><br><span class="line">    position:</span><br><span class="line">      x: -4.62540772845</span><br><span class="line">      y: 0.131501771877</span><br><span class="line">      z: 0.154</span><br><span class="line">    orientation:</span><br><span class="line">      x: nan</span><br><span class="line">      y: nan</span><br><span class="line">      z: nan</span><br><span class="line">      w: nan</span><br><span class="line">  -</span><br><span class="line">    position:</span><br><span class="line">      x: -3.45648613658</span><br><span class="line">      y: -1.2583585332</span><br><span class="line">      z: 0.154</span><br><span class="line">    orientation:</span><br><span class="line">      x: 0.0</span><br><span class="line">      y: 0.0</span><br><span class="line">      z: -0.603646441451</span><br><span class="line">      w: 0.797252139366</span><br><span class="line">  -</span><br><span class="line">    position:</span><br><span class="line">      x: -4.01158578781</span><br><span class="line">      y: 0.355958845102</span><br><span class="line">      z: 0.154</span><br><span class="line">    orientation:</span><br><span class="line">      x: nan</span><br><span class="line">      y: nan</span><br><span class="line">      z: nan</span><br><span class="line">      w: nan</span><br></pre></td></tr></table></figure>
+<p>很可能是四元数的平方和不是1，因为我们建图定位都不需要四元数，可以手动设置<code>(w,x,y,z)=(1,0,0,0)</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%BA%8C)%20%E5%BB%BA%E5%9B%BE/" data-id="ckr28or1200h1ewlm6lok09vf" data-title="反光板定位 (二) 建图" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/反光板/反光板定位 (一) 高强度数据提取和处理" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%B8%80)%20%E9%AB%98%E5%BC%BA%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%92%8C%E5%A4%84%E7%90%86/" class="article-date">
+  <time class="dt-published" datetime="2021-03-17T12:58:16.000Z" itemprop="datePublished">2021-03-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%B8%80)%20%E9%AB%98%E5%BC%BA%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%92%8C%E5%A4%84%E7%90%86/">反光板定位 (一) 高强度数据提取和处理</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="https://i.loli.net/2021/03/21/tgr9zBPhdw6CSIe.png" alt="基于反光板的2D激光雷达定位流程"></p>
+<p>扫描数据分割及数据拟合属于反光板位置的拟合，其主要作用是将原始扫描数据转化为反光板极坐标。反光板位置匹配是将反光板极坐标与定位地图中反光板坐标相匹配。</p>
+<p><img src="https://i.loli.net/2021/03/17/Ncg6CXD3sEG2fHo.png" alt="激光束和反光板圆截面"><br>每个反光板对应一些激光束，因此需要每个反光板对应的激光束index。</p>
+<h2 id="反光板数据的提取处理"><a href="#反光板数据的提取处理" class="headerlink" title="反光板数据的提取处理"></a>反光板数据的提取处理</h2><p>订阅的雷达话题是<code>scan_rectified</code>，不是<code>scan</code></p>
+<p>当雷达扫描到三个反光板时，获得的强度数据可能是这样的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">39.0</span>, <span class="number">44.0</span>, <span class="number">38.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">52.0</span>, </span><br><span class="line"># 然后是一大堆低强度的数据</span><br><span class="line"><span class="number">255.0</span>, <span class="number">40.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">40.0</span>, <span class="number">255.0</span>, </span><br><span class="line"># 然后是一大堆低强度的数据</span><br><span class="line"><span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>, <span class="number">255.0</span>,</span><br><span class="line"># 然后是一大堆低强度的数据</span><br></pre></td></tr></table></figure>
+
+<p>数据有下列特点：</p>
+<ul>
+<li><p>反光板有部分遮挡: 255之间会有低强度数据，需要把这些过滤掉</p>
+</li>
+<li><p>有时某个反光板只对应一两个强度数据，无法用最小二乘法拟合，如果拟合，每次结果会有明显差别。因此规定如果少于6个，则不处理。</p>
+</li>
+<li><p>其他障碍物表面光滑或者是镜面时，也会产生高强度的反射，与反光板混淆。尽量将这样的障碍物挡住</p>
+</li>
+<li><p>高强度数据的range可能是nan，也要过滤。另外需要限制在最小和最大值之间</p>
+</li>
+<li><p>同一个反光板的数据，中间遮挡太多，容易误判，比如这样的</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">scan id: <span class="number">1673</span>, range: <span class="number">0.406000</span></span><br><span class="line">scan id: <span class="number">1674</span>, range: <span class="number">0.406000</span></span><br><span class="line">scan id: <span class="number">1680</span>, range: <span class="number">0.402000</span></span><br><span class="line"></span><br><span class="line">scan id: <span class="number">1742</span>, range: <span class="number">0.408000</span></span><br><span class="line">scan id: <span class="number">1743</span>, range: <span class="number">0.404000</span></span><br></pre></td></tr></table></figure>
+<p>虽然id从1680跳到1742，但这里实际只有1个反光板，需要一个参数<code>reflector_data_threshold</code>进行区分，默认100。也就是相邻高强度数据的ID之差超过100才算发现了新的反光板，否则会出现一个反光板对应多个位姿。</p>
+<p>某反光板的强度数据断裂太多，将1个反光板认为是2个<br><img src="https://i.loli.net/2021/04/25/tTcFxBSzrNyibwh.gif" alt="某反光板的强度数据断裂太多"></p>
+<h2 id="反光板的数据拟合-获取局部位姿"><a href="#反光板的数据拟合-获取局部位姿" class="headerlink" title="反光板的数据拟合 (获取局部位姿)"></a>反光板的数据拟合 (获取局部位姿)</h2><p>根据强度数据，可以获得对应的激光束的index，然后可以找到对应的range。根据角分辨率和index，就可以得到反射板的激光束对应的角度<code>theta</code>。 我们要的是多个反光板的<strong>局部位姿</strong>，也就是<strong>多个反光板圆截面的圆心在雷达坐标系中的坐标</strong> (<code>geometry_msgs::PoseArray</code>)。如果只对扫描得到的强度数据简单求算数平均，会不准确，局部位姿是变化的。因为车移动时，只能扫描到反光板一小段圆弧，每次扫描到的圆弧不同，圆弧的中心也就不同，所以局部坐标会在圆截面的范围内变化。</p>
+<p>看了一些论文，有各种各样的方法，先使用Ceres最小二乘法进行拟合<br><img src="https://i.loli.net/2021/03/17/w2LyRTVGbOoAUXt.png"></p>
+<p>如果查最小二乘法求拟合圆的算法，均是Kasa算法的实现。但这跟我的问题不同，Kasa算法用于未知圆半径的情况，我用它求出来的圆半径很小，而当前反射板的圆半径是已知的，所以还是用Ceres计算。如果遇到不收敛的情况，将局部位姿赋值0</p>
+<p>反光板在雷达坐标系中的朝向，设置为雷达射向反光板的激光成角，即<code>theta = angle_min + increment*i</code>。每个强度点到雷达的距离range是从话题获得的，那么极坐标(range, theta)就可以获得。可以很方便的转换为笛卡尔坐标(x<sub>i</sub>, y<sub>i </sub>)，使用最小二乘就可以求出圆心，也就是反光板在雷达坐标系中的坐标。</p>
+<br>
+
+<p>参考:<br><a target="_blank" rel="noopener" href="http://www.whudj.cn/?p=173">最小二乘法圆拟合：kasa’s method</a><br><a target="_blank" rel="noopener" href="https://people.cas.uab.edu/~mosya/cl/CPPcircle.html">C++ code for circle fitting algorithms</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/17/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E5%AE%9A%E4%BD%8D%20(%E4%B8%80)%20%E9%AB%98%E5%BC%BA%E5%BA%A6%E6%95%B0%E6%8D%AE%E6%8F%90%E5%8F%96%E5%92%8C%E5%A4%84%E7%90%86/" data-id="ckr28or1100gxewlm7x3sfdlo" data-title="反光板定位 (一) 高强度数据提取和处理" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/全局路径/公司机器人的全局路径算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/10/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/%E5%85%AC%E5%8F%B8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2021-03-10T14:19:23.000Z" itemprop="datePublished">2021-03-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/10/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/%E5%85%AC%E5%8F%B8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">公司机器人的全局路径算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>目前使用Dijkstra算法。</p>
+<p>小车的程序没有加载<code>global_planner_params.yaml</code>，所以全局路径的相关参数都没有加载。</p>
+<p>如果参数服务器不加载yaml文件，就没有相应的参数。<code>nh.param</code>函数只是对相应的变量赋值，不会加载参数到服务器。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/10/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/%E5%85%AC%E5%8F%B8%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/" data-id="ckr28or2f00lkewlm3zn76u15" data-title="公司机器人的全局路径算法" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/gmapping/多台车使用gmapping联合建图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/10/%E6%BF%80%E5%85%89SLAM/gmapping/%E5%A4%9A%E5%8F%B0%E8%BD%A6%E4%BD%BF%E7%94%A8gmapping%E8%81%94%E5%90%88%E5%BB%BA%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2021-03-10T14:13:20.000Z" itemprop="datePublished">2021-03-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/10/%E6%BF%80%E5%85%89SLAM/gmapping/%E5%A4%9A%E5%8F%B0%E8%BD%A6%E4%BD%BF%E7%94%A8gmapping%E8%81%94%E5%90%88%E5%BB%BA%E5%9B%BE/">多台车使用gmapping联合建图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=Dw9wkcfnZo0">三台车使用RRT和gmapping联合建图</a></p>
+<ul>
+<li><p>集群机器人可以协作进行地图构建吗？<br>两个问题：每个机器人的定位；每个机器人和主节点通信。机器人1把扫描的点加到地图，机器人2把扫描的点加到地图，最后形成完整地图。</p>
+</li>
+<li><p>室内的两个车怎么进行准确定位呢？<br>环境不大的话，在天花板上贴二维码，两个机器人都去识别二维码。如果环境很大，初始建图时候，让两个机器人离得近一些，手工量出来二者的相对位置，建图时候在增量定位，这样也可以定位</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/10/%E6%BF%80%E5%85%89SLAM/gmapping/%E5%A4%9A%E5%8F%B0%E8%BD%A6%E4%BD%BF%E7%94%A8gmapping%E8%81%94%E5%90%88%E5%BB%BA%E5%9B%BE/" data-id="ckr28or0y00gqewlm79ukgr5v" data-title="多台车使用gmapping联合建图" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-PCL点云/PCL1.7和1.8版本冲突问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/09/PCL%E7%82%B9%E4%BA%91/PCL1.7%E5%92%8C1.8%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2021-03-09T13:28:54.000Z" itemprop="datePublished">2021-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/09/PCL%E7%82%B9%E4%BA%91/PCL1.7%E5%92%8C1.8%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/">PCL1.7和1.8版本冲突问题</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>同事的点云程序必须用PCL-1.8，而ROS默认的是1.7，结果有时出现了版本冲突。</p>
+<p>安装了PCL-1.8后，重要的库文件<code>libcostmap_2d.so</code>链接到了pcl-1.8，而不是默认的1.7。此时删除了pcl-1.8之后，再编译会报错:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CMake Error at /home/user/catkin_ws/devel/share/costmap_2d/cmake/costmap_2dConfig.cmake:113 (message):</span><br><span class="line">Project <span class="string">&#x27;costmap_2d&#x27;</span> specifies <span class="string">&#x27;/usr/local/include/pcl-1.8&#x27;</span> as an include</span><br><span class="line">dir, <span class="built_in">which</span> is not found.  It does neither exist as an absolute directory</span><br><span class="line">nor <span class="keyword">in</span> <span class="string">&#x27;/home/user/catkin_ws/src/navigation/costmap_2d//usr/local/include/pcl-1.8&#x27;</span>.</span><br></pre></td></tr></table></figure>
+<p>编译还会找pcl-1.8的路径，这是<code>CMake caches</code>的问题，不是软链接之类的问题，它还会去找旧的路径，所以删除<code>catkin_ws/build</code>下面的<code>catkin_make.cache</code>,  <code>Makefile</code>,   <code>CMakeCache.txt</code>. 然后重新编译，这样<code>libcostmap_2d.so</code>就不会再去链接1.8了</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/09/PCL%E7%82%B9%E4%BA%91/PCL1.7%E5%92%8C1.8%E7%89%88%E6%9C%AC%E5%86%B2%E7%AA%81%E9%97%AE%E9%A2%98/" data-id="ckr28oqua0013ewlmc9r3c7jt" data-title="PCL1.7和1.8版本冲突问题" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/全局路径/sbpl planner的配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/sbpl%20planner%E7%9A%84%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2021-03-09T13:25:48.000Z" itemprop="datePublished">2021-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/sbpl%20planner%E7%9A%84%E9%85%8D%E7%BD%AE/">sbpl planner的配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>先安装库</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ros-kinetic-sbpl</span><br><span class="line">sudo apt-get install ros-kinetic-fake-localization</span><br><span class="line">sudo apt-get install ros-kinetic-sbpl-lattice-planner</span><br></pre></td></tr></table></figure>
+<p>修改<code>move_base_params.yaml</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#base_global_planner: &quot;global_planner/GlobalPlanner&quot;</span></span><br><span class="line">base_global_planner: SBPLLatticePlanner</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/sbpl%20planner%E7%9A%84%E9%85%8D%E7%BD%AE/" data-id="ckr28or2f00lhewlmf46w5qyr" data-title="sbpl planner的配置" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-路径规划/全局路径/ROS配置RRT全局算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/ROS%E9%85%8D%E7%BD%AERRT%E5%85%A8%E5%B1%80%E7%AE%97%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2021-03-09T13:24:35.000Z" itemprop="datePublished">2021-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/ROS%E9%85%8D%E7%BD%AERRT%E5%85%A8%E5%B1%80%E7%AE%97%E6%B3%95/">ROS配置RRT全局算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>因为单通道的处理已经在<code>global_planner</code>里面，而<code>global_planner</code>只包括A星和Dijkstra算法，所以使用了RRT就不能再使用单通道了。</p>
+<h2 id="RRT算法的配置"><a href="#RRT算法的配置" class="headerlink" title="RRT算法的配置"></a>RRT算法的配置</h2><p><code>rrt_planner_plugin.xml</code>文件:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">library</span> <span class="attr">path</span>=<span class="string">&quot;lib/librrt_planner&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">class</span> <span class="attr">name</span>=<span class="string">&quot;rrt_planner/RRTPlanner&quot;</span> <span class="attr">type</span>=<span class="string">&quot;rrt_planner::RRTPlanner&quot;</span> <span class="attr">base_class_type</span>=<span class="string">&quot;nav_core::BaseGlobalPlanner&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>This is a global planner plugin that implements the RRT algorithm.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">library</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中的name就是赋给<code>base_global_planner</code>，<code>base_class_type</code>是<code>nav_core::BaseGlobalPlanner</code>或者<code>nav_core::BaseLocalPlanner</code>, <code>path=&quot;lib/librrt_planner&quot;</code>的意思是目录<code>devel/lib</code>或者<code>install/lib</code>下的文件<code>librrt_planner.so</code></p>
+<br>
+
+<p>修改<code>move_base_params.yaml</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#base_global_planner: &quot;global_planner/GlobalPlanner&quot;</span></span><br><span class="line">base_global_planner: <span class="string">&quot;rrt_planner/RRTPlanner&quot;</span></span><br></pre></td></tr></table></figure>
+<p>还要注释掉所有<code>global_planner/GlobalPlanner</code>使用的参数，以及单通道等层</p>
+<p>运行时发现车走了一段，然后再发导航命令就不动了，怎么也查不出原因。于是先在仿真上试验，结果发现车只能走白色区域，不能走有代价地图的区域，或者走的很奇怪，仿真中的情况如下：<br><a target="_blank" rel="noopener" href="https://youtu.be/cdd8bdtWi6Q">RRT算法的仿真导航结果</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/ROS%E9%85%8D%E7%BD%AERRT%E5%85%A8%E5%B1%80%E7%AE%97%E6%B3%95/" data-id="ckr28or2e00lfewlmcvch2dyn" data-title="ROS配置RRT全局算法" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/反光板/反光板介绍" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/02/27/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E4%BB%8B%E7%BB%8D/" class="article-date">
+  <time class="dt-published" datetime="2021-02-27T13:27:22.000Z" itemprop="datePublished">2021-02-27</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/02/27/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E4%BB%8B%E7%BB%8D/">反光板介绍和选型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>2013年以前，国内普遍使用的激光导航AGV依靠反光板导航。但铺设反光板耗时长、后期维护难，花费也很高。且在恶劣的生产环境中，这种产品使用体验并不好，反光板很容易被弄脏、光源也可能被遮挡，如果叉车使用量多，反光板铺得过度密集，也会导致信号错乱，很难在封闭空间中同时运行多个产品。</p>
+<p>基于反光板的SLAM属于特征地图的范畴。</p>
+<table><tr><td bgcolor=yellow> 在长廊、变化频繁的环境中，可使用激光反光板导航、二维码导航，确保定位不会丢失。 </td></tr></table>
+
+<p>激光反光板的内部是三棱镜结构，可以实现入射光的同路反射，反射率远远大于普通物体表面反射率，提供特定反光强度，所以激光雷达能够轻易识别出反光板。</p>
+<p>反光板导航是在AGV行驶路径的周围安装位置精确的激光反射板，AGV通过发射激光束，同时采集由反射板反射的激光束，来确定其当前的位置和方向，并通过连续的三角几何运算来实现AGV的导航。</p>
+<p>激光雷达通过识别扫描范围内的物体表面反射率，来识别激光反光板的位置信息（X,Y），再通过最少三个反光板的位置，用三角定位法计算出雷达当前坐标位置。 雷达通过记录光束的序号得到反光板相对车身的偏角。</p>
+<p><img src="https://i.loli.net/2021/03/09/nIyxFNpJ9fR26Gt.png" alt="反光条用于充电桩的定位"></p>
+<h2 id="问题阐述"><a href="#问题阐述" class="headerlink" title="问题阐述"></a>问题阐述</h2><p>机器人会导航到某个空旷和缺乏环境特征的区域，此时用AMCL很容易丢失定位，无法继续导航了。这其实也可以归结为机器人绑架问题，很直接地想到用二维码全局定位解决，在机器人可能的导航路径上放一些二维码，最好能让机器人在这个区域一直能看到二维码，这样才保证不丢失定位。但问题是工控机的配置又不高，<strong>二维码定位会占用CPU，位姿话题输出频率太低</strong></p>
+<p>首先想到的思路，在进入该区域前，记下map坐标系和odom坐标系的转换关系，然后关闭AMCL。之后就只靠里程计定位，同时还要写一个程序发布<code>map---&gt;odom</code>的tf转换，维持tf树不变，出了这个区域再启动AMCL。 这个思路适用于机器人在这个区域行走不多的情况，如果行走很多，里程计累计误差会比较大，影响定位。</p>
+<p>如果使用反光板，实际和二维码的逻辑类似。在这里<strong>都是用于全局定位</strong>，区别在于二维码是带有ID识别的，但反光板没有ID，需要自己用算法识别当前机器人检测的是哪几个反光板。</p>
+<p><font color = blue size=4> 实际上反光板最典型的应用是EKF(《概率机器人》 7.4)，但EKF算法不能解决全局定位和某些情况的机器人绑架问题(《概率机器人》第8章开头)</font>。 而这正是我面临的问题， 所以我的做法并不是把反光板当做landmark(cartographer中的用法)的正规方案：</p>
+<ol>
+<li>建图：在开启AMCL情况下，机器人先获得所有反光板在区域内的全局坐标(map坐标系的坐标，没有朝向)，建立特征地图</li>
+<li>先记下<code>map---&gt;odom</code>的tf转换，关闭AMCL，再用程序发布这个tf</li>
+<li>机器人进入区域，检测反光板的局部位姿(一直保证至少检测三个，在雷达坐标系的位姿)，与地图文件中的位姿匹配，获得当前检测的反光板ID和全局位姿</li>
+<li>根据检测的反光板的全局位姿，求出机器人的全局位姿</li>
+</ol>
+<p>反光板定位包括了静态定位和动态定位。比如二维码定位属于静态，只给一个初值，实现了当前的定位。之后一直依靠AMCL定位，这属于动态定位。我们要实现的是动态定位，需要一直至少检测到三个反光板。</p>
+<h2 id="设备选型"><a href="#设备选型" class="headerlink" title="设备选型"></a>设备选型</h2><p>因为堆垛式叉车常常移动货物，使得障碍时有时无，所以常常使用反光板导航。常用<font color = blue size=4>倍加福雷达R2000HD </font>，它专门用于搭配反光板，有效输出距离为<code>0.1～10m</code>，输出回波强度为<code>32～4095</code>，也可以使用<code>SICK Nav350</code>，这两个雷达的驱动强大之处在于能直接针对反光板建图。还有万集科技的<code>WLR-712</code>雷达，检测距离达50米。</p>
+<p>对于一个品牌的雷达，并不是所有型号都支持搭配反光板。比如镭神雷达，N401和N501系列是专门的反光板激光雷达，其他则不是。我手里的北洋雷达就没法用于反光板，它的激光发射到反光板对应的强度没有增大。</p>
+<p>但是限于成本，我只能用星秒雷达，它对一般障碍物的反射强度基本是<code>15~30</code>，用特定的反光材料才能检测到高强度数据，根据厂家设定，强度大于<strong>60</strong>的数据，强度直接置为255。外部光照条件不会对强度数据有影响。</p>
+<p>我使用的是3M公司生产的V级白色钻石级反光膜，做成直径10cm的圆柱形，该反光<br>材料为全棱镜结构。<br><img src="https://i.loli.net/2021/04/24/N9XnM3gvqdPie8k.png"></p>
+<p>但是从rviz里看反光柱的强度数据，结果如下<br><img src="https://i.loli.net/2021/04/24/imMSb5tULN8guoj.png"><br>蓝色部分是我们需要的255的高强度数据，已经看不出圆弧了，甚至整个扫描结果也不太像圆弧，近乎椭圆弧了。</p>
+<p>换成星秒雷达的驱动软件查看，有趣的是强度颜色与rviz里是相反的，红色是高强度。在反光柱离雷达稍微远一点(2米左右)，完全看不出圆弧形状了<br><img src="https://i.loli.net/2021/04/24/DfJWpbPhRzYrcSw.png" alt="星秒雷达PavoView 不同强度反射有不同颜色点云"><br>经过厂家的多次测试，发现是反光材料不好，钻石级反而导致点云数据不好，改用二级的3930材料就有圆弧形状了。</p>
+<p>遗憾的是，后来发现，星秒雷达扫描中心正对着反光柱(直径10cm)时，检测距离可以超过3米， <font color = orange size=4>但是如果是成一定角度地扫描，检测距离会变小，甚至有时不到1米，因为强度数据太少了。而且并不是角度越大， </font>毕竟不是专业的反光板雷达，所以考虑把反光柱换成反光板，强度数据增加了很多<br><img src="https://i.loli.net/2021/04/24/26aURmGIurCEiWe.png"></p>
+<p><img src="https://i.loli.net/2021/04/25/g1RydNUoZmpEfa7.png" alt="反光板"></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-27875-id-5824925.html">关于使用激光雷达的光线反射强度来定位目标的方案</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/02/27/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E4%BB%8B%E7%BB%8D/" data-id="ckr28or0z00guewlm9awybsgy" data-title="反光板介绍和选型" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/4/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/6/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

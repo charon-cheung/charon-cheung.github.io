@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>C++与Qt常用的类型转换 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="注意： c++11不允许char* c &#x3D; &quot;123&quot;;这种初始化，通常都用const char*。 string转char*是不允许的。printf(&quot;%s&quot;)只接收char*和const char*，不能是string const char*转string12const char* cc &#x3D; &quot;12345&quot;;std::string s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++与Qt常用的类型转换">
+<meta property="og:url" content="http://example.com/2019/06/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++%E4%B8%8EQt%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="注意： c++11不允许char* c &#x3D; &quot;123&quot;;这种初始化，通常都用const char*。 string转char*是不允许的。printf(&quot;%s&quot;)只接收char*和const char*，不能是string const char*转string12const char* cc &#x3D; &quot;12345&quot;;std::string s">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-06-19T13:18:00.000Z">
+<meta property="article:modified_time" content="2020-08-24T14:13:03.307Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-C++/C++  基础/C++与Qt常用的类型转换" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/06/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++%E4%B8%8EQt%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" class="article-date">
+  <time class="dt-published" datetime="2019-06-19T13:18:00.000Z" itemprop="datePublished">2019-06-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      C++与Qt常用的类型转换
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>注意： c++11不允许<code>char* c = &quot;123&quot;;</code>这种初始化，通常都用<code>const char*</code>。 <code>string</code>转<code>char*</code>是不允许的。<br><code>printf(&quot;%s&quot;)</code>只接收<code>char*</code>和<code>const char*</code>，不能是string</p>
+<h3 id="const-char-转string"><a href="#const-char-转string" class="headerlink" title="const char*转string"></a>const char*转string</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* cc = <span class="string">&quot;12345&quot;</span>;</span><br><span class="line">std::string s = cc;</span><br></pre></td></tr></table></figure>
+<p>其实就是直接赋值</p>
+<h3 id="string转const-char"><a href="#string转const-char" class="headerlink" title="string转const char*"></a>string转const char*</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::string s = <span class="string">&quot;12345&quot;</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* cc = s.<span class="built_in">c_str</span>();</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* cc = s.<span class="built_in">data</span>();	<span class="comment">// 实际调用同c_str()</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="const-char-转-char"><a href="#const-char-转-char" class="headerlink" title="const char* 转 char*"></a>const char* 转 char*</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* c = <span class="keyword">const_cast</span>&lt;<span class="keyword">char</span>*&gt;(cc);</span><br></pre></td></tr></table></figure>
+
+<h3 id="char-转-const-char"><a href="#char-转-const-char" class="headerlink" title="char* 转 const char*"></a>char* 转 const char*</h3><p>直接赋值转换即可</p>
+<h3 id="拼接const-char"><a href="#拼接const-char" class="headerlink" title="拼接const char*"></a>拼接const char*</h3><p>先转换成string，用+运算符，最后转为<code>const char*</code>类型。或者用<code>strcat</code>，但是要保证空间足够：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> str1[<span class="number">30</span>];</span><br><span class="line"><span class="built_in">memset</span>(str1, <span class="number">0</span>, <span class="built_in"><span class="keyword">sizeof</span></span>(str1));</span><br><span class="line"><span class="built_in">memcpy</span>(str1, <span class="string">&quot;abcd&quot;</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* str2 = <span class="string">&quot;1234&quot;</span>;</span><br><span class="line"><span class="built_in">strcat</span>(str1, str2);</span><br><span class="line">cout &lt;&lt; str1 &lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<p>还有<code>stringstream</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sstream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::stringstream ss;</span><br><span class="line">ss &lt;&lt; a &lt;&lt; b;</span><br><span class="line"></span><br><span class="line">std::string combined = ss.<span class="built_in">str</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="数值类型转为string"><a href="#数值类型转为string" class="headerlink" title="数值类型转为string"></a>数值类型转为string</h3><p>C++11标准增加了全局函数std::to_string，有多个重载，将常用数值类型转为string</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">int</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">long</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">long</span> <span class="keyword">long</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">unsigned</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="keyword">long</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">float</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">double</span> val)</span></span>;</span><br><span class="line"><span class="function">string <span class="title">to_string</span> <span class="params">(<span class="keyword">long</span> <span class="keyword">double</span> val)</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="string转数值类型"><a href="#string转数值类型" class="headerlink" title="string转数值类型"></a>string转数值类型</h3><p>也是C++11新增加的函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::stod 		<span class="comment">// string转double</span></span><br><span class="line">std::stof 		<span class="comment">// string转float</span></span><br><span class="line">std::stoi 		<span class="comment">// string转int</span></span><br><span class="line">std::stol 		<span class="comment">// string转long</span></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="QString转std-string"><a href="#QString转std-string" class="headerlink" title="QString转std::string"></a>QString转std::string</h3><p>QString::toStdString</p>
+<h3 id="std-string转QString"><a href="#std-string转QString" class="headerlink" title="std::string转QString"></a>std::string转QString</h3><p>QString::fromStdString</p>
+<h3 id="QString转char"><a href="#QString转char" class="headerlink" title="QString转char*"></a>QString转char*</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">QString str1 = <span class="string">&quot;Hello&quot;</span>;</span><br><span class="line">QByteArray a = str.<span class="built_in">toLatin1</span>();</span><br><span class="line"><span class="keyword">char</span> *b = a.<span class="built_in">data</span>();</span><br></pre></td></tr></table></figure>
+
+<h3 id="char-转QString"><a href="#char-转QString" class="headerlink" title="char* 转QString"></a>char* 转QString</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *b;</span><br><span class="line">QString str2 = <span class="built_in">QString</span>(<span class="built_in">QLatin1String</span>(b));</span><br></pre></td></tr></table></figure>
+
+<h2 id="QByteArray与QString"><a href="#QByteArray与QString" class="headerlink" title="QByteArray与QString"></a>QByteArray与QString</h2><p>QString会用UTF-16编码存储，而qDebug()等I/O函数会以UTF-8编码处理。其实转换后的字节流是正确的，只是显示时用了和字节流不同的编码方式处理导致乱码</p>
+<p>// Qt默认会使用本机编码，所以对于中文系统，下面这句设置是多余的<br><code>QTextCodec::setCodecForLocale(QTextCodec::codecForName(&quot;GBK&quot;));</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//QByteArray转QString</span></span><br><span class="line">QByteArray ba;</span><br><span class="line">QString s = <span class="built_in">QString</span>(ba);	<span class="comment">// 强制转换</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//QString转QByteArray</span></span><br><span class="line">QString s=<span class="string">&quot;abc&quot;</span>;</span><br><span class="line">QByteArray ba = s.<span class="built_in">toLocal8Bit</span>();	<span class="comment">// 受setCodecForLocale影响，会转换为设定的编码。如果本机不支持指定编码，则会按toLatin1处理</span></span><br><span class="line">QByteArray baLatin1 = str1.<span class="built_in">toLatin1</span>(); <span class="comment">//不受setCodecForLocale影响，强制转换为ISO-8859-1编码  </span></span><br><span class="line">QByteArray bUtf8 = str1.<span class="built_in">toUtf8</span>();     <span class="comment">// 不受setCodecForLocale影响，强制转换为UTF-8编码</span></span><br></pre></td></tr></table></figure>
+
+<p>QByteArray为汉字时，输出会出现乱码，解决方法：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">QByteArray ba = <span class="string">&quot;汉字&quot;</span>;</span><br><span class="line">QTextCodec* tc = QTextCodec::<span class="built_in">codecForName</span>(<span class="string">&quot;GBK&quot;</span>);</span><br><span class="line"><span class="built_in">qDebug</span>()&lt;&lt;ba;				<span class="comment">//  &quot;\xBA\xBA\xD7\xD6&quot;</span></span><br><span class="line"><span class="built_in">qDebug</span>()&lt;&lt;<span class="built_in">QString</span>(ba);		<span class="comment">//  &quot;????&quot; </span></span><br><span class="line"><span class="built_in">qDebug</span>()&lt;&lt;tc-&gt;<span class="built_in">toUnicode</span>(ba);	<span class="comment">// 汉字</span></span><br></pre></td></tr></table></figure>
+
+<p>wchar_t 转 QString</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">wchar_t</span> a[<span class="number">10</span>];</span><br><span class="line">QString str1= QString::<span class="built_in">fromWCharArray</span>(a);</span><br></pre></td></tr></table></figure>
+
+<p>int/char 转 16进制QString 补0</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">0x0483</span>;</span><br><span class="line">QString str1 = <span class="built_in">QString</span>(<span class="string">&quot;%1&quot;</span>).<span class="built_in">arg</span>(a,<span class="number">4</span>,<span class="number">16</span>,<span class="built_in">QLatin1Char</span>(<span class="string">&#x27;0&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+
+
+<p>环境设置为GB2312,汉字会显示为乱码，使用QStringLiteral会报错<code>error: converting to execution character set: Illegal byte sequence</code>，发现是Mingw编译器问题，换成MSVC编译正常。</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/aqtata/article/details/9184741">Qt字符编码、乱码的一点总结</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/06/19/C++/C++%20%20%E5%9F%BA%E7%A1%80/C++%E4%B8%8EQt%E5%B8%B8%E7%94%A8%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" data-id="ckr28oqwv007aewlmcqep0z45" data-title="C++与Qt常用的类型转换" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/06/24/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/rosbag%E7%9A%84%E4%BD%BF%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          rosbag的使用
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/19/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/roscore%E6%BA%90%E7%A0%81/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">roscore源码</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

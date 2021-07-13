@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>通过cgi切换机器人的地图 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文写的时间比较早，现在发现没有频繁切换地图的需求，机器人在一次现场部署后，地图长期内不会再换，另一个地图一般用另一个机器人   在上位机需要切换机器人中使用的地图，目前采用http get的方式获得参数map_name值，也就是浏览器地址栏是这样的:http:&#x2F;&#x2F;192.168.1.14:8080&#x2F;load_map?map_name&#x3D;house，在网络目录里放load_map的CGI可执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="通过cgi切换机器人的地图">
+<meta property="og:url" content="http://example.com/2018/11/23/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/cgi%E5%88%87%E6%8D%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%9C%B0%E5%9B%BE/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文写的时间比较早，现在发现没有频繁切换地图的需求，机器人在一次现场部署后，地图长期内不会再换，另一个地图一般用另一个机器人   在上位机需要切换机器人中使用的地图，目前采用http get的方式获得参数map_name值，也就是浏览器地址栏是这样的:http:&#x2F;&#x2F;192.168.1.14:8080&#x2F;load_map?map_name&#x3D;house，在网络目录里放load_map的CGI可执">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2019/08/12/6XMNbVU24t5DcIx.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/14/s9ob3E6RDyrhJHu.png">
+<meta property="og:image" content="https://i.loli.net/2019/08/14/WmvzABZ1GfPlUX9.png">
+<meta property="article:published_time" content="2018-11-23T14:03:50.000Z">
+<meta property="article:modified_time" content="2020-08-31T02:54:13.468Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web服务器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/08/12/6XMNbVU24t5DcIx.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-ROS/ROS机器人/cgi切换机器人的地图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2018/11/23/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/cgi%E5%88%87%E6%8D%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%9C%B0%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2018-11-23T14:03:50.000Z" itemprop="datePublished">2018-11-23</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      通过cgi切换机器人的地图
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p> <font color = red>  <font size= 3> 本文写的时间比较早，现在发现没有频繁切换地图的需求，机器人在一次现场部署后，地图长期内不会再换，另一个地图一般用另一个机器人 </font> </font></p>
+<p>在上位机需要切换机器人中使用的地图，目前采用<code>http get</code>的方式获得参数<code>map_name</code>值，也就是浏览器地址栏是这样的:<code>http://192.168.1.14:8080/load_map?map_name=house</code>，在网络目录里放<code>load_map</code>的CGI可执行文件。在Qt环境里加载cgicc库进行编程。</p>
+<h3 id="初始思路"><a href="#初始思路" class="headerlink" title="初始思路"></a>初始思路</h3><p>先在地址栏输入要用的地图名称，然后在程序里获得这个名称。</p>
+<p>机器人运行时，用<code>move_base.launch</code>运行了一系列跟地图有关的节点，其中的<code>map_server</code>和<code>map_server_amcl</code>两个关键节点的参数就是地图名称，但光重启这两个节点(同时改变参数)还不够，最好把所有节点都重启一遍。所以思路是先关闭这些节点，再使用system函数重新运行这些节点，但地图参数换成地址栏输入的地图名称。</p>
+<p>结果发现system函数只能调用shell的内置命令，如ls,pwd等，不能运行<code>roscore</code>, <code>roslaunch</code>这样的命令，否则结果返回32512，也就是命令不识别。所以只能直接运行ROS的可执行文件+参数。</p>
+<p>使用system函数只能阻塞运行外部程序，这样没法运行多个节点。于是想到了QProcess，因此在Qt环境下用<br>下面方式运行多个外部程序:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">QProcess *pro = <span class="keyword">new</span> QProcess;  </span><br><span class="line">pro-&gt;<span class="built_in">start</span>(<span class="string">&quot;/opt/myApp&quot;</span>,argList);</span><br></pre></td></tr></table></figure>
+<p>这种方法不会阻塞，但是有可能在终端上看不到打印出来的信息。</p>
+<p>很快又发现了问题，<code>move_base</code>节点需要加载很多参数，但加载参数是通过加载yaml文件实现的:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">rosparam</span> <span class="attr">command</span>=<span class="string">&quot;load&quot;</span> <span class="attr">file</span>=<span class="string">&quot;$(find nav_control)/param/navigation/nav_local_costmap_params.yaml&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这是在launch文件里实现的，相当于命令<code>rosparam load param.yaml</code>，用<code>rosparam list</code>观察加载了哪些参数。<br>这是因为机器人使用时，有些参数则需要动态改变（特别是在调试的时候）。ROS提供了参数服务器来满足这一需求。我们可以将参数设置在参数服务器，在需要用到参数的时候再从参数服务器中获取。</p>
+<p>问题就是参数实在太多了，用<code>argc</code>和<code>argv</code>恐怕实现不了，也懒得试验。</p>
+<h3 id="新思路"><a href="#新思路" class="headerlink" title="新思路"></a>新思路</h3><p>其实新思路就是发现了system函数里使用ros命令的方法，一般是很难发现的:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">system(<span class="string">&quot;gnome-terminal -x bash -c &#x27;source ~/my_ws/devel/setup.bash; roslaunch my_package file.launch&#x27;&quot;</span>); </span><br></pre></td></tr></table></figure>
+<p>这样在Qt环境运行这个函数，就可以执行<code>roslaunch</code>命令了，结果是出现一个终端，开始执行ROS命令</p>
+<p>现在把重启各节点的思路改为修改现有的launch文件中的地图参数，我们用<code>QDomDocument</code>几个类实现，这里不赘述了，注意的是这种方法会改变子标签的顺序，这是Qt内部实现的，不影响roslaunch。</p>
+<p>先不考虑CGI，直接在Qt里修改地图参数，用上面的命令roslaunch启动各节点，然后运行<code>rviz</code>，结果发现地图更换成功了！</p>
+<p>最后使用地址栏输入参数，运行CGI程序，但是发现失败了，因为<code>rosnode list</code>没看到需要的节点，反复测试都不能实现。</p>
+<h3 id="最终思路"><a href="#最终思路" class="headerlink" title="最终思路"></a>最终思路</h3><p>把上面的程序分为两部分，上位机使用ros package的开发方式，程序负责获取地址栏参数，然后把这个参数当做<code>std_msgs/String</code>的消息类型发布出来，机器人部分的程序负责订阅这个话题，回调函数里执行roslaunch，但也就出现了一个问题：跟平时的发布不同，上位机里获得参数后只能发布一次，否则机器人里的回调函数会不停地执行roslaunch，那样几个节点会反复挂掉。</p>
+<h3 id="发现的问题"><a href="#发现的问题" class="headerlink" title="发现的问题"></a>发现的问题</h3><p>注意的问题：</p>
+<ol>
+<li><p>还是之前提过的，CGI中只能获得CGI环境那些环境变量，所以即使是<code>/etc/environment</code>这样的系统环境变量也不行，这样就不必特意去设置了。执行<code>getenv(&quot;JAVA_HOME&quot;)</code>的结果一定是null</p>
+</li>
+<li><p>有一些文件在不同电脑上的目录不同，但内容相同，这给版本控制带来了不便，由于不能使用环境变量的方法了，只好使用ini文件做设置，在不同电脑上修改这个文件</p>
+</li>
+<li><p>开始加载地图不成功，因为CGI只能识别自身环境的环境变量，解决方法也简单，把所有ROS相关的环境变量全在代码里用<code>setenv</code>函数设置一遍，</p>
+</li>
+<li><p>system函数调用某执行文件时，不需要<code>./showpath</code>,有可执行权限即可</p>
+</li>
+</ol>
+<ol start="3">
+<li><p>我的电脑上编译的带Qt环境的cgi，到其他电脑上不能运行，同样代码到其他电脑上编译后，放到wwwroot目录，可以运行</p>
+</li>
+<li><p>其实运行<code>map_server</code>这个节点后，打开rviz就可以打开地图了，只是定位导航的功能都没有。如果要换地图成功，必须关掉上一个<code>map_server</code>，如果同时运行了两个，rviz打开地图时会不确定，可能是新的也可能是旧的，应当是跟话题<code>map</code>和<code>map_metadata</code>有关。</p>
+</li>
+<li><p>关闭运行ros程序的网页后，对应节点仍在运行，<code>rosnode list</code>可以观察到，只能用<code>rosnode kill test</code>关闭。同样在<code>Qt Creator</code>中，用system函数运行的可执行文件如果是ROS的，无法用停止键杀掉进程，<code>rosnode list</code>查看会发现节点仍在运行。如果用<code>pkill</code>杀掉节点会不彻底，确实是杀掉了，但rosnode有记录，这时再用<code>rosnode kill</code>就无法抹掉记录了，只能重启<code>roscore</code></p>
+</li>
+<li><p>如果用SSH连接到远程主机运行map_receiver，结果会报错``，这是<code>gnome-terminal</code>那句命令导致的，因此只能在远程主机上终端运行，所以问题就变成了让<code>map_receiver</code>节点开机自启动</p>
+</li>
+</ol>
+<p>CGI执行时，实际是这样的：<br><img src="https://i.loli.net/2019/08/12/6XMNbVU24t5DcIx.png"><br>在浏览器可看到CGI执行头部和响应等选项</p>
+<p>可以看到CGI执行时的进度，也就是<code>Timing</code><br><img src="https://i.loli.net/2019/08/14/s9ob3E6RDyrhJHu.png"></p>
+<p>不存在相应的CGI文件时，网页回复是<code>NOT FOUND</code><br><img src="https://i.loli.net/2019/08/14/WmvzABZ1GfPlUX9.png"></p>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014695839/article/details/78348600">rosparam和参数服务器</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/11/23/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/cgi%E5%88%87%E6%8D%A2%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%9C%B0%E5%9B%BE/" data-id="ckr28oqzc00d4ewlm0nni4f49" data-title="通过cgi切换机器人的地图" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/11/27/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E7%9A%84%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          环境变量
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/22/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/launch%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">roslaunch详解</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

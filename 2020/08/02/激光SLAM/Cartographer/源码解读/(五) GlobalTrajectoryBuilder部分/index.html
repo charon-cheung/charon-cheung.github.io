@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>(五) GlobalTrajectoryBuilder部分 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="接上一篇的回调函数路线 TrajectoryBuilder是用来创建一个trajectory的。所以，该类首先要保存trajectory上的传感器数据，从一个连续的多帧传感器数据中会抽取若干关键帧。一帧关键帧数据被称为trajectory上的一个节点(注意与ROS中的节点概念相区分)，一条trajectory由一串儿节点组成，所以TrajectoryBuilder要维护一个节点列表，同时，每一帧时">
+<meta property="og:type" content="article">
+<meta property="og:title" content="(五) GlobalTrajectoryBuilder部分">
+<meta property="og:url" content="http://example.com/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="接上一篇的回调函数路线 TrajectoryBuilder是用来创建一个trajectory的。所以，该类首先要保存trajectory上的传感器数据，从一个连续的多帧传感器数据中会抽取若干关键帧。一帧关键帧数据被称为trajectory上的一个节点(注意与ROS中的节点概念相区分)，一条trajectory由一串儿节点组成，所以TrajectoryBuilder要维护一个节点列表，同时，每一帧时">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/08/04/vplyBgeraR6iD8Y.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/01/sQ87tlIPLVvhRb9.png">
+<meta property="og:image" content="https://i.loli.net/2020/08/03/L59QOs7dahqDIP3.png">
+<meta property="article:published_time" content="2020-08-02T01:53:37.000Z">
+<meta property="article:modified_time" content="2021-07-01T10:52:54.288Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/08/04/vplyBgeraR6iD8Y.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/Cartographer/源码解读/(五) GlobalTrajectoryBuilder部分" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/" class="article-date">
+  <time class="dt-published" datetime="2020-08-02T01:53:37.000Z" itemprop="datePublished">2020-08-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      (五) GlobalTrajectoryBuilder部分
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>接上一篇的回调函数路线<br><img src="https://i.loli.net/2020/08/04/vplyBgeraR6iD8Y.png" alt="核心路线.png"></p>
+<p>TrajectoryBuilder是用来创建一个trajectory的。所以，该类首先要保存trajectory上的传感器数据，从一个连续的多帧传感器数据中会抽取若干关键帧。一帧关键帧数据被称为trajectory上的一个节点(注意与ROS中的节点概念相区分)，一条trajectory由一串儿节点组成，所以TrajectoryBuilder要维护一个节点列表，同时，每一帧时的传感器数据相对于该Submap的局部坐标变换要已知；其次，该类要创建并维护一个栅格化的Submap列表，以便在MapBuilder中对所有的submap进行优化，形成一个总的Map。每个Submap相对于世界坐标系的位姿要估计出来，这样PoseGraph才能依据不同的submap各自的位姿变换矩阵把他们tie在一起并做全局优化。</p>
+<h2 id="GlobalTrajectoryBuilder"><a href="#GlobalTrajectoryBuilder" class="headerlink" title="GlobalTrajectoryBuilder"></a>GlobalTrajectoryBuilder</h2><p><img src="https://i.loli.net/2020/08/01/sQ87tlIPLVvhRb9.png" alt="TrajectoryBuilderInterface的继承关系"></p>
+<p>分为前端和后端两部分：local_trajectory_builder和pose_graph。<code>GlobalTrajectoryBuilder</code>实际上是一个模板类，模板列表中的<code>LocalTrajectoryBuilder2D</code>和<code>PoseGraph2D</code>分别是前端和后端的两个核心类型。 它将local slam的一些定位和submap信息，送给后端优化pose_graph，从而完成闭环和优化，从而完成整个SLAM。</p>
+<p>成员变量很少：<br><img src="https://i.loli.net/2020/08/03/L59QOs7dahqDIP3.png"><br>完成指定ID轨迹中前端和后端的联系，需要获取trajectory的ID。</p>
+<p><code>AddLocalSlamResultData</code>函数的意思是把前端结果直接给后端，但是不能是当前的前端。这个仅用于后端约束优化。</p>
+<h2 id="时间点云的AddSensorData"><a href="#时间点云的AddSensorData" class="headerlink" title="时间点云的AddSensorData"></a>时间点云的AddSensorData</h2><p>类有多个<code>AddSensorData</code>函数，其中最重要的是时间点云对应的，也是<font color = blue size=4>cartographer最核心的函数 </font></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 参数sensor_id记录了产生数据的传感器， timed_point_cloud_data则是传感器产生的数据</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddSensorData</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">      <span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">      <span class="keyword">const</span> sensor::TimedPointCloudData&amp; timed_point_cloud_data)</span> <span class="keyword">override</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 检查一下前端核心对象是否存在</span></span><br><span class="line">    <span class="built_in">CHECK</span>(local_trajectory_builder_)</span><br><span class="line">        &lt;&lt; <span class="string">&quot;Cannot add TimedPointCloudData without a LocalTrajectoryBuilder.&quot;</span>;</span><br><span class="line">    <span class="comment">// Local SLAM的业务主线, 在该结果中同时记录了子图的更新信息</span></span><br><span class="line">    std::unique_ptr&lt;<span class="keyword">typename</span> LocalTrajectoryBuilder::MatchingResult&gt;</span><br><span class="line">        matching_result = local_trajectory_builder_-&gt;<span class="built_in">AddRangeData</span>(</span><br><span class="line">            sensor_id, timed_point_cloud_data);</span><br><span class="line">    <span class="comment">// 结果中包含了轨迹中节点的pose、点云和submap的相关信息</span></span><br><span class="line">    <span class="keyword">if</span> (matching_result == <span class="literal">nullptr</span>)</span><br><span class="line">      <span class="comment">// The range data 还没有fully accumulated yet.</span></span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 将前端的输出结果喂给后端进行闭环检测和全局优化  */</span></span><br><span class="line">    kLocalSlamMatchingResults-&gt;<span class="built_in">Increment</span>();</span><br><span class="line">     <span class="comment">// 前端匹配的结果，即submap位置和submap</span></span><br><span class="line">    std::unique_ptr&lt;InsertionResult&gt; insertion_result;</span><br><span class="line">    <span class="comment">// 判定前端成功的是否将传感器的数据插入到子图中</span></span><br><span class="line">    <span class="keyword">if</span> (matching_result-&gt;insertion_result != <span class="literal">nullptr</span>) </span><br><span class="line">    &#123;</span><br><span class="line">      kLocalSlamInsertionResults-&gt;<span class="built_in">Increment</span>();</span><br><span class="line">      <span class="comment">// 将匹配后的结果加入图优化节点中</span></span><br><span class="line">      <span class="comment">// 把前端的输出结果喂给后端，即后端增加一个新的节点</span></span><br><span class="line">      <span class="comment">// 后端优化位姿图节点ID，记录在临时对象 node_id</span></span><br><span class="line">      <span class="keyword">auto</span> node_id = pose_graph_-&gt;<span class="built_in">AddNode</span>(</span><br><span class="line">          matching_result-&gt;insertion_result-&gt;constant_data, trajectory_id_,</span><br><span class="line">          matching_result-&gt;insertion_result-&gt;insertion_submaps );</span><br><span class="line">      <span class="built_in">CHECK_EQ</span>(node_id.trajectory_id, trajectory_id_);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 重新封装前端匹配的后的submap结果，并增加一个node_id</span></span><br><span class="line">      insertion_result = absl::make_unique&lt;InsertionResult&gt;( InsertionResult&#123;</span><br><span class="line">          node_id, matching_result-&gt;insertion_result-&gt;constant_data,</span><br><span class="line">          std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap&gt;&gt;(</span><br><span class="line">              matching_result-&gt;insertion_result-&gt;insertion_submaps.<span class="built_in">begin</span>(),</span><br><span class="line">              matching_result-&gt;insertion_result-&gt;insertion_submaps.<span class="built_in">end</span>())  &#125;  );</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 如果提供了回调函数，就调用之，并将前端的输出和刚刚构建的</span></span><br><span class="line">    <span class="comment">//insertion_result对象传参，也就是采用回调函数将前端匹配的结果信息传递出去</span></span><br><span class="line">    <span class="keyword">if</span> (local_slam_result_callback_) </span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">local_slam_result_callback_</span>(</span><br><span class="line">          trajectory_id_, matching_result-&gt;time, matching_result-&gt;local_pose,</span><br><span class="line">          std::<span class="built_in">move</span>(matching_result-&gt;range_data_in_local),</span><br><span class="line">          std::<span class="built_in">move</span>(insertion_result)  );</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基类<code>TrajectoryBuilderInterface</code>中有个成员变量<code>InsertionResult</code>，它描述前端的一次子图更新操作，将传感器的扫描数据插入子图中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="comment">// 有两个字段,分别记录了轨迹的索引(trajectory_id)和一个从零开始计数的节点编号(node_index)</span></span><br><span class="line">  NodeId node_id;</span><br><span class="line">  <span class="comment">// 子图更新时在局部地图中的位姿，以及有传感器原始数据转换之后的点云信息</span></span><br><span class="line">  std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt; constant_data;</span><br><span class="line">  <span class="comment">// 被更新的子图对象</span></span><br><span class="line">  std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>根据NodeId，可以把一条轨迹理解为由若干个节点串联起来的一个数据结构。<br><br></p>
+<p>类<code>LocalTrajectoryBuilder2D</code>中也有一个<code>InsertionResult</code>，<font color = blue size=4>但是注意前端类不是继承自 TrajectoryBuilderInterface， </font>这两个没有直接关系，前端只关心更新子图时的位姿和点云信息，不考虑在它与整个运动轨迹之间的关系，所以没有字段<code>node_id</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">  <span class="comment">// 插入的节点数据，TrajectoryNode::Data 包含了处理之后的点云数据</span></span><br><span class="line">  std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt; constant_data;</span><br><span class="line">  std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="里程计和IMU的-AddSensorData"><a href="#里程计和IMU的-AddSensorData" class="headerlink" title="里程计和IMU的 AddSensorData"></a>里程计和IMU的 AddSensorData</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddSensorData</span><span class="params">(<span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                   <span class="keyword">const</span> sensor::ImuData&amp; imu_data)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (local_trajectory_builder_)</span><br><span class="line">    local_trajectory_builder_-&gt;<span class="built_in">AddImuData</span>(imu_data);</span><br><span class="line"></span><br><span class="line">  pose_graph_-&gt;<span class="built_in">AddImuData</span>(trajectory_id_, imu_data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddSensorData</span><span class="params">(<span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                   <span class="keyword">const</span> sensor::OdometryData&amp; odometry_data)</span> <span class="keyword">override</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">CHECK</span>(odometry_data.pose.<span class="built_in">IsValid</span>()) &lt;&lt; odometry_data.pose;</span><br><span class="line">  <span class="keyword">if</span> (local_trajectory_builder_)</span><br><span class="line">    <span class="comment">// 实际有用的就一句 extrapolator_-&gt;AddOdometryData(odometry_data);</span></span><br><span class="line">    local_trajectory_builder_-&gt;<span class="built_in">AddOdometryData</span>(odometry_data);</span><br><span class="line">  </span><br><span class="line">  pose_graph_-&gt;<span class="built_in">AddOdometryData</span>(trajectory_id_, odometry_data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先判定存在前端对象，将数据喂给前端对象进入<code>PoseExtrapolator</code>，然后通过后端的位姿图将传感器的信息添加到全局地图中。</p>
+<p>Cartographer将类似GPS这种具有全局定位能力的传感器输出的位姿称为固定坐标系位姿(fixed frame pose)。由于它们的测量结果是全局的信息，所以没有喂给前端用于局部定位。此外路标数据也可以认为是全局的定位信息，也直接喂给了后端</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/" data-id="ckr28or2w00n0ewlm841f0x5w" data-title="(五) GlobalTrajectoryBuilder部分" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/08/03/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%20%E5%89%8D%E7%AB%AF%20LocalTrajectoryBuilder2D/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (六) 前端 LocalTrajectoryBuilder2D
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">(三) MapBuilder类</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

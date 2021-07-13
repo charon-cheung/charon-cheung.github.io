@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>源码分析(一) 总体逻辑 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="局部定位：假定机器人有了初始位姿，通过增加运动噪声完成机器人定位。不确定性围绕在真实位姿附近，用单峰概率模拟，比如高斯分布。  全局定位： 不知道初始位姿，不确定定位误差的有界性。需要匹配定位，单峰概率难以模拟误差分布  机器人绑架： 全局定位的延伸，定位难度更大。机器人运行时被搬离原来位置，导致之前定位不准确。   算法流程  初始化  首先定义两个粒子集，开始都是空集，一个用于重采样缓冲的s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="源码分析(一) 总体逻辑">
+<meta property="og:url" content="http://example.com/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="局部定位：假定机器人有了初始位姿，通过增加运动噪声完成机器人定位。不确定性围绕在真实位姿附近，用单峰概率模拟，比如高斯分布。  全局定位： 不知道初始位姿，不确定定位误差的有界性。需要匹配定位，单峰概率难以模拟误差分布  机器人绑架： 全局定位的延伸，定位难度更大。机器人运行时被搬离原来位置，导致之前定位不准确。   算法流程  初始化  首先定义两个粒子集，开始都是空集，一个用于重采样缓冲的s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/08/30/sCI2oG6kHlxim5M.png">
+<meta property="og:image" content="https://i.loli.net/2020/03/31/qX4dgajlT58Swix.png">
+<meta property="article:published_time" content="2020-01-12T14:22:15.000Z">
+<meta property="article:modified_time" content="2020-09-14T03:32:12.554Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/08/30/sCI2oG6kHlxim5M.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-激光SLAM/amcl和粒子滤波/源码分析(一)总体逻辑" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/" class="article-date">
+  <time class="dt-published" datetime="2020-01-12T14:22:15.000Z" itemprop="datePublished">2020-01-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      源码分析(一) 总体逻辑
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>局部定位：假定机器人有了初始位姿，通过增加运动噪声完成机器人定位。不确定性围绕在真实位姿附近，用单峰概率模拟，比如高斯分布。</p>
+</li>
+<li><p>全局定位： 不知道初始位姿，不确定定位误差的有界性。需要匹配定位，单峰概率难以模拟误差分布</p>
+</li>
+<li><p>机器人绑架： 全局定位的延伸，定位难度更大。机器人运行时被搬离原来位置，导致之前定位不准确。</p>
+</li>
+</ul>
+<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2><p><img src="https://i.loli.net/2020/08/30/sCI2oG6kHlxim5M.png" alt="AMCL.png"></p>
+<ul>
+<li>初始化</li>
+</ul>
+<p>首先定义两个粒子集，开始都是空集，一个用于重采样缓冲的<code>set_a</code>，一个是最终需要的<code>set_b</code>，对每份粒子集合创建kdtree。算法的目的是用粒子集合来表示置信度。</p>
+<p>先在AMCL里给定一个初始位姿值和协方差矩阵，粒子数为M。一开始，每一个粒子的权重值都是1/M，位姿的分布是一个高斯分布，每个粒子的初始位姿记做<code>(x,y,theta)</code>，其均值是AMCL的初始位姿，方差是从协方差矩阵获得的。将每个粒子插入到kdtree中，对粒子滤波器的粒子集进行聚类。</p>
+<ul>
+<li>运动模型</li>
+</ul>
+<p>概率模型是p(x<sub> t</sub> | u<sub> t</sub>, x<sub> t-1</sub>)， 使用里程计模型进行估计。对每一个粒子更新位姿。位姿是从运动模型中采样获得的，机器人从t-1时刻运动到t时刻，获得相对运动参数<code>rot1,trans,rot2</code></p>
+<p>最终，对于每个粒子的位姿， x加上相对平移量在x轴的分量(乘以cos), y加上相对平移量在y轴的分量， theta加上两次旋转的参数。这些分量除了跟rot1,trans,rot2有关，还跟AMCL中的四个运动噪声参数<code>alpha1~alpha4</code>有关</p>
+<ul>
+<li>感知模型</li>
+</ul>
+<p>概率模型是p(z <sub> t </sub> | x<sub>t</sub>)，使用似然场模型，用于更新每一个粒子的权重</p>
+<ul>
+<li>失效恢复的准备</li>
+</ul>
+<p>把每个粒子添加到临时粒子集中，也就是说<code>set_a</code>内的粒子的权重是不同的，更新粒子集的平均权重。根据alpha_slow和alpha_fast计算短期和长期的似然平均</p>
+<ul>
+<li>重采样</li>
+</ul>
+<p>从缓冲的粒子集中替换所有粒子，抽取粒子的概率取决于粒子的权重，更新后的粒子集有很多粒子是重复的，而抛弃了大多数的低权重的粒子。</p>
+<p>上面的算法还有两个问题： 1. 粒子重采样的退化问题；2. 固定的粒子群导致无用的计算，影响效率。</p>
+<p>具体做法：开始处理每一个粒子，先生成一个(0,1)的随机数rand，如果<code>rand&lt; w_diff = (1 - w_fast / w_slow)</code>，那么当前粒子的位姿是随机值。如果是<code>&gt;=</code>，需要从<code>set_a</code>中寻找一个权重比较大的粒子。方法是：c[i]是第<code>1~i</code>个粒子的权重之和，如果第i+1个粒子的权重很大，那么<code>c[i+1] - c[i]</code>很大，i+1就是我们需要的粒子。</p>
+<p>把上面找出的所有粒子添加到<code>set_b</code>，<code>set_b</code>的粒子个数是M，多数粒子是原来<code>set_a</code>中权重比较大的粒子，而且可能重复。让<code>set_b</code>中的粒子权重全是<code>1 / M</code></p>
+<p>AMCL用到的算法:</p>
+<ul>
+<li>sample_motion_model_odometry</li>
+<li>likelihood_field_range_finder_model</li>
+<li>Augmented_MCL</li>
+<li>KLD_Sampling_MCL</li>
+</ul>
+<p>还有一些剩余的内容，比如KD树，KLD采样</p>
+<br>
+
+<p>文件<code>amcl_node.cpp</code>最主要的几个函数是构造函数，handleMapMessage, laserReceived。尤其是最后一个</p>
+<h2 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h2><p><code>sigintHandler</code>回调函数在关闭程序之前只有一句<code>amcl_node_ptr-&gt;savePoseToServer();</code>，也就是关闭前把最近一次的机器人位姿存入参数服务器，这就可以理解为什么关掉程序后，用<code>rosparam get</code>获得的<code>initial_pose_x</code>等位姿仍然是以前的。</p>
+<p><code>amcl</code>根据输入参数来决定运行方式。从代码中可以看到amcl支持数据回放的，运行时只需要通过参数<code>--run-from-bag</code>指定bag文件即可</p>
+<p>从main函数可以看出，amcl的所有业务逻辑都是由AmclNode类的构造函数完成</p>
+<h2 id="AmclNode构造函数"><a href="#AmclNode构造函数" class="headerlink" title="AmclNode构造函数"></a>AmclNode构造函数</h2><p>通过参数服务器，根据launch文件里的大量参数，对各类变量赋值</p>
+<p>成员函数<code>updatePoseFromServer</code>，该函数就是用来从参数服务器上获取机器人的初始位姿和位姿误差的协方差矩阵的。</p>
+<p>发布<code>amcl_pose</code>和<code>particlecloud</code>两个主题，分别用于输出机器人位姿估计和粒子集合。</p>
+<p>接着注册三个服务：<code>global_localization</code>用于获取机器人的全局定位，<code>request_nomotion_update</code>则用于手动的触发粒子更新并发布新的位姿估计，<code>set_map</code>用于设定机器人位姿和地图信息。 <strong>这几个平时都用不到</strong></p>
+<br>
+接下来构建激光传感器的消息过滤器对象和tf2的过滤器，并注册回调函数laserReceived。
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">laser_scan_sub_ = <span class="keyword">new</span> message_filters::Subscriber&lt;sensor_msgs::LaserScan&gt;(nh_, scan_topic_, <span class="number">100</span>);</span><br><span class="line">laser_scan_filter_ = <span class="keyword">new</span> tf::MessageFilter&lt;sensor_msgs::LaserScan&gt;(</span><br><span class="line">                                  *laser_scan_sub_, </span><br><span class="line">                                  *tf_, </span><br><span class="line">                                  odom_frame_id_, </span><br><span class="line">                                  <span class="number">100</span> );</span><br><span class="line">laser_scan_filter_-&gt;<span class="built_in">registerCallback</span>(boost::<span class="built_in">bind</span>(&amp;AmclNode::laserReceived,</span><br><span class="line">                                                 <span class="keyword">this</span>, _1));</span><br></pre></td></tr></table></figure>
+这里的message_filter为ROS系统提供了一些通用的消息过滤方法， 它对接收到的消息进行缓存，只有当满足过滤条件后才输出，在需要消息同步的时候应用比较多。这里主要是同时监听激光扫描消息和里程计坐标变换，同步两者的输出。 这一套路在GMapping中也有用到。
+
+<p>订阅用于初始化机器人位姿估计的主题<code>initialpose</code></p>
+<p>根据运行参数<code>use_map_topic_</code>获取地图，或者订阅地图主题，或者通过<code>requestMap</code>请求<code>static_map</code>服务。因为一般取false，所以后面我们直接看<code>requestMap</code>函数，也就是如下逻辑：<br><img src="https://i.loli.net/2020/03/31/qX4dgajlT58Swix.png"><br>定义<code>m_force_update</code>为false，后面会用到</p>
+<p>最后定义一个计时器用于每隔15s检查一次激光雷达的接收数据，如果期间没有收到新的数据给出告警</p>
+<h3 id="requestMap-和-handleMapMessage"><a href="#requestMap-和-handleMapMessage" class="headerlink" title="requestMap 和 handleMapMessage"></a>requestMap 和 handleMapMessage</h3><p><code>requestMap</code>函数请求<code>static_map</code>服务成功后，调用函数<code>handleMapMessage</code>处理接收到的地图数据，进一步完成AmclNode的初始化工作，内容庞大的其实是handleMapMessage</p>
+<p><code>handleMapMessage</code>的流程图在<a target="_blank" rel="noopener" href="https://live.staticflickr.com/65535/49379331342_b2dfde6972_b.jpg">这里</a></p>
+<p>释放了与地图相关的内存和对象之后，通过函数convertMap将地图消息转换成amcl中的地图数据结构。</p>
+<p>接着构建粒子滤波器对象，并完成初始化：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建粒子滤波器对象</span></span><br><span class="line">pf_ = <span class="built_in">pf_alloc</span>(min_particles_,</span><br><span class="line">               max_particles_,</span><br><span class="line">               alpha_slow_,</span><br><span class="line">               alpha_fast_,</span><br><span class="line">               (<span class="keyword">pf_init_model_fn_t</span>)AmclNode::uniformPoseGenerator,</span><br><span class="line">               (<span class="keyword">void</span> *)map_ );</span><br><span class="line">pf_-&gt;pop_err = pf_err_;</span><br><span class="line">pf_-&gt;pop_z = pf_z_;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 从参数服务器获取初始位姿及方差放到pf中</span></span><br><span class="line"><span class="built_in">updatePoseFromServer</span>();</span><br><span class="line"><span class="keyword">pf_vector_t</span> pf_init_pose_mean = <span class="built_in">pf_vector_zero</span>();</span><br><span class="line">pf_init_pose_mean.v[<span class="number">0</span>] = init_pose_[<span class="number">0</span>];   <span class="comment">// initial_pose_x</span></span><br><span class="line">pf_init_pose_mean.v[<span class="number">1</span>] = init_pose_[<span class="number">1</span>];   <span class="comment">// initial_pose_y</span></span><br><span class="line">pf_init_pose_mean.v[<span class="number">2</span>] = init_pose_[<span class="number">2</span>];   <span class="comment">// initial_pose_a</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pf_matrix_t</span> pf_init_pose_cov = <span class="built_in">pf_matrix_zero</span>();</span><br><span class="line">pf_init_pose_cov.m[<span class="number">0</span>][<span class="number">0</span>] = init_cov_[<span class="number">0</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">1</span>][<span class="number">1</span>] = init_cov_[<span class="number">1</span>];</span><br><span class="line">pf_init_pose_cov.m[<span class="number">2</span>][<span class="number">2</span>] = init_cov_[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化高斯粒子滤波器</span></span><br><span class="line"><span class="built_in">pf_init</span>(pf_, pf_init_pose_mean, pf_init_pose_cov);</span><br><span class="line">pf_init_ = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p>这里面有两个重要函数<strong>pf_alloc</strong>和<strong>pf_init</strong></p>
+<p>构建里程计对象，根据launch文件里的参数配置里程计模型</p>
+<p>构建雷达传感器对象，根据运行参数<code>laser_model_type_</code>构建不同模型的雷达</p>
+<p>最后考虑到，在接收到地图数据之前，有可能已经接收到了机器人的初始位姿，这里调用函数applyInitialPose处理</p>
+<h3 id="pf-alloc"><a href="#pf-alloc" class="headerlink" title="pf_alloc"></a>pf_alloc</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Create a new filter</span></span><br><span class="line"><span class="function"><span class="keyword">pf_t</span> *<span class="title">pf_alloc</span><span class="params">(<span class="keyword">int</span> min_samples, <span class="keyword">int</span> max_samples,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="keyword">double</span> alpha_slow, <span class="keyword">double</span> alpha_fast,</span></span></span><br><span class="line"><span class="params"><span class="function">               <span class="keyword">pf_init_model_fn_t</span> random_pose_fn, <span class="keyword">void</span> *random_pose_data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i, j;</span><br><span class="line">  <span class="keyword">pf_t</span> *pf;</span><br><span class="line">  <span class="keyword">pf_sample_set_t</span> *set;</span><br><span class="line">  <span class="keyword">pf_sample_t</span> *sample;</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">srand48</span>(<span class="built_in">time</span>(<span class="literal">NULL</span>));</span><br><span class="line"></span><br><span class="line">  pf = <span class="built_in">calloc</span>(<span class="number">1</span>, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_t</span>));</span><br><span class="line"></span><br><span class="line">  pf-&gt;random_pose_fn = random_pose_fn;</span><br><span class="line">  pf-&gt;random_pose_data = random_pose_data;</span><br><span class="line"></span><br><span class="line">  pf-&gt;min_samples = min_samples;</span><br><span class="line">  pf-&gt;max_samples = max_samples;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Control parameters for the population size calculation.  [err] is</span></span><br><span class="line">  <span class="comment">// the max error between the true distribution and the estimated</span></span><br><span class="line">  <span class="comment">// distribution.  [z] is the upper standard normal quantile for (1 -</span></span><br><span class="line">  <span class="comment">// p), where p is the probability that the error on the estimated</span></span><br><span class="line">  <span class="comment">// distrubition will be less than [err].</span></span><br><span class="line">  pf-&gt;pop_err = <span class="number">0.01</span>;</span><br><span class="line">  pf-&gt;pop_z = <span class="number">3</span>;</span><br><span class="line">  pf-&gt;dist_threshold = <span class="number">0.5</span>; </span><br><span class="line">  pf-&gt;current_set = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; <span class="number">2</span>; j++)</span><br><span class="line">  &#123;</span><br><span class="line">    set = pf-&gt;sets + j;</span><br><span class="line"></span><br><span class="line">    set-&gt;sample_count = max_samples;</span><br><span class="line">    set-&gt;samples = <span class="built_in">calloc</span>(max_samples, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_sample_t</span>));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; set-&gt;sample_count; i++)</span><br><span class="line">    &#123;</span><br><span class="line">      sample = set-&gt;samples + i;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">0</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">1</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;pose.v[<span class="number">2</span>] = <span class="number">0.0</span>;</span><br><span class="line">      sample-&gt;weight = <span class="number">1.0</span> / max_samples;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">HACK:</span> is 3 times max_samples enough?</span></span><br><span class="line">    set-&gt;kdtree = <span class="built_in">pf_kdtree_alloc</span>(<span class="number">3</span> * max_samples);</span><br><span class="line"></span><br><span class="line">    set-&gt;cluster_count = <span class="number">0</span>;</span><br><span class="line">    set-&gt;cluster_max_count = max_samples;</span><br><span class="line">    set-&gt;clusters = <span class="built_in">calloc</span>(set-&gt;cluster_max_count, <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">pf_cluster_t</span>));</span><br><span class="line"></span><br><span class="line">    set-&gt;mean = <span class="built_in">pf_vector_zero</span>();</span><br><span class="line">    set-&gt;cov = <span class="built_in">pf_matrix_zero</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pf-&gt;w_slow = <span class="number">0.0</span>;</span><br><span class="line">  pf-&gt;w_fast = <span class="number">0.0</span>;</span><br><span class="line">  pf-&gt;alpha_slow = alpha_slow;</span><br><span class="line">  pf-&gt;alpha_fast = alpha_fast;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//set converged to 0</span></span><br><span class="line">  <span class="built_in">pf_init_converged</span>(pf);</span><br><span class="line">  <span class="keyword">return</span> pf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="pf-init"><a href="#pf-init" class="headerlink" title="pf_init"></a>pf_init</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Initialize the filter using a guassian</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">pf_init</span><span class="params">(<span class="keyword">pf_t</span> *pf, <span class="keyword">pf_vector_t</span> mean, <span class="keyword">pf_matrix_t</span> cov)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i;</span><br><span class="line">  <span class="keyword">pf_sample_set_t</span> *set;</span><br><span class="line">  <span class="keyword">pf_sample_t</span> *sample;</span><br><span class="line">  <span class="keyword">pf_pdf_gaussian_t</span> *pdf;</span><br><span class="line">  </span><br><span class="line">  set = pf-&gt;sets + pf-&gt;current_set;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Create the kd tree for adaptive sampling</span></span><br><span class="line">  <span class="built_in">pf_kdtree_clear</span>(set-&gt;kdtree);</span><br><span class="line"></span><br><span class="line">  set-&gt;sample_count = pf-&gt;max_samples;</span><br><span class="line"></span><br><span class="line">  pdf = <span class="built_in">pf_pdf_gaussian_alloc</span>(mean, cov);</span><br><span class="line">    </span><br><span class="line">  <span class="comment">// Compute the new sample poses</span></span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; set-&gt;sample_count; i++)</span><br><span class="line">  &#123;</span><br><span class="line">    sample = set-&gt;samples + i;</span><br><span class="line">    sample-&gt;weight = <span class="number">1.0</span> / pf-&gt;max_samples;</span><br><span class="line">    sample-&gt;pose = <span class="built_in">pf_pdf_gaussian_sample</span>(pdf);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Add sample to histogram</span></span><br><span class="line">    <span class="built_in">pf_kdtree_insert</span>(set-&gt;kdtree, sample-&gt;pose, sample-&gt;weight);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  pf-&gt;w_slow = pf-&gt;w_fast = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">pf_pdf_gaussian_free</span>(pdf);</span><br><span class="line">    </span><br><span class="line">  <span class="comment">// Re-compute cluster statistics</span></span><br><span class="line">  <span class="built_in">pf_cluster_stats</span>(pf, set); </span><br><span class="line"></span><br><span class="line">  <span class="comment">//set converged to 0</span></span><br><span class="line">  <span class="built_in">pf_init_converged</span>(pf);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/01/12/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80)%E6%80%BB%E4%BD%93%E9%80%BB%E8%BE%91/" data-id="ckr28or0n00fyewlm6ugz3l1a" data-title="源码分析(一) 总体逻辑" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/01/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E7%8B%84%E6%8B%89%E5%85%8B%E5%87%BD%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          狄拉克函数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%9C%A8%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E4%B8%AD%E7%94%A8%E9%9D%9E%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E5%8F%96%E4%BB%A3%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">在命名空间中用非成员函数取代成员函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

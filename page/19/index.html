@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/19/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-激光SLAM/gmapping/(九) 总结" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/25/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B9%9D)%20%E6%80%BB%E7%BB%93/" class="article-date">
+  <time class="dt-published" datetime="2020-06-25T02:26:35.000Z" itemprop="datePublished">2020-06-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/25/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B9%9D)%20%E6%80%BB%E7%BB%93/">(九) 总结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>gmapping源码中不完善的部分：</p>
+<ol>
+<li>drawFromMotion函数是一个十分粗糙的运动模型，只是简单的矢量加减运算。相比于《概率机器人》中提到的速度模型和里程计模型，有很多方面都没有考虑，精度上可能有折扣。</li>
+<li><code>m_angularOdometryReliability</code>和<code>m_linearOdometryReliability</code>用于控制激光评分的增益<code>odo_gain</code>, 实际都是0，所以没有用到，而且无法用参数赋值, 要使用就得修改源码.</li>
+<li>紧接上面的代码，<code>localScore=odo_gain*score(map, localPose, readings);</code>，localScore在之后的<code>likelihoodAndScore</code>函数里实际赋值为0，根本没有用。所以这里有好几行可以删除</li>
+<li>在论文中，粒子的权重不是用最优位姿的似然值来表示的，而是用所有的似然值的和来表示的</li>
+<li>重采样的粒子索引选取用的是轮盘赌算法，有些论文提出了一些更好的算法</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/25/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B9%9D)%20%E6%80%BB%E7%BB%93/" data-id="ckr28or0u00ggewlmbu494r9n" data-title="(九) 总结" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/gmapping/OpenMP加速gmapping" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/19/%E6%BF%80%E5%85%89SLAM/gmapping/OpenMP%E5%8A%A0%E9%80%9Fgmapping/" class="article-date">
+  <time class="dt-published" datetime="2020-06-19T14:32:20.000Z" itemprop="datePublished">2020-06-19</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/19/%E6%BF%80%E5%85%89SLAM/gmapping/OpenMP%E5%8A%A0%E9%80%9Fgmapping/">OpenMP加速gmapping</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>在CMakeLists里做如下配置：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FIND_PACKAGE( OpenMP REQUIRED)</span><br><span class="line"><span class="keyword">if</span>(OPENMP_FOUND)</span><br><span class="line">    message(<span class="string">&quot;OPENMP FOUND&quot;</span>)</span><br><span class="line">    <span class="built_in">set</span>(CMAKE_C_FLAGS <span class="string">&quot;<span class="variable">$&#123;CMAKE_C_FLAGS&#125;</span> <span class="variable">$&#123;OpenMP_C_FLAGS&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">set</span>(CMAKE_CXX_FLAGS <span class="string">&quot;<span class="variable">$&#123;CMAKE_CXX_FLAGS&#125;</span> <span class="variable">$&#123;OpenMP_CXX_FLAGS&#125;</span>&quot;</span>)</span><br><span class="line">endif()</span><br></pre></td></tr></table></figure>
+
+<p>注意： OpenMP并不适合需要复杂的线程间同步和互斥的场合，这种情况下花的时间可能更长</p>
+<p>gmapping使用OpenMP加速的语句: <code>#pragma omp parallel for</code></p>
+<ol>
+<li><p>for循环的drawFromMotion之前</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//#pragma omp parallel for</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_particles.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line"></span><br><span class="line">    m_particles[i].pose =  m_motionModel.<span class="built_in">drawFromMotion</span>(m_particles[i].pose, relPose,m_odoPose);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>invalidateActiveArea之前</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//#pragma omp parallel for</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_particles.<span class="built_in">size</span>(); i++) &#123;</span><br><span class="line">    m_matcher.<span class="built_in">invalidateActiveArea</span>();</span><br></pre></td></tr></table></figure></li>
+<li><p>scanMatch函数开头，实际就是对整个scanMatch并行化</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">scanMatch</span><span class="params">(<span class="keyword">double</span> * plainReading)</span> </span>&#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; m_particles.<span class="built_in">size</span>(); i++) &#123;</span><br></pre></td></tr></table></figure></li>
+<li><p>updateMap函数中</p>
+</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> x=<span class="number">0</span>; x &lt; smap.<span class="built_in">getMapSizeX</span>(); x++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> y=<span class="number">0</span>; y &lt; smap.<span class="built_in">getMapSizeY</span>(); y++)</span><br><span class="line">    &#123;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>重采样resample函数</li>
+</ol>
+<p>对于保留下来的粒子进行更新，在并行化操作里面<code>m_particles.push_back()</code>会报错，因此需要把push_back()提出来，在外面的的for循环进行</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">pragma</span> omp parallel for</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;tmp_size;i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//对保留下来的粒子数据进行更新</span></span><br><span class="line">        <span class="comment">//每个粒子的权重都设置为相同的值</span></span><br><span class="line">        temp[i].<span class="built_in">setWeight</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="comment">//为每个粒子更新running_scans</span></span><br><span class="line">        <span class="comment">//增加了一帧激光数据 因此需要更新地图</span></span><br><span class="line">        m_matcher.<span class="built_in">registerScan</span>(temp[i].map,temp[i].pose,plainReading);</span><br><span class="line">        <span class="comment">//m_matcher.registerScan(temp[i].lowResolutionMap,temp[i].pose,plainReading);</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>为每个粒子更新地图时，同样可以并行化</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/19/%E6%BF%80%E5%85%89SLAM/gmapping/OpenMP%E5%8A%A0%E9%80%9Fgmapping/" data-id="ckr28or0x00gpewlm8g1icy80" data-title="OpenMP加速gmapping" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/gmapping/(八) 源码分析6  scan match" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/" class="article-date">
+  <time class="dt-published" datetime="2020-06-17T12:21:43.000Z" itemprop="datePublished">2020-06-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/">(八) 源码分析6  scan match</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>先接上篇，不是第一帧激光数据的情况，上来是<code>scanMatch</code>函数，也就是<code>GridSlamProcessor::scanMatch</code>(在文件gridslamprocessor.hxx)。</p>
+<h2 id="主要部分"><a href="#主要部分" class="headerlink" title="主要部分"></a>主要部分</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">GridSlamProcessor::scanMatch</span><span class="params">(<span class="keyword">const</span> <span class="keyword">double</span>* plainReading)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// sample a new pose from each scan in the reference</span></span><br><span class="line">    <span class="comment">/* 每个粒子都要进行 scan-match */</span></span><br><span class="line">    <span class="keyword">double</span> sumScore=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> particle_number = m_particles.<span class="built_in">size</span>();</span><br><span class="line">    <span class="comment">//可以用openMP的方式来进行并行化，因此这里不能用迭代器，只能用下标的方式</span></span><br><span class="line">    <span class="comment">//并行化之后，里面的循环会均匀分到各个不同的核里面</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; particle_number; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        OrientedPoint corrected;</span><br><span class="line">        <span class="keyword">double</span> score, l, s;</span><br><span class="line">        <span class="comment">/*进行scan-match 计算粒子的最优位姿，这是gmapping本来的做法*/</span></span><br><span class="line">        score = m_matcher.<span class="built_in">optimize</span>(corrected, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">        <span class="comment">/* 匹配成功则更新最优位姿 */</span></span><br><span class="line">	    <span class="keyword">if</span> (score&gt;m_minimumScore)</span><br><span class="line">	    &#123;</span><br><span class="line">	      m_particles[i].pose = corrected;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="comment">/*  扫描匹配不上,则使用里程计的数据,使用里程计数据不进行更新.</span></span><br><span class="line"><span class="comment">	          因为在进行扫描匹配之前 里程计已经更新过了*/</span></span><br><span class="line">	    <span class="keyword">else</span></span><br><span class="line">	    &#123;</span><br><span class="line">	        <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">	        &#123;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;Scan Matching Failed, using odometry. Likelihood=&quot;</span> &lt;&lt; l &lt;&lt;std::endl;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;lp:&quot;</span> &lt;&lt; m_lastPartPose.x &lt;&lt; <span class="string">&quot; &quot;</span>  &lt;&lt; m_lastPartPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_lastPartPose.theta &lt;&lt;std::endl;</span><br><span class="line">	            m_infoStream &lt;&lt; <span class="string">&quot;op:&quot;</span> &lt;&lt; m_odoPose.x &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; m_odoPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_odoPose.theta;</span><br><span class="line">	        &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	    <span class="comment">// 粒子的最优位姿计算了之后，重新计算粒子的权重,相当于粒子滤波器中的观测步骤</span></span><br><span class="line">	    <span class="comment">/* 计算p(z|x,m)，粒子的权重由粒子的似然来表示, 计算粒子的得分和权重(似然)	</span></span><br><span class="line"><span class="comment">	        注意粒子的权重经过ScanMatch之后已经更新了</span></span><br><span class="line"><span class="comment">	     * 在论文中   粒子的权重不是用最优位姿的似然值来表示的</span></span><br><span class="line"><span class="comment">	     * 是用所有的似然值的和来表示的, s是得分  l是似然,也就是权重 */</span></span><br><span class="line">	    m_matcher.<span class="built_in">likelihoodAndScore</span>(s, l, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">	    sumScore+=score;</span><br><span class="line">	    m_particles[i].weight+= l;</span><br><span class="line">	    m_particles[i].weightSum+= l;</span><br><span class="line"></span><br><span class="line">	    <span class="comment">//set up the selective copy of the active area</span></span><br><span class="line">	    <span class="comment">//by detaching the areas that will be updated</span></span><br><span class="line">	    <span class="comment">/*计算出来最优的位姿之后，进行地图的扩充  这里不会进行内存分配</span></span><br><span class="line"><span class="comment">	     *不进行内存分配的原因是这些粒子进行重采样之后有可能会消失掉，因此在后面进行重采样的时候统一进行内存分配。</span></span><br><span class="line"><span class="comment">	     *理论上来说，这里的操作是没有必要的，因为后面的重采样的时候还会进行一遍</span></span><br><span class="line"><span class="comment">	     */</span></span><br><span class="line">	    m_matcher.<span class="built_in">invalidateActiveArea</span>();</span><br><span class="line">	    m_matcher.<span class="built_in">computeActiveArea</span>(m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;Average Scan Matching Score of all particles=&quot;</span> &lt;&lt; sumScore/m_particles.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>开始的都没意思，直接看<code>ScanMatcher::optimize</code>，在<code>scanmatcher.cpp</code>里，开头又是一个重要函数<code>score</code>，在<code>scanmatcher.h</code>里。它根据地图、激光数据、位姿迭代求解一个最优的新的位姿出来。</p>
+<p>代码比较复杂，直接看整个<code>scan</code>函数(包括了optimize和score)的评分算法的理论：</p>
+<p>对于栅格地图的环境地图模型，一般采用基于似然场模型（likelihood field range finder mode）的扫描匹配算法来进行激光雷达数据与地图的匹配。 该算法通过评估当前时刻位姿的激光雷达数据中每一个激光点与该时刻栅格地图的匹配程度，并将评估得到的每个激光点得分进行累加，得到当前时刻激光雷达数据与地图匹配的总分数，得分越高说明该时刻激光雷达信息与地图匹配程度越高，即机器人位姿越精确。由于该算法能够根据机器人当前时刻状态、 观测值和地图信息直接得到该时刻位姿的匹配程度，因而该算法常与基于粒子滤波的定位算法结合使用，用于选取各粒子中得分最高的位姿，并计算得分， 从而完成机器人位姿的确定，其原理如图：<br><img src="https://i.loli.net/2020/06/17/zGU6bgEwCnlRpr9.png" alt="基于似然场模型的扫描匹配示意图.png"></p>
+<p>黑色的格子代表前一时刻栅格地图中障碍物的位置， 圆形的点表示以里程计运动模型作为提议分布得到的机器人位姿估计为基础，将当前时刻激光雷达数据转换到栅格地图坐标系中的激光点的分布。把激光雷达的坐标转换到世界坐标系: 先旋转到机器人坐标系，然后再转换到世界坐标系。</p>
+<p>该位姿下观测信息与地图匹配得分的具体算法步骤如下：对于当前激光雷达数据中任意一个激光点，设其端点在世界坐标系中坐标为 <code>lp</code> ，则其对应栅格地图中坐标为 <code>phit</code> ，对 <code>phit</code>周围八个栅格进行障碍物判定，并计算这些障碍物的平均坐标 <code>pavr</code>， 求出 <code>pavr</code>与 phit 的距离 dist 。 该激光点的评分可由下式表示<br><img src="https://i.loli.net/2020/06/17/7TFuOJbjxSr9BNA.png" alt="评分公式.png"></p>
+<p>如果设置的<code>minimumScore</code>参数过大，一些粒子的匹配会失败，因为要求太高了，gmapping会出现下列信息：<br><img src="https://i.loli.net/2020/06/18/lDeLROQoaziNZrb.png" alt="scan match失败.png"><br>gmapping变成使用里程计进行位姿估计，这其实是不好的，因为从论文可知<strong>激光精度比里程计精确得多</strong>，但是注意粒子的权重计算还是调用<code>likelihoodAndScore</code>函数。</p>
+<p><code>ε</code>为基于扫描匹配概率的激光方差，对该时刻所有激光点进行上式的计算，并将评分进行求和，分数越高说明该位姿的可信度越高。 对当前时刻所有粒子位姿进行扫描匹配运算， 并根据得分实现粒子的权重更新，最后求出粒子群的平均评分<code>sumScore/m_particles.size()</code></p>
+<h3 id="试验小强的scan-match评分"><a href="#试验小强的scan-match评分" class="headerlink" title="试验小强的scan match评分"></a>试验小强的scan match评分</h3><p>直接修改<code>gridslamprocessor.hxx</code>的scanMatch函数。 小强的gmapping编译有问题，执行<code>catkin_make --pkg gmapping</code>之后，需要 <code>cp /home/xiaoqiang/Documents/ros/devel/lib/gmapping/slam_gmapping /home/xiaoqiang/Documents/ros/src/gmapping/launch</code>，否则roslaunch找不到节点文件</p>
+<p>根据测试，激光评分多数在<code>140~160</code>，有时也会超过160.</p>
+<h2 id="for循环剩下的部分"><a href="#for循环剩下的部分" class="headerlink" title="for循环剩下的部分"></a>for循环剩下的部分</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*矫正成功则更新位姿*/</span></span><br><span class="line"><span class="keyword">if</span> (score&gt;m_minimumScore)</span><br><span class="line">&#123;</span><br><span class="line">    m_particles[i].pose = corrected;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 扫描匹配不上,则使用里程计的数据,使用里程计数据不进行更新,因为扫描匹配之前,里程计已经更新过了</span></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//输出信息 这个在并行模式下可以会出现错位</span></span><br><span class="line">    <span class="keyword">if</span> (m_infoStream)</span><br><span class="line">    &#123;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;Scan Matching Failed, using odometry. Likelihood=&quot;</span> &lt;&lt; l &lt;&lt;endl;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;lp:&quot;</span> &lt;&lt; m_lastPartPose.x &lt;&lt; <span class="string">&quot; &quot;</span>  &lt;&lt; m_lastPartPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_lastPartPose.theta &lt;&lt;endl;</span><br><span class="line">        m_infoStream &lt;&lt; <span class="string">&quot;op:&quot;</span> &lt;&lt; m_odoPose.x &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; m_odoPose.y &lt;&lt; <span class="string">&quot; &quot;</span>&lt;&lt; m_odoPose.theta &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/* 粒子的最优位姿计算了之后，重新计算粒子的权重(相当于粒子滤波器中的观测步骤，</span></span><br><span class="line"><span class="comment">   计算p(z|x,m))，粒子的权重由粒子的似然来表示。</span></span><br><span class="line"><span class="comment">* 计算粒子的得分和权重(似然)   注意粒子的权重经过ScanMatch之后已经更新了</span></span><br><span class="line"><span class="comment">* 在论文中,例子的权重不是用最有位姿的似然值来表示的。</span></span><br><span class="line"><span class="comment">* 是用所有的似然值的和来表示的。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">m_matcher.<span class="built_in">likelihoodAndScore</span>(s, l, m_particles[i].map, m_particles[i].pose, plainReading);</span><br><span class="line"></span><br><span class="line">sumScore+=score;</span><br><span class="line">m_particles[i].weight+=l;</span><br><span class="line">m_particles[i].weightSum+=l;</span><br><span class="line"><span class="comment">//set up the selective copy of the active area</span></span><br><span class="line"><span class="comment">//by detaching the areas that will be updated</span></span><br><span class="line"><span class="comment">/*计算出来最优的位姿之后，进行地图的扩充  这里不会进行内存分配</span></span><br><span class="line"><span class="comment">*不进行内存分配的原因是这些粒子进行重采样之后有可能会消失掉，因此在后面进行冲采样的时候统一进行内存分配。</span></span><br><span class="line"><span class="comment">*理论上来说，这里的操作是没有必要的，因为后面的重采样的时候还会进行一遍</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">m_matcher.<span class="built_in">invalidateActiveArea</span>();</span><br><span class="line">m_matcher.<span class="built_in">computeActiveArea</span>(m_particles[i].map, m_particles[i].pose, plainReading);</span><br></pre></td></tr></table></figure>
+
+<h2 id="重采样"><a href="#重采样" class="headerlink" title="重采样"></a>重采样</h2><p><code>resample</code>函数：该函数在gridslamprocessor.hxx。首先是备份老的粒子的轨迹，即保留叶子的节点。然后是需要重采样还是不需要重采样，如果不需要重采样，则权值不变。只为轨迹创建一个新的节点，每个粒子更新地图。当有效值小于阈值的时候需要重采样，通过resampleIndexes提取到需要删除的粒子。删除粒子后，保留当前的粒子并在保存的粒子的节点里新增一个节点。删除要删除粒子的节点，保留的粒子进行数据更新，将每个粒子的设置同一个权重。最后更新一下地图。</p>
+<p>​<code>resampleIndexes</code>：该函数在particlefilter.h中，使用轮盘赌算法，决定哪些粒子会保留，保留的粒子会返回下标，里面的下标可能会重复，因为有些粒子会重复采样,而另外的一些粒子会消失掉。</p>
+<p>首先计算总的权重，计算平均权重值（interval），根据权值进行采样,target是0-1分布随机选取的一数值，当总权重大于目标权重的，记录该粒子的索引，target在加上一个interval。如果某个粒子的权重比较大的话，就被采样多次。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简化声明</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">resampleIndexes</span><span class="params">(<span class="keyword">const</span> std::vector&lt;Particle&gt;&amp; particles, <span class="keyword">int</span> nparticles)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	Numeric cweight=<span class="number">0</span>;</span><br><span class="line">	<span class="comment">/*计算总的权重*/</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> n=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">typename</span> std::vector&lt;Particle&gt;::const_iterator it=particles.<span class="built_in">begin</span>(); it!=particles.<span class="built_in">end</span>(); ++it)</span><br><span class="line">	&#123;</span><br><span class="line">		cweight+=(Numeric)*it;</span><br><span class="line">		n++;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (nparticles&gt;<span class="number">0</span>)</span><br><span class="line">		n=nparticles;</span><br><span class="line">	<span class="comment">//compute the interval</span></span><br><span class="line">	Numeric interval=cweight/n;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// drand48 返回服从均匀分布的·[0.0, 1.0) 之间的double随机数</span></span><br><span class="line">	Numeric target=interval*::<span class="built_in">drand48</span>();</span><br><span class="line">    <span class="comment">// 如果某个粒子的区间为4*interval。那么它至少被采样3次。</span></span><br><span class="line">	cweight=<span class="number">0</span>;  n=<span class="number">0</span>;</span><br><span class="line">	<span class="function">std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; <span class="title">indexes</span><span class="params">(n)</span></span>;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">typename</span> std::vector&lt;Particle&gt;::const_iterator it=particles.<span class="built_in">begin</span>(); it!=particles.<span class="built_in">end</span>(); ++it, ++i)</span><br><span class="line">	&#123;</span><br><span class="line">		cweight+=(Numeric)* it;</span><br><span class="line">		<span class="keyword">while</span>(cweight&gt;target)</span><br><span class="line">		&#123;</span><br><span class="line">			indexes[n++]=i;</span><br><span class="line">			target+=interval;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> indexes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/17/%E6%BF%80%E5%85%89SLAM/gmapping/(%E5%85%AB)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%906%20%20scan%20match/" data-id="ckr28or0v00gkewlm3yut2sff" data-title="(八) 源码分析6  scan match" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS机器人/小强机器人的说明" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%B0%8F%E5%BC%BA%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%AF%B4%E6%98%8E/" class="article-date">
+  <time class="dt-published" datetime="2020-06-16T11:37:02.000Z" itemprop="datePublished">2020-06-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%B0%8F%E5%BC%BA%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%AF%B4%E6%98%8E/">小强机器人的补充说明</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="编译问题"><a href="#编译问题" class="headerlink" title="编译问题"></a>编译问题</h2><p>将<code>/home/xiaoqiang/Documents/ros/src/ORB_SLAM2</code>中的CMakeLists大部分内容都注释掉了，目前还用不到它．</p>
+<p>注释<code>xqserial_server/CMakeLists.txt</code>的57行，否则出现下面情况：<br><img src="https://i.loli.net/2020/05/21/NBcWdKsP286OAV5.png"></p>
+<p><code>nav_test</code>不需要特别编译，它全是py文件，没有cpp。但是需要从网上下载<code>rbx1</code>工程，这是一本教程里用到的，只把其中的<code>rbx1_nav</code>放到当前工作空间里，编译通过。<strong>nav_squared.py</strong>需要它</p>
+<p>将<code>startup.launch</code>注释掉一部分，比如摄像头节点等等。</p>
+<p><code>robot_pose_ekf</code>包很奇怪，它应当是在<code>/home/xiaoqiang/Documents/ros/src/navigation</code>，但是修改相应源码，执行launch没有效果。最后发现实际使用的是<code>R50_Release</code>中的<code>robot_pose_ekf</code>。删掉后者就报错找不到了，可见xiaoqiang中的那个没有生效，不像个package，但是rospd又能找到，很奇怪。</p>
+<h2 id="运动部分"><a href="#运动部分" class="headerlink" title="运动部分"></a>运动部分</h2><p>小强有时不移动，可能是IMU在重启，因为此时的IMU数据除了四元数的w为1，其他全是0</p>
+<p><code>/xqserial_server/Twist</code>疑似无用，只有<code>/motor_driver</code>在一直发布它</p>
+<p><code>xqserial_server/Pose2D</code>的消息是(x,y,theta)，是相对里程计坐标系原点的位姿</p>
+<p>里程计模型也是速度积分的二轮差速，使用编码器读数获得极小时间内的位移，以左右轮的编码器增量的均值计算。</p>
+<p><code>control.py</code>就是从键盘获取方向键，发布速度命令到<code>cmd_vel</code>话题，订阅了<code>/xqserial_server/Odom</code>话题，但是实际没用到。</p>
+<p><code>xqserial_server</code>命名空间包括<code>StatusPublisher</code>和<code>DiffDriverController</code>两个类</p>
+<p><code>xiaoqiang_log</code>话题对应的<code>LogRecored.msg</code>如下，只有缺少串口设备时才发布，record是json形式</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string collection_name</span><br><span class="line">time stamp</span><br><span class="line">string record</span><br></pre></td></tr></table></figure>
+
+<p><code>xiaoqiang_tts/text</code>话题对应语音提示信息，也是在缺少串口设备时才发布</p>
+<p>里程计的更新频率为100Hz,里程计也是切线模型假设，使用编码器推算轨迹</p>
+<h2 id="startup-launch"><a href="#startup-launch" class="headerlink" title="startup.launch"></a>startup.launch</h2><p>开机启动的launch文件是<code>startup</code>包中的startup.launch</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;xqserial_server&quot;</span> <span class="attr">type</span>=<span class="string">&quot;xqserial_server&quot;</span> <span class="attr">name</span>=<span class="string">&quot;motor_driver&quot;</span> <span class="attr">respawn</span>=<span class="string">&quot;true&quot;</span> <span class="attr">respawn_delay</span>=<span class="string">&quot;10&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;debug_flag&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;wheel_separation&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0.360&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;wheel_radius&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0.0625&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;port&quot;</span> <span class="attr">value</span>=<span class="string">&quot;/dev/ttyUSB001&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;r_min&quot;</span> <span class="attr">value</span>=<span class="string">&quot;1.0&quot;</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;tf&quot;</span> <span class="attr">type</span>=<span class="string">&quot;static_transform_publisher&quot;</span> <span class="attr">name</span>=<span class="string">&quot;baselink_broadcaster&quot;</span> <span class="attr">args</span>=<span class="string">&quot;0 0 0.15 0 0 0 1 base_footprint base_link 50&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;tf&quot;</span> <span class="attr">type</span>=<span class="string">&quot;static_transform_publisher&quot;</span> <span class="attr">name</span>=<span class="string">&quot;imulink_broadcaster&quot;</span> <span class="attr">args</span>=<span class="string">&quot;-0.1 -0.03 0 0 0 0 1 base_link imu 50&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>主要是xqserial_server，然后是静态发布tf变换： <code>base_footprint --&gt; base_link --&gt; imu</code></p>
+<h2 id="urdf"><a href="#urdf" class="headerlink" title="urdf"></a>urdf</h2><h3 id="rviz显示问题"><a href="#rviz显示问题" class="headerlink" title="rviz显示问题"></a>rviz显示问题</h3><p>尝试在远程机上同时启动<code>xiaoqiang_udrf.launch</code>和rviz，先尝试加载<code>urdf.rviz</code>，这种情况下的tf变换都是正常的<br><img src="https://i.loli.net/2020/04/21/p9o8NVRW62OEbcz.png" alt="加载urdf并显示小强机器人.png"></p>
+<p>但是常用方式是远程机启动launch，本地机启动rviz，rviz里做好配置后，发现终端会报错：找不到所需要的所有STL文件，这几个文件在<code>/home/xiaoqiang/Documents/ros/src/xiaoqiang_udrf/meshes</code>。这是因为rviz在本机找这些文件，</p>
+<p>launch文件里加载了<code>xiaoqiang_udrf.URDF</code>，这个文件又加载STL文件，语句是这样的：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mesh</span>  <span class="attr">filename</span>=<span class="string">&quot;package://xiaoqiang_udrf/meshes/base_link.STL&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<p>也就是说本地机需要一个名为xiaoqiang_udrf的package，自己新建一个。</p>
+<p>这时再打开rviz就不会报错了，但还是有问题，整个模型透明发白，这是因为rivz中的全局坐标系“fixed frame”设置的不合适，将map改成base_link后即可正常显示。</p>
+<p>结果机器人并不能动，rviz里仍显示几个wheel和odom没有tf变换，但是<code>rosrun tf tf_echo</code>有正常结果，结果发现就是显示的问题，<font color = blue size= 3>重启rviz就好了 </font></p>
+<h3 id="坐标系冲突"><a href="#坐标系冲突" class="headerlink" title="坐标系冲突"></a>坐标系冲突</h3><p>现在urdf中的坐标系叫做<code>lidar_urdf</code>，<code>static_transform_publisher</code>定义的是base_link和laser的关系，在<code>a2.launch</code>里。<br><img src="https://i.loli.net/2020/07/05/LICsGrwtDm3nPVK.png" alt="urdf中的base_link和laser的关系.png"><br><img src="https://i.loli.net/2020/07/05/ErV4Hq3xAPyk7TO.png" alt="static_transform_publisher中base_link和laser的关系.png"><br>可以看到二者的坐标关系有所不同，如果把<code>lidar_urdf</code>也改成<code>laser</code>，那么在rviz可以看到<code>laser</code>坐标系会不断旋转跳动，这是存在两个tf变换造成的。由于urdf只是个显示功能，所以还是用两个坐标系。<code>base_link</code>和<code>laser</code>之间的关系可能不精确，这就需要标定了</p>
+<h2 id="tf变换"><a href="#tf变换" class="headerlink" title="tf变换"></a>tf变换</h2><p><img src="https://i.loli.net/2020/04/20/Izq7PYWlSMBJTkn.png" alt="开机启动下的tf关系图.png"></p>
+<p><img src="https://i.loli.net/2020/04/23/6Jdp2VgYIlPzZwr.png" alt="odom和base_foot坐标系低于地图"></p>
+<p><img src="https://i.loli.net/2020/04/21/fTDlwPs7YIFEuzA.png" alt="雷达扫描的轨迹和地图边缘有一定差距"></p>
+<p><img src="https://i.loli.net/2020/04/23/TM8Vud6EoFshwKb.png" alt="LaserScan未正常显示，但tf正常"></p>
+<p>无地图状态下，以odom为固定坐标系，移动机器人时，base_link会相对移动。但是用rviz里的<code>Odometry</code>可以表达base_link在odom坐标系下的运动</p>
+<h2 id="使用伽利略客户端"><a href="#使用伽利略客户端" class="headerlink" title="使用伽利略客户端"></a>使用伽利略客户端</h2><p>使用最新版本，一开始总连接不成功，最后发现是公用网络的防火墙造成的，但是不知为什么，防火墙已经将它添加例外了，无法修改，只好把防火墙关了<br><img src="https://i.loli.net/2020/05/18/n5EueWIBL3TtQPO.png" alt="防火墙.png"><br><img src="https://i.loli.net/2020/05/18/xlGK29yToFkRejq.png" alt="关闭串口.png"></p>
+<h2 id="建图"><a href="#建图" class="headerlink" title="建图"></a>建图</h2><p>gmapping建图： <code>roslaunch gmapping a2.launch</code>，对应<code>rplidar_a2_test.rviz</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E5%B0%8F%E5%BC%BA%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%AF%B4%E6%98%8E/" data-id="ckr28oqzn00dvewlmgvzq14ae" data-title="小强机器人的补充说明" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/gmapping/(七) 源码分析5  updateMap函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/15/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%83)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%905%20%20updateMap%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2020-06-15T09:16:12.000Z" itemprop="datePublished">2020-06-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/15/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%83)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%905%20%20updateMap%E5%87%BD%E6%95%B0/">(七) 源码分析5  updateMap函数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="第1部分"><a href="#第1部分" class="headerlink" title="第1部分"></a>第1部分</h2><p>这里的更新地图，只是为了可视化。因为真正的地图存储在粒子里面，这里会拿一个权值最大的粒子的地图<strong>发布</strong>出来.</p>
+<p>得到权值最大的粒子，然后遍历这个粒子的整个轨迹，根据轨迹上记录的信息来进行建图，然后把得到的地图发布出去。</p>
+<p>每次addScan()成功了，就会调用这个函数来生成地图，并发布出去。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Update map&quot;</span>);</span><br><span class="line"><span class="comment">// 更新地图的时候，加了一把锁</span></span><br><span class="line">boost::<span class="function">mutex::scoped_lock <span class="title">map_lock</span> <span class="params">(map_mutex_)</span></span>;</span><br><span class="line"><span class="comment">// 构造函数的解释在下一篇</span></span><br><span class="line">GMapping::ScanMatcher  matcher;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*设置scanmatcher的各个参数*/</span></span><br><span class="line">matcher.<span class="built_in">setLaserParameters</span>(scan.ranges.<span class="built_in">size</span>(), &amp;(laser_angles_[<span class="number">0</span>]),</span><br><span class="line">        gsp_laser_-&gt;<span class="built_in">getPose</span>() );</span><br><span class="line">matcher.<span class="built_in">setlaserMaxRange</span>(maxRange_);</span><br><span class="line">matcher.<span class="built_in">setusableRange</span>(maxUrange_);</span><br><span class="line">matcher.<span class="built_in">setgenerateMap</span>(<span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 得到累计权重(weightSum)最大的粒子，不是当前的最大权重的粒子</span></span><br><span class="line"><span class="comment">// 累计权重即该粒子在各个时刻的权重之和(轨迹上的各个节点的权重之和)</span></span><br><span class="line">GMapping::GridSlamProcessor::Particle best =</span><br><span class="line">        gsp_-&gt;<span class="built_in">getParticles</span>()[gsp_-&gt;<span class="built_in">getBestParticleIndex</span>()];</span><br><span class="line"></span><br><span class="line">std_msgs::Float64 entropy;</span><br><span class="line"><span class="comment">// computePoseEntropy 遍历粒子集合计算熵</span></span><br><span class="line">entropy.data = <span class="built_in">computePoseEntropy</span>();</span><br><span class="line"><span class="comment">//发布位姿的熵</span></span><br><span class="line"><span class="keyword">if</span>(entropy.data &gt; <span class="number">0.0</span>)</span><br><span class="line">    entropy_publisher_.<span class="built_in">publish</span>(entropy);</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果没有地图，则初始化一个地图</span></span><br><span class="line"><span class="keyword">if</span>(!got_map_)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// nav_msgs::GetMap::Response   map_</span></span><br><span class="line">    map_.map.info.resolution = delta_;</span><br><span class="line">    map_.map.info.origin.position.x = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.position.y = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.position.z = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.orientation.x = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.orientation.y = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.orientation.z = <span class="number">0.0</span>;</span><br><span class="line">    map_.map.info.origin.orientation.w = <span class="number">1.0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="计算位姿的信息熵"><a href="#计算位姿的信息熵" class="headerlink" title="计算位姿的信息熵"></a>计算位姿的信息熵</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">SlamGMapping::computePoseEntropy</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> weight_total=<span class="number">0.0</span>;</span><br><span class="line">    <span class="keyword">for</span>( std::vector&lt;GMapping::GridSlamProcessor::Particle&gt;::const_iterator it = gsp_-&gt;<span class="built_in">getParticles</span>().<span class="built_in">begin</span>();</span><br><span class="line">        it != gsp_-&gt;<span class="built_in">getParticles</span>().<span class="built_in">end</span>();</span><br><span class="line">        ++it)</span><br><span class="line">    &#123;</span><br><span class="line">        weight_total += it-&gt;weight;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">double</span> entropy = <span class="number">0.0</span>;</span><br><span class="line">    <span class="keyword">for</span>( std::vector&lt;GMapping::GridSlamProcessor::Particle&gt;::const_iterator it = gsp_-&gt;<span class="built_in">getParticles</span>().<span class="built_in">begin</span>();</span><br><span class="line">        it != gsp_-&gt;<span class="built_in">getParticles</span>().<span class="built_in">end</span>();</span><br><span class="line">        ++it)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(it-&gt;weight/weight_total &gt; <span class="number">0.0</span>)</span><br><span class="line">            entropy += it-&gt;weight/weight_total * <span class="built_in">log</span>(it-&gt;weight/weight_total);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -entropy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="第2部分"><a href="#第2部分" class="headerlink" title="第2部分"></a>第2部分</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*地图的中点*/</span></span><br><span class="line">GMapping::Point center;</span><br><span class="line">center.x=(xmin_ + xmax_) / <span class="number">2.0</span>;</span><br><span class="line">center.y=(ymin_ + ymax_) / <span class="number">2.0</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 初始化一个scanmatcherMap 创建一个地图 */</span></span><br><span class="line"><span class="function">GMapping::ScanMatcherMap <span class="title">smap</span><span class="params">(center, xmin_, ymin_, xmax_, ymax_,</span></span></span><br><span class="line"><span class="params"><span class="function">                              delta_)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*更新地图*/</span></span><br><span class="line"><span class="comment">//遍历最优粒子的整条轨迹树， 按照轨迹上各个节点存储的信息，计算激活区域更新地图</span></span><br><span class="line"><span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Trajectory tree:&quot;</span>);</span><br><span class="line"><span class="keyword">for</span>(GMapping::GridSlamProcessor::TNode* n = best.node;n;n = n-&gt;parent)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;  %.3f %.3f %.3f&quot;</span>,</span><br><span class="line">              n-&gt;pose.x,</span><br><span class="line">              n-&gt;pose.y,</span><br><span class="line">              n-&gt;pose.theta);</span><br><span class="line">    <span class="keyword">if</span>(!n-&gt;reading)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Reading is NULL&quot;</span>);</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//进行地图更新</span></span><br><span class="line">    <span class="comment">//matcher.invalidateActiveArea();</span></span><br><span class="line">    <span class="comment">//matcher.computeActiveArea(smap, n-&gt;pose, &amp;((*n-&gt;reading)[0]));</span></span><br><span class="line">    <span class="comment">//matcher.registerScan(smap, n-&gt;pose, &amp;((*n-&gt;reading)[0]));</span></span><br><span class="line">    matcher.<span class="built_in">registerScan</span>(smap, n-&gt;pose, &amp;(n-&gt;reading-&gt;m_dists[<span class="number">0</span>]));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// the map may have expanded, so resize ros message as well</span></span><br><span class="line"><span class="comment">// 扩充地图的大小</span></span><br><span class="line"><span class="keyword">if</span>(map_.map.info.width != (<span class="keyword">unsigned</span> <span class="keyword">int</span>) smap.<span class="built_in">getMapSizeX</span>() || map_.map.info.height != (<span class="keyword">unsigned</span> <span class="keyword">int</span>) smap.<span class="built_in">getMapSizeY</span>())</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> The results of ScanMatcherMap::getSize() are different from the parameters given to the constructor</span></span><br><span class="line">    <span class="comment">//       so we must obtain the bounding box in a different way</span></span><br><span class="line">    GMapping::Point wmin = smap.<span class="built_in">map2world</span>(GMapping::<span class="built_in">IntPoint</span>(<span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">    GMapping::Point wmax = smap.<span class="built_in">map2world</span>(GMapping::<span class="built_in">IntPoint</span>(smap.<span class="built_in">getMapSizeX</span>(), smap.<span class="built_in">getMapSizeY</span>()));</span><br><span class="line">    xmin_ = wmin.x; ymin_ = wmin.y;</span><br><span class="line">    xmax_ = wmax.x; ymax_ = wmax.y;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;map size is now %dx%d pixels (%f,%f)-(%f, %f)&quot;</span>, smap.<span class="built_in">getMapSizeX</span>(), smap.<span class="built_in">getMapSizeY</span>(),</span><br><span class="line">              xmin_, ymin_, xmax_, ymax_);</span><br><span class="line"></span><br><span class="line">    map_.map.info.width = smap.<span class="built_in">getMapSizeX</span>();</span><br><span class="line">    map_.map.info.height = smap.<span class="built_in">getMapSizeY</span>();</span><br><span class="line">    map_.map.info.origin.position.x = xmin_;</span><br><span class="line">    map_.map.info.origin.position.y = ymin_;</span><br><span class="line">    map_.map.data.<span class="built_in">resize</span>(map_.map.info.width * map_.map.info.height);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;map origin: (%f, %f)&quot;</span>, map_.map.info.origin.position.x, map_.map.info.origin.position.y);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//根据地图的信息计算出来各个点的情况:occ、free、noinformation</span></span><br><span class="line"><span class="comment">//这样对地图进行标记主要是方便用RVIZ显示出来</span></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> x=<span class="number">0</span>; x &lt; smap.<span class="built_in">getMapSizeX</span>(); x++)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> y=<span class="number">0</span>; y &lt; smap.<span class="built_in">getMapSizeY</span>(); y++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">/// @todo Sort out the unknown vs. free vs. obstacle thresholding</span></span><br><span class="line">        <span class="comment">/// 得到.xy被占用的概率</span></span><br><span class="line">        <span class="function">GMapping::IntPoint <span class="title">p</span><span class="params">(x, y)</span></span>;</span><br><span class="line">        <span class="keyword">double</span> occ=smap.<span class="built_in">cell</span>(p);</span><br><span class="line">        <span class="built_in">assert</span>(occ &lt;= <span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//unknown</span></span><br><span class="line">        <span class="keyword">if</span>(occ &lt; <span class="number">0</span>)</span><br><span class="line">            map_.map.data[<span class="built_in">MAP_IDX</span>(map_.map.info.width, x, y)] = GMAPPING_UNKNOWN;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//占用</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(occ &gt; occ_thresh_)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//map_.map.data[MAP_IDX(map_.map.info.width, x, y)] = (int)round(occ*100.0);</span></span><br><span class="line">            map_.map.data[<span class="built_in">MAP_IDX</span>(map_.map.info.width, x, y)] = GMAPPING_OCC;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//freespace</span></span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            map_.map.data[<span class="built_in">MAP_IDX</span>(map_.map.info.width, x, y)] = GMAPPING_FREE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//到了这一步，肯定是有地图了。</span></span><br><span class="line">got_map_ = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//make sure to set the header information on the map</span></span><br><span class="line"><span class="comment">//把计算出来的地图发布出去</span></span><br><span class="line">map_.map.header.stamp = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">map_.map.header.frame_id = tf_.<span class="built_in">resolve</span>( map_frame_ );</span><br><span class="line"></span><br><span class="line">sst_.<span class="built_in">publish</span>(map_.map);</span><br><span class="line">sstm_.<span class="built_in">publish</span>(map_.map.info);</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/15/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%83)%20%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%905%20%20updateMap%E5%87%BD%E6%95%B0/" data-id="ckr28or0t00gdewlmcxi2arum" data-title="(七) 源码分析5  updateMap函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SLAM工具/OctoMap安装配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/12/SLAM%E5%B7%A5%E5%85%B7/OctoMap%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2020-06-12T01:51:31.000Z" itemprop="datePublished">2020-06-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/12/SLAM%E5%B7%A5%E5%85%B7/OctoMap%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/">OctoMap安装配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ROS环境下的安装：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 也可用与非ROS环境</span></span><br><span class="line">sudo apt-get install ros-kinetic-octomap</span><br><span class="line"><span class="comment"># octomap的查看工具</span></span><br><span class="line">sudo apt-get install ros-kinetic-octovis</span><br><span class="line">````</span><br><span class="line">`octomap_ros`和`octomap_msgs`提供了消息文件，封装和转换方法。`octomap_server`提供建图和服务</span><br><span class="line"></span><br><span class="line"><span class="comment">## 编译</span></span><br><span class="line"></span><br><span class="line">在`package.xml`中添加：</span><br><span class="line">```sh</span><br><span class="line">&lt;build_depend&gt;octomap&lt;/build_depend&gt;</span><br><span class="line">&lt;run_depend&gt;octomap&lt;/run_depend&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因为库提供了CMake的config文件，所以直接这样用：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">find_package(octomap REQUIRED)</span><br><span class="line">include_directories(<span class="variable">$&#123;OCTOMAP_INCLUDE_DIRS&#125;</span>)</span><br><span class="line">target_link_libraries(<span class="variable">$&#123;OCTOMAP_LIBRARIES&#125;</span>)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/12/SLAM%E5%B7%A5%E5%85%B7/OctoMap%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE/" data-id="ckr28oquf001fewlm0pwjfebc" data-title="OctoMap安装配置" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-PCL点云/点云滤波" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/11/PCL%E7%82%B9%E4%BA%91/%E7%82%B9%E4%BA%91%E6%BB%A4%E6%B3%A2/" class="article-date">
+  <time class="dt-published" datetime="2020-06-11T11:17:10.000Z" itemprop="datePublished">2020-06-11</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/11/PCL%E7%82%B9%E4%BA%91/%E7%82%B9%E4%BA%91%E6%BB%A4%E6%B3%A2/">点云滤波</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>地图分很多种：稀疏的，稠密的，还有半稀疏的。稀疏的地图放大了看就是一个个离散的空间点，不过我们可以把它变成连续的稠密的网格，这个过程也叫点云的网格化。点云网格化需要对点云进行一系列处理</p>
+<p>一般下面这几种情况需要进行点云滤波处理：</p>
+<ol>
+<li><p>点云数据密度不规则需要平滑</p>
+</li>
+<li><p>因为遮挡等问题造成离群点需要去除</p>
+</li>
+<li><p>大量数据需要下采样</p>
+</li>
+<li><p>噪声数据需要去除</p>
+</li>
+</ol>
+<p>滤波模块主要是调用一些封装好的滤波函数，然后根据需要设定一下参数</p>
+<p>滤波对应的方案有如下几种：</p>
+<ul>
+<li>按照给定的规则限制过滤去除点</li>
+<li>通过常用滤波算法修改点的部分属性</li>
+<li>对数据进行下采样</li>
+</ul>
+<h2 id="滤波程序"><a href="#滤波程序" class="headerlink" title="滤波程序"></a>滤波程序</h2><p><code>package.xml</code>中要添加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;build_depend&gt;libpcl-all-dev&lt;/build_depend&gt;</span><br><span class="line">&lt;exec_depend&gt;libpcl-all&lt;/exec_depend&gt;</span><br></pre></td></tr></table></figure>
+<p>CMake按照第一篇里进行配置</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ros/ros.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sensor_msgs/PointCloud2.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl_conversions/pcl_conversions.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/point_cloud.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/point_types.h&gt;</span></span></span><br><span class="line"><span class="comment">//滤波的头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pcl/filters/voxel_grid.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">ros::Publisher pub;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cloud_cb</span> <span class="params">(<span class="keyword">const</span> sensor_msgs::PointCloud2ConstPtr&amp; cloud_msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 声明存储原始数据与滤波后的数据的点云的格式</span></span><br><span class="line">  pcl::PCLPointCloud2* cloud = <span class="keyword">new</span> pcl::PCLPointCloud2; <span class="comment">//原始的点云的数据格式</span></span><br><span class="line">  <span class="function">pcl::PCLPointCloud2ConstPtr <span class="title">cloudPtr</span><span class="params">(cloud)</span></span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// ROS消息转化为PCL中的点云数据格式</span></span><br><span class="line">  pcl_conversions::<span class="built_in">toPCL</span>(*cloud_msg, *cloud);</span><br><span class="line"></span><br><span class="line">  pcl::PCLPointCloud2 cloud_filtered;   <span class="comment">//存储滤波后的数据格式</span></span><br><span class="line">  <span class="comment">// 进行一个滤波处理</span></span><br><span class="line">  pcl::VoxelGrid&lt;pcl::PCLPointCloud2&gt; sor; <span class="comment">//创建滤波对象</span></span><br><span class="line">  sor.<span class="built_in">setInputCloud</span> (cloudPtr);  <span class="comment">//设置输入的滤波，将需要过滤的点云给滤波对象</span></span><br><span class="line">  sor.<span class="built_in">setLeafSize</span> (<span class="number">0.1</span>, <span class="number">0.1</span>, <span class="number">0.1</span>);  <span class="comment">//设置滤波时创建的体素大小为1cm立方体</span></span><br><span class="line">  sor.<span class="built_in">filter</span> (cloud_filtered);<span class="comment">//执行滤波处理，存储输出cloud_filtered</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// 再将滤波后的点云的数据格式转换为ROS下的数据格式发布</span></span><br><span class="line">  sensor_msgs::PointCloud2 output;</span><br><span class="line">  pcl_conversions::<span class="built_in">moveFromPCL</span>(cloud_filtered, output);<span class="comment">//第一个参数是输入，后面的是输出</span></span><br><span class="line">  pub.<span class="built_in">publish</span> (output);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span> (argc, argv, <span class="string">&quot;filter_cloud&quot;</span>);<span class="comment">//声明节点的名称</span></span><br><span class="line">  ros::NodeHandle nh;</span><br><span class="line"></span><br><span class="line">  ros::Subscriber sub = nh.subscribe&lt;sensor_msgs::PointCloud2&gt; (<span class="string">&quot;/camera/depth/points&quot;</span>, <span class="number">1</span>, cloud_cb);</span><br><span class="line">  pub = nh.advertise&lt;sensor_msgs::PointCloud2&gt; (<span class="string">&quot;filtered_cloud&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">  ros::<span class="built_in">spin</span> ();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/11/PCL%E7%82%B9%E4%BA%91/%E7%82%B9%E4%BA%91%E6%BB%A4%E6%B3%A2/" data-id="ckr28oque001dewlm1oe31hfl" data-title="点云滤波" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-视觉SLAM/depthimage_to_laserscan 深度图转scan" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/05/%E8%A7%86%E8%A7%89SLAM/depthimage_to_laserscan%20%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%ACscan/" class="article-date">
+  <time class="dt-published" datetime="2020-06-05T13:37:49.000Z" itemprop="datePublished">2020-06-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/05/%E8%A7%86%E8%A7%89SLAM/depthimage_to_laserscan%20%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%ACscan/">depthimage_to_laserscan 深度图转scan</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Kinect扫描的数据是一个深度图像，即一个二维矩阵。二维平面激光雷达扫描的数据是一行，可以理解为一个行向量。</p>
+<p><code>depthimage_to_laserscan</code>原理是从深度图中选择一行深度值作为激光雷达的扫描数据，取每一列中深度值最小的元素作为该列的代表值，然后将每列的最小值<br>按照原列的顺序组成一行，作为二维激光雷达的扫描数据。</p>
+<p>因此，如果深度图中存在很多深度值为0的点，那么势必会对产生的激光雷达数据造成一定的影响。最后转换出的laser scan就会有很多的断点，原因在于深度图中有<strong>黑洞和边缘噪点</strong><br><img src="https://i.loli.net/2020/06/03/zd1PxA9ZRHrcBOV.png" alt="Kinect 的伪激光雷达数据图.png"></p>
+<h2 id="depthimage-to-laserscan"><a href="#depthimage-to-laserscan" class="headerlink" title="depthimage_to_laserscan"></a>depthimage_to_laserscan</h2><h3 id="源码编译"><a href="#源码编译" class="headerlink" title="源码编译"></a>源码编译</h3><p><code>depthimage_to_laserscan</code>包中有一句：<code>generate_dynamic_reconfigure_options(cfg/Depth.cfg)</code></p>
+<p>编译时出错：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/env: ‘python\r’: No such file or directory</span><br><span class="line"></span><br><span class="line">depthimage_to_laserscan/CMakeFiles/depthimage_to_laserscan_gencfg.dir/build.make:63: recipe <span class="keyword">for</span> target <span class="string">&#x27;/home/hlhp/plan_ws/devel/include/depthimage_to_laserscan/DepthConfig.h&#x27;</span> failed</span><br></pre></td></tr></table></figure>
+<p>去掉这句就可以正常编译，但是不能用动态参数调整了。</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>运行：<code>rosrun depthimage_to_laserscan depthimage_to_laserscan</code></p>
+<p>源码中的调用关系如下：<br><code>DepthImageToLaserScan.cpp</code>中的main函数——<code>DepthImageToLaserScanROS</code> 构造函数 —— <code>pub_ = n.advertise&lt;sensor_msgs::LaserScan&gt;(&quot;scan&quot;, 10, boost::bind(&amp;DepthImageToLaserScanROS::connectCb, this, _1), boost::bind(&amp;DepthImageToLaserScanROS::disconnectCb, this, _1));</code> ——<br><code>DepthImageToLaserScanROS::connectCb</code> —— <code>subscribeCamera(&quot;image&quot;)</code>，这里应当改为<code>/camera/depth/image_raw</code>，或者用remap机制修改。</p>
+<p>算法的核心函数是<code>DepthImageToLaserScan.h</code>中的<code>convert</code><br><br></p>
+<p><code>sensor_msgs/LaserScan</code> overlayed in color on the <code>sensor_msgs/Image</code>. 红色是靠近摄像头，紫色远离摄像头。</p>
+<p><code>depthimage_to_laserscan</code>处理的是深度图，根据提供的参数产生2D雷达scan. 它使用的是&lt;font size =4,color=blue&gt;lazy 订阅机制</font> 直到其他节点订阅<code>scan</code>，才会订阅<code>image</code>或者<code>camera_info</code>.也就是上面的advertise函数中的bind占位符做参数。</p>
+<p>生成的scan参数如下：<br><img src="https://i.loli.net/2020/06/04/4if8Ww2OnQYXxpT.png" alt="pic_031.png"></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>但是默认<code>depthimage_to_laserscan</code>转化的数据<font color = blue size= 3>实际上还是只能检测到平行kinect的障碍物 </font>，而较低的障碍物或者较高的障碍物检测不到。ranges[]数组体现了横向每个障碍点到kinect距离。但是实际，纵向扫描的高度极为苛刻。</p>
+<p>比如，在距离kinect不到1米处，放一个较低的障碍，图像如下：<br><img src="https://i.loli.net/2020/06/04/v3NGX5LzEYxPRks.png" alt="rgbd.png"><br><img src="https://i.loli.net/2020/06/04/tL5dvSjW7UeZu1D.png" alt="depth.png"><br>但是经过转换，结果没看到低障碍的scan结果，现实世界的实际距离是通过深度图像转化的，而scan_hight是针对深度图像扫描高度。</p>
+<p>这种情况下，节点的动态参数调整机制就发挥作用了，<code>rosrun rqt_reconfigure rqt_reconfigure</code>启动，然后调整<code>scan_height</code><br><img src="https://i.loli.net/2020/06/04/zosRTk8Xgpx3fnQ.png" alt="reconfigure.png"></p>
+<p>发现调到180左右就能扫描到0.8米处的低障碍，但是其他部分的scan会有变化.再大于180，低障碍一直能扫描到，但远处障碍的扫描结果又会变化，很难找到我们需要的<code>scan_heigth</code>。因为<code>scan_hight</code>对扫面的高度影响极小，但对远处的障碍物影响很大，何况kinect还有明显的噪声。<br><img src="https://i.loli.net/2020/06/04/IqpZn1B9oxPu3i7.png" alt="调整scan_height后的scan.png"></p>
+<p>即使障碍物在Kinect水平视角内，可能也因为障碍物离kinect太近，以致不在Kinect的竖直视角内。结果kinect会把障碍物后面的墙当做障碍。修改参数会让机器人和障碍之间的最小距离更小，但最终使地面被当成障碍物了。</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/depthimage_to_laserscan">depthimage_to_laserscan</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cv-pr/p/5725831.html">深度图转激光原理</a><br><a target="_blank" rel="noopener" href="https://answers.ros.org/question/187694/depthimage_to_laserscan-choose-which-part-of-the-image-is-scanned/">1个kinect生成3个scan</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/05/%E8%A7%86%E8%A7%89SLAM/depthimage_to_laserscan%20%E6%B7%B1%E5%BA%A6%E5%9B%BE%E8%BD%ACscan/" data-id="ckr28oqw8005sewlm0ozdbiin" data-title="depthimage_to_laserscan 深度图转scan" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/ICP/laser_scan_matcher 配置使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/04/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2020-06-04T12:56:10.000Z" itemprop="datePublished">2020-06-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/04/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/">laser_scan_matcher</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><code>laser_scan_matcher</code>是一个增量式的scan配准工具. 在连续的<code>sensor_msgs/LaserScan</code>消息之间进行<strong>scan match</strong>, 把laser的估计位姿以<code>geometry_msgs/Pose2D</code>消息发布，产生tf变换。</p>
+<p>激光里程计可以不需要轮式里程计和IMU，也可以使用二者加快配准速度。可接受<code>sensor_msgs/LaserScan</code>或者<code>sensor_msgs/PointCloud2</code>消息</p>
+<p>当每次新的scan产生时（每次进入scan的回调函数时），如果为传感器当前的位姿提供初值(使用轮式里程计和IMU)，可以加快PL-ICP的配准速度。如果没有初值，则使用<strong>零速度模型</strong>。  源码在<code>getPrediction</code>函数，在delta_t时间内的相对运动x, y用轮式里程计的delta_x和delta_y表示。 如果用了IMU，delta_theta用IMU的相对yaw表示，否则还用轮式里程计。</p>
+<p>包里的demo.bag是手持一个Hokuyo雷达的移动结果，当然没有里程计。</p>
+<br>
+
+<p>常数速度模型: 假设机器人基于估计的速度运行，速度估计来自传感器或 derivating and filtering scan match的结果. 需要的话题是<code>vel</code>. 使用<code>Alpha-beta</code>滤波器 tracking scan-matching 的预测值</p>
+<p>零速度模型: 不使用预测，假设机器人停在原地。</p>
+<p>我们可以使用<strong>轮式里程计+IMU</strong>，或者 <strong>IMU+alpha-beta tracking</strong>。 使用的优先级是：IMU &gt; Odometry &gt; Constant Velocity &gt; Zero Velocity.    源码在<code>getPrediction</code>函数</p>
+<p>IMU和轮式里程计(尤其IMU)可以显著提高收敛速度， 强烈建议添加IMU</p>
+<p>scan matcher性能稳定时， Alpha-beta tracking 也可以加速收敛，但可能在动态变化环境或缺少特征的环境下出现weird behavior， 一般建议开启，出现异常再关闭。</p>
+<h2 id="Keyframes-和-frame-to-frame-scan-matching"><a href="#Keyframes-和-frame-to-frame-scan-matching" class="headerlink" title="Keyframes 和 frame-to-frame scan matching"></a>Keyframes 和 frame-to-frame scan matching</h2><p>激光里程计一般是<code>frame-to-frame</code>，每一帧scan和上一帧配准. scan中的噪声是难免的，即使机器人不动， incremental 变换也不是零，机器人位姿会慢慢漂移。</p>
+<p>可以使用<code>keyframe-based matching</code>. 位姿变换是在当前scan 和 <code>keyframe scan</code>之间计算. keyframe scan只有在机器人移动一定距离后才更新，如果机器人不动，keyframe scan不变，位姿就不会漂移。  参数<code>kf_dist_linear</code>和<code> kf_dist_angular</code>(弧度制)作为阈值。 把两个阈值都改为0，就可以切换回<code>frame-to-frame</code>模式</p>
+<h2 id="话题和tf"><a href="#话题和tf" class="headerlink" title="话题和tf"></a>话题和tf</h2><p>订阅:</p>
+<ul>
+<li>scan (sensor_msgs/LaserScan)  Scans from a laser range-finder</li>
+<li>cloud (sensor_msgs/PointCloud2)  Scans in point cloud form</li>
+<li>imu/data (sensor_msgs/Imu) 用于 theta prediction. 只有参数<code>use_imu</code>为true才有效</li>
+<li>odom (nav_msgs/Odometry) 用于x-, y-的预测, 没有IMU时预测theta. 只有参数<code>use_odom</code>为true才有效</li>
+</ul>
+<p>发布:</p>
+<ul>
+<li><p>pose2D (geometry_msgs/Pose2D) The pose of the base frame, in some fixed (world) frame</p>
+</li>
+<li><p>需要的tf: base_link——laser, the pose of the laser in the base frame.</p>
+</li>
+<li><p>提供的tf: world——base_link, the pose of the robot base in the world frame. Only provided when <code>publish_tf</code> is enabled. world可以改为自定义的名称，一般为odom</p>
+</li>
+</ul>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><ul>
+<li><p><code>~fixed_frame</code> (string, default: “world”): the fixed frame，可以改为odom</p>
+</li>
+<li><p><code>~base_frame</code> (string, default: “base_link”): the base frame of the robot</p>
+</li>
+<li><p><code>~use_imu</code> (bool, default: true)   Whether to use an imu for the theta prediction of the scan registration. Requires input on <code>/imu/data</code> topic.</p>
+</li>
+<li><p><code>~use_odom</code> (bool, default: true)  Whether to use wheel odometry for the x-, y-, and theta prediction of the scan registration. Requires input on odom topic.</p>
+</li>
+<li><p><code>~use_vel</code> (bool, default: false)  Whether to use constant velocity model for the x-, y-, and theta prediction of the scan registration. Requires input on vel topic.</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="http://wiki.ros.org/laser_scan_matcher">官网的剩余ICP参数</a></p>
+<h2 id="在小强机器人的使用"><a href="#在小强机器人的使用" class="headerlink" title="在小强机器人的使用"></a>在小强机器人的使用</h2><p>注释StatusPublisher.cpp的部分代码，也就是屏蔽原来的odom：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mOdomPub = mNH.advertise&lt;nav_msgs::Odometry&gt;(<span class="string">&quot;xqserial_server/Odom&quot;</span>, <span class="number">1</span>, <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">mOdomPub.<span class="built_in">publish</span>(CarOdom);</span><br><span class="line"></span><br><span class="line">br.<span class="built_in">sendTransform</span>(tf::<span class="built_in">StampedTransform</span>(transform, current_time.<span class="built_in">fromSec</span>(base_time_), <span class="string">&quot;odom&quot;</span>, <span class="string">&quot;base_footprint&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>注释<code>xqserial.launch</code>下面部分，因为我们的目的是<code>odom--&gt;base_link</code>，目前<code>base_footprint</code>是<code>link</code>的parent了，base_link不能有两个parent:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;tf&quot;</span> <span class="attr">type</span>=<span class="string">&quot;static_transform_publisher&quot;</span> <span class="attr">name</span>=<span class="string">&quot;baselink_broadcaster&quot;</span> <span class="attr">args</span>=<span class="string">&quot;0 0 0.15 0 0 0 1 base_footprint base_link 50&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<p>编辑<code>laser_scan_matcher</code>中的<code>rplidar.launch</code>:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">include</span> <span class="attr">file</span>=<span class="string">&quot;$(find rplidar_ros)/launch/a2.launch&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">node</span> <span class="attr">pkg</span>=<span class="string">&quot;laser_scan_matcher&quot;</span> <span class="attr">type</span>=<span class="string">&quot;laser_scan_matcher_node&quot;</span></span></span><br><span class="line"><span class="tag">	<span class="attr">name</span>=<span class="string">&quot;laser_scan_matcher_node&quot;</span>   <span class="attr">output</span>=<span class="string">&quot;screen&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;publish_tf&quot;</span> <span class="attr">value</span> = <span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;fixed_frame&quot;</span> <span class="attr">value</span> = <span class="string">&quot;odom&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;max_iterations&quot;</span> <span class="attr">value</span>=<span class="string">&quot;10&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;publish_pose_with_covariance_stamped&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;publish_pose&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>  /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;do_compute_covariance&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;false&quot;</span>  /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;kf_dist_linear&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;0.08&quot;</span>  /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;kf_dist_angular&quot;</span>  <span class="attr">value</span>=<span class="string">&quot;0.14&quot;</span>  /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;/imu/data&quot;</span> <span class="attr">to</span>=<span class="string">&quot;/xqserial_server/IMU&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">remap</span> <span class="attr">from</span>=<span class="string">&quot;pose_with_covariance_stamped&quot;</span> <span class="attr">to</span>=<span class="string">&quot;plicp_pose&quot;</span>  /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">node</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动<code>startup</code>, <code>roslaunch laser_scan_matcher rplidar.launch</code>. 现在原来的轮式坐标系odom坐标系换成了<font color = blue size= 3> 激光坐标系 odom </font></p>
+<p>现在tf变换是:  <strong>odom —&gt; base_link —&gt; laser</strong></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><img src="https://i.loli.net/2020/09/16/BzoxkWPKNimYe3u.png" alt="process scan失败.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/04/%E6%BF%80%E5%85%89SLAM/ICP/laser_scan_matcher%20%E9%85%8D%E7%BD%AE%E4%BD%BF%E7%94%A8/" data-id="ckr28or0l00fsewlma49w5vcc" data-title="laser_scan_matcher" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-视觉SLAM/Kinect深度图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/06/03/%E8%A7%86%E8%A7%89SLAM/Kinect%E6%B7%B1%E5%BA%A6%E5%9B%BE/" class="article-date">
+  <time class="dt-published" datetime="2020-06-03T13:12:04.000Z" itemprop="datePublished">2020-06-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/06/03/%E8%A7%86%E8%A7%89SLAM/Kinect%E6%B7%B1%E5%BA%A6%E5%9B%BE/">Kinect深度图</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>深度图不受阴影、光照、色度的影响。</p>
+<p>深度图的各个像素点和实际中的对应坐标值通过标定矩阵匹配的方法获取环境信息的三维点云。每一帧深度图上的y坐标和z坐标代表深度图中的像素单位，不是实际世界坐标。</p>
+<p>kinect深度在<code>0.5~8</code>米，随着距离的增加而精度下降，推荐深度范围1-4米，所以深度相机只能用于小场景。</p>
+<p>Kinect最显著的缺点就是水平视场角太小。</p>
+<p>深度图的z轴正向为相机前方</p>
+<p>kinect——深度图点云数据——特征提取——特征匹配——建图</p>
+<h2 id="噪声和修复"><a href="#噪声和修复" class="headerlink" title="噪声和修复"></a>噪声和修复</h2><p>深度图中有黑洞和边缘噪点。这就是测量噪声，而且深度相机的测量噪声随着测量距离的变大而变大。双边贝叶斯滤波</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/06/03/%E8%A7%86%E8%A7%89SLAM/Kinect%E6%B7%B1%E5%BA%A6%E5%9B%BE/" data-id="ckr28oqw6005newlmfxg9c2tu" data-title="Kinect深度图" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/18/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/20/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

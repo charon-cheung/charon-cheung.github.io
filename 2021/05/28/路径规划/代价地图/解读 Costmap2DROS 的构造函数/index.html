@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>解读 Costmap2DROS 的构造函数 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="ROS源码里有个costmap_2d_node.cpp，编译成可执行文件costmap_2d_node，注意它的链接库： 123456target_link_libraries(costmap_2d_node    costmap_2d    $&amp;#123;PCL_LIBRARIES&amp;#125;    $&amp;#123;Boost_LIBRARIES&amp;#125;    $&amp;#123;catkin_LI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解读 Costmap2DROS 的构造函数">
+<meta property="og:url" content="http://example.com/2021/05/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%A7%A3%E8%AF%BB%20Costmap2DROS%20%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="ROS源码里有个costmap_2d_node.cpp，编译成可执行文件costmap_2d_node，注意它的链接库： 123456target_link_libraries(costmap_2d_node    costmap_2d    $&amp;#123;PCL_LIBRARIES&amp;#125;    $&amp;#123;Boost_LIBRARIES&amp;#125;    $&amp;#123;catkin_LI">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2020/05/13/4R5iKrCghHZ7cwd.png">
+<meta property="article:published_time" content="2021-05-28T03:34:34.000Z">
+<meta property="article:modified_time" content="2021-06-16T11:03:17.314Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/13/4R5iKrCghHZ7cwd.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-路径规划/代价地图/解读 Costmap2DROS 的构造函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/05/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%A7%A3%E8%AF%BB%20Costmap2DROS%20%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" class="article-date">
+  <time class="dt-published" datetime="2021-05-28T03:34:34.000Z" itemprop="datePublished">2021-05-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      解读 Costmap2DROS 的构造函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ROS源码里有个<code>costmap_2d_node.cpp</code>，编译成可执行文件<code>costmap_2d_node</code>，注意它的链接库：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">target_link_libraries(costmap_2d_node</span><br><span class="line">    costmap_2d</span><br><span class="line">    <span class="variable">$&#123;PCL_LIBRARIES&#125;</span></span><br><span class="line">    <span class="variable">$&#123;Boost_LIBRARIES&#125;</span></span><br><span class="line">    <span class="variable">$&#123;catkin_LIBRARIES&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>它的main函数非常简单，实际就是<code>Costmap2DROS</code>的构造函数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ros/ros.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;costmap_2d/costmap_2d_ros.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;costmap_node&quot;</span>);</span><br><span class="line">  <span class="function">tf::TransformListener <span class="title">tf</span><span class="params">(ros::Duration(<span class="number">10</span>))</span></span>;</span><br><span class="line">  <span class="function">costmap_2d::Costmap2DROS <span class="title">lcr</span><span class="params">(<span class="string">&quot;costmap&quot;</span>, tf)</span></span>;</span><br><span class="line">  ros::<span class="built_in">spin</span>();</span><br><span class="line">  <span class="keyword">return</span> (<span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="获取参数值和tf变换"><a href="#获取参数值和tf变换" class="headerlink" title="获取参数值和tf变换"></a>获取参数值和tf变换</h3><p>首先是一些参数的获取。循环等待直到获得机器人底盘坐标系和global系之间的坐标转换。<br>并获取<code>rolling_window</code>、<code>track_unknown_space</code>、<code>always_send_full_costmap</code>的参数，默认为false。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">Costmap2DROS::<span class="built_in">Costmap2DROS</span>(std::string name, tf::TransformListener&amp; tf) :</span><br><span class="line">    <span class="built_in">layered_costmap_</span>(<span class="literal">NULL</span>),</span><br><span class="line">    <span class="built_in">name_</span>(name),  <span class="comment">// 局部还是全局代价地图</span></span><br><span class="line">    <span class="built_in">tf_</span>(tf),</span><br><span class="line">    <span class="built_in">transform_tolerance_</span>(<span class="number">0.3</span>),</span><br><span class="line">    <span class="built_in">map_update_thread_shutdown_</span>(<span class="literal">false</span>),</span><br><span class="line">    <span class="built_in">stop_updates_</span>(<span class="literal">false</span>),</span><br><span class="line">    <span class="built_in">initialized_</span>(<span class="literal">true</span>),</span><br><span class="line">    <span class="built_in">stopped_</span>(<span class="literal">false</span>),</span><br><span class="line">    <span class="built_in">robot_stopped_</span>(<span class="literal">false</span>),</span><br><span class="line">    <span class="built_in">map_update_thread_</span>(<span class="literal">NULL</span>),</span><br><span class="line">    <span class="built_in">last_publish_</span>(<span class="number">0</span>),</span><br><span class="line">    <span class="built_in">plugin_loader_</span>(<span class="string">&quot;costmap_2d&quot;</span>, <span class="string">&quot;costmap_2d::Layer&quot;</span>),</span><br><span class="line">    <span class="built_in">publisher_</span>(<span class="literal">NULL</span>),</span><br><span class="line">    <span class="built_in">dsrv_</span>(<span class="literal">NULL</span>),</span><br><span class="line">    <span class="built_in">footprint_padding_</span>(<span class="number">0.0</span>)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">//初始化old pose</span></span><br><span class="line">  old_pose_.<span class="built_in">setIdentity</span>();</span><br><span class="line">  old_pose_.<span class="built_in">setOrigin</span>(tf::<span class="built_in">Vector3</span>(<span class="number">1e30</span>, <span class="number">1e30</span>, <span class="number">1e30</span>));</span><br><span class="line">  <span class="comment">// 如果是全局代价地图，这里name是global_costmap</span></span><br><span class="line">  <span class="function">ros::NodeHandle <span class="title">private_nh</span><span class="params">(<span class="string">&quot;~/&quot;</span> + name)</span></span>;</span><br><span class="line">  ros::NodeHandle g_nh;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//获取tf前缀</span></span><br><span class="line">  ros::NodeHandle prefix_nh;</span><br><span class="line">  std::string tf_prefix = tf::<span class="built_in">getPrefixParam</span>(prefix_nh);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//两个坐标系，全局和局部的参数是不同的</span></span><br><span class="line">  private_nh.<span class="built_in">param</span>(<span class="string">&quot;global_frame&quot;</span>, global_frame_, std::<span class="built_in">string</span>(<span class="string">&quot;/map&quot;</span>));</span><br><span class="line">  private_nh.<span class="built_in">param</span>(<span class="string">&quot;robot_base_frame&quot;</span>, robot_base_frame_, std::<span class="built_in">string</span>(<span class="string">&quot;base_link&quot;</span>));</span><br><span class="line"></span><br><span class="line">  <span class="comment">//确保基于tf前缀正确设置了坐标系</span></span><br><span class="line">  <span class="comment">//tf::resolve或者TransformListener::resolve的作用就是使用tf_prefix参数将frame_name解析为frame_id</span></span><br><span class="line">  global_frame_ = tf::<span class="built_in">resolve</span>(tf_prefix, global_frame_);</span><br><span class="line">  robot_base_frame_ = tf::<span class="built_in">resolve</span>(tf_prefix, robot_base_frame_);</span><br><span class="line"></span><br><span class="line">  ros::Time last_error = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">  std::string tf_error;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">//确保机器人global_frame_和robot_base_frame_之间的有效转换, 否则一直停留在这里阻塞</span></span><br><span class="line">  <span class="keyword">while</span> (ros::<span class="built_in">ok</span>()</span><br><span class="line">      &amp;&amp; !tf_.<span class="built_in">waitForTransform</span>(global_frame_, robot_base_frame_, ros::<span class="built_in">Time</span>(), </span><br><span class="line">        ros::<span class="built_in">Duration</span>(<span class="number">0.1</span>), ros::<span class="built_in">Duration</span>(<span class="number">0.01</span>), &amp;tf_error))</span><br><span class="line">  &#123;</span><br><span class="line">    ros::<span class="built_in">spinOnce</span>();</span><br><span class="line">    <span class="comment">// 如果５秒内未成功tf转换，报警</span></span><br><span class="line">    <span class="keyword">if</span> (last_error + ros::<span class="built_in">Duration</span>(<span class="number">5.0</span>) &lt; ros::Time::<span class="built_in">now</span>())</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Timed out waiting for transform from %s to %s to become available before running costmap, tf error: %s&quot;</span>,</span><br><span class="line">               robot_base_frame_.<span class="built_in">c_str</span>(), global_frame_.<span class="built_in">c_str</span>(), tf_error.<span class="built_in">c_str</span>());</span><br><span class="line">      last_error = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// The error string will accumulate and errors will typically be the same, so the last</span></span><br><span class="line">    <span class="comment">// will do for the warning above. Reset the string here to avoid accumulation.</span></span><br><span class="line">    tf_error.<span class="built_in">clear</span>();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//检测是否需要“窗口滚动”，从参数服务器获取以下参数</span></span><br><span class="line">  <span class="keyword">bool</span> rolling_window, track_unknown_space, always_send_full_costmap;</span><br><span class="line">  private_nh.<span class="built_in">param</span>(<span class="string">&quot;rolling_window&quot;</span>, rolling_window, <span class="literal">false</span>);</span><br><span class="line">  private_nh.<span class="built_in">param</span>(<span class="string">&quot;track_unknown_space&quot;</span>, track_unknown_space, <span class="literal">false</span>);</span><br><span class="line">  private_nh.<span class="built_in">param</span>(<span class="string">&quot;always_send_full_costmap&quot;</span>, always_send_full_costmap, <span class="literal">false</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="LayeredCostmap类的对象"><a href="#LayeredCostmap类的对象" class="headerlink" title="LayeredCostmap类的对象"></a>LayeredCostmap类的对象</h3><p><code>layered_costmap_ = new LayeredCostmap(global_frame_, rolling_window, track_unknown_space);</code></p>
+<p>接下来创建一个<code>LayeredCostmap</code>类实例<code>layered_costmap_</code>，作为规划器使用的<strong>master costmap</strong>，并通过它管理各层地图。</p>
+<p><code>LayeredCostmap</code>类是Costmap2DROS的类成员，它是<strong>master costmap</strong>，也能够管理各层地图，因为它 <font color = blue size=4> 含有指向各层子地图的指针</font> <code>std::vector&lt;boost::shared_ptr&lt;Layer&gt; &gt;  plugins_</code>，能够调用子地图的类方法，开启子地图的更新，各层子地图最后都会合并到<strong>master costmap</strong>，提供给规划器的使用。</p>
+<p>它的构造函数只有:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果追踪未知信息的cell，默认false</span></span><br><span class="line"><span class="keyword">if</span> (track_unknown)</span><br><span class="line">	costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">255</span>);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 枚举值的含义对应如下：</span></span><br><span class="line"><span class="comment">/*	NO_INFORMATION = 255;</span></span><br><span class="line"><span class="comment">	LETHAL_OBSTACLE = 254;</span></span><br><span class="line"><span class="comment">	INSCRIBED_INFLATED_OBSTACLE = 253;</span></span><br><span class="line"><span class="comment">	FREE_SPACE = 0;    */</span></span><br></pre></td></tr></table></figure>
+<p><code>LayeredCostmap</code>含有类成员<code>Costmap2D costmap_</code>，这个类就是底层地图，用于记录地图数据。</p>
+<p>继续Costmap2DROS的构造函数代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 查看参数服务器里的costmap是否有plugins参数，如果没有，则重置为旧参数</span></span><br><span class="line"><span class="keyword">if</span> (!private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">resetOldParameters</span>(private_nh);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果加载了plugins，循环将每个plugin即每层子地图添加进layered_costmap_类的</span></span><br><span class="line"><span class="comment">// 指针组对象中，并对每层地图调用其 initialize 类方法，初始化各层地图。</span></span><br><span class="line"><span class="keyword">if</span> (private_nh.<span class="built_in">hasParam</span>(<span class="string">&quot;plugins&quot;</span>))</span><br><span class="line">&#123;</span><br><span class="line">    XmlRpc::XmlRpcValue my_list;</span><br><span class="line">    private_nh.<span class="built_in">getParam</span>(<span class="string">&quot;plugins&quot;</span>, my_list);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int32_t</span> i = <span class="number">0</span>; i &lt; my_list.<span class="built_in">size</span>(); ++i)</span><br><span class="line">    &#123;</span><br><span class="line">      std::string pname = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;name&quot;</span>]);</span><br><span class="line">      std::string type = <span class="keyword">static_cast</span>&lt;std::string&gt;(my_list[i][<span class="string">&quot;type&quot;</span>]);</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Using plugin \&quot;%s\&quot;&quot;</span>, pname.<span class="built_in">c_str</span>());</span><br><span class="line"></span><br><span class="line">      <span class="comment">// plugin_loader_类型是　pluginlib::ClassLoader&lt;Layer&gt;，ROS插件机制</span></span><br><span class="line">      boost::shared_ptr&lt;Layer&gt; plugin = plugin_loader_.<span class="built_in">createInstance</span>(type);</span><br><span class="line">      <span class="comment">// 添加到容器  plugins_</span></span><br><span class="line">      layered_costmap_-&gt;<span class="built_in">addPlugin</span>(plugin);</span><br><span class="line">      <span class="comment">// 执行 Layer::initialize， 它向各层地图通知主地图的存在，并调用</span></span><br><span class="line">      <span class="comment">// oninitialize方法  （Layer类中的虚函数，被定义在各层地图中）</span></span><br><span class="line">      plugin-&gt;<span class="built_in">initialize</span>(layered_costmap_, name + <span class="string">&quot;/&quot;</span> + pname, &amp;tf_);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里得到的插件即为各层子地图。每层子地图使用Pluginlib（ROS插件机制）来实例化，各个层可以被独立的编译，且允许使用C++接口对Costmap做出任意的改变。</p>
+<h3 id="footprint话题"><a href="#footprint话题" class="headerlink" title="footprint话题"></a>footprint话题</h3><p>订阅footprint话题，回调函数为setUnpaddedRobotFootprintPolygon。当话题上收到footprint时，回调函数会将接收到的footprint根据参数<code>footprint_padding_</code>的值进行<strong>膨胀</strong>，得到“膨胀”后的<code>padded_footprint_</code>，传递给各级地图。</p>
+<p>查看节点可知，<code>/move_base/local_costmap/footprint</code>和<code>/move_base/global_costmap/footprint</code>两个话题的发布订阅者都是move_base</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">std::string topic_param, topic;</span><br><span class="line"><span class="keyword">if</span> (!private_nh.<span class="built_in">searchParam</span>(<span class="string">&quot;footprint_topic&quot;</span>, topic_param))</span><br><span class="line">&#123;</span><br><span class="line">  topic_param = <span class="string">&quot;footprint_topic&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">private_nh.<span class="built_in">param</span>(topic_param, topic, std::<span class="built_in">string</span>(<span class="string">&quot;footprint&quot;</span>));</span><br><span class="line">footprint_sub_ = private_nh.<span class="built_in">subscribe</span>(topic, <span class="number">1</span>, &amp;Costmap2DROS::setUnpaddedRobotFootprintPolygon, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!private_nh.<span class="built_in">searchParam</span>(<span class="string">&quot;published_footprint_topic&quot;</span>, topic_param))</span><br><span class="line">&#123;</span><br><span class="line">  topic_param = <span class="string">&quot;published_footprint&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line">private_nh.<span class="built_in">param</span>(topic_param, topic, std::<span class="built_in">string</span>(<span class="string">&quot;oriented_footprint&quot;</span>));</span><br><span class="line">footprint_pub_ = private_nh.advertise&lt;geometry_msgs::PolygonStamped&gt;(<span class="string">&quot;footprint&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">setUnpaddedRobotFootprint</span>(<span class="built_in">makeFootprintFromParams</span>(private_nh));</span><br></pre></td></tr></table></figure>
+<br>
+
+<h3 id="发布代价地图"><a href="#发布代价地图" class="headerlink" title="发布代价地图"></a>发布代价地图</h3><p>创建地图的发布器实例,<code>Costmap2DPublisher</code>类是用于地图发布的封装类,在函数<code>mapUpdateLoop</code>中调用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//发布Costmap2D</span></span><br><span class="line">publisher_ = <span class="keyword">new</span> <span class="built_in">Costmap2DPublisher</span>(&amp;private_nh, layered_costmap_-&gt;<span class="built_in">getCostmap</span>(), global_frame_, <span class="string">&quot;costmap&quot;</span>, always_send_full_costmap);</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建地图更新线程的控制量</span></span><br><span class="line">stop_updates_ = <span class="literal">false</span>;</span><br><span class="line">initialized_ = <span class="literal">true</span>;</span><br><span class="line">stopped_ = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建一个timer去检测机器人是否在移动</span></span><br><span class="line">robot_stopped_ = <span class="literal">false</span>;</span><br><span class="line"><span class="comment">//回调函数movementCB通过比较前后两个pose的差来判断机器人是否在移动</span></span><br><span class="line">timer_ = private_nh.<span class="built_in">createTimer</span>(ros::<span class="built_in">Duration</span>(<span class="number">.1</span>), &amp;Costmap2DROS::movementCB, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<p>开启动态参数配置，它的回调函数Costmap2DROS::reconfigureCB会在节点启动时运行一次，加载.cfg文件的配置参数。这个函数给对应参数赋值，并创建了一个<code>Costmap2DROS::mapUpdateLoop</code>函数的线程，即地图更新线程。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//开启参数动态配置</span></span><br><span class="line">  dsrv_ = <span class="keyword">new</span> dynamic_reconfigure::Server&lt;Costmap2DConfig&gt;(ros::<span class="built_in">NodeHandle</span>(<span class="string">&quot;~/&quot;</span> + name));</span><br><span class="line">  <span class="comment">//回调函数reconfigureCB 除了对一些类成员的配置值做赋值以外，还会开启一个更新map的线程 </span></span><br><span class="line">  dynamic_reconfigure::Server&lt;Costmap2DConfig&gt;::CallbackType cb = boost::<span class="built_in">bind</span>(&amp;Costmap2DROS::reconfigureCB, <span class="keyword">this</span>, _1,_2);</span><br><span class="line">  dsrv_-&gt;<span class="built_in">setCallback</span>(cb);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的代码有点复杂了，<code>mapUpdateLoop</code>函数循环调用<code>UpdateMap</code>函数，更新地图。并以publish_cycle为周期，发布更新后的地图。</p>
+<p><code>UpdateMap</code>首先调用类内getRobotPose函数，通过tf转换，将机器人底盘系的坐标转换到global系，得到机器人的位姿。然后通过<code>layered_costmap_</code>调用LayeredCostmap类的updateMap函数，更新地图。</p>
+<p>流程如下<br><img src="https://i.loli.net/2020/05/13/4R5iKrCghHZ7cwd.png" alt="costmap的初始化流程.png"></p>
+<p>整个costmap初始化，最关键和复杂的就是各层的加载和更新地图</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/05/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%A7%A3%E8%AF%BB%20Costmap2DROS%20%E7%9A%84%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" data-id="ckr28or2900kxewlm3o86ga1d" data-title="解读 Costmap2DROS 的构造函数" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/06/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E6%89%80%E6%9C%89%E5%8F%82%E6%95%B0%E5%90%AB%E4%B9%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          TEB所有参数含义
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%843%E4%B8%AA%E7%B1%BB%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">代价地图的3个类常用的函数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

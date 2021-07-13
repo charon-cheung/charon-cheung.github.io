@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Kinect v1的配置调试 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="深度相机是能直接输出深度的相机，有的是通过软件算法间接计算深度，有的是用物理方法测量深度；RGB-D相机除了深度图还输出彩色图。 下面就是一张深度图：这是用ImageJ打开的，每个像素点的值代表距离，物理距离&#x3D;像素值 &#x2F; 尺度因子，不同相机的尺度因子是不同的， 目前RGBD深度摄像头获取深度图像的方法主要有立体视觉，激光雷达测距和结构光三大类。  立体视觉。获取深度信息，指的是通过获取同一场景不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kinect v1的配置调试">
+<meta property="og:url" content="http://example.com/2020/02/13/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E9%85%8D%E7%BD%AE%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="深度相机是能直接输出深度的相机，有的是通过软件算法间接计算深度，有的是用物理方法测量深度；RGB-D相机除了深度图还输出彩色图。 下面就是一张深度图：这是用ImageJ打开的，每个像素点的值代表距离，物理距离&#x3D;像素值 &#x2F; 尺度因子，不同相机的尺度因子是不同的， 目前RGBD深度摄像头获取深度图像的方法主要有立体视觉，激光雷达测距和结构光三大类。  立体视觉。获取深度信息，指的是通过获取同一场景不同">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49529758366_7e637256d6.jpg">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49529758346_b5c795886c_z.jpg">
+<meta property="og:image" content="https://i.loli.net/2020/02/13/RcrQL78ajDUhSl4.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/13/tHMWg9Yl8uoFAVN.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/13/k1S6NDLJAaWhjMw.png">
+<meta property="og:image" content="https://i.loli.net/2020/02/13/pEgDbumQeYlsMG9.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49529935241_5ba37e018b_z.jpg">
+<meta property="og:image" content="https://live.staticflickr.com/65535/47907938531_95db78701b_b.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/11/26/ZkYhenJcbrdjGI3.png">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49529783221_b5a1f5d63a_n.jpg">
+<meta property="og:image" content="https://live.staticflickr.com/65535/49529279898_367fe66a23_w.jpg">
+<meta property="og:image" content="https://i.loli.net/2019/11/26/YqwvIenKRQag6rZ.png">
+<meta property="article:published_time" content="2020-02-13T14:09:16.000Z">
+<meta property="article:modified_time" content="2020-06-11T11:15:07.358Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://live.staticflickr.com/65535/49529758366_7e637256d6.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-视觉SLAM/Kinect v1摄像头的配置调试" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/13/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E9%85%8D%E7%BD%AE%E8%B0%83%E8%AF%95/" class="article-date">
+  <time class="dt-published" datetime="2020-02-13T14:09:16.000Z" itemprop="datePublished">2020-02-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Kinect v1的配置调试
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>深度相机是能直接输出深度的相机，有的是通过软件算法间接计算深度，有的是用物理方法测量深度；RGB-D相机除了深度图还输出彩色图。</p>
+<p>下面就是一张深度图：<br><img src="https://live.staticflickr.com/65535/49529758366_7e637256d6.jpg"><br>这是用<code>ImageJ</code>打开的，每个像素点的值代表距离，<strong>物理距离=像素值 / 尺度因子</strong>，不同相机的尺度因子是不同的，</p>
+<p>目前RGBD深度摄像头获取深度图像的方法主要有立体视觉，激光雷达测距和结构光三大类。</p>
+<ol>
+<li><p>立体视觉。获取深度信息，指的是通过获取同一场景不同视角的多张图像，利用图像的匹配和一定的三维重建算法来计算场景对象的深度信息，如利用处同一轴线上的两个摄像头获取场景对象的两张视差图以及相机的内参和外参数计算深度信息的双目摄像头。</p>
+</li>
+<li><p>激光雷达测距则采用TOF 技术（Timeof flight，飞行时间），它通过记录光源投射到每个像素点的光线发射与反射间的相位变化来计算光线飞行时间，进而计算光源到每个像素点的距离，比如微软推出的最新的 Kinect 2代(京东价格1459)。</p>
+</li>
+</ol>
+<p>TOF优点：</p>
+<ul>
+<li>通过调节发射脉冲的频率改变测量距离</li>
+<li>测量精度不会随着测量距离的增大而降低</li>
+<li>抗干扰能力强</li>
+<li>适合距离远的场合(无人驾驶，AR)</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>功耗大</li>
+<li>分辨率低</li>
+<li>深度图质量差</li>
+</ul>
+<ol start="3">
+<li>结构光：获取深度数据的方式是通过结构光投射器向物体表面投射可控制的光点、光线或者光面，就Kinect而言，其通过一个红外散斑发射器发射红外光束，光束碰到障碍物后反射回深度摄像头，然后通过返回散斑之间的几何关系计算距离。其实，Kinect的深度摄像头就是一个装了滤波片的普通摄像头，只对红外光成像的摄像头（可以这么认为）。相比双目相机通过软件计算距离来说深度相机可以节省大量的时间。 比如Kinect 1和IphoneX。 结构光又分几类：</li>
+</ol>
+<ul>
+<li>单目结构光： 一个红外发射器和一个红外接收器</li>
+<li>双目结构光： 一个红外发射器和两个红外接收器，得到两个红外图</li>
+</ul>
+<p>结构光法是为解决双目匹配问题而产生的，解决对环境光照的敏感问题，夜晚也可用，主动投影已知图案</p>
+<p>RGBD相机的缺点：</p>
+<ul>
+<li>不适合室外</li>
+<li>受深黑色物体、(半)透明物体、镜面反射物体、视差影响</li>
+<li>功耗大</li>
+<li>分辨率低</li>
+<li>使用多个时会互相干扰</li>
+<li>深黑色物体可以吸收大量的红外光导致测量不准</li>
+</ul>
+<p>物体呈现的颜色： 物体对不同波长的光具有选择性的吸收，进而决定物体 本身的颜色<br>白光中的光是互补的，一束白光通过溶液时，黄光会被吸收，结果只剩下对应得蓝光，溶液就表现出蓝色<br><img src="https://live.staticflickr.com/65535/49529758346_b5c795886c_z.jpg"></p>
+<p>看下图的例子：色卡到摄像头的距离固定，接受的红外光形成散斑图，但是色卡右下角的黑色实际没接收到红外光，不同颜色对红外光的吸收是不同的，尤其深黑色物体。<br><img src="https://i.loli.net/2020/02/13/RcrQL78ajDUhSl4.png" alt="色卡.png"></p>
+<p>再看下图的例子：椅子靠背是黑色，吸收了红外光，所以深度图上没有值<br><img src="https://i.loli.net/2020/02/13/tHMWg9Yl8uoFAVN.png" alt="椅子.png"></p>
+<ul>
+<li>(半)透明物体、镜面反射物体的影响: 漫反射是多个角度清晰成像的基础，镜面发射容易发生过曝光或欠曝光。对光滑物体，很难检测到，只能调整到某个角度测量。当物体表面超过一定的光滑度时，深度相机测量精度会急剧下降，设置测量失败(没有深度值)</li>
+</ul>
+<p>看下图的例子：左边椅子虽然是黑色，但是不光滑。桌子既是黑色又光滑，所以几乎没有深度值<br><img src="https://i.loli.net/2020/02/13/k1S6NDLJAaWhjMw.png" alt="光滑桌面.png"></p>
+<ul>
+<li>由于结构光深度相机的发射端和接收端有一定间距，因此在物体的边缘有明显视差</li>
+</ul>
+<p><img src="https://i.loli.net/2020/02/13/pEgDbumQeYlsMG9.png" alt="边缘.png"></p>
+<h2 id="Kinect-1"><a href="#Kinect-1" class="headerlink" title="Kinect 1"></a>Kinect 1</h2><p>Kinect v1的Depth传感器，采用了<code>Light Coding</code>的方式，读取投射的红外线pattern，通过pattern的变形来取得Depth的信息。为此，Depth传感器分为投射红外线pattern的IR Projector（左）和读取的这个的IR Camera（右）。红外线（Infrared Radiation），简称IR。还有Depth传感器中间还搭载了Color Camera</p>
+<p><img src="https://live.staticflickr.com/65535/49529935241_5ba37e018b_z.jpg"><br><img src="https://live.staticflickr.com/65535/47907938531_95db78701b_b.jpg"><br>Kinect 1目前已经停产，但是可以在淘宝上买到二手的，我发现的一家只有300多。</p>
+<p>Kinect 1的缺点：需要使用自己的适配器，供电上有一个220v转12v的电源转换器，不可拆卸。如果用到移动机器人上，需要将线剪断，接到12v电源上。如果只是在固定端使用，就不需要进行改动。因为Kinect主要面向是游戏开发，固定在一个位置就行。</p>
+<p>kinect深度图左边黑点一直闪， 有测量噪声，而且深度相机的测量噪声随着测量距离的变大而变大</p>
+<h3 id="安装和运行驱动"><a href="#安装和运行驱动" class="headerlink" title="安装和运行驱动"></a>安装和运行驱动</h3><p><code>openni_launch</code>包已经不适用ROS-Kinetic了，应该用<code>freenect_launch</code>，它与<code>openni_launch</code>做到了最大限度的兼容：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y libfreenect-dev</span><br><span class="line"></span><br><span class="line">sudo apt-get -y install ros-kinetic-freenect-camera ros-kinetic-camera-calibration ros-kinetic-freenect-stack  ros-kinetic-freenect-launch</span><br></pre></td></tr></table></figure>
+
+<p>然后运行<code>roslaunch freenect_launch freenect.launch</code>，终端里会出现告警信息：<br><img src="https://i.loli.net/2019/11/26/ZkYhenJcbrdjGI3.png"><br>显然这是在找标定文件，一个是RGB的，一个是深度的，稍后需要标定然后把文件放到提示中的目录．</p>
+<h2 id="话题"><a href="#话题" class="headerlink" title="话题"></a>话题</h2><p>下面这些话题是我们经常使用的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/camera/depth/image</span><br><span class="line">/camera/depth/image_raw</span><br><span class="line">/camera/depth/points : 无颜色点云. 使用`PCL`对单个点进行处理</span><br><span class="line">/camera/ir/image_raw</span><br><span class="line">/camera/rgb/image_color</span><br><span class="line">/camera/rgb/image_raw</span><br></pre></td></tr></table></figure>
+<p>如果是realsense相机，还有一个<code>/camera/depth/color/points</code>话题，可到驱动处查看配置</p>
+<ul>
+<li>RGB图像：/camera/rgb/image_color</li>
+</ul>
+<p>消息类型<code>sensor_msgs/Image</code><br>OPENCV数据格式：Mat<br>图像尺寸：<code>640*480</code><br>像素数据类型：8UC3</p>
+<ul>
+<li>深度图像：/camera/depth/image</li>
+</ul>
+<p>消息类型<code>sensor_msgs/Image</code><br>OPENCV数据格式：Mat<br>图像尺寸：<code>640*480</code><br>像素数据类型：32FC1<br>小端<br>data数组长度 1228800</p>
+<ul>
+<li>点云数据（无整合RGB）: /camera/depth/points</li>
+</ul>
+<p>ROS数据格式：sensor_msgs/Image<br>PCL点云库数据格式：pcl::PointCloud<a href="pcl::PointXYZ">pcl::PointXYZ</a><br>图像尺寸：有序点云，<code>640*480</code><br>像素数据类型：double，每个像素实际是32位浮点，单位米</p>
+<p>运行<code>rqt</code>，然后到话题列表里选择<code>/camera/rgb/image_color</code>和<code>/camera/depth/image</code>，会显示彩色图像和深度图像，选择<code>/camera/depth/disparity</code>话题是视差图</p>
+<h3 id="保存图片"><a href="#保存图片" class="headerlink" title="保存图片"></a>保存图片</h3><p>图像保存方法是最右测按钮，直接保存即可。如果是在无界面环境下保存，就要用<code>image_view</code>包的节点<code>image_saver</code>。可以从流媒体中保存<code>jpg/png</code>文件(也就是<code>sensor_msgs/Image</code>话题)。</p>
+<p>比如保存深度图：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding参数默认是bgr8, save_all_image参数默认true，会一直保存</span></span><br><span class="line">rosrun image_view image_saver image:=/camera/depth/image_raw _encoding:=16UC1 _filename_format:=<span class="string">&quot;image%03i.png&quot;</span></span><br></pre></td></tr></table></figure>
+<p>保存的文件名是<code>image000.png</code>形式，但问题是它会不断保存当前图片，因为是以订阅话题形式运行节点。 如果只保存一次，我们就需要将<code>save_all_image</code>参数设置为false，而且用service形式，<code>rosservice list</code>发现有一个<code>/image_saver_1581905204960559926/save</code>，显然是跟时间戳对应的，有时会出现多个这样的话题，所以要注意区分是哪个图片。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rosrun image_view image_saver image:=/camera/depth/image_raw _encoding:=16UC1 _filename_format:=<span class="string">&quot;image%03i.png&quot;</span> _save_all_image:=<span class="literal">false</span></span><br><span class="line">rosservice call /image_saver_1581905064980209474/save</span><br></pre></td></tr></table></figure>
+
+<p>此外还有节点<code>extract_images</code>也是用于保存图片，用法类似；<code>video_recorder</code>用于录像</p>
+<p>Kinect获取到的深度图一定要用png格式存储，而不能用jpg。深度图像的是12位的，jpg只能存储8位，PNG支持16位。jpg格式属于有损压缩，而png为无损压缩。</p>
+<h3 id="使用rviz显示"><a href="#使用rviz显示" class="headerlink" title="使用rviz显示"></a>使用rviz显示</h3><p>打开rviz后，修改“Fixed Frame”为<code>/camera_depth_optical_frame</code>，接着点击add添加PointCloud2类型，修改topic，如下图所示<br><img src="https://live.staticflickr.com/65535/49529783221_b5a1f5d63a_n.jpg" alt="话题配置"></p>
+<p>效果是这样的，视角不好，得自己调整<br><img src="https://live.staticflickr.com/65535/49529279898_367fe66a23_w.jpg"></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>如果没有图像显示可以使用<code>rostopic echo</code>命令看看是否有数据流出来，如果切换rgb和ir太快，可能会在终端报错：<br><img src="https://i.loli.net/2019/11/26/YqwvIenKRQag6rZ.png"></p>
+<p><code>freenect_launch</code>中还有一些文件可以根据需要运行最少的节点，同时可以避免一些不必要的警告</p>
+<ul>
+<li><p>freenect-xyz.launch: provides the pointcloud /camera/depth/points. Disables device registration.</p>
+</li>
+<li><p>freenect-registered-xyzrgb.launch: provides the pointcloud /camera/depth_registered/points. Enables device registration. </p>
+</li>
+</ul>
+<p>在rviz中打算观察点云时，话题部分有报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">For frame [camera_depth_optical_frame]: No transform to fixed frame [odom].  TF error: [Could not find a connection between &#x27;odom&#x27; and &#x27;camera_depth_optical_frame&#x27; because they are not part of the same tree.Tf has two or more unconnected trees.]</span><br></pre></td></tr></table></figure>
+
+
+
+
+<p>参考：<br><a target="_blank" rel="noopener" href="http://res.percipio.xyz/doc/PCP_DS_FM810_CN.pdf">图漾FM510的参数</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/SFM2020/article/details/83002133">史上最详尽的RGB-D传感器选型</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/13/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E9%85%8D%E7%BD%AE%E8%B0%83%E8%AF%95/" data-id="ckr28oqw5005iewlmaidw9iv4" data-title="Kinect v1的配置调试" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/14/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%BA%8C)%20shared_ptr/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          智能指针(二) shared_ptr
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E4%B8%8A%E4%BD%8D%E6%9C%BA-ROS%E9%80%9A%E4%BF%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">上位机-ROS通信</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

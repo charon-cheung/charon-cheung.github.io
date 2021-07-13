@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/25/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-ROS/ROS机器人/urdf建模" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/09/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/urdf%E5%BB%BA%E6%A8%A1/" class="article-date">
+  <time class="dt-published" datetime="2020-03-09T14:06:31.000Z" itemprop="datePublished">2020-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/09/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/urdf%E5%BB%BA%E6%A8%A1/">urdf建模</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>在一个package中新建文件夹，第一个文件夹为urdf，用来放置模型文件。第二个文件夹叫做meshes，用来放置外观纹理，一般是通过三维软件建模完成后，导出并放置在meshes中，第三个为launch文件夹。第四个是config文件夹，功能包的配置文件以及rviz的显示配置文件。</p>
+<p>我们要准备这样的launch文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span>                                               </span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;robot_description&quot;</span> <span class="attr">textfile</span>=<span class="string">&quot;$(find robot_description)/urdf/robot.urdf&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 设置GUI参数，显示关节控制插件，配合下面的joint_state_publisher使用 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;use_gui&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 根据关节状态，创建tf关系，并发布到tf tree中  --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">name</span>=<span class="string">&quot;robot_state_publisher&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;robot_state_publisher&quot;</span> <span class="attr">type</span>=<span class="string">&quot;robot_state_publisher&quot;</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 发布机器人的关节状态  --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">name</span>=<span class="string">&quot;joint_state_publisher&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;joint_state_publisher&quot;</span> <span class="attr">type</span>=<span class="string">&quot;joint_state_publisher&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>一个简单的模型，就是一个底盘带一个轮子：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=&quot;1.0&quot; ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">robot</span> <span class="attr">name</span>=<span class="string">&quot;robot&quot;</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">material</span> <span class="attr">name</span>=<span class="string">&quot;Black&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">color</span> <span class="attr">rgba</span>=<span class="string">&quot;0.15 0.15 0.15 1&quot;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">material</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">material</span> <span class="attr">name</span>=<span class="string">&quot;Blue&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">color</span> <span class="attr">rgba</span>=<span class="string">&quot;0 0 0.8 1&quot;</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">material</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">link</span> <span class="attr">name</span>=<span class="string">&quot;base_link&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">visual</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">origin</span> <span class="attr">xyz</span>=<span class="string">&quot;0 0 0&quot;</span> <span class="attr">rpy</span>=<span class="string">&quot;0 0 0&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">geometry</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">box</span> <span class="attr">size</span>=<span class="string">&quot;0.5 0.3 0.01&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">geometry</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">material</span> <span class="attr">name</span>=<span class="string">&quot;Black&quot;</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">visual</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">link</span> <span class="attr">name</span>=<span class="string">&quot;left_front_wheel_link&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">visual</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">origin</span> <span class="attr">xyz</span>=<span class="string">&quot;0 0 0&quot;</span> <span class="attr">rpy</span>=<span class="string">&quot;1.5707 0 0&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">geometry</span>&gt;</span></span><br><span class="line">				<span class="tag">&lt;<span class="name">cylinder</span> <span class="attr">radius</span>=<span class="string">&quot;0.1125&quot;</span> <span class="attr">length</span>=<span class="string">&quot;0.064&quot;</span> /&gt;</span></span><br><span class="line">			<span class="tag">&lt;/<span class="name">geometry</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">material</span> <span class="attr">name</span>=<span class="string">&quot;Blue&quot;</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">visual</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">link</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">joint</span> <span class="attr">name</span>=<span class="string">&quot;left_front_joint&quot;</span> <span class="attr">type</span>=<span class="string">&quot;continuous&quot;</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">origin</span> <span class="attr">xyz</span>=<span class="string">&quot;0.1375 0.182 0&quot;</span> <span class="attr">rpy</span>=<span class="string">&quot;0 0 0&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">parent</span> <span class="attr">link</span>=<span class="string">&quot;base_link&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">child</span> <span class="attr">link</span>=<span class="string">&quot;left_front_wheel_link&quot;</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">axis</span> <span class="attr">xyz</span>=<span class="string">&quot;0 1 0&quot;</span> /&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">joint</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">robot</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>有时创建URDF模型在rviz中显示时，可以显示模型形状，但不显示颜色，rviz中显示<font color = orange>  <font size= 3> No transform from [base_link] to [map] </font> </font>。 rviz默认Fixed Frame为<code>map</code>，而我的模型中没有map，将Fixed Frame改为<code>base_link</code>，重启一遍后，模型有了颜色。 依次类推，画出另外三个轮子.</p>
+<p>使用<code>check_urdf robot.urdf</code>可以检查语法,但是偶尔也有漏掉错误的时候.</p>
+<p>第一行的xml版本声明,开头不能有空格, 也不能加注释. <font color = blue size=4>在urdf文件中不能加中文注释 </font></p>
+<h3 id="joint-state-publisher-和-robot-state-publisher"><a href="#joint-state-publisher-和-robot-state-publisher" class="headerlink" title="joint_state_publisher 和 robot_state_publisher"></a>joint_state_publisher 和 robot_state_publisher</h3><p><strong>joint_state_publisher</strong>节点读取<code>robot_description</code>参数,这个就是我们的urdf文件.</p>
+<p><code>use_gui</code>参数,布尔类型,默认false,决定是否显示GUI界面. 这个小工具把所有joint做成slider形式,供用户测试,对continuous的joint,slider范围是-π到π</p>
+<p>发布话题<code>/joint_states</code>, 消息类型<code>sensor_msgs/JointState</code>,可以echo查看</p>
+<p><strong>robot_state_publisher</strong>订阅话题<code>/joint_states</code>, tf变换也是它发布的,它有一个参数<code>use_tf_static</code>,用于决定是否使用<code>tf_static</code> latched 静态变换的广播,而这个参数默认true.<br><img src="https://i.loli.net/2020/03/11/DTZpH8avxUdXw26.png" alt="robot_state_publisher.png"></p>
+<p>一般写成launch形式:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">launch</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;robot_description&quot;</span> <span class="attr">textfile</span>=<span class="string">&quot;$(find robot_description)/urdf/robot.urdf&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;use_gui&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">name</span>=<span class="string">&quot;robot_state_publisher&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;robot_state_publisher&quot;</span> <span class="attr">type</span>=<span class="string">&quot;robot_state_publisher&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">node</span> <span class="attr">name</span>=<span class="string">&quot;joint_state_publisher&quot;</span> <span class="attr">pkg</span>=<span class="string">&quot;joint_state_publisher&quot;</span> <span class="attr">type</span>=<span class="string">&quot;joint_state_publisher&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">launch</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>启动launch，在rviz中加载<code>RobotModel</code>，如果没有<code>map</code>坐标系，就把全局坐标系改成<code>base_link</code>坐标系，会显示下面画面：<br><img src="https://i.loli.net/2020/03/10/1DIVeEKWRsSgZd6.png" alt="urdf.png"></p>
+<p>现在可以启动完整的机器人程序了，有了map坐标系，也就有了<code>map-&gt;base_link</code>转换，现在移动机器人，rviz里的模型就会跟着移动了。<br><img src="https://i.loli.net/2020/03/11/nWJHthyRDTr8LKY.png" alt="机器人模型.png"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>rviz里没有显示机器人的模型，发现终端有这样的错误：<br><img src="https://i.loli.net/2020/04/21/QglJ2yY4AS81WeV.png" alt="本机rviz加载urdf出错"></p>
+<p>在urdf文件中对某个约束改名为<code>camera</code>，对相应的STL文件也改名后，在本地机的rviz打开<code>RobotModel</code>，结果终端报错：<br><img src="https://i.loli.net/2020/07/03/jLi6pVTuZRbWw8S.png"><br>但是rviz里没报错，tf树是正常的。最后发现还是URDF文件里的STL路径没有改过来</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/67550381">古月居的urdf教程</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/hitgavin/article/details/51997379">urdf文件编码导致的缺少tf变换</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/09/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/urdf%E5%BB%BA%E6%A8%A1/" data-id="ckr28oqzi00dhewlm5mbf4u4o" data-title="urdf建模" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-PCL点云/ROS中的几个点云工具" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E7%82%B9%E4%BA%91%E5%B7%A5%E5%85%B7/" class="article-date">
+  <time class="dt-published" datetime="2020-03-09T13:28:54.000Z" itemprop="datePublished">2020-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E7%82%B9%E4%BA%91%E5%B7%A5%E5%85%B7/">ROS中的几个点云工具</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="pointcloud-to-laserscan包"><a href="#pointcloud-to-laserscan包" class="headerlink" title="pointcloud_to_laserscan包"></a>pointcloud_to_laserscan包</h3><p>将3D点云转换为2D的雷达scan, 最适用于把Kinect相机用作雷达，再使用2D算法。<a target="_blank" rel="noopener" href="http://wiki.ros.org/pointcloud_to_laserscan">详细使用</a></p>
+<p>我们可以直接利用kinect的点云数据，因为costmap2D的接口是直接调用点云。问题是计算量很大，点云规模太大，可以把点云数量降下去，但这样效果又不好了，可能无法识别障碍。点云覆盖信息大，对障碍物信息敏感。计算量大，实时性差。从障碍物进入相机视野出现到加入代价地图有1.5秒时间</p>
+<h3 id="depthimage-to-laserscan"><a href="#depthimage-to-laserscan" class="headerlink" title="depthimage_to_laserscan"></a>depthimage_to_laserscan</h3><p>如果想从RGBD相机创建虚拟的雷达scan，这个包的效果更好，它直接处理图像数据而不是点云。<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/depthimage_to_laserscan">详细使用</a></p>
+<p>使用Kinect的一个方案是把点云或深度图降维生成线激光，本质上是当成2D激光雷达，在平坦地面环境用。还是用gmapping、hector SLAM、cartographer等手段建图</p>
+<h3 id="pcl-ros包"><a href="#pcl-ros包" class="headerlink" title="pcl_ros包"></a>pcl_ros包</h3><p>这个包的工具如下：<br><img src="https://i.loli.net/2020/03/09/UrXntZwKoOFR9vd.png" alt="pcl_ros包.png"></p>
+<p>如果想获得雷达的点云数据，可以发布<code>PointCloud2</code>类型的话题，同时用<code>rosbag record</code>录制得到bag文件，然后使用<code>pcl_ros</code>包中的<code>bag_to_pcd</code>得到pcd点云文件，用法：<code>rosrun pcl_ros bag_to_pcd input.bag topic output_directory</code>，过程：<br><img src="https://i.loli.net/2020/03/09/nZbwL31r7tRAF4N.png" alt="转换过程.png"></p>
+<p>注意输出是个目录，因为<strong>bag文件的消息数量就是生成的pcd文件数量</strong>，bag文件的消息数量可以用<code>rosbag info</code>查看<br><img src="https://i.loli.net/2020/03/09/EZ8yGRJhl2Bj9nN.png" alt="rosbag info.png"></p>
+<p>可以用<code>pcl_viewer</code>工具查看pcd，<strong>然后就是点云拼接了。</strong> 如果只有雷达<code>scan</code>数据，那只能先转为点云数据，才能转为pcd文件</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/Mr_yangsir/article/details/94559945">ROS中解析bag包中的点云文件到pcd格式</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/banrixianxin/p/6378789.html">激光雷达bag文件播放和转PCD文件</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E5%87%A0%E4%B8%AA%E7%82%B9%E4%BA%91%E5%B7%A5%E5%85%B7/" data-id="ckr28oqub0015ewlmgyd68jfh" data-title="ROS中的几个点云工具" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-PCL点云/(二) ICP算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/04/PCL%E7%82%B9%E4%BA%91/(%E4%BA%8C)%20ICP%E7%AE%97%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2020-03-04T01:44:05.000Z" itemprop="datePublished">2020-03-04</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/04/PCL%E7%82%B9%E4%BA%91/(%E4%BA%8C)%20ICP%E7%AE%97%E6%B3%95/">(二) ICP算法</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ICP算法采用最小二乘估计计算变换矩阵，原理简单且具有较好的精度，但是由于采用了迭代计算，导致算法计算速度较慢，而且采用ICP进行配准计算时，其对待配准点云的初始位置有一定要求，若所选初始位置不合理，则会导致算法陷入局部最优。</p>
+<p>IterativeClosestPoint类提供了标准ICP算法的实现（The transformation is estimated based on SVD），算法迭代结束条件有如下几个:</p>
+<ul>
+<li>最大迭代次数： 最大迭代次数。  <code>setMaximumIterations (100)</code></li>
+<li>两次变化矩阵之间的差值：前一个变换矩阵和当前变换矩阵的差异小于阈值时，就认为已经收敛了。 <code>setTransformationEpsilon(1e-10)</code></li>
+<li>均方误差（MSE）：均方误差和小于给定阈值， 停止迭代。 <code>setEuclideanFitnessEpsilon(0.01)</code></li>
+</ul>
+<p><code>align</code>函数是配准，<strong>在使用之前至少给定上面三个条件</strong>，还有<code>setMaxCorrespondenceDistance</code>等其他函数。PCL的ICP里的transformation estimation就是基于SVD分解实现的。</p>
+<p>如果从一个好的<strong>初始猜想变换矩阵</strong>开始迭代，那么算法将会在比较少的迭代之后就收敛，配准结果也较好，当像我们这里没有指定初始guess时，就默认使用单位阵<code>Matrix4::Identity()</code></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/04/PCL%E7%82%B9%E4%BA%91/(%E4%BA%8C)%20ICP%E7%AE%97%E6%B3%95/" data-id="ckr28oqu90011ewlmd69048sy" data-title="(二) ICP算法" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-PCL点云/(三)杂项" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/03/03/PCL%E7%82%B9%E4%BA%91/(%E4%B8%89)%E6%9D%82%E9%A1%B9/" class="article-date">
+  <time class="dt-published" datetime="2020-03-03T12:17:31.000Z" itemprop="datePublished">2020-03-03</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/03/03/PCL%E7%82%B9%E4%BA%91/(%E4%B8%89)%E6%9D%82%E9%A1%B9/">(二) 杂项</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="计时"><a href="#计时" class="headerlink" title="计时"></a>计时</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">pcl::console::TicToc time;</span><br><span class="line">time.<span class="built_in">tic</span> ();</span><br><span class="line"><span class="comment">//需要记录执行多长时间的代码</span></span><br><span class="line">cout &lt;&lt;time.<span class="built_in">toc</span> () &lt;&lt; <span class="string">&quot; ms :&lt;&lt; endl;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="日志输出"><a href="#日志输出" class="headerlink" title="日志输出"></a>日志输出</h3><p>同ROS类似，就是把ROS换成了PCL:  PCL_DEBUG, PCL_INFO, PCL_WARN, PCL_ERROR</p>
+<p>参考：<a target="_blank" rel="noopener" href="http://pointclouds.org/documentation/tutorials/pcl_visualizer.php#pcl-visualizer"></a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/03/03/PCL%E7%82%B9%E4%BA%91/(%E4%B8%89)%E6%9D%82%E9%A1%B9/" data-id="ckr28oqu9000yewlm3twt149q" data-title="(二) 杂项" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Matlab/matlab画等高线" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/25/Matlab/matlab%E7%94%BB%E7%AD%89%E9%AB%98%E7%BA%BF/" class="article-date">
+  <time class="dt-published" datetime="2020-02-25T05:11:38.000Z" itemprop="datePublished">2020-02-25</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Matlab/">Matlab</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/25/Matlab/matlab%E7%94%BB%E7%AD%89%E9%AB%98%E7%BA%BF/">matlab画等高线</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p><img src="https://i.loli.net/2020/02/25/HD4GbkKmSudNgvE.png" alt="2020-02-25_130103.png"></p>
+<p>matlab的操作步骤：</p>
+<ol>
+<li>产生独立变量，为带有两个变量 x 和 y 的集合，meshgrid是一个可以建立独立变量的函数，产生矩阵元素，元素x和y按照指定的范围和增量来产生。</li>
+<li>输入要使用的函数</li>
+<li>调用contour(x,y,w)命令，contour函数是画一个多维函数的等高线</li>
+</ol>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[x,y] = <span class="built_in">meshgrid</span>(<span class="number">-5</span>:<span class="number">0.05</span>:<span class="number">5</span>,<span class="number">-5</span>:<span class="number">0.05</span>:<span class="number">5</span>)</span><br><span class="line">w = x.^<span class="number">2</span>+y.^<span class="number">2</span></span><br><span class="line">contour(x,y,w, <span class="string">&#x27;showText&#x27;</span>, <span class="string">&#x27;on&#x27;</span>)</span><br><span class="line"><span class="comment">% surf(x,y,w), title(&#x27;等高线&#x27;)</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2020/02/25/jkSvBFGabXLyCKp.png" alt="等高线.png"></p>
+<p>surf函数用于画三维的等高线<br><img src="https://i.loli.net/2020/02/25/sNKnCUXlHVGPbJB.png" alt="三维的等高线.png"></p>
+<p>高维高斯分布的概率密度函数和等高线图</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">u=[<span class="number">0</span>;<span class="number">0</span>];<span class="comment">%均值</span></span><br><span class="line">v=[<span class="number">4</span>,<span class="number">3</span>;<span class="number">3</span>,<span class="number">9</span>];<span class="comment">%协方差阵</span></span><br><span class="line">x=<span class="number">-7</span>:<span class="number">0.05</span>:<span class="number">7</span>;</span><br><span class="line">y=<span class="number">-7</span>:<span class="number">0.05</span>:<span class="number">7</span>;</span><br><span class="line"></span><br><span class="line">[X,Y]=<span class="built_in">meshgrid</span>(x,y);</span><br><span class="line">s2x=v(<span class="number">1</span>,<span class="number">1</span>)      <span class="comment">%x的方差</span></span><br><span class="line">s2y=v(<span class="number">2</span>,<span class="number">2</span>)</span><br><span class="line">sx=<span class="built_in">sqrt</span>(s2x)    <span class="comment">%标准差多个</span></span><br><span class="line">sy=<span class="built_in">sqrt</span>(s2y)</span><br><span class="line">Cov=v(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">r=Cov/(sx*sy)</span><br><span class="line">a=<span class="number">1</span>/(<span class="number">2</span>*<span class="built_in">pi</span>*sx*sy*<span class="built_in">sqrt</span>(<span class="number">1</span>-r^<span class="number">2</span>));</span><br><span class="line">b1=<span class="number">-1</span>/(<span class="number">2</span>*(<span class="number">1</span>-r^<span class="number">2</span>));</span><br><span class="line">b2=((X-u(<span class="number">1</span>))./sx).^<span class="number">2</span>;</span><br><span class="line">b3=((Y-u(<span class="number">2</span>))./sy).^<span class="number">2</span>;</span><br><span class="line">b4=<span class="number">2</span>*r.*(X-u(<span class="number">1</span>)).*(Y-u(<span class="number">2</span>))./(sx*sy)</span><br><span class="line">Z=a*<span class="built_in">exp</span>(b1*(b2+b3-b4));     <span class="comment">%也就是f(x1,x2)的表达式</span></span><br><span class="line"></span><br><span class="line">mesh(X,Y,Z),title(<span class="string">&#x27;密度函数图&#x27;</span>)</span><br><span class="line"><span class="built_in">figure</span></span><br><span class="line">contour(X,Y,Z,<span class="string">&#x27;showText&#x27;</span>,<span class="string">&#x27;on&#x27;</span>),title(<span class="string">&#x27;等高线图&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/02/25/tWFAlsfpZD2iwvr.png" alt="等高线图.png"><br><img src="https://i.loli.net/2020/02/25/aQbV5KUmonJLg7i.png" alt="密度图.png"></p>
+<p>参考： <a target="_blank" rel="noopener" href="https://zlearning.netlify.com/communication/matlab/matlab-surface-contour.html">使用surface 和 contour 画图</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/25/Matlab/matlab%E7%94%BB%E7%AD%89%E9%AB%98%E7%BA%BF/" data-id="ckr28oqu6000rewlme0hsgm71" data-title="matlab画等高线" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SLAM工具/ceres库" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/22/SLAM%E5%B7%A5%E5%85%B7/ceres%E5%BA%93/" class="article-date">
+  <time class="dt-published" datetime="2020-02-22T01:59:56.000Z" itemprop="datePublished">2020-02-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/22/SLAM%E5%B7%A5%E5%85%B7/ceres%E5%BA%93/">ceres库</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>ceres是google库，首先安装相关依赖</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install liblapack-dev libsuitesparse-dev libcxsparse3.1.2 libgflags-dev </span><br><span class="line">sudo apt-get install libgoogle-glog-dev libgtest-dev</span><br></pre></td></tr></table></figure>
+
+<p>如果安装时找不到 cxsparse 或者其他的lib，需要添加下面的源</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>把下面的源粘贴到source.list的最上方: <code>deb http://cz.archive.ubuntu.com/ubuntu trusty main universe</code><br>更新一下: <code>sudo apt-get update</code>， 然后再进行第一步的安装。</p>
+<p>从<a target="_blank" rel="noopener" href="https://github.com/ceres-solver/ceres-solver">github</a>上下载，这里要注意ceres的版本和Eigen是搭配的，ceres版本越新，对Eigen的版本要求也越新，它的<code>CMakeLists</code>里有提示，所以不要安装最新的。</p>
+<p>下载解压后执行老一套命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line"><span class="built_in">cd</span> build</span><br><span class="line">cmake ..</span><br><span class="line">make </span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置-CMake"><a href="#配置-CMake" class="headerlink" title="配置 CMake"></a>配置 CMake</h2><p>安装官方的说明配置是错误的，应该是这样：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 必不可少，CMake自己找不到Ceres的路径</span></span><br><span class="line"><span class="comment"># 也可能是 /usr/local/lib/cmake/ceres</span></span><br><span class="line"><span class="built_in">set</span>(Ceres_DIR  <span class="string">&quot;/usr/local/lib/cmake/ceres&quot;</span>)</span><br><span class="line">find_package(Ceres REQUIRED)</span><br><span class="line"></span><br><span class="line">include_directories(</span><br><span class="line">  <span class="variable">$&#123;catkin_INCLUDE_DIRS&#125;</span></span><br><span class="line">  <span class="variable">$&#123;CERES_INCLUDE_DIRS&#125;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">add_executable(program src/program.cpp) </span><br><span class="line">target_link_libraries(program</span><br><span class="line">   <span class="variable">$&#123;catkin_LIBRARIES&#125;</span></span><br><span class="line">   <span class="variable">$&#123;CERES_LIBRARIES&#125;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p><code>Ceres::Solve</code>的结果只有<code>ceres::Solver::Summary::BriefReport()</code>，没有一个返回Bool的函数检查是否收敛，只有对<code>BriefReport()</code>的文本查找<code>NO_CONVERGENCE</code>，若存在则不收敛。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/22/SLAM%E5%B7%A5%E5%85%B7/ceres%E5%BA%93/" data-id="ckr28oquf001hewlm48j6clea" data-title="ceres库" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SLAM工具/欧氏变换，最小二乘，SVD" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/21/SLAM%E5%B7%A5%E5%85%B7/%E6%AC%A7%E6%B0%8F%E5%8F%98%E6%8D%A2%EF%BC%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%8CSVD/" class="article-date">
+  <time class="dt-published" datetime="2020-02-21T01:56:15.000Z" itemprop="datePublished">2020-02-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/21/SLAM%E5%B7%A5%E5%85%B7/%E6%AC%A7%E6%B0%8F%E5%8F%98%E6%8D%A2%EF%BC%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%8CSVD/">欧氏变换，最小二乘，cholesky</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="欧氏变换"><a href="#欧氏变换" class="headerlink" title="欧氏变换"></a>欧氏变换</h2><p>欧氏变换(Isometry Transform)可以看作是维持任意两点距离不变的变换，在实际场景中使用比较多。在Eigen中已经内置好了一些常用的欧氏变换:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> Transform&lt;<span class="keyword">float</span>,<span class="number">2</span>,Isometry&gt; Isometry2f;</span><br><span class="line"><span class="keyword">typedef</span> Transform&lt;<span class="keyword">float</span>,<span class="number">3</span>,Isometry&gt; Isometry3f;</span><br><span class="line"><span class="keyword">typedef</span> Transform&lt;<span class="keyword">double</span>,<span class="number">2</span>,Isometry&gt; Isometry2d;</span><br><span class="line"><span class="keyword">typedef</span> Transform&lt;<span class="keyword">double</span>,<span class="number">3</span>,Isometry&gt; Isometry3d;</span><br></pre></td></tr></table></figure>
+<p>欧氏变换必须初始化，如果没初始化，Isometry3d中的元素全为0，一般初始化为单位矩阵，也可以初始化为Quaternion。 赋值可以通过它的成员函数.rotate()和.translate()完成</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">AngleAxisd <span class="title">rotation</span><span class="params">(<span class="number">3.1415926</span> / <span class="number">4</span>, Vector3d(<span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>).normalized())</span></span>;</span><br><span class="line"><span class="function">Vector3d <span class="title">translation</span><span class="params">(<span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>)</span></span>;</span><br><span class="line">Isometry3d T= Isometry3d::<span class="built_in">Identity</span>();</span><br><span class="line"><span class="comment">// 先平移后旋转</span></span><br><span class="line">T.<span class="built_in">translate</span>(translation);</span><br><span class="line">T.<span class="built_in">rotate</span>(rotation);</span><br></pre></td></tr></table></figure>
+
+<p>A.translate(B)等价于A×B，而A.pretranslate(B)等价于B×A，对应于左乘和右乘的区别。凡是前面带pre的函数，其变化都是相对于上一步变化之前的状态进行的。举例说我要新建一个按固定轴先平移后旋转的变换。但我首先设置了旋转，然后再设置平移。这个时候设置平移就不能用<code>translate()</code>了，而应该用<code>pretranslate()</code>。因为第一步已经对坐标系进行了旋转，后面的平移是在旋转后的坐标系中进行的，所以最好不要用pre开头的函数</p>
+<h2 id="线性方程组的最小二乘解"><a href="#线性方程组的最小二乘解" class="headerlink" title="线性方程组的最小二乘解"></a>线性方程组的最小二乘解</h2><p>如果一个线性方程组是超定的(overdeterminated，未知数个数&gt;方程数)，这时候常规方法无解，就需要用最小二乘拟合最优结果。最精确的解法是SVD分解。SVD也有多种解法，官方推荐的是BDCSVD方法。</p>
+<p>如下超定方程组：<br><img src="https://i.loli.net/2021/07/13/nO5X2yTVvZKbPoj.png" alt="1.png"><br><img src="https://i.loli.net/2021/07/13/fiXjLN8AkCqJgZI.png" alt="2.png"></p>
+<p>最小二乘求解代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">MatrixXf <span class="title">A</span><span class="params">(<span class="number">3</span>, <span class="number">2</span>)</span></span>;</span><br><span class="line">Vector3f b;</span><br><span class="line">Vector2f x;</span><br><span class="line">A &lt;&lt; <span class="number">1</span>,<span class="number">1</span>, <span class="number">1</span>,<span class="number">2</span>, <span class="number">1</span>,<span class="number">3</span> ;</span><br><span class="line">b &lt;&lt; <span class="number">0</span>,<span class="number">4</span>,<span class="number">10</span>;</span><br><span class="line">x = A.<span class="built_in">bdcSvd</span>(ComputeThinU | ComputeThinV).<span class="built_in">solve</span>(b);</span><br><span class="line">cout &lt;&lt; x &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">Vector3f error = (A*x - b).<span class="built_in">cwiseAbs</span>();</span><br><span class="line"><span class="keyword">double</span> mean_error = error.<span class="built_in">mean</span>();</span><br></pre></td></tr></table></figure>
+<p>程序运行需要一点时间，最后得到的x就是通过最小二乘算出来的。这里.bcdScd()函数里面的参数ComputeThinU | ComputeThinV必须要写(可以先记住)，否则会报错。</p>
+<p>将得到的解带回方程会发现其并不是严格成立的，有时可能还会相差较大。这是因为对于超定方程，采用最小二乘法得出的解并不一定对每一个方程都严格成立，其确保的是当前解在所有方程上的总误差最小。得到解以后我们可以反算出其解的整体精度</p>
+<h2 id="cholesky-分解"><a href="#cholesky-分解" class="headerlink" title="cholesky 分解"></a>cholesky 分解</h2><p>Cholesky分解是把一个对称正定的矩阵表示成一个下三角矩阵L和其转置的乘积的分解。Eigen的LLT分解实现了Cholesky分解。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;Eigen/Cholesky&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   Eigen::Matrix2d down;</span><br><span class="line">   down&lt;&lt;<span class="number">1</span>,<span class="number">0</span>,</span><br><span class="line">         <span class="number">2</span>,<span class="number">1</span>;</span><br><span class="line">   <span class="comment">// P&lt;&lt;1,2</span></span><br><span class="line">   <span class="comment">//   2,5</span></span><br><span class="line">   Eigen::Matrix2d P=down*down.<span class="built_in">transpose</span>();</span><br><span class="line">   std::cout&lt;&lt;<span class="string">&quot;P&quot;</span>&lt;&lt;P&lt;&lt;std::endl;</span><br><span class="line">   Eigen::Matrix2d ml=P.<span class="built_in">llt</span>().<span class="built_in">matrixL</span>();</span><br><span class="line">   Eigen::Matrix2d testP=ml*ml.<span class="built_in">transpose</span>();</span><br><span class="line">   std::cout&lt;&lt;<span class="string">&quot;mllt&quot;</span>&lt;&lt;ml&lt;&lt;std::endl;</span><br><span class="line">   std::cout&lt;&lt;<span class="string">&quot;testP&quot;</span>&lt;&lt;testP&lt;&lt;std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SVD分解"><a href="#SVD分解" class="headerlink" title="SVD分解"></a>SVD分解</h2><p><img src="https://i.loli.net/2020/03/03/ElH9B538daugNXo.png"><br><img src="https://i.loli.net/2020/03/03/ImOeKSksfDFlG87.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Eigen::Matrix3f A;</span><br><span class="line">A &lt;&lt; <span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,</span><br><span class="line">     <span class="number">1</span>,<span class="number">2</span>,<span class="number">4</span>,</span><br><span class="line">     <span class="number">8</span>,<span class="number">0</span>,<span class="number">1</span>;</span><br><span class="line"><span class="comment">// SVD分解</span></span><br><span class="line"><span class="function">Eigen::JacobiSVD&lt;Eigen::Matrix3f&gt; <span class="title">svd</span><span class="params">(A, Eigen::ComputeFullU | Eigen::ComputeFullV)</span></span>;</span><br><span class="line">Eigen::Matrix3f U = svd.<span class="built_in">matrixU</span>();</span><br><span class="line">Eigen::Matrix3f V = svd.<span class="built_in">matrixV</span>();</span><br><span class="line"></span><br><span class="line">cout &lt;&lt; U &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line">cout &lt;&lt; V.<span class="built_in">transpose</span>() &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"><span class="comment">// 从对角线元素组成的向量</span></span><br><span class="line">cout &lt;&lt; svd.<span class="built_in">singularValues</span>() &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line"><span class="comment">// U和V都是正交矩阵（酉矩阵），和转置的乘积为单位矩阵</span></span><br><span class="line">cout &lt;&lt; U.<span class="built_in">isUnitary</span>() &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line">cout &lt;&lt; V.<span class="built_in">isUnitary</span>() &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line">cout &lt;&lt;<span class="string">&quot;***********************&quot;</span>&lt;&lt;endl;</span><br><span class="line"><span class="comment">// 推荐方法，从对角线元素组成的向量直接构造对角矩阵</span></span><br><span class="line">Eigen::Matrix3f diag = svd.<span class="built_in">singularValues</span>().<span class="built_in">asDiagonal</span>();</span><br><span class="line"><span class="comment">// 从公式推导出的对角矩阵，有误差</span></span><br><span class="line">Eigen::Matrix3f S = U.<span class="built_in">inverse</span>() * A * V.<span class="built_in">transpose</span>().<span class="built_in">inverse</span>();</span><br><span class="line">cout &lt;&lt; diag&lt;&lt;endl&lt;&lt;endl;</span><br><span class="line">cout &lt;&lt; S &lt;&lt;endl&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 大致等于原矩阵A</span></span><br><span class="line">cout&lt;&lt; U *S *V.<span class="built_in">transpose</span>()&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>参考：<br><a target="_blank" rel="noopener" href="http://zhaoxuhui.top/blog/2019/09/03/eigen-note-4.html#5%E5%8F%98%E6%8D%A2">Eigen学习与使用笔记</a><br><a target="_blank" rel="noopener" href="http://zhaoxuhui.top/blog/2019/08/22/eigen-note-2.html#2%E8%AE%A1%E7%AE%97%E7%89%B9%E5%BE%81%E5%80%BC%E4%B8%8E%E7%89%B9%E5%BE%81%E5%90%91%E9%87%8F">Eigen学习与使用笔记2</a><br><a target="_blank" rel="noopener" href="https://eigen.tuxfamily.org/dox/classEigen_1_1AngleAxis.html">Eigen官方文档-AngleAxis</a><br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/31386807">矩阵的特征分解与奇异值分解</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/21/SLAM%E5%B7%A5%E5%85%B7/%E6%AC%A7%E6%B0%8F%E5%8F%98%E6%8D%A2%EF%BC%8C%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%EF%BC%8CSVD/" data-id="ckr28oquh001mewlma8csg8xi" data-title="欧氏变换，最小二乘，cholesky" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-视觉SLAM/Kinect v1运行ORB_SLAM2" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/" class="article-date">
+  <time class="dt-published" datetime="2020-02-15T14:32:29.000Z" itemprop="datePublished">2020-02-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/">KinectV1运行 ORB_SLAM2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>ORB_SLAM2是一个基于深度相机、Pose graph （图优化）的程序，后端用的是g2o。第一个版本仅仅是单目SLAM，第二个版本在原来的单目基础上增加了双目和RGBD的接口，尽管地图还是单目常见的稀疏特征点图，但是我们能通过各种传感器来玩ORB_SLAM2了</p>
+<h2 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h2><p>只要按照<a target="_blank" rel="noopener" href="https://github.com/raulmur/ORB_SLAM2">Github上的安装指导</a>进行就可以</p>
+<p>需要先安装Eigen3和Pangolin，后者也按Github上的说明安装即可，不必安装Recommended Dependencies和Optional Dependencies，只要执行<code>Building</code>就行。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/raulmur/ORB_SLAM2.git ORB_SLAM2</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> ORB_SLAM2</span><br><span class="line">chmod +x build.sh</span><br><span class="line">./build.sh</span><br></pre></td></tr></table></figure>
+<p>这会编译产生<code>libORB_SLAM2.so</code>到<code>lib</code>文件夹，以及<code>Examples/Monocular</code>文件夹中生成<code>mono_euroc</code>,<code>mono_tum</code>, <code>mono_kitti</code>; <code>RGB-D</code>文件夹中生成<code>rgbd_tum</code>; <code>Stereo</code>文件夹中生成<code>stereo_kitti</code>和<code>stereo_euroc</code></p>
+<p>第一次编译忘了<code>build_ros.sh</code>，也就是少编译了几个核心文件，结果无法运行运行后又产生了问题</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>编译报错<code>ros_rgbd.cc.o: undefined reference to symbol &#39;_ZN5boost6system15system_categoryEv&#39;</code>，解决方法是在<code>/ORB_SLAM2/Examples/ROS/ORB_SLAM2/CMakeLists.txt</code>中添加boost_system库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">set(LIBS</span><br><span class="line">	$&#123;OpenCV_LIBS&#125;</span><br><span class="line">	$&#123;EIGEN3_LIBS&#125;</span><br><span class="line">	$&#123;Pangolin_LIBRARIES&#125;</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../Thirdparty/DBoW2/lib/libDBoW2.so</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../Thirdparty/g2o/lib/libg2o.so</span><br><span class="line">	$&#123;PROJECT_SOURCE_DIR&#125;/../../../lib/libORB_SLAM2.so</span><br><span class="line">	-lboost_system</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="RGB-D例子"><a href="#RGB-D例子" class="headerlink" title="RGB-D例子"></a>RGB-D例子</h2><p>从<a target="_blank" rel="noopener" href="http://vision.in.tum.de/data/datasets/rgbd-dataset/download">序列下载</a>下载一个序列并解压。</p>
+<p>使用<code>associate.py</code> associate RGB images and depth images. We already provide associations for some of the sequences in Examples/RGB-D/associations/. 你可以生成自己的associations文件:</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python associate.py PATH_TO_SEQUENCE/rgb.txt PATH_TO_SEQUENCE/depth.txt &gt; associations.txt</span><br></pre></td></tr></table></figure>
+
+<p>将<code>TUMX.yaml</code>换成TUM1.yaml,TUM2.yaml or TUM3.yaml for freiburg1, freiburg2 and freiburg3 sequences respectively. 填好<code>PATH_TO_SEQUENCE_FOLDER</code>和<code>ASSOCIATIONS_FILE</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./Examples/RGB-D/rgbd_tum Vocabulary/ORBvoc.txt Examples/RGB-D/TUMX.yaml PATH_TO_SEQUENCE_FOLDER ASSOCIATIONS_FILE</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行自己的RGBD节点"><a href="#运行自己的RGBD节点" class="headerlink" title="运行自己的RGBD节点"></a>运行自己的RGBD节点</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun ORB_SLAM2 RGBD ORB_SLAM2/Vocabulary/ORBvoc.txt ~/path/kinect_calibration.yaml</span><br></pre></td></tr></table></figure>
+<p><code>ORBvoc.txt</code>还是下载的那个，<code>kinect_calibration.yaml</code>就是我们自己的相机标定文件，这里有个问题，之前标定得到的yaml文件和这里要求的yaml文件格式不同，我们需要的可以参考<code>~/ORB_SLAM2-master/Examples/ROS/ORB_SLAM2/Asus.yaml</code>，只需要修改相机矩阵和畸变系数即可。</p>
+<p>之前标定的yaml文件部分：</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">camera_matrix:</span><br><span class="line">  rows: <span class="number">3</span></span><br><span class="line">  cols: <span class="number">3</span></span><br><span class="line">  data: [<span class="number">519.7959964940057</span>, <span class="number">0</span>, <span class="number">311.8351165024031</span>, <span class="number">0</span>, <span class="number">520.264653178918</span>, <span class="number">260.4976776521158</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>]</span><br><span class="line">distortion_model: plumb_bob</span><br><span class="line">distortion_coefficients:</span><br><span class="line">  rows: <span class="number">1</span></span><br><span class="line">  cols: <span class="number">5</span></span><br><span class="line">  data: [<span class="number">0.1316145046090376</span>, -<span class="number">0.2008704147933575</span>, <span class="number">0.002009131405045224</span>, <span class="number">0.0002143881752906817</span>, <span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>参数解释如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#内参数矩阵</span></span><br><span class="line">|        fx          0             cx     |</span><br><span class="line">|         0          fy            cy     |</span><br><span class="line">|         0          0             1      |</span><br><span class="line"></span><br><span class="line">fx : focal length <span class="keyword">in</span> direction of camera<span class="string">&#x27;s x axis </span></span><br><span class="line"><span class="string">fy : focal length in direction of camera&#x27;</span>s y axis </span><br><span class="line">cx,cy  : Principal point <span class="keyword">in</span> image</span><br><span class="line"></span><br><span class="line">distortion_coefficients (1x5):   <span class="comment">#畸变相关系数，是一个1x5的矩阵</span></span><br><span class="line">[k1    k2     p1     p2     k3]</span><br><span class="line"></span><br><span class="line">k1,k2,k3 : Radial distortion coefficients    <span class="comment"># 径向畸变</span></span><br><span class="line">p1, p2 : Tangential distortion coefficinets  <span class="comment"># 切向畸变</span></span><br><span class="line">k3 - <span class="built_in">set</span> to zero (only applicable <span class="keyword">for</span> fish-eyed lens)</span><br></pre></td></tr></table></figure>
+
+<p>根据说明将需要的参数对<code>Asus.yaml</code>进行修改：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># Camera calibration and distortion parameters (OpenCV) </span><br><span class="line">Camera.fx: 519.7959964940057</span><br><span class="line">Camera.fy: 520.264653178918</span><br><span class="line">Camera.cx: 311.8351165024031</span><br><span class="line">Camera.cy: 260.4976776521158</span><br><span class="line"></span><br><span class="line">Camera.k1: 0.1316145046090376</span><br><span class="line">Camera.k2: -0.2008704147933575</span><br><span class="line">Camera.p1: 0.002009131405045224</span><br><span class="line">Camera.p2: 0.0002143881752906817</span><br></pre></td></tr></table></figure>
+
+<p>现在运行节点，终端一切正常，出现两个窗口<code>Current Frame</code>和<code>Map Viewer</code>，但是前者一片黑，后者没有内容。发现<code>Current Frame</code>状态是<code>Waiting for images</code>，节点需要的是话题<code>/camera/rgb/image_raw</code>和<code>/camera/depth_registered/image_raw</code>，使用<code>rostopic info</code>发现话题发布订阅都正常，但是<code>rostopic echo</code>后者却没有数据。</p>
+<p>默认情况下，对于深度图，选择<code>/camera/depth/XXXX</code>的话题才会显示出来图像，因为没有设置<code>depth_registered</code>，如果在显示的过程中，在新的终端里使用<code>rosrun rqt_reconfiguration rqt_reconfiguration</code>，之后在<strong>camera-&gt;driver</strong>中勾选了<em>depth_registered</em>，此时rqt窗口就不会进行图像刷新了，此时切换至<code>/camera/depth_registered/XXXX</code>的话题后，继续会刷新图像。   <strong>但问题是好像重启freenect之后又要设置</strong><br><img src="https://i.loli.net/2020/02/19/wHf4Kgm2eQ7LBpl.png" alt="rqt_reconfigure"><br>再次启动节点，就能看到结果了。在<code>MapViewer</code>上，鼠标左键是移动，右键旋转，滚轮放大缩小。</p>
+<h2 id="SLAM-和-Localization-模式"><a href="#SLAM-和-Localization-模式" class="headerlink" title="SLAM 和 Localization 模式"></a>SLAM 和 Localization 模式</h2><p>你可以使用<code>map viewer</code>在SLAM和Localization模式之间切换</p>
+<p>SLAM Mode：默认模式，有三个线程: Tracking, Local Mapping 和 Loop Closing. 对相机定位，建立新地图并close loops</p>
+<p>Localization Mode：如果当前区域一个比较好的地图，可以用这个模式。Local Mapping 和 Loop Closing 线程没有启动. 定位地图中的相机(which is no longer updated), 有必要的话会重定位</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E8%BF%90%E8%A1%8CORB_SLAM2/" data-id="ckr28oqw5005kewlmbtrh6qgp" data-title="KinectV1运行 ORB_SLAM2" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-视觉SLAM/Kinect v1摄像头的标定" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E6%A0%87%E5%AE%9A/" class="article-date">
+  <time class="dt-published" datetime="2020-02-15T13:40:30.000Z" itemprop="datePublished">2020-02-15</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E6%A0%87%E5%AE%9A/">Kinect v1的标定</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="畸变"><a href="#畸变" class="headerlink" title="畸变"></a>畸变</h2><p>我们期望的相机检测标定图的结果是这样的：<br><img src="https://i.loli.net/2020/02/16/i58n42sqAE9WjfM.png" alt="无畸变的图.png"></p>
+<p>但实际是这样的：<br><img src="https://i.loli.net/2020/02/16/y3PUpXH6Dk2TuEK.png" alt="畸变图.png"><br>可以看到线是有圆弧的，正常畸变分为两种，径向和切向，是透镜的位置和厚度不同引起的</p>
+<p>深度值校准：深度图像的深度值有误差，误差呈现什么分布</p>
+<p>配准(Registeration)：图像配准问题</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#内参数矩阵</span></span><br><span class="line">|        fx          0             cx     |</span><br><span class="line">|         0          fy            cy     |</span><br><span class="line">|         0          0             1      |</span><br><span class="line"></span><br><span class="line">fx : focal length <span class="keyword">in</span> direction of camera<span class="string">&#x27;s x axis </span></span><br><span class="line"><span class="string">fy : focal length in direction of camera&#x27;</span>s y axis </span><br><span class="line">cx,cy  : Principal point <span class="keyword">in</span> image</span><br><span class="line"></span><br><span class="line">distortion_coefficients (1x5):   <span class="comment">#畸变相关系数，是一个1x5的矩阵</span></span><br><span class="line">[k1    k2     p1     p2     k3]</span><br><span class="line"></span><br><span class="line">k1,k2,k3 : Radial distortion coefficients    <span class="comment"># 径向畸变</span></span><br><span class="line">p1, p2 : Tangential distortion coefficinets  <span class="comment"># 切向畸变</span></span><br><span class="line">k3 - <span class="built_in">set</span> to zero (only applicable <span class="keyword">for</span> fish-eyed lens)</span><br></pre></td></tr></table></figure>
+
+
+<p>运行<code>freenect.launch</code>后，终端有两句报警信息，这就是缺少标定文件：<br><img src="https://i.loli.net/2020/02/15/tmDEj7ZO3ceGKHs.png" alt="yerreg.png"></p>
+<p>kinect彩色头、深度头、红外头的内参和外参，都以yaml文件存储。</p>
+<p>把彩色相机和红外相机分别作为单目相机进行标定，方法几乎一样</p>
+<p>Matlab的<code>Camera Calibrator</code>工具箱，ROS的<code>camera_calibration</code>，OpenCV的标定系列函数，德国Bremen大学的<code>iai_kinect2</code></p>
+<p>手拿相机标定不能保证稳定，在标定外参时，彩色相机和红外相机不是同时拍图像，如果手拿着相机运动，外参会不精确。</p>
+<p>内参是为了矫正畸变，外参是为了坐标系之间转换。用内部参数时不一定用外部参数，但是用外部参数一定要用内部参数。在不需要准确知道图像空间点和像素点关系的图像处理中，不需要外部参数，只需要内部参数改变图片的畸变；需要测量的视觉中，需要利用外部参数来完成空间点和像素点的转换，内部参数完成相机矫正。</p>
+<h2 id="标定"><a href="#标定" class="headerlink" title="标定"></a>标定</h2><ul>
+<li><p>下载<a target="_blank" rel="noopener" href="http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration">黑白棋盘</a></p>
+</li>
+<li><p>可以先用A4纸打印棋盘，注意打印比例选择无，然后粘贴在硬纸板上。纸板要保证是严格的平面，尽量不反光，有条件可以买标定板，不过最便宜也要60左右。标定红外相机，Kinect自己带光源，会对纸板有明显反光</p>
+</li>
+<li><p>测量棋盘单元(黑色或白色正方形)边长（A4纸的在25mm 左右），以求精准</p>
+</li>
+<li><p>安装标定ros包 sudo apt install ros-kinetic-camera-calibration</p>
+</li>
+<li><p>启动相机驱动： roslaunch freenect_launch freenect.launch</p>
+</li>
+</ul>
+<h3 id="RGB标定"><a href="#RGB标定" class="headerlink" title="RGB标定"></a>RGB标定</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/camera/rgb/image_raw camera:=/camera/rgb</span><br></pre></td></tr></table></figure>
+<p>size是黑白格的横纵点数，square是黑白格边长，image是图像节点名称，camera是相机名称。<br>标定界面出现后，按照x（左右）、y（上下）、size（前后）、skew（倾斜）等方式移动棋盘，直到x,y,size,skew的进度条都变成绿色位置，不必四个进度条达到最大长度，此时可以按下CALIBRATE按钮，等一段时间(跟电脑CPU性能有关，我的用了二十分钟)就可以完成标定，再commit就成功了。</p>
+<p>结果会在<code>~/.ros/camera_info</code>生成标定文件<code>rgb_A00361A06712145A.yaml</code>，下划线后面的是相机名称</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">image_width: 640</span><br><span class="line">image_height: 480</span><br><span class="line">camera_name: rgb_A00363A05200151A</span><br><span class="line">camera_matrix:		<span class="comment"># 内参数矩阵， 依次为fx,0,cx,0,fy,cy,0,0,1</span></span><br><span class="line">  rows: 3</span><br><span class="line">  cols: 3</span><br><span class="line">  data: [519.7959964940057, 0, 311.8351165024031, 0, 520.264653178918, 260.4976776521158, 0, 0, 1]</span><br><span class="line">distortion_model: plumb_bob</span><br><span class="line">distortion_coefficients:   <span class="comment"># 畸变参数，依次为k1,k2,p1,p2,k3</span></span><br><span class="line">  rows: 1</span><br><span class="line">  cols: 5</span><br><span class="line">  data: [0.1316145046090376, -0.2008704147933575, 0.002009131405045224, 0.0002143881752906817, 0]</span><br><span class="line">rectification_matrix:   <span class="comment"># 有时说成旋转矩阵，不必关注，一般是单位矩阵</span></span><br><span class="line">  rows: 3</span><br><span class="line">  cols: 3</span><br><span class="line">  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]</span><br><span class="line">projection_matrix:    <span class="comment"># 用的也很少</span></span><br><span class="line">  rows: 3</span><br><span class="line">  cols: 4</span><br><span class="line">  data: [530.9489135742188, 0, 311.8610150917521, 0, 0, 531.2692260742188, 261.2333082555961, 0, 0, 0, 1, 0]</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="IR标定"><a href="#IR标定" class="headerlink" title="IR标定"></a>IR标定</h3><p>如果kinect没标定过IR，深度图和彩色图之间不能保证一一对应，在做slam时就会出错。一般运行误差不大的话不必标定IR，就用出厂的参数。</p>
+<p>深度图本质是从红外相机获得，红外图像 = 灰度图像<br><img src="https://i.loli.net/2020/02/15/s2L71ieZhDVkSog.png" alt="IR标定.png"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/camera/ir/image_raw camera:=/camera/ir</span><br><span class="line">rosrun camera_calibration cameracalibrator.py --size 8x6 --square 0.025 image:=/camera/depth/image_raw camera:=/camera/depth</span><br></pre></td></tr></table></figure>
+<p>斑点图案使得不可能在IR图像中准确地检测棋盘角。最简单的解决方法是用一两个便签纸覆盖投影机（最左边的单独的开口），大多散布斑点。一个理想的解决方案是完全阻挡投影机，并提供一个单独的红外光源。良好的照明源包括阳光，卤素灯或白炽灯。<br>解决：打开窗帘，Kinect背对窗户，使用便签纸覆盖投影机（最左边的单独的开口），人手持黑白棋盘，面向太阳，便可成功校准<br>Kinect相机驱动程序不能同时传输IR和RGB图像。它将根据用户数量决定两者中的哪一个流，因此在进行IR校准之前杀掉订阅RGB图像的节点</p>
+<p>标定过程中的一些感受：</p>
+<ul>
+<li><p>标定所用的棋盘要尽量大，至少要有A3纸的大小，不过这样参数也要修改</p>
+</li>
+<li><p>棋盘平面与摄像头像平面之间的夹角不要太大，控制在45度以下；</p>
+</li>
+<li><p>棋盘的姿势与位置尽可能多样化，但相互平行的棋盘对结果没有贡献；</p>
+</li>
+<li><p>用于标定的图片要多于10张；</p>
+</li>
+<li><p>注意设置好摄像头的分辨率，长宽比最好和深度图的相同，比如1280x960（4:3）</p>
+</li>
+</ul>
+<p>直接采到的RGB图和深度图存在的问题：</p>
+<p>有一些时差（约几到十几个毫秒）。这个时差的存在，会产生<strong>RGB图已经向右转了，怎么深度图还没转</strong>的感觉。光圈中心未对齐。因为深度毕竟是靠另一个相机获取的，所以深度传感器和彩色传感器参数可能不一致。<br>深度图里有很多“洞”。这是RGB-D相机本身的局限性，它有一个探测距离的限制，太远或太近的东西都是看不见的。关于这些“洞”，我们暂时不去理它。以后我们也可以靠双边bayes滤波器去填这些洞，但是软件算法至多优化，并不能完全弥补它的缺陷。</p>
+<p>ROS存在包<a target="_blank" rel="noopener" href="http://wiki.ros.org/camera_calibration_parsers">camera_calibration_parsers</a>对yaml标定文件和ini文件进行转换，不过一般ini格式用不到</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/15/%E8%A7%86%E8%A7%89SLAM/Kinect%20v1%E6%91%84%E5%83%8F%E5%A4%B4%E7%9A%84%E6%A0%87%E5%AE%9A/" data-id="ckr28oqw4005fewlm775z37ws" data-title="Kinect v1的标定" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  面向对象/智能指针(二) shared_ptr" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2020/02/14/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%BA%8C)%20shared_ptr/" class="article-date">
+  <time class="dt-published" datetime="2020-02-14T12:07:01.000Z" itemprop="datePublished">2020-02-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2020/02/14/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%BA%8C)%20shared_ptr/">智能指针(二) shared_ptr</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>shared_ptr内部包含两个指针，一个指向对象，另一个指向控制块，控制块中包含一个引用计数和其它一些数据。由于这个控制块需要在多个shared_ptr之间共享，所以它也是存在于 heap 中的。</p>
+<p>在使用<code>shared_ptr</code>之前应该考虑，是否真的需要使用<code>shared_ptr</code>, 而非<code>unique_ptr</code>。</p>
+<p><code>shared_ptr</code>就是和<code>unique_ptr</code>相对的,它可以共享所有权，即多个<code>shared_ptr</code>可以共享同一块内存,如果不涉及,使用<code>unique_ptr</code>就足够了</p>
+<p>由于支持共享所有权,<code>shared_ptr</code>支持拷贝和赋值运算, <strong>也支持移动</strong>。如果对象在创建的时候没有使用共享指针存储的话，之后也不能用共享指针管理这个对象了。</p>
+<p>避免使用原生指针来创建<code>shared_ptr</code>指针</p>
+<p><code>shared_ptr</code>销毁对象的情况:</p>
+<ol>
+<li>最后一个智能指针离开作用域</li>
+<li>用其他的<code>shared_ptr</code>给一个<code>shared_ptr</code>初始化</li>
+<li>最后一个智能指针调用reset</li>
+</ol>
+<p><code>shared_ptr</code>的缺点:</p>
+<ul>
+<li><p>内存占用是原生指针的两倍,因为除了要管理一个原生指针外，还要维护一个引用计数</p>
+</li>
+<li><p>使用操作性能低的原子操作:<br>考虑到线程安全问题，引用计数的增减必须是原子操作。而原子操作一般情况下都比非原子操作慢</p>
+</li>
+<li><p>两个shared_ptr可能出现循环引用，永远不能释放指向的对象</p>
+</li>
+</ul>
+<h2 id="weak-ptr解决循环引用"><a href="#weak-ptr解决循环引用" class="headerlink" title="weak_ptr解决循环引用"></a>weak_ptr解决循环引用</h2><p><code>weak_ptr</code>必须跟<code>shared_ptr</code>配合使用, 它用于解决<code>shared_ptr</code>的死锁问题，如果两个<code>shared_ptr</code>一直互相引用，那么它们的引用计数永远不是0，资源永远不释放，这样实际造成了内存泄露。<code>weak_ptr</code>并不拥有其指向的对象，让weak_ptr指向shared_ptr所指向对象，对象的引用计数并不会增加</p>
+<p>循环引用的情况：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ~<span class="built_in">Father</span>() &#123;cout&lt;&lt;<span class="string">&quot; father 析构&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    shared_ptr&lt;Son&gt; son_;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> &#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">    ~<span class="built_in">Son</span>() &#123;cout&lt;&lt;<span class="string">&quot; son 析构&quot;</span>&lt;&lt;endl; &#125;</span><br><span class="line">    shared_ptr&lt;Father&gt; father_;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">auto</span> father = make_shared&lt;Father&gt;();</span><br><span class="line"><span class="keyword">auto</span> son = make_shared&lt;Son&gt;();</span><br><span class="line">father-&gt;son_ = son;</span><br><span class="line">son-&gt;father_ = father;</span><br></pre></td></tr></table></figure>
+<p>结果一个析构函数也没运行，说明对象资源没有释放。使用<code>weak_ptr</code>解决很简单，让Son的成员变量father改为weak_ptr类型，运行后发现两个析构都有了。</p>
+<p>main函数退出前，Son对象的引用计数是2，而Father的引用计数是1。<br>son指针销毁，Son对象的引用计数变成1。<br>father指针销毁，Father对象的引用计数变成0，导致Father对象析构，Father对象的析构会导致它包含的son_指针被销毁，这时Son对象的引用计数变成0，所以Son对象也会被析构。</p>
+<p>参考:<a target="_blank" rel="noopener" href="https://blog.csdn.net/Jacketinsysu/article/details/53341370">shared_ptr循环引用的例子及解决方法示例</a></p>
+<h2 id="线程安全性"><a href="#线程安全性" class="headerlink" title="线程安全性"></a>线程安全性</h2><p><code>shared_ptr</code>有两个成员，指向对象的指针ptr和管理引用计数的指针ref_count。引用计数本身是原子操作，是线程安全的，但 <code>shared_ptr</code>的赋值操作由复制对象指针和修改使用计数两个操作复合而成, 因此仍不是线程安全的。如果要从多个线程读写同一个<code>shared_ptr</code> 对象，还是需要加锁。</p>
+<p>陈硕专门写了<a target="_blank" rel="noopener" href="https://blog.csdn.net/Solstice/article/details/8547547">这篇文章</a>分析这个问题，<br>也可以看我自己的<a href="">这篇文章</a>，子线程里能写shared_ptr指向的对象，回到主线程就变了。</p>
+<h2 id="尽量使用-make-shared"><a href="#尽量使用-make-shared" class="headerlink" title="尽量使用 make_shared()"></a>尽量使用 make_shared()</h2><p>为了节省一次内存分配，原来<code>shared_ptr&lt;Foo&gt; x(new Foo);</code> 需要为 Foo 和 ref_count 各分配一次内存，现在用<code>make_shared()</code>的话，可以一次分配一块足够大的内存，供 Foo 和 ref_count 对象容身。</p>
+<h2 id="常见用法"><a href="#常见用法" class="headerlink" title="常见用法"></a>常见用法</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">int</span> num = <span class="number">12</span>;</span><br><span class="line">    <span class="keyword">int</span>* p = <span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(num);</span><br><span class="line"><span class="comment">//    shared_ptr&lt;int&gt; p1 = &amp;num;      // error</span></span><br><span class="line">    shared_ptr&lt;<span class="keyword">int</span>&gt; p2 = boost::make_shared&lt;<span class="keyword">int</span>&gt;(num);</span><br><span class="line">    <span class="function">shared_ptr&lt;Foo&gt; <span class="title">p3</span><span class="params">(p)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//    cout &lt;&lt; *p2 &lt;&lt;endl;</span></span><br><span class="line"><span class="comment">//    cout &lt;&lt; *p3 &lt;&lt;endl;</span></span><br></pre></td></tr></table></figure>
+<p>p1的用法是错的，p2和p3正确，但是不要同时使用，改用p3(p2)即可</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">boost::shared_ptr&lt;Foo&gt; a;</span><br><span class="line">cout&lt;&lt; a.<span class="built_in">use_count</span>()&lt;&lt;endl;</span><br><span class="line">a-&gt;<span class="built_in">out</span>();</span><br></pre></td></tr></table></figure>
+<p>执行<code>a-&gt;out()</code>会报错，原因是a没有指向对象，应该这样定义：<code>boost::shared_ptr&lt;Foo&gt; a(new Foo());</code></p>
+<p>再看这样的代码:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boost::shared_ptr&lt;Foo&gt; <span class="title">a</span><span class="params">(<span class="keyword">new</span> Foo())</span></span>;            <span class="comment">// 让a指向对象</span></span><br><span class="line">cout&lt;&lt; a.<span class="built_in">use_count</span>()&lt;&lt;endl;                        <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">boost::shared_ptr&lt;Foo&gt; b = a;                   <span class="comment">// 另一个指针也指向同一个对象</span></span><br><span class="line">cout&lt;&lt; a.<span class="built_in">use_count</span>()&lt;&lt;endl;                     <span class="comment">// 2</span></span><br><span class="line">cout&lt;&lt; b.<span class="built_in">use_count</span>()&lt;&lt;endl;                     <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">a.<span class="built_in">reset</span>();                      <span class="comment">// 不执行析构函数，实际执行 delete a; a = NULL;</span></span><br><span class="line">a-&gt;<span class="built_in">out</span>();                    <span class="comment">// 报错</span></span><br><span class="line">b-&gt;<span class="built_in">out</span>();                   <span class="comment">// 正常</span></span><br><span class="line">cout&lt;&lt; a.<span class="built_in">use_count</span>()&lt;&lt;endl;                     <span class="comment">// 0</span></span><br><span class="line">cout&lt;&lt; b.<span class="built_in">use_count</span>()&lt;&lt;endl;                     <span class="comment">// 1</span></span><br><span class="line">b.<span class="built_in">reset</span>();                  <span class="comment">// 执行析构函数</span></span><br><span class="line">cout&lt;&lt;<span class="string">&quot;end&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+
+<p>只有对象的引用计数为0的时候，才执行类的析构和free其内存:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">boost::shared_ptr&lt;Foo&gt; <span class="title">a</span><span class="params">(<span class="keyword">new</span> Foo())</span></span>;</span><br><span class="line">boost::shared_ptr&lt;Foo&gt; b = a;</span><br><span class="line"></span><br><span class="line">cout&lt;&lt;a&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt;b&lt;&lt;endl;</span><br><span class="line"></span><br><span class="line">a.<span class="built_in">reset</span>(<span class="keyword">new</span> <span class="built_in">Foo</span>());         <span class="comment">// a重新初始化，指向另一个地址</span></span><br><span class="line">cout&lt;&lt;a&lt;&lt;endl;</span><br><span class="line">cout&lt;&lt;b&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x99fc20</span><br><span class="line">0x99fc20</span><br><span class="line"></span><br><span class="line">0x9a0c70</span><br><span class="line">0x99fc20</span><br></pre></td></tr></table></figure>
+
+<p>不要把一个原生指针给多个shared_ptr管理</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span>* ptr = <span class="keyword">new</span> <span class="keyword">int</span>;</span><br><span class="line"><span class="function">boost::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p1</span><span class="params">(ptr)</span></span>;</span><br><span class="line"><span class="function">boost::shared_ptr&lt;<span class="keyword">int</span>&gt; <span class="title">p2</span><span class="params">(ptr)</span></span>; </span><br></pre></td></tr></table></figure>
+<p>这样做会导致ptr会被释放两次。在实际应用中，保证除了第一个<code>shared_ptr</code>使用ptr定义之外，后面的都采用p1来操作，就不会出现此类问题。</p>
+<p>可以在标准容器里存储boost::shared_ptr，但不能存储<code>std::auto_ptr</code>和<code>boost::scoped_ptr</code>，后两者不能共享对象所有权．</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;boost::shared_ptr&lt;<span class="keyword">int</span>&gt; &gt; v; </span><br><span class="line">v.<span class="built_in">push_back</span>(boost::shared_ptr&lt;<span class="keyword">int</span>&gt;(<span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(<span class="number">1</span>))); </span><br><span class="line">v.<span class="built_in">push_back</span>(boost::shared_ptr&lt;<span class="keyword">int</span>&gt;(<span class="keyword">new</span> <span class="built_in"><span class="keyword">int</span></span>(<span class="number">2</span>)));</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="自定义删除器"><a href="#自定义删除器" class="headerlink" title="自定义删除器"></a>自定义删除器</h3><p>默认情况下，shared_ptr调用<code>delete()</code>函数进行资源释放，即<code>delete p;</code>。但是如果shared_ptr指向一个数组而不是一个简单的指针，应该调用<code>delete[] p</code>，此时可以将一个回调传递给shared_ptr的构造函数来定制删除器。</p>
+<p>主要是利用了构造函数<code>template&lt;class Y, class D&gt; shared_ptr(Y * p, D d);</code>，第一个参数是要被管理的指针, 与其它形式的构造函数一致; 第二个参数称为删除器, 他是一个接受<code>Y*</code>的可调用物, d(p)的行为应类似与delete p, 而且不应该抛出异常。有了删除器, 我们就可以管理一些更复杂的资源, 比如数据库连接, socket连接。</p>
+<p>其实有很多种用法，只列举常用的普通函数法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Derived *d = <span class="keyword">new</span> Derived[<span class="number">5</span>];</span><br><span class="line"><span class="function">boost::shared_ptr&lt;Derived&gt; <span class="title">p1</span><span class="params">(d, deleter)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// deleter函数定义</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">deleter</span><span class="params">(Derived* d)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">delete</span>[] d;</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;delete&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>参考：<a target="_blank" rel="noopener" href="https://www.boost.org/doc/libs/1_47_0/libs/smart_ptr/shared_ptr.htm#use_count">官方说明</a><br><a target="_blank" rel="noopener" href="http://dengzuoheng.github.io/boost-shared-ptr">boost智能指针之shared_ptr</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/02/14/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%BA%8C)%20shared_ptr/" data-id="ckr28oqy100a0ewlm7gigag7h" data-title="智能指针(二) shared_ptr" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/24/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/23/">23</a><a class="page-number" href="/page/24/">24</a><span class="page-number current">25</span><a class="page-number" href="/page/26/">26</a><a class="page-number" href="/page/27/">27</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/26/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

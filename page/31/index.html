@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/31/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-cmake qmake/cmake教程（四）ROS中的catkin_make" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/26/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89ROS%E4%B8%AD%E7%9A%84catkin_make/" class="article-date">
+  <time class="dt-published" datetime="2019-08-26T13:08:13.000Z" itemprop="datePublished">2019-08-26</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/cmake-qmake/">cmake/qmake</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/26/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89ROS%E4%B8%AD%E7%9A%84catkin_make/">cmake教程（四）ROS中的catkin_make</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>使用<code>catkin_make</code>编译时，有时编译内容太长,而错误在终端的上面，使用滑条仍有可能看不到。这时可以使用<code>catkin_make &gt; path/file.log</code>将编译内容输出到某个文件，这样就容易查看了。 <font color = blue>  <font size= 3> catkin本身不会存储编译过程的日志 </font> </font></p>
+<h3 id="catkin-package"><a href="#catkin-package" class="headerlink" title="catkin_package()"></a>catkin_package()</h3><p>这个函数十分重要，观察CMakeLists就可以发现，它是唯一的非cmake函数，显然ROS的<code>catkin_make</code>就是靠它了，它的作用是指定功能包构建信息导出，在使用<code>add_library()</code>或者<code>add_executable()</code> <font color = blue>  <font size= 3> 之前，必须调用此函数。 </font> </font></p>
+<p>该函数有5个可选参数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">INCLUDE_DIRS  导出包含功能包的路径(即cflags)</span><br><span class="line"></span><br><span class="line">LIBRARIES 项目中导出的库</span><br><span class="line"></span><br><span class="line">CATKIN_DEPENDS  该项目所依赖的其他catkin项目</span><br><span class="line"></span><br><span class="line">DEPENDS 此项目依赖的非catkin CMake项目</span><br><span class="line"></span><br><span class="line">CFG_EXTRAS  其他配置选项</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">catkin_package(</span><br><span class="line">   INCLUDE_DIRS include</span><br><span class="line">   LIBRARIES $&#123;PROJECT_NAME&#125;</span><br><span class="line">   CATKIN_DEPENDS roscpp nodelet</span><br><span class="line">   DEPENDS eigen opencv)</span><br></pre></td></tr></table></figure>
+<p>这表示功能包文件夹中的“include”文件夹是导出头文件所在的位置。<code>roscpp</code>+<code>nodelet</code>是构建/运行此功能包需要存在的功能包，<code>eigen</code>+<code>opencv</code>是构建/运行此功能包时需要存在的系统依赖性。</p>
+<p>catkin_package在<code>/opt/ros/kinetic/share/catkin/cmake/catkin_package.cmake</code>文件中定义。<code>devel</code>和<code>build</code>文件夹内的内容基本都是由其生成的。</p>
+<p>这个函数解析package.xml文件，提取出里面的参数，执行<code>catkin_make</code>时，会在<code>workspace/devel/share</code>里生成<strong>pkgConfig.cmake</strong>文件的，在cmake文件中<code>find_package</code>就会用到这些文件，这样其他的对这个软件包有依赖的程序就可以方便的使用了。</p>
+<p>比如现在有sub这个包，编译之后会在<code>devel/share/sub/cmake</code>生成两个文件：<strong>pubConfig.cmake</strong>和<strong>pubConfig-version.cmake</strong>，然后到另一个包pub的CMakeLists里调用sub：<code>find_package(sub)</code>，这样编译pub就通过了．假如把那两个文件删掉，然后使用<code>catkin_make --pkg pub</code>编译，就会报错：<br><img src="https://live.staticflickr.com/65535/47927167308_75e9331a0b_b.jpg"></p>
+<p>对于build文件夹，生成是一些编译中的中间文件，比如用来存储一些环境变量之类的文件。这个文件夹意义不大。</p>
+<h3 id="在工程中显示其他源文件"><a href="#在工程中显示其他源文件" class="headerlink" title="在工程中显示其他源文件"></a>在工程中显示其他源文件</h3><p>新建CMake工程后，只有<code>main.cpp</code>，向目录添加文件foo.h和foo.cpp，但是它们不会在工程目录里显示，编辑<code>CMakeLists</code>如下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cmake_minimum_required(VERSION 2.8)</span><br><span class="line"></span><br><span class="line">project(testStream)</span><br><span class="line"></span><br><span class="line">include_directories(.)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者add_library(Foo &quot;foo.cpp&quot;)</span></span><br><span class="line">add_executable(<span class="variable">$&#123;PROJECT_NAME&#125;</span> <span class="string">&quot;main.cpp&quot;</span> <span class="string">&quot;foo.cpp&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>然后执行cmake后就会显示<br><img src="https://live.staticflickr.com/65535/48438792322_51bdec917a_m.jpg"></p>
+<h2 id="报错Policy-CMP0046-is-not-set"><a href="#报错Policy-CMP0046-is-not-set" class="headerlink" title="报错Policy CMP0046 is not set"></a>报错Policy CMP0046 is not set</h2><p><img src="https://i.loli.net/2020/06/07/6QaRtDyf5ZhqKoH.png" alt="Policy CMP0046 is not set"><br>可以不用管，也可以按提示修改，最好先安装：<code>sudo apt-get install libproj-dev</code></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.coder.work/article/3331212">Policy CMP0046问题</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/26/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89ROS%E4%B8%AD%E7%9A%84catkin_make/" data-id="ckr28oqur002eewlm9b7hhhe9" data-title="cmake教程（四）ROS中的catkin_make" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Valgrind和内存管理/Valgrind基本使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/17/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/Valgrind%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2019-08-17T01:01:18.000Z" itemprop="datePublished">2019-08-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/17/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/Valgrind%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">Valgrind(一) valgrind的基本使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="Memcheck"><a href="#Memcheck" class="headerlink" title="Memcheck"></a>Memcheck</h3><p>默认的工具，用来检测程序中出现的内存问题，所有对内存的读写都会被检测到，一切对malloc、free、new、delete的调用都会被捕获。所以，它能检测以下问题：</p>
+<ol>
+<li><p>对未初始化内存的使用；</p>
+</li>
+<li><p>读/写释放后的内存块；</p>
+</li>
+<li><p>读/写超出malloc分配的内存块；</p>
+</li>
+<li><p>读/写不适当的栈中内存块；</p>
+</li>
+<li><p>内存泄漏，指向一块内存的指针永远丢失；</p>
+</li>
+<li><p>不正确的malloc/free或new/delete匹配；</p>
+</li>
+<li><p>memcpy()相关函数中的dst和src指针重叠</p>
+</li>
+</ol>
+<p>valgrind只报告内存泄漏，但没有显示具体代码中泄漏的地方。因此需要使用<code>--leak-check=full</code>选项启动valgrind。你的程序将比正常的运行慢得多（如20〜30倍），并使用更多的内存。Memcheck会报告关于内存错误，和检测到的泄漏的消息。</p>
+<p>Memcheck也报告未初始化值的使用，最常见的消息是<code>Conditional jump or move depends on uninitialised value(s)</code>。可以难以确定这些错误的根源。尝试使用<code>--track-origins=yes</code>来获得额外的信息。这使得Memcheck运行得更慢，</p>
+<p>Invalid write of size 1 //堆内存越界被查出来</p>
+<p>Invalid free() / delete / delete[] //重复释放</p>
+<p>Process terminating with default action of signal 11 (SIGSEGV): dumping core  //非法指针，导致coredump</p>
+<h3 id="massif"><a href="#massif" class="headerlink" title="massif"></a>massif</h3><p>堆栈分析器，指示程序中使用了多少堆内存等信息。它能测量程序在堆栈中使用了多少内存，告诉我们堆块，堆管理块和栈的大小。Massif能帮助我们减少内存的使用，在带有虚拟内存的现代系统中，它还能够加速我们程序的运行，减少程序停留在交换区中的几率。</p>
+<p>Massif对内存的分配和释放做profile。程序开发者通过它可以深入了解程序的内存使用行为，从而对内存使用进行优化。这个功能对C++尤其有用，因为C++有很多隐藏的内存分配和释放</p>
+<h3 id="Helgrind"><a href="#Helgrind" class="headerlink" title="Helgrind"></a>Helgrind</h3><p>它主要用来检查多线程程序中出现的竞争问题。Helgrind寻找内存中被多个线程访问，而又没有一贯加锁的区域，这些区域往往是线程之间失去同步的地方，而且会导致难以发掘的错误。不过，Helgrind仍然处于实验阶段。</p>
+<h3 id="memcheck的常用选项"><a href="#memcheck的常用选项" class="headerlink" title="memcheck的常用选项"></a>memcheck的常用选项</h3><p><strong>–tool=<toolname> [default: memcheck]</strong></p>
+<p>最常用的选项。运行valgrind中名为toolname的工具。如果省略工具名，默认运行memcheck。</p>
+<p><strong>–leak-check=&lt;no|summary|yes|full&gt; [default: summary]</strong></p>
+<p>用于控制内存泄漏检测力度。</p>
+<ul>
+<li><p>no，不检测内存泄漏；</p>
+</li>
+<li><p>summary，仅报告总共泄漏的数量，不报告具体泄漏位置；</p>
+</li>
+<li><p>yes/full，报告泄漏总数、泄漏的具体位置</p>
+</li>
+</ul>
+<p><strong>–show-reachable=&lt;yes|no&gt; [default: no]</strong></p>
+<p>用于控制是否检测控制范围之外的泄漏，比如全局指针、static指针等。</p>
+<p><strong>–undef-value-errors=&lt;yes|no&gt; [default: yes]</strong></p>
+<p>用于控制是否检测代码中使用未初始化变量的情况。</p>
+<p>–log-file=filename         # 将结果输出到文件，支持相对路径</p>
+<p>–track-fds=&lt;yes|no&gt; [default: no]        # 跟踪打开的文件描述符</p>
+<h3 id="五种泄露内存的类型"><a href="#五种泄露内存的类型" class="headerlink" title="五种泄露内存的类型"></a>五种泄露内存的类型</h3><ul>
+<li>definitely lost：确认丢失。程序中存在内存泄露，应尽快修复。当程序结束时如果一块动态分配的内存没有被释放且通过程序内的指针变量均无法访问这块内存则会报这个错误。</li>
+<li>indirectly lost：间接丢失。当使用了含有指针成员的类或结构时可能会报这个错误。这类错误无需直接修复，他们总是与”definitely lost”一起出现，只要修复”definitely lost”即可。例子可参考我的例程。</li>
+<li>possibly lost：可能丢失。大多数情况下应视为与”definitely lost”一样需要尽快修复，除非你的程序让一个指针指向一块动态分配的内存（但不是这块内存起始地址），然后通过运算得到这块内存起始地址，再释放它。例子可参考我的例程。当程序结束时如果一块动态分配的内存没有被释放且通过程序内的指针变量均无法访问这块内存的起始地址，但可以访问其中的某一部分数据，则会报这个错误。</li>
+<li>still reachable：可以访问，未丢失但也未释放。如果程序是正常结束的，那么它可能不会造成程序崩溃，但长时间运行有可能耗尽系统资源，因此笔者建议修复它。如果程序是崩溃（如访问非法的地址而崩溃）而非正常结束的，则应当暂时忽略它，先修复导致程序崩溃的错误，然后重新检测。</li>
+<li>suppressed：已被解决。出现了内存泄露但系统自动处理了。可以无视这类错误。这类错误我没能用例程触发，看官方的解释也不太清楚是操作系统处理的还是valgrind，也没有遇到过。</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/17/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/Valgrind%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="ckr28oquj001rewlm0gkk6xdh" data-title="Valgrind(一) valgrind的基本使用" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-C++/C++  基础/string和char" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/14/C++/C++%20%20%E5%9F%BA%E7%A1%80/string%E5%92%8Cchar/" class="article-date">
+  <time class="dt-published" datetime="2019-08-14T14:26:14.000Z" itemprop="datePublished">2019-08-14</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/C/">C++</a>►<a class="article-category-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/14/C++/C++%20%20%E5%9F%BA%E7%A1%80/string%E5%92%8Cchar/">string和char*</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="判断char-是否为NULL"><a href="#判断char-是否为NULL" class="headerlink" title="判断char* 是否为NULL"></a>判断char* 是否为NULL</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* foo;</span><br><span class="line">foo=<span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">if</span>(foo)</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;foo: %s&quot;</span>,foo);	<span class="comment">// 先判断是否为NULL</span></span><br></pre></td></tr></table></figure>
+
+<p>比较典型的一个应用是获取环境变量时，如果没有设置环境变量，直接使用变量会报错，所以要判断是否为空：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span>* path = <span class="built_in">getenv</span>(<span class="string">&quot;CONFIG&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(path)</span><br><span class="line">    cout&lt;&lt; <span class="built_in">string</span>(path)&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+<p>使用getenv，不需要<code>delete path</code>释放内存</p>
+<h3 id="与字符串比较"><a href="#与字符串比较" class="headerlink" title="与字符串比较"></a>与字符串比较</h3><p><font color = blue>  <font size= 3> C++11 does not allow conversion from string literal to  char* </font> 所以最好不要把字符串直接赋值给 <code>char*</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* path = <span class="string">&quot;abcdef&quot;</span>;	<span class="comment">// 常用</span></span><br><span class="line">std::string ss = <span class="string">&quot;abcdef&quot;</span>;		<span class="comment">// 常用，因为源码的 operator= 定义如此</span></span><br><span class="line"><span class="keyword">char</span>* s = <span class="string">&quot;abcdef&quot;</span>;				<span class="comment">// 避免这样使用</span></span><br></pre></td></tr></table></figure>
+
+<p><code>const char*</code>与字符串比较，可以用函数<code>strcmp</code>，若相等则返回0</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( <span class="number">0</span>==<span class="built_in">strcmp</span>(path, <span class="string">&quot;abcdef&quot;</span>) )</span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;yes&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+
+<p>或者先转换成string，再进行比较：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="built_in">string</span>(path) == ss)</span><br><span class="line">        cout&lt;&lt;<span class="string">&quot;yes&quot;</span>&lt;&lt;endl;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/14/C++/C++%20%20%E5%9F%BA%E7%A1%80/string%E5%92%8Cchar/" data-id="ckr28oqx2007qewlmbqrp26hc" data-title="string和char*" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/ROS中使用GDB和valgrind" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/13/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E4%BD%BF%E7%94%A8GDB%E5%92%8Cvalgrind/" class="article-date">
+  <time class="dt-published" datetime="2019-08-13T12:07:33.000Z" itemprop="datePublished">2019-08-13</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/13/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E4%BD%BF%E7%94%A8GDB%E5%92%8Cvalgrind/">ROS中使用GDB和Valgrind调试</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>我们可以使用GDB和Valgrind对ROS程序进行调试，关键就是roslaunch中的<code>launch-prefix</code>参数，但是这两个工具不能同时在roslaunch中使用</p>
+<h3 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h3><p>可以在使用<code>catkin_make</code>时，添加编译类型为Debug：<code>catkin_make -DCMAKE_BUILD_TYPE=Debug --pkg pub</code>，另一种方法是在CMakeLists中添加下列信息，这同CMake是一样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SET(CMAKE_BUILD_TYPE &quot;Debug&quot;)</span><br><span class="line">SET(CMAKE_CXX_FLAGS_DEBUG &quot;$ENV&#123;CXXFLAGS&#125; -O0 -Wall -g -ggdb&quot;)</span><br><span class="line">SET(CMAKE_CXX_FLAGS_RELEASE &quot;$ENV&#123;CXXFLAGS&#125; -O3 -Wall&quot;)</span><br></pre></td></tr></table></figure>
+<p>编译后，运行命令要加<code>--prefix</code>参数： <code>rosrun --prefix &#39;gdb -ex run --args&#39;   pub  myPub</code>，然后会进入GDB环境运行节点。</p>
+<p>运行结果如下，在代码第20行有一句<code>ROS_BREAK</code>：<br><img src="https://live.staticflickr.com/65535/33963514598_9005cd9bc5_b.jpg"></p>
+<p><strong>不过更常用的是roslaunch</strong>，除了修改CMakeLists外，还需要修改launch文件，在type之后加一句：<code>launch-prefix=&quot;xterm -e gdb --args&quot;</code>，也就是添加<code>launch-prefix</code>属性来启动node，但是注意不能通过SSH隧道启动GDB，也就是不能从本机SSH到远程机启动GDB，结果会报错，因为本机要弹出GDB的窗口<br><img src="https://i.loli.net/2019/08/15/IF8jNYKweraz7P1.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">launch-prefix=&quot;xterm -e gdb --args&quot; #在一个单独的xterm窗口运行节点，需要手动输入run来运行</span><br><span class="line"></span><br><span class="line">launch-prefix=&quot;gdb -ex run --args&quot; : 在launch程序相同的窗口运行GDB，不需要手动输入run</span><br><span class="line"></span><br><span class="line">launch-prefix=&quot;nice&quot; : 优化进程以减少CPU占用</span><br><span class="line"></span><br><span class="line">launch-prefix=&quot;screen -d -m gdb --args&quot; : 这个就是专门用于节点在另一个机器上运行，SSH登录到对方那里，使用 screen -D -R 观察GDB过程</span><br></pre></td></tr></table></figure>
+<p>剩下的就是GDB的使用了<br><br></p>
+<h3 id="Valgrind"><a href="#Valgrind" class="headerlink" title="Valgrind"></a>Valgrind</h3><p>配置很简单，除了上面修改<code>CMakeLists</code>，把launch中的参数修改如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">launch-prefix=&quot;valgrind --leak-check=full --show-reachable=yes --undef-value-errors=yes --track-fds=yes&quot;   		#后面的参数写在同一行</span><br></pre></td></tr></table></figure>
+<p>使用launch文件时，不要设置<code>respawn</code>为true，那样会没完没了地执行valgrind。在启动launch之后就会启动valgrind工具检测内存泄露，并执行性能分析，剩下的就是valgrind的使用了。</p>
+<p>下面是一个简单的节点，只发布一个<code>std_msgs</code>消息，用valgrind测试的结果：<br><img src="https://i.loli.net/2019/08/15/9alZQRVmEJbhcpt.png"></p>
+<p>检查一下这个简单的程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>** argv)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::<span class="built_in">init</span>(argc,argv,<span class="string">&quot;node&quot;</span>);</span><br><span class="line">    ros::NodeHandle nh;</span><br><span class="line">    <span class="built_in">ROS_INFO</span>(<span class="string">&quot;------ waiting for client&#x27;s request ------&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果竟然有内存泄露：<br><img src="https://i.loli.net/2019/08/17/itdGeYWxnZjIhPw.png"></p>
+<p><img src="https://i.loli.net/2019/08/17/atJ3rzpubROnQ7Y.png"></p>
+<p>上网一查，原来真是kinetic的bug，分析在<a target="_blank" rel="noopener" href="https://github.com/ros/ros_comm/issues/1433">这里</a>，是一个指针没有delete就置为NULL，有人解决之后，在melodic没有了这个bug</p>
+<p>参考：<a target="_blank" rel="noopener" href="http://wiki.ros.org/roslaunch/Tutorials/Roslaunch%20Nodes%20in%20Valgrind%20or%20GDB">GDB and Valgrind in ROS</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/13/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/ROS%E4%B8%AD%E4%BD%BF%E7%94%A8GDB%E5%92%8Cvalgrind/" data-id="ckr28oqyb00anewlm3mst31jv" data-title="ROS中使用GDB和Valgrind调试" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Linux基础/Linux网络知识" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/12/Linux%E5%9F%BA%E7%A1%80/Linux%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86/" class="article-date">
+  <time class="dt-published" datetime="2019-08-12T15:00:06.000Z" itemprop="datePublished">2019-08-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/12/Linux%E5%9F%BA%E7%A1%80/Linux%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86/">Linux网络知识</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h4 id="系统网卡设置"><a href="#系统网卡设置" class="headerlink" title="系统网卡设置"></a>系统网卡设置</h4><p><code>/etc/network/interfaces</code>内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">auto lo</span><br><span class="line">iface lo inet loopback</span><br><span class="line"></span><br><span class="line">auto enp3s0</span><br><span class="line">iface enp3s0 inet dhcp</span><br></pre></td></tr></table></figure>
+<p>自动加载网卡<code>lo</code>和<code>enp3s0</code>，将<code>lo</code>设置为回环，<code>enp3s0</code>设置为<code>DHCP</code>自动获取IP</p>
+<p><code>ifconfig enp3s0 down</code>可以使对应网卡无效，<code>up</code>可以使之有效。另外：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ifup 网卡名称    //启动某网卡，可能需要用sudo</span><br><span class="line">ifdown 网卡名称	//禁用某网卡</span><br></pre></td></tr></table></figure>
+
+<p>以服务的形式开关网卡(需要root)</p>
+<ul>
+<li>service network start</li>
+<li>service network stop</li>
+<li>service network restart</li>
+</ul>
+<p><code>rfkill list</code>列出网卡是否被屏蔽的情况<br><code>sudo rfkill unblock all</code> 解除所有无线网卡的屏蔽</p>
+<h4 id="查看局域网的所有主机的IP"><a href="#查看局域网的所有主机的IP" class="headerlink" title="查看局域网的所有主机的IP"></a>查看局域网的所有主机的IP</h4><p>使用<code>nmap</code>对局域网扫描，查看arp缓存表就可以知道局域内主机ip和mac。使用<code>nmap -sP 192.168.1.0/24</code>进行ping扫描，打印出对扫描做出响应的主机，就能获知此网段的所有IP</p>
+<p><code>nmap -sS -O  192.168.0.127</code>  探测某主机的端口和操作系统情况</p>
+<h4 id="ifconfig"><a href="#ifconfig" class="headerlink" title="ifconfig"></a>ifconfig</h4><p>用<code>ifconfig</code>可以看到每个网卡对应的IP地址<br><img src="https://i.loli.net/2019/08/13/caL6oQj2hAV8RXk.png"></p>
+<ul>
+<li>第一行：连接类型：Ethernet（封装类型-以太网）  HWaddr（硬件mac地址）。</li>
+<li>第二行：网卡的IP地址、广播、掩码。</li>
+<li>第三行：IPV6不用管</li>
+<li>第四行：UP（代表网卡开启状态）BROADCAST（广播）  RUNNING（代表网卡的网线被接上）MULTICAST（支持组播）MTU:1500（最大传输单元）：1500字节。</li>
+<li>第四行：接收的包</li>
+<li>第五行：发送的包</li>
+</ul>
+<h4 id="查看网关"><a href="#查看网关" class="headerlink" title="查看网关"></a>查看网关</h4><p><code>route -n</code> </p>
+<h4 id="查看网卡"><a href="#查看网卡" class="headerlink" title="查看网卡"></a>查看网卡</h4><p>台式机一般有两个网卡，用两根网线连接装置。</p>
+<ul>
+<li><p><code>lspci | grep Eth</code>&emsp;&emsp;查看物理网卡</p>
+</li>
+<li><p>查看两个网卡的连接情况：<br><img src="https://i.loli.net/2019/08/13/RQEe1iwdl8SCfxn.png"></p>
+</li>
+</ul>
+<p><code>lspci | grep -i net</code><br><img src="https://i.loli.net/2019/08/13/ygPdIvZt1eo46hJ.png"></p>
+<p><code>sudo lshw -C network</code> 查看网卡详细情况<br><img src="https://i.loli.net/2019/08/13/1dnkE9UWMBQybFJ.png"></p>
+<h4 id="命令行连接-wifi"><a href="#命令行连接-wifi" class="headerlink" title="命令行连接 wifi"></a>命令行连接 wifi</h4><p>查看可以使用的无线网</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmcli dev wifi</span><br></pre></td></tr></table></figure>
+<p>出现这样的结果:<br><img src="https://i.loli.net/2019/08/13/pisAgOqcU4dN8Lx.png"></p>
+<p>连接无线网</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmcli dev wifi connect 网络名称 password 密码</span><br></pre></td></tr></table></figure>
+
+<h4 id="Ubuntu安装无线网卡驱动"><a href="#Ubuntu安装无线网卡驱动" class="headerlink" title="Ubuntu安装无线网卡驱动"></a>Ubuntu安装无线网卡驱动</h4><p>用<code>lspci | grep net</code>找到对应网卡名称，再用<code>lsusb</code>找出对应的ID号，比如</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Bus 001 Device 009: ID 148f:3070 Ralink Technology, Corp. RT2870/RT3070 Wireless Adapter</span><br></pre></td></tr></table></figure>
+<p>就是148f:3070，然后据此上网找驱动。</p>
+<p>依据<a target="_blank" rel="noopener" href="https://www.linuxidc.com/Linux/2018-01/150666.htm">安装Linux Kernel 4.15</a>先升级内核版本到4.15，再按下面步骤进行</p>
+<ol>
+<li>Download driver directory from this repo: <code>https://github.com/endlessm/linux/tree/master/drivers/net/wireless/rtl8821ce</code></li>
+</ol>
+<p>You can do it by this link: <code>https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/endlessm/linux/tree/master/drivers/net/wireless/rtl8821ce</code></p>
+<ol start="2">
+<li>Unpack zip archive.</li>
+<li>Change the Makefile. Line <code>export TopDIR ?= ...</code> to <code>export TopDIR ?= PATH TO EXTRACTED DIRECTORY</code>. 再根据<code>make</code>的报错信息将报错的那行去掉</li>
+<li>make</li>
+<li>sudo make install</li>
+<li>sudo modprobe -a 8821ce</li>
+</ol>
+<h4 id="network-scripts"><a href="#network-scripts" class="headerlink" title="network-scripts"></a>network-scripts</h4><p>路径 <code>/etc/sysconfig/network-scripts</code>。文件<code>ifcfg-eth0</code>和<code>ifcfg-eth1</code>是两个网卡的信息，如果缺少，说明网卡配置不正确。其中的<code>HWADDR</code>是MAC地址；<code>ONBOOT</code>如果是yes，代表启动时激活；BOOTPROTO是协议类型，一般是NONE;<br>在修改文件<code>ifcfg-eth0</code>后还需要重新导入文件才能生效: <code>/etc/init.d/network reload</code>，其他命令还有start, stop, restart.</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h4 id="Ubuntu无法无线上网"><a href="#Ubuntu无法无线上网" class="headerlink" title="Ubuntu无法无线上网"></a>Ubuntu无法无线上网</h4><p>电脑装了Ubuntu16.04后，系统配置里无线上网的开关都打不开，自己加一个无线网卡也不行。</p>
+<p>这个问题困扰了我几天，在网上查了很久，但网上提供的方法都没用，最后严重怀疑是网卡和Ubuntu版本不匹配的问题。最后，我用U盘做了一个Ubuntu系统，与工控机的一样，用<code>try without install Ubuntu</code>的方式启动，发现工控机的Ubuntu版本比我自己的电脑内核版本低。这时插上外置无线网卡，等了一会找到信号了。因此，我重装为旧内核版本的Ubuntu，结果发现插上外置无线网卡后，能发现几个无线信号，但显示是<code>在范围之外</code>，偶尔能连接上一次。</p>
+<p>最后决定拆掉笔记本的内置无线网卡。果然，拆掉后插上外置无线立刻就正常了。</p>
+<p>也可以不拆网卡，<code>ifconfig enp3s0 down</code>可以使对应网卡无效，<code>up</code>可以使之有效。将自带网卡<code>down</code>掉，然后用外接网卡，最好将<code>auto</code>行删掉</p>
+<h4 id="Linux连不上网"><a href="#Linux连不上网" class="headerlink" title="Linux连不上网"></a>Linux连不上网</h4><p>无论桥接还是NAT模式，都连不上网，主机和虚拟机都可以互相ping通。最后挂载yum成功，原因不明</p>
+<h4 id="修复双网卡同IP"><a href="#修复双网卡同IP" class="headerlink" title="修复双网卡同IP"></a>修复双网卡同IP</h4><p>两个网卡，但网络编辑里只有一个<code>自动</code>，两个网卡会用同一个IP，导致双机通信不正常。<br><font color = blue>  <font size= 5>  解决：</font> </font>删除后重新添加两个有线网络。分别命名为Eth0、Eth1, 然后用<code>ifconfig</code>查看两个网络的MAC地址，分别填写，然后再编辑IP等参数，恢复正常。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/12/Linux%E5%9F%BA%E7%A1%80/Linux%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86/" data-id="ckr28oqtu0005ewlmbbfk3yh7" data-title="Linux网络知识" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-wireshark/wireshark（二）抓包TCP和Http" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/10/wireshark/wireshark%EF%BC%88%E4%BA%8C%EF%BC%89%E6%8A%93%E5%8C%85TCP%E5%92%8CHttp/" class="article-date">
+  <time class="dt-published" datetime="2019-08-10T04:30:31.000Z" itemprop="datePublished">2019-08-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Wireshark/">Wireshark</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/10/wireshark/wireshark%EF%BC%88%E4%BA%8C%EF%BC%89%E6%8A%93%E5%8C%85TCP%E5%92%8CHttp/">wireshark（二）抓包TCP和Http</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="TCP三次握手抓包方法"><a href="#TCP三次握手抓包方法" class="headerlink" title="TCP三次握手抓包方法"></a>TCP三次握手抓包方法</h3><p>将捕获过滤器设置为<code>tcp only</code>，然后显示过滤器设为<code>http</code>，访问某个http网站(<font color = blue>  <font size= 5> 不能是https  </font> </font>)，可以看到一条<code>GET / HTTP/1.1</code>的http报文，右键点击选择追踪TCP流，这是可以看到显示过滤器栏变为<code>tcp.stream eq 47</code>，然后就可以看到该http请求前的三次握手的TCP报文如下图所示。</p>
+<p><img src="https://i.loli.net/2019/08/10/5JYrDaIzGglq3K9.png"></p>
+<p>参考: <a target="_blank" rel="noopener" href="http://jverson.com/2016/05/17/wireshark/#%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E6%8A%93%E5%8C%85%E6%96%B9%E6%B3%95">Wireshark抓TCP包</a></p>
+<h3 id="ping"><a href="#ping" class="headerlink" title="ping"></a>ping</h3><p>ICMP是Internet控制报文协议。它是TCP/IP协议族的一个子协议，用于在IP主机、路由器之间传递控制消息。控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。</p>
+<p>ping命令属于ICMP协议中的类型0(Echo Reply)和类型8(Echo Request)。ping的常用参数:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-n count       要发送的回显请求数。</span><br><span class="line">-l size        发送缓冲区大小。</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.loli.net/2019/08/10/OV9lczwkimX1EfR.png"><br>两次请求：<br><img src="https://i.loli.net/2019/08/10/sUMu1hIviDqRoxz.png"><br><img src="https://i.loli.net/2019/08/10/mCM2NBegY54syjt.png"></p>
+<p>包的length改变<br><img src="https://i.loli.net/2019/08/10/QruNwqenF5SAUIa.png"><br>这种操作可用于抓包的打标</p>
+<h3 id="异常情况"><a href="#异常情况" class="headerlink" title="异常情况"></a>异常情况</h3><p><strong>TCP Previous segment not captured</strong></p>
+<p>在TCP传输过程中，同一台主机发出的数据段应该是连续的，即后一个包的Seq号等于前一个包的Seq + Len（三次握手和四次挥手是例外）。如果Wireshark发现后一个包的Seq号大于前一个包的Seq Len，就知道中间缺失了一段数据。</p>
+<p><strong>TCP ACKed unseen segment</strong><br>Wireshark发现被Ack的那个包没被抓到，这可能是最常见的Wireshark提示了，幸好它几乎是永远可以忽略的。</p>
+<p><strong>Packet size limited during capture</strong><br>被标记的那个包没有抓全，一般是由抓包方式引起的。</p>
+<p><strong>TCP Out-Of-Order</strong></p>
+<p>当Wireshark发现后一个包的Seq号小于前一个包的Seq Len时，就会认为是乱序了，因此提示 [TCP Out-of-Order] 。</p>
+<p><strong>TCP Dup ACK</strong></p>
+<p>当乱序或者丢包发生时，接收方会收到一些Seq号比期望值大的包。它每收到一个这种包就会Ack一次期望的Seq值，以此方式来提醒发送方，于是就产生了一些重复的Ack。Wireshark会在这种重复的Ack上标记[TCP Dup ACK] 。[TCP Dup ACK]40#1。其中40表示对包序号40重复，#号之后的1表示重复次数为1次。</p>
+<p><strong>TCP spurious retransmission</strong></p>
+<p>发送端认为发送的包已经丢失了，然后就重传了，尽管此时接收端已经发送了对这些包的确认（确认还没收到或者已经丢失了）。</p>
+<p><strong>TCP Fast Retransmission</strong></p>
+<p>当发送方收到3个或以上[TCP Dup ACK]，就意识到之前发的包可能丢了，于是快速重传它。<br><img src="https://i.loli.net/2019/08/10/pamkB7x5wA1TUyr.png"></p>
+<p><strong>TCP Retransmission</strong></p>
+<p>如果一个包真的丢了，又没有后续包可以在接收方触发[Dup Ack]，就不会快速重传。这种情况下发送方只好等到超时了再重传，此类重传包就会被Wireshark标上[TCP Retransmission]。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/10/wireshark/wireshark%EF%BC%88%E4%BA%8C%EF%BC%89%E6%8A%93%E5%8C%85TCP%E5%92%8CHttp/" data-id="ckr28oquw002rewlm3eo63q6z" data-title="wireshark（二）抓包TCP和Http" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-wireshark/wireshark（一）安装和基本使用" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/10/wireshark/wireshark%EF%BC%88%E4%B8%80%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="article-date">
+  <time class="dt-published" datetime="2019-08-10T04:26:31.000Z" itemprop="datePublished">2019-08-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Wireshark/">Wireshark</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/10/wireshark/wireshark%EF%BC%88%E4%B8%80%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">wireshark（一）安装和基本使用</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>Windows安装wireshark没什么问题，主要说一下linux，先安装编译环境工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install bison flex libpcap-dev gcc</span><br><span class="line">sudo apt-get install build-essential</span><br><span class="line">sudo apt-get install libgtk2.0-dev libglib2.0-dev</span><br><span class="line">sudo apt-get install checkinstall</span><br></pre></td></tr></table></figure>
+<p>然后进行安装：<code>sudo apt-get install wireshark</code>，结果在我的电脑上报错了：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">依赖: wireshark-qt 但是它将不会被安装</span><br><span class="line">依赖: wireshark-gtk 但是它将不会被安装</span><br></pre></td></tr></table></figure>
+<p>原因在于我的电脑上有一个库文件的版本与wireshark需要的不同，再尝试安装<code>wireshark-qt</code>，结果继续报错，依次进行层层寻找，删除这个库<br><img src="https://i.loli.net/2019/08/10/1uBcWhUpNOdfkQq.png"><br>然后再安装就正常了</p>
+<ol>
+<li>过滤IP，如来源IP或者目标IP等于某个IP</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.src eq 192.168.1.107 or ip.dst eq 192.168.1.107</span><br></pre></td></tr></table></figure>
+<p>也可以用and</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ip.addr eq 192.168.1.107 // 既是来源IP也是目标IP</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>过滤端口</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tcp.port eq 80  // 不管端口是来源的还是目标的都显示</span><br><span class="line">tcp.dstport == 80 // 只显tcp协议的目标端口80</span><br><span class="line">udp.srcport == 80 // 只显tcp协议的来源端口80</span><br><span class="line">tcp.port&gt;=1 and tcp.port&lt;=80  // 指定范围</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>过滤协议</li>
+</ol>
+<p>直接输入协议名称</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tcp</span><br><span class="line">udp</span><br><span class="line">arp</span><br><span class="line">http</span><br><span class="line">ftp</span><br><span class="line">ssh</span><br></pre></td></tr></table></figure>
+<p>排除arp包，如<code>!arp</code>   或者  <code>not arp</code></p>
+<ol start="4">
+<li>过滤MAC</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eth.dst == A0:00:00:04:C5:84 // 过滤目标mac</span><br><span class="line">eth.src eq A0:00:00:04:C5:84 // 过滤来源mac</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>包长度过滤</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">udp.length == 26  // 这个长度是指udp本身固定长度8加上udp下面那块数据包之和</span><br><span class="line">tcp.len &gt;= 7   // 指ip数据包(tcp下面那块数据),不包括tcp本身</span><br><span class="line">ip.len == 94   // 除了以太网头固定长度14,其它都算是ip.len,即从ip本身到最后</span><br><span class="line">frame.len == 119  // 整个数据包长度,从eth开始到最后</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>TCP参数过滤</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tcp.flags   // 显示包含TCP标志的封包。</span><br><span class="line">tcp.flags.syn == 0x02   // 显示包含TCP SYN标志的封包。</span><br><span class="line">tcp.window_size == 0 &amp;&amp; tcp.flags.reset != 1</span><br></pre></td></tr></table></figure>
+
+
+<p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/JSJWR/article/details/78658533">Ubuntu安装wireshark</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/10/wireshark/wireshark%EF%BC%88%E4%B8%80%EF%BC%89%E5%AE%89%E8%A3%85%E5%92%8C%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" data-id="ckr28oquv002newlm3sxtd6bm" data-title="wireshark（一）安装和基本使用" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-ROS/ROS Kinetic知识/在rviz上标记机器人的轨迹" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%9C%A8rviz%E4%B8%8A%E6%A0%87%E8%AE%B0%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%BD%A8%E8%BF%B9/" class="article-date">
+  <time class="dt-published" datetime="2019-08-06T13:37:32.000Z" itemprop="datePublished">2019-08-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%9C%A8rviz%E4%B8%8A%E6%A0%87%E8%AE%B0%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%BD%A8%E8%BF%B9/">在rviz上标记机器人的轨迹</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>在rviz中标记机器人的轨迹需要用到类<code>visualization_msgs::Marker</code>，其重要成员如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//各种标志物类型的定义，也是Marker的枚举值，所有的具体介绍和形状：http://wiki.ros.org/rviz/DisplayTypes/Marker</span></span><br><span class="line">uint8 ARROW=<span class="number">0</span><span class="comment">//箭头</span></span><br><span class="line">uint8 CUBE=<span class="number">1</span><span class="comment">//立方体</span></span><br><span class="line">uint8 SPHERE=<span class="number">2</span><span class="comment">//球</span></span><br><span class="line">uint8 CYLINDER=<span class="number">3</span><span class="comment">//圆柱体</span></span><br><span class="line">uint8 LINE_STRIP=<span class="number">4</span><span class="comment">//线条（点的连线）</span></span><br><span class="line">uint8 LINE_LIST=<span class="number">5</span><span class="comment">//线条序列</span></span><br><span class="line">uint8 CUBE_LIST=<span class="number">6</span><span class="comment">//立方体序列</span></span><br><span class="line">uint8 SPHERE_LIST=<span class="number">7</span><span class="comment">//球序列</span></span><br><span class="line">uint8 POINTS=<span class="number">8</span><span class="comment">//点集</span></span><br><span class="line">uint8 TEXT_VIEW_FACING=<span class="number">9</span><span class="comment">//显示3D的文字</span></span><br><span class="line">uint8 MESH_RESOURCE=<span class="number">10</span><span class="comment">//网格？</span></span><br><span class="line">uint8 TRIANGLE_LIST=<span class="number">11</span><span class="comment">//三角形序列</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//对标记的操作，也是枚举值</span></span><br><span class="line">uint8 ADD=<span class="number">0</span></span><br><span class="line">uint8 MODIFY=<span class="number">0</span></span><br><span class="line">uint8 DELETE=<span class="number">2</span></span><br><span class="line">uint8 DELETEALL=<span class="number">3</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 重要成员变量</span></span><br><span class="line">Header header</span><br><span class="line">string ns   <span class="comment">//命名空间namespace</span></span><br><span class="line">int32 id    <span class="comment">//与命名空间联合起来，形成唯一的id，这个唯一的id可以将各个标志物区分开来，使得程序可以对指定的标志物进行操作，如果再次执行相同id，会删除上一次的标记</span></span><br><span class="line">int32 type  	<span class="comment">//类型，指哪种形状</span></span><br><span class="line">int32 action    <span class="comment">//操作，是添加还是修改还是删除</span></span><br><span class="line">geometry_msgs/Pose pose       # 位姿</span><br><span class="line">geometry_msgs/Vector3 scale   # 默认<span class="number">1</span>，指<span class="number">1</span>米大小。一般要小于<span class="number">1</span></span><br><span class="line">std_msgs/ColorRGBA color      # Color [<span class="number">0.0</span><span class="number">-1.0</span>]，其实是普通颜色值除以<span class="number">255</span></span><br><span class="line">duration lifetime             # 在自动删除前维持多久，<span class="number">0</span>表示永久。注意类型为duration，所以要用ros::<span class="built_in">Duration</span>(<span class="number">1</span>)初始化</span><br><span class="line"><span class="keyword">bool</span> frame_locked             # If <span class="keyword">this</span> marker should be frame-locked, i.e. retransformed into its frame every timestep</span><br><span class="line"></span><br><span class="line">geometry_msgs/Point[] points<span class="comment">//这个是在序列、点集中才会用到，指明序列中每个点的位置</span></span><br><span class="line"></span><br><span class="line"># 数量必须是<span class="number">0</span>或与点数相同，alpha还不能用</span><br><span class="line">std_msgs/ColorRGBA[] colors</span><br><span class="line"></span><br><span class="line">#只用于文本标识</span><br><span class="line">string text</span><br><span class="line"></span><br><span class="line">string mesh_resource</span><br><span class="line"><span class="keyword">bool</span> mesh_use_embedded_materials</span><br></pre></td></tr></table></figure>
+<p>ns和id变量每次不能同时一样，否则后面的操作会覆盖前面的操作，也就一直只能看到最新的了。建议每次让id+=1或者从命令行输入，</p>
+<p>我写了代码如下，在rviz上标记机器人当前位置，形状为球体，id从命令行输入，id为0时清除所有标识</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ros/ros.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;visualization_msgs/Marker.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;geometry_msgs/Pose.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">int</span> argc, <span class="keyword">char</span>** argv )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ros::<span class="built_in">init</span>(argc, argv, <span class="string">&quot;basic_shapes&quot;</span>);</span><br><span class="line">    ros::NodeHandle nh;</span><br><span class="line">    <span class="keyword">if</span>(argc !=<span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ROS_ERROR</span>(<span class="string">&quot;no marker id !&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    visualization_msgs::Marker marker;</span><br><span class="line"></span><br><span class="line">    ros::Publisher marker_pub = nh.advertise&lt;visualization_msgs::Marker&gt;(<span class="string">&quot;visualization_marker&quot;</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">uint32_t</span> shape = visualization_msgs::Marker::SPHERE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取当前位姿，阻塞至获取成功</span></span><br><span class="line">    boost::shared_ptr&lt;geometry_msgs::Pose <span class="keyword">const</span>&gt; edge = ros::topic::waitForMessage&lt;geometry_msgs::Pose&gt;(<span class="string">&quot;robot_pose&quot;</span>,nh);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>( <span class="built_in">atoi</span>(argv[<span class="number">1</span>])==<span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        marker.action = visualization_msgs::Marker::DELETEALL;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;All marker in rviz will be removed !&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        marker.action = visualization_msgs::Marker::ADD;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set the frame ID and timestamp.  See the TF tutorials for information on these.</span></span><br><span class="line">    marker.header.frame_id = <span class="string">&quot;/map&quot;</span>;</span><br><span class="line">    marker.header.stamp = ros::Time::<span class="built_in">now</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set the namespace and id for this marker.  This serves to create a unique ID</span></span><br><span class="line">    <span class="comment">// Any marker sent with the same namespace and id will overwrite the old one</span></span><br><span class="line">    marker.ns = <span class="string">&quot;basic_shapes&quot;</span>;</span><br><span class="line">    marker.id = <span class="built_in">atoi</span>(argv[<span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">    marker.type = shape;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set the pose of the marker.  This is a full 6DOF pose relative to the frame/time specified in the header</span></span><br><span class="line">    marker.pose.position.x = edge-&gt;position.x;</span><br><span class="line">    marker.pose.position.y = edge-&gt;position.y;</span><br><span class="line">    marker.pose.position.z = edge-&gt;position.z;</span><br><span class="line">    marker.pose.orientation.x = edge-&gt;orientation.x;</span><br><span class="line">    marker.pose.orientation.y = edge-&gt;orientation.y;</span><br><span class="line">    marker.pose.orientation.z = edge-&gt;orientation.z;</span><br><span class="line">    marker.pose.orientation.w = edge-&gt;orientation.w;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set the scale of the marker -- 1x1x1 here means 1m on a side</span></span><br><span class="line">    marker.scale.x = <span class="number">0.1</span>;</span><br><span class="line">    marker.scale.y = <span class="number">0.1</span>;</span><br><span class="line">    marker.scale.z = <span class="number">0.1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Set the color -- set alpha to something non-zero!</span></span><br><span class="line">    marker.color.r = <span class="number">0.0f</span>;</span><br><span class="line">    marker.color.g = <span class="number">0.0f</span>;</span><br><span class="line">    marker.color.b = <span class="number">1.0f</span>;</span><br><span class="line">    marker.color.a = <span class="number">1.0</span>;</span><br><span class="line">    <span class="comment">// 不加参数就是0，标识生命期为永久</span></span><br><span class="line">    marker.lifetime = ros::<span class="built_in">Duration</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果rviz里没有订阅话题visualization_marker，等待2秒</span></span><br><span class="line">    <span class="keyword">while</span> (marker_pub.<span class="built_in">getNumSubscribers</span>() &lt; <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (!ros::<span class="built_in">ok</span>())</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">ROS_WARN_ONCE</span>(<span class="string">&quot;Please create a subscriber to the marker&quot;</span>);</span><br><span class="line">        <span class="built_in">sleep</span>(<span class="number">2</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 这样比较好，有了订阅者再发布</span></span><br><span class="line">    marker_pub.<span class="built_in">publish</span>(marker);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打开rviz，后添加<code>Marker</code>，设置话题:<br><img src="https://i.loli.net/2019/08/06/AthkF1BjaNDJEnV.png"></p>
+<p>机器人在导航状态，所以<code>Fixed Frame</code>是<code>/map</code><br><img src="https://i.loli.net/2019/08/06/s91ZQd64lyMrGc3.png"></p>
+<p>在终端运行<code>rosrun add_marker marker 1</code>，会添加标识成功</p>
+<p>运行<code>rosrn map_server map_saver</code>不会保存标识，因为它和地图无关，只是rviz里的显示，否则就成了地图上的障碍物了。</p>
+<p>因为发布了Marker消息，在rviz里订阅后观测到，所以重启rviz后就没有标识了</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/rviz/Tutorials/Markers%3A%20Basic%20Shapes">官方marker教程</a><br><a target="_blank" rel="noopener" href="https://haoqchen.site/2018/05/25/ROS-show-trajectory/">ROS之rviz显示历史运动轨迹、路径的各种方法</a><br><a target="_blank" rel="noopener" href="https://github.com/PickNikRobotics/rviz_visual_tools">github: rviz_visual_tools</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/06/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E5%9C%A8rviz%E4%B8%8A%E6%A0%87%E8%AE%B0%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%BD%A8%E8%BF%B9/" data-id="ckr28oqyv00c8ewlmcpmxg2tb" data-title="在rviz上标记机器人的轨迹" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-激光SLAM/雷达/激光雷达的配置和ROS消息" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/05/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8CROS%E6%B6%88%E6%81%AF/" class="article-date">
+  <time class="dt-published" datetime="2019-08-05T14:32:38.000Z" itemprop="datePublished">2019-08-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/05/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8CROS%E6%B6%88%E6%81%AF/">激光雷达的配置和ROS消息</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="配置雷达"><a href="#配置雷达" class="headerlink" title="配置雷达"></a>配置雷达</h2><p>我用的雷达是<strong>sick LMS511</strong>，配置步骤可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/u013453604/article/details/50725833#comments">SICK激光雷达LMS511笔记</a></p>
+<p>连接直流电源24V，将雷达网线连接到无线路由器。准备一个windows电脑，连接到雷达的同一个无线网，开启雷达配送的调试工具<code>Sick sensor intellingence</code>，搜索设备获得雷达，记住IP:<code>192.168.10.100</code>，双击设备图标进入配置页面。</p>
+<p>在另一台Ubuntu电脑上进行驱动配置，也是连到同一个无线网，先测试能否ping通，如不能则按上面步骤配置。</p>
+<p>使用驱动<a target="_blank" rel="noopener" href="https://github.com/pangfumin/lms511_laser">lms511_laser_node</a>，下载后放到某工作空间中，先在<code>lms5xx_node.cpp</code>中，在<code>ip_add</code>修改雷达的IP，然后使用<code>catkin_make --pkg laser_node</code>编译。</p>
+<h2 id="数据表示"><a href="#数据表示" class="headerlink" title="数据表示"></a>数据表示</h2><p>激光雷达获取的数据是以以雷达为中心的极坐标系表示， 激光雷达以数据帧的方式返还数据<br><img src="https://i.loli.net/2020/05/31/tRIzCdfQkbwYWNO.png" alt="2020-05-31_105134.png"><br><img src="https://i.loli.net/2020/05/31/gmXSBlCv87Fd9Oc.png" alt="2020-05-31_105250.png"></p>
+<h2 id="雷达的消息和参数"><a href="#雷达的消息和参数" class="headerlink" title="雷达的消息和参数"></a>雷达的消息和参数</h2><h3 id="消息成员"><a href="#消息成员" class="headerlink" title="消息成员"></a>消息成员</h3><p>启动roscore后，用<code>rosrun laser_node laser_node</code>启动驱动程序，会有很多输出信息。<br>使用命令<code>rosnode list</code>查看运行的节点列表，发现了<code>sicklms5xx</code>。</p>
+<p>使用<code>rostopic list</code>查看主题，发现了主题<code>scan</code>，信息如下：<br><img src="https://i.loli.net/2019/08/12/YWV6k2T3dlrpMOm.png"></p>
+<p>其消息类型是<code>sensor_msgs/LaserScan</code>，发布者是<code>sicklidar</code>，其消息成员如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Header header            <span class="comment"># 时间戳是收到第一束激光的时间</span></span><br><span class="line">                         <span class="comment"># in frame frame_id, angles are measured around </span></span><br><span class="line">                         <span class="comment"># the positive Z axis (counterclockwise, if Z is up)</span></span><br><span class="line">                         <span class="comment"># with zero angle being forward along the x axis</span></span><br><span class="line">float32 angle_min        <span class="comment"># 扫描起始角度[rad]</span></span><br><span class="line">float32 angle_max        <span class="comment"># 扫描结束角度[rad]</span></span><br><span class="line">float32 angle_increment  <span class="comment"># 角分辨率，相邻扫描点的角度增量,[弧度]</span></span><br><span class="line">float32 time_increment   <span class="comment"># 每个数据点的时间间隔 [秒]</span></span><br><span class="line">float32 scan_time        <span class="comment"># 当前帧数据与下一帧数据的时间间隔 [秒]</span></span><br><span class="line">float32 range_min        <span class="comment"># 最小的扫描距离 [m]</span></span><br><span class="line">float32 range_max        <span class="comment"># 最大的扫描距离 [m]</span></span><br><span class="line">float32[] ranges         <span class="comment"># 各个方向的扫描数据 [m]</span></span><br><span class="line">float32[] intensities    <span class="comment"># 雷达的强度数据，思岚有，有些SICK雷达没有</span></span><br></pre></td></tr></table></figure>
+<p>使用命令<code>rostopic echo scan</code>可查看雷达扫描到的数据:<br><img src="https://i.loli.net/2019/08/12/dzOrXP3J7RElLWu.png"></p>
+<h3 id="扫描角度"><a href="#扫描角度" class="headerlink" title="扫描角度"></a>扫描角度</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">angle_min: -1.65806281567</span><br><span class="line">angle_max: 1.65806281567</span><br></pre></td></tr></table></figure>
+<p>经过换算，其实就是<code>-95°~95°</code>，而雷达的扫描范围是190°，显然扫描范围是个对称的扇形。雷达角度范围是<code>-1.658~1.658</code>, 角分辨率是<code>0.00872</code>, 这样算出来大概是380, 也就是380个激光束射出。</p>
+<p>雷达有旋转方向的问题，大部分雷达都是逆时针旋转，这和ROS中的习惯一致，少数雷达是顺时针，这就会对建图和定位产生问题。比如<code>EAI YDLIDAR G4</code>既可正转也可反转。</p>
+<p>判断<code>angle_min</code>和<code>angle_max</code>的大小，就能知道雷达扫描的方向，因为雷达的扫描角度都是从angle_min到angle_max变化的。如果<code>angle_min</code>&lt;<code>angle_max</code>，就是逆时针。这样雷达数据从极坐标系转换到笛卡尔右手系时，才能使用公式<code>angle = angle_min + (i * angle_increment)</code>。某些雷达已经在驱动里处理过了，即使顺时针旋转，也可以直接用此公式。</p>
+<p>换句话说，<code>angle_min</code>应该叫<strong>开始角度</strong>，<code>angle_max</code>应该叫<strong>结束角度</strong>。 </p>
+<h3 id="扫描距离"><a href="#扫描距离" class="headerlink" title="扫描距离"></a>扫描距离</h3><p>激光传感器在每次扫描都会返回几百个数据，这就是ranges数组。每秒钟还要扫描很多次，这是由<code>scan_time</code>描述，也就是每秒扫出一个扇形(一帧)，对每个扫描束都必须处理一个<code>ray-tracing</code>操作.</p>
+<p>需要保证<code>range</code>数组中元素的存储顺序与扫描到顺序一致:</p>
+<ul>
+<li>ranges数组中第一个元素存的scan中第一个扫描到点</li>
+<li>ranges数组中最后一个元素存的scan中最后一个扫描到的点</li>
+</ul>
+<p>如果我们有个rosbag文件，使用<code>rosbag info</code>可以看到这样的结果：<br><img src="https://i.loli.net/2020/04/13/T2CSwqMIuW41zhy.png" alt="scan消息.png"><br>这里面有360个msg，也就是雷达扫描了360次，注意这不是ranges数组的大小</p>
+<p>ranges是个float32类型数组，但不同雷达的ranges大小不同，获得数组大小的方法是 <code>rostopic echo --noarr /scan/ranges</code>，会不断显示<code>&lt;array type: float32, length: 381&gt;</code>，可以看到ranges的大小是381，和激光束的数量基本对应。</p>
+<p>A2的量程是<code>0.15－12/18</code>，还是基于白色高反光物体测得。<font color = blue size= 3> 使用A2时，不能离障碍物太近，否则会出现ranges数组很多个0的情况，这一点在导航时要注意</font></p>
+<p>LMS511最大检测81m，所以说适合室外。这个参数一般是在良好的反射率情况下得到的，对黑色物体的检测量程没这么大。</p>
+<br>
+
+<p>有时的ranges会出现很多inf和nan的情况，这个对不同雷达的处理可能不同，对于A2，可以看一下源码是这样的:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (read_value == <span class="number">0.0</span>)</span><br><span class="line">    scan_msg.ranges[node_count<span class="number">-1</span>-i] = std::numeric_limits&lt;<span class="keyword">float</span>&gt;::<span class="built_in">infinity</span>();</span><br></pre></td></tr></table></figure>
+<p>也就是读取距离为0时，输出inf</p>
+<p>对于北洋雷达，距离超过测量范围时候的两种情况是INF，其余由于强度或其他原因导致的数据错误会输出。</p>
+<h3 id="强度"><a href="#强度" class="headerlink" title="强度"></a>强度</h3><p>雷达数据强度是反映生成某点的激光雷达脉冲回波强度的一种测量指标（针对每个点而采集）。<font color = blue size =3> 雷达强度数据跟激光的反射情况有关，如果射向黑色物体，可能不会有反馈 </font>数组intensities与ranges中的数据是一一对应的，描述的是每个测量数据的强度。</p>
+<p>雷达在室外跟室内区别, 基本的点就是光照条件的区别</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
+<li>启动地图后，移动机器人，雷达轨迹跟随移动</li>
+</ul>
+<p>先看雷达安装朝上还是朝下，程序中要保持一致。如果没问题，把所有程序关闭再启动，一般会恢复正常</p>
+<ul>
+<li>启动雷达，雷达未分配到IP，导致无法使用；运行雷达节点时，突然报错，雷达无法扫描到数据，然后雷达IP丢失</li>
+</ul>
+<p><img src="https://i.loli.net/2019/10/17/jSkbuF7ODytMvl1.png"></p>
+<ol start="3">
+<li>雷达扫描的结果比实际偏一定角度</li>
+</ol>
+<p><img src="https://i.loli.net/2020/07/27/cmMPILifAHOJabS.png" alt="偏移的scan.png"><br><img src="https://i.loli.net/2020/07/27/NGhAamf8FxcIozV.png" alt="正常scan.png"><br>再三试验，应当是rviz视角问题</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://www.ncnynl.com/archives/201803/2372.html">Turtlebot3中级教程-应用-自动泊车</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/215695">EAI的YDLIDAR-X4激光雷达在ROS下使用方法</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/05/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E6%BF%80%E5%85%89%E9%9B%B7%E8%BE%BE%E7%9A%84%E9%85%8D%E7%BD%AE%E5%92%8CROS%E6%B6%88%E6%81%AF/" data-id="ckr28or1600hdewlmac2bbe95" data-title="激光雷达的配置和ROS消息" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-南京导航程序的疑难问题/机器人导航的问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2019/08/05/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
+  <time class="dt-published" datetime="2019-08-05T13:21:58.000Z" itemprop="datePublished">2019-08-05</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2019/08/05/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%9A%84%E9%97%AE%E9%A2%98/">问题累计</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>有一次机器人前进时，会碰到一个障碍物，由于走的太接近，以致于不能通过转弯来避开，否则会直接撞上，此时会有报错：<br><img src="https://i.loli.net/2019/08/05/3sNSkzA2MH6iDVQ.png"><br>没办法，只能手动让机器人走开</p>
+<p>导航到目标，但快到目标时，机器人速度过快，最后超过了目标，这样无法再成功导航，因为雷达不能向后扫描</p>
+<h2 id="执行move-base-launch报错"><a href="#执行move-base-launch报错" class="headerlink" title="执行move_base.launch报错"></a>执行<code>move_base.launch</code>报错</h2><p><img src="https://i.loli.net/2019/08/12/BbIxKOoeVfnZDsd.png"></p>
+<h2 id="然后获取机器人位姿失败"><a href="#然后获取机器人位姿失败" class="headerlink" title="然后获取机器人位姿失败"></a>然后获取机器人位姿失败</h2><p><img src="https://i.loli.net/2019/08/12/5FkNuKXlsUWQCoM.png"></p>
+<h2 id="机器人可能会撞上障碍物，所以最好在中间设置一个桥接点"><a href="#机器人可能会撞上障碍物，所以最好在中间设置一个桥接点" class="headerlink" title="机器人可能会撞上障碍物，所以最好在中间设置一个桥接点"></a>机器人可能会撞上障碍物，所以最好在中间设置一个桥接点</h2><p><img src="https://i.loli.net/2019/08/14/kqLyUwli8SajAmr.png"></p>
+<h2 id="使用rosbag的离线方式控制机器人会发生抖动现象，因为rosbag-play的方式是每隔0-2秒发布一次数据"><a href="#使用rosbag的离线方式控制机器人会发生抖动现象，因为rosbag-play的方式是每隔0-2秒发布一次数据" class="headerlink" title="使用rosbag的离线方式控制机器人会发生抖动现象，因为rosbag play的方式是每隔0.2秒发布一次数据"></a>使用rosbag的离线方式控制机器人会发生抖动现象，因为rosbag play的方式是每隔0.2秒发布一次数据</h2><h2 id="所有的恢复行为都失败了"><a href="#所有的恢复行为都失败了" class="headerlink" title="所有的恢复行为都失败了"></a>所有的恢复行为都失败了</h2><p><img src="https://i.loli.net/2019/08/14/RUeBaIgtZxk68lf.png"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">MoveBase::executeCycle</span><br><span class="line">&#123;</span><br><span class="line">	......</span><br><span class="line">log.<span class="built_in">debug</span>(<span class="string">&quot;[move_base_recovery] All recovery behaviors have failed, locking the planner and disabling it.);</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/05/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr28oqv4003eewlmgjc4aa6w" data-title="问题累计" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/30/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><a class="page-number" href="/page/30/">30</a><span class="page-number current">31</span><a class="page-number" href="/page/32/">32</a><a class="page-number" href="/page/33/">33</a><span class="space">&hellip;</span><a class="page-number" href="/page/45/">45</a><a class="extend next" rel="next" href="/page/32/">Next &raquo;</a>
+  </nav>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/07/13/7861/">7861</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">17747</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
+          </li>
+        
+          <li>
+            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
