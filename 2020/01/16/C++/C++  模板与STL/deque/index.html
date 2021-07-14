@@ -24,7 +24,7 @@
 <p>deque的最初状态是有一个缓冲区，调用clear函数的作用就会清除整个deque，释放所有空间而只保留一个缓冲区。如果调用erase清楚某个元素，而这个元素是所在缓冲区唯一的元素，会将此缓冲区释放。<br><br></p>
 <p>与vector不同，deque的内存大小是可缩减的。deque的内存区块不再被使用时，会被释放。</p>
 <p>deque维护start和finish两个迭代器，分别指向第一缓冲区的第一个元素和最后一个缓冲区的最后元素的下一个位置。它还要记住当前map的大小，如果map的节点不足，就需要重新配置。<br><br></p>
-<p>为了指定缓冲区的大小，必须指定 <font color = blue>  <font size= 3> alloc </font> </font>为空间配置器。比如指定数据int类型，缓冲区大小为4的deque: <code>deque&lt;int, alloc, 4&gt;</code>。 map的初始大小至少是8，最多是<strong>所需节点数+2</strong>，按刚才的例子，要存放50个元素，就需要13个节点，那么map的初始大小就是15。  如果插入的元素太多，map会不够大，需要扩充，和vector的内存扩充一样，先配置一块更大的，把原来的节点全拷贝过来，再释放原来的map。  对于平时的空间扩充，如果缓冲区中还有备用的空间，那么直接使用备用的空间；否则另外配置一个缓冲区，将其信息记录到缓冲区地址表里</p>
+<p>为了指定缓冲区的大小，必须指定 <font color = blue>  <font size= 3> alloc </font> &lt;/font&gt;为空间配置器。比如指定数据int类型，缓冲区大小为4的deque: <code>deque&lt;int, alloc, 4&gt;</code>。 map的初始大小至少是8，最多是<strong>所需节点数+2</strong>，按刚才的例子，要存放50个元素，就需要13个节点，那么map的初始大小就是15。  如果插入的元素太多，map会不够大，需要扩充，和vector的内存扩充一样，先配置一块更大的，把原来的节点全拷贝过来，再释放原来的map。  对于平时的空间扩充，如果缓冲区中还有备用的空间，那么直接使用备用的空间；否则另外配置一个缓冲区，将其信息记录到缓冲区地址表里</p>
 <p>在除了首尾两端的其他地方插入和删除元素，都将会导致指向deque元素的任何pointers、references、iterators失效。</p>
 <h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
 <li><p>deque看上去比vector功能强大，但元素存取和迭代器操作会稍微慢一些，因为它的内部结构会多一个间接过程</p>
@@ -57,7 +57,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

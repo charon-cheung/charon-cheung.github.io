@@ -11,14 +11,14 @@
 <p>矩形区域的判断依据是，如果一个低矮点云障碍也没有则不减速。<font color = blue size=4>但问题在于，有时候矩形区域内可能有少量点云，0.27是个保守的值，其实0.3在大部分情况下也有效 </font></p>
 <h2 id="快速接近低矮障碍的速度波动"><a href="#快速接近低矮障碍的速度波动" class="headerlink" title="快速接近低矮障碍的速度波动"></a>快速接近低矮障碍的速度波动</h2><p>经过反复测试，在相机扫描点云时，小车在空旷区域的速度曲线正常，连续经过多个低处障碍也很少有明显波动。从空旷的远处快速接近低处障碍时，几乎每次都有明显波动。初步判断是全局路径的改变而造成的</p>
 <p>速度波动较大其实就是速度曲线不够平滑。有时是急刹车，有时甚至刹不住车，有时先刹车但又有一个瞬间的加速。<br><img src="https://i.loli.net/2021/06/10/klVMRG2CcKvwFuJ.png" alt="loop 无低矮障碍的速度曲线"></p>
-<p>下面是两次对低矮障碍的避障:<br><img src="https://i.loli.net/2021/06/10/qElrVskMXICNga8.png"><br>在速度大幅下降后，又大幅上升，这就是小车卡顿的来源<br><br></p>
-<p><img src="https://i.loli.net/2021/06/10/CL2pK1mu6WMUDFq.png">速度大幅下降后，只有小幅上升，但里程计的反馈速度是平滑下降的，几乎没有波动，这已经很好了</p>
+<p>下面是两次对低矮障碍的避障:<br><img src="https://i.loli.net/2021/06/10/qElrVskMXICNga8.png" alt=""><br>在速度大幅下降后，又大幅上升，这就是小车卡顿的来源<br><br></p>
+<p><img src="https://i.loli.net/2021/06/10/CL2pK1mu6WMUDFq.png" alt="">速度大幅下降后，只有小幅上升，但里程计的反馈速度是平滑下降的，几乎没有波动，这已经很好了</p>
 <h2 id="速度的进一步平滑"><a href="#速度的进一步平滑" class="headerlink" title="速度的进一步平滑"></a>速度的进一步平滑</h2><p><code>TEB</code>算法输出的速度本身非常abrupt，不够平滑。这里要用到参数<code>control_look_ahead_poses</code>，它用于<code>getVelocityCommand</code>函数，这个参数是参照当前机器人后面多少个局部规划位姿，来计算控制速度。</p>
 <p>如果在yaml里不加这个参数，是不会有效果的，参数服务器不会加载默认值。</p>
 <p><code>control_look_ahead_poses: 2</code>:  </p>
 <p><img src="https://i.loli.net/2021/06/10/iAExQN12Y3BIfUq.png" alt="无 control_look_ahead_poses.png"></p>
 <p><img src="https://i.loli.net/2021/06/10/p3PhW6ZzAe8459R.png" alt="control_look_ahead_poses=2.png"><br>即使在仿真中，加了参数后，速度波动确实减少了</p>
-<p>详细参考： <a href="https://charon-cheung.github.io/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/(%E5%8D%81%E4%B8%89)%20%E8%BE%93%E5%87%BA%E9%80%9F%E5%BA%A6%E5%91%BD%E4%BB%A4/#getVelocityCommand">(十三) 输出速度命令</a></p>
+<p>详细参考： <a href="https://charon-cheung.github.io/2020/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/(%E5%8D%81%E4%B8%89">(十三) 输出速度命令</a>%20%E8%BE%93%E5%87%BA%E9%80%9F%E5%BA%A6%E5%91%BD%E4%BB%A4/#getVelocityCommand)</p>
 </div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/3.%20%E5%AF%B9%E4%BD%8E%E5%A4%84%E9%9A%9C%E7%A2%8D%E9%81%BF%E9%9A%9C%E6%97%B6%E7%9A%84%E9%80%9F%E5%BA%A6%E6%B3%A2%E5%8A%A8%E9%97%AE%E9%A2%98/">https://charon-cheung.github.io/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/3.%20%E5%AF%B9%E4%BD%8E%E5%A4%84%E9%9A%9C%E7%A2%8D%E9%81%BF%E9%9A%9C%E6%97%B6%E7%9A%84%E9%80%9F%E5%BA%A6%E6%B3%A2%E5%8A%A8%E9%97%AE%E9%A2%98/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/costmap_converter%E4%BA%A7%E7%94%9F%E7%9A%84%E9%9A%9C%E7%A2%8D%E6%AF%94%E5%AE%9E%E9%99%85%E6%9B%B4%E5%A4%A7/"><i class="fa fa-chevron-left">  </i><span>costmap_converter产生的障碍比实际更大</span></a></div><div class="next-post pull-right"><a href="/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/4.%20%E5%B1%80%E9%83%A8%E8%B7%AF%E5%BE%84%E5%81%8F%E7%A6%BB%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E9%97%AE%E9%A2%98/"><span>(四) 局部路径偏离全局路径的问题</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
   this.page.url = 'https://charon-cheung.github.io/2020/12/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/3.%20%E5%AF%B9%E4%BD%8E%E5%A4%84%E9%9A%9C%E7%A2%8D%E9%81%BF%E9%9A%9C%E6%97%B6%E7%9A%84%E9%80%9F%E5%BA%A6%E6%B3%A2%E5%8A%A8%E9%97%AE%E9%A2%98/';
@@ -28,7 +28,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

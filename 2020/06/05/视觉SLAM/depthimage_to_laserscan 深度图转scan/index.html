@@ -11,14 +11,12 @@
 <p><code>depthimage_to_laserscan</code>原理是从深度图中选择一行深度值作为激光雷达的扫描数据，取每一列中深度值最小的元素作为该列的代表值，然后将每列的最小值<br>按照原列的顺序组成一行，作为二维激光雷达的扫描数据。</p>
 <p>因此，如果深度图中存在很多深度值为0的点，那么势必会对产生的激光雷达数据造成一定的影响。最后转换出的laser scan就会有很多的断点，原因在于深度图中有<strong>黑洞和边缘噪点</strong><br><img src="https://i.loli.net/2020/06/03/zd1PxA9ZRHrcBOV.png" alt="Kinect 的伪激光雷达数据图.png"></p>
 <h2 id="depthimage-to-laserscan"><a href="#depthimage-to-laserscan" class="headerlink" title="depthimage_to_laserscan"></a>depthimage_to_laserscan</h2><h3 id="源码编译"><a href="#源码编译" class="headerlink" title="源码编译"></a>源码编译</h3><p><code>depthimage_to_laserscan</code>包中有一句：<code>generate_dynamic_reconfigure_options(cfg/Depth.cfg)</code></p>
-<p>编译时出错：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/env: ‘python\r’: No such file or directory</span><br><span class="line"></span><br><span class="line">depthimage_to_laserscan/CMakeFiles/depthimage_to_laserscan_gencfg.dir/build.make:63: recipe <span class="keyword">for</span> target <span class="string">&#x27;/home/hlhp/plan_ws/devel/include/depthimage_to_laserscan/DepthConfig.h&#x27;</span> failed</span><br></pre></td></tr></table></figure>
-<p>去掉这句就可以正常编译，但是不能用动态参数调整了。</p>
+<p>编译时出错：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/env: ‘python\r’: No such file or directory</span><br><span class="line"></span><br><span class="line">depthimage_to_laserscan/CMakeFiles/depthimage_to_laserscan_gencfg.dir/build.make:63: recipe <span class="keyword">for</span> target <span class="string">&#x27;/home/hlhp/plan_ws/devel/include/depthimage_to_laserscan/DepthConfig.h&#x27;</span> failed</span><br></pre></td></tr></table></figure><br>去掉这句就可以正常编译，但是不能用动态参数调整了。</p>
 <h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>运行：<code>rosrun depthimage_to_laserscan depthimage_to_laserscan</code></p>
 <p>源码中的调用关系如下：<br><code>DepthImageToLaserScan.cpp</code>中的main函数——<code>DepthImageToLaserScanROS</code> 构造函数 —— <code>pub_ = n.advertise&lt;sensor_msgs::LaserScan&gt;(&quot;scan&quot;, 10, boost::bind(&amp;DepthImageToLaserScanROS::connectCb, this, _1), boost::bind(&amp;DepthImageToLaserScanROS::disconnectCb, this, _1));</code> ——<br><code>DepthImageToLaserScanROS::connectCb</code> —— <code>subscribeCamera(&quot;image&quot;)</code>，这里应当改为<code>/camera/depth/image_raw</code>，或者用remap机制修改。</p>
 <p>算法的核心函数是<code>DepthImageToLaserScan.h</code>中的<code>convert</code><br><br></p>
 <p><code>sensor_msgs/LaserScan</code> overlayed in color on the <code>sensor_msgs/Image</code>. 红色是靠近摄像头，紫色远离摄像头。</p>
-<p><code>depthimage_to_laserscan</code>处理的是深度图，根据提供的参数产生2D雷达scan. 它使用的是&lt;font size =4,color=blue&gt;lazy 订阅机制</font> 直到其他节点订阅<code>scan</code>，才会订阅<code>image</code>或者<code>camera_info</code>.也就是上面的advertise函数中的bind占位符做参数。</p>
+<p><code>depthimage_to_laserscan</code>处理的是深度图，根据提供的参数产生2D雷达scan. 它使用的是<font size =4,color=blue>lazy 订阅机制</font> 直到其他节点订阅<code>scan</code>，才会订阅<code>image</code>或者<code>camera_info</code>.也就是上面的advertise函数中的bind占位符做参数。</p>
 <p>生成的scan参数如下：<br><img src="https://i.loli.net/2020/06/04/4if8Ww2OnQYXxpT.png" alt="pic_031.png"></p>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>但是默认<code>depthimage_to_laserscan</code>转化的数据<font color = blue size= 3>实际上还是只能检测到平行kinect的障碍物 </font>，而较低的障碍物或者较高的障碍物检测不到。ranges[]数组体现了横向每个障碍点到kinect距离。但是实际，纵向扫描的高度极为苛刻。</p>
 <p>比如，在距离kinect不到1米处，放一个较低的障碍，图像如下：<br><img src="https://i.loli.net/2020/06/04/v3NGX5LzEYxPRks.png" alt="rgbd.png"><br><img src="https://i.loli.net/2020/06/04/tL5dvSjW7UeZu1D.png" alt="depth.png"><br>但是经过转换，结果没看到低障碍的scan结果，现实世界的实际距离是通过深度图像转化的，而scan_hight是针对深度图像扫描高度。</p>
@@ -35,7 +33,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

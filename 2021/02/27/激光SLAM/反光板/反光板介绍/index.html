@@ -29,10 +29,10 @@
 <h2 id="设备选型"><a href="#设备选型" class="headerlink" title="设备选型"></a>设备选型</h2><p>因为堆垛式叉车常常移动货物，使得障碍时有时无，所以常常使用反光板导航。常用<font color = blue size=4>倍加福雷达R2000HD </font>，它专门用于搭配反光板，有效输出距离为<code>0.1～10m</code>，输出回波强度为<code>32～4095</code>，也可以使用<code>SICK Nav350</code>，这两个雷达的驱动强大之处在于能直接针对反光板建图。还有万集科技的<code>WLR-712</code>雷达，检测距离达50米。</p>
 <p>对于一个品牌的雷达，并不是所有型号都支持搭配反光板。比如镭神雷达，N401和N501系列是专门的反光板激光雷达，其他则不是。我手里的北洋雷达就没法用于反光板，它的激光发射到反光板对应的强度没有增大。</p>
 <p>但是限于成本，我只能用星秒雷达，它对一般障碍物的反射强度基本是<code>15~30</code>，用特定的反光材料才能检测到高强度数据，根据厂家设定，强度大于<strong>60</strong>的数据，强度直接置为255。外部光照条件不会对强度数据有影响。</p>
-<p>我使用的是3M公司生产的V级白色钻石级反光膜，做成直径10cm的圆柱形，该反光<br>材料为全棱镜结构。<br><img src="https://i.loli.net/2021/04/24/N9XnM3gvqdPie8k.png"></p>
-<p>但是从rviz里看反光柱的强度数据，结果如下<br><img src="https://i.loli.net/2021/04/24/imMSb5tULN8guoj.png"><br>蓝色部分是我们需要的255的高强度数据，已经看不出圆弧了，甚至整个扫描结果也不太像圆弧，近乎椭圆弧了。</p>
+<p>我使用的是3M公司生产的V级白色钻石级反光膜，做成直径10cm的圆柱形，该反光<br>材料为全棱镜结构。<br><img src="https://i.loli.net/2021/04/24/N9XnM3gvqdPie8k.png" alt=""></p>
+<p>但是从rviz里看反光柱的强度数据，结果如下<br><img src="https://i.loli.net/2021/04/24/imMSb5tULN8guoj.png" alt=""><br>蓝色部分是我们需要的255的高强度数据，已经看不出圆弧了，甚至整个扫描结果也不太像圆弧，近乎椭圆弧了。</p>
 <p>换成星秒雷达的驱动软件查看，有趣的是强度颜色与rviz里是相反的，红色是高强度。在反光柱离雷达稍微远一点(2米左右)，完全看不出圆弧形状了<br><img src="https://i.loli.net/2021/04/24/DfJWpbPhRzYrcSw.png" alt="星秒雷达PavoView 不同强度反射有不同颜色点云"><br>经过厂家的多次测试，发现是反光材料不好，钻石级反而导致点云数据不好，改用二级的3930材料就有圆弧形状了。</p>
-<p>遗憾的是，后来发现，星秒雷达扫描中心正对着反光柱(直径10cm)时，检测距离可以超过3米， <font color = orange size=4>但是如果是成一定角度地扫描，检测距离会变小，甚至有时不到1米，因为强度数据太少了。而且并不是角度越大， </font>毕竟不是专业的反光板雷达，所以考虑把反光柱换成反光板，强度数据增加了很多<br><img src="https://i.loli.net/2021/04/24/26aURmGIurCEiWe.png"></p>
+<p>遗憾的是，后来发现，星秒雷达扫描中心正对着反光柱(直径10cm)时，检测距离可以超过3米， <font color = orange size=4>但是如果是成一定角度地扫描，检测距离会变小，甚至有时不到1米，因为强度数据太少了。而且并不是角度越大， </font>毕竟不是专业的反光板雷达，所以考虑把反光柱换成反光板，强度数据增加了很多<br><img src="https://i.loli.net/2021/04/24/26aURmGIurCEiWe.png" alt=""></p>
 <p><img src="https://i.loli.net/2021/04/25/g1RydNUoZmpEfa7.png" alt="反光板"></p>
 <p>参考：<br><a target="_blank" rel="noopener" href="http://blog.chinaunix.net/uid-27875-id-5824925.html">关于使用激光雷达的光线反射强度来定位目标的方案</a></p>
 </div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2021/02/27/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E4%BB%8B%E7%BB%8D/">https://charon-cheung.github.io/2021/02/27/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/%E5%8F%8D%E5%85%89%E6%9D%BF%E4%BB%8B%E7%BB%8D/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/03/09/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/ROS%E9%85%8D%E7%BD%AERRT%E5%85%A8%E5%B1%80%E7%AE%97%E6%B3%95/"><i class="fa fa-chevron-left">  </i><span>ROS配置RRT全局算法</span></a></div><div class="next-post pull-right"><a href="/2021/02/25/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%B8%A4%E5%8F%B0%E8%BD%A6%E5%90%8C%E5%90%91%E6%97%B6%E7%9A%84%E8%BE%B9%E7%BC%98%E7%A2%B0%E6%92%9E%E9%97%AE%E9%A2%98/"><span>两台车同向时的边缘碰撞问题</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
@@ -44,7 +44,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

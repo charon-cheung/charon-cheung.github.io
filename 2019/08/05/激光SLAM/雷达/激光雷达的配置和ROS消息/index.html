@@ -13,10 +13,8 @@
 <p>使用驱动<a target="_blank" rel="noopener" href="https://github.com/pangfumin/lms511_laser">lms511_laser_node</a>，下载后放到某工作空间中，先在<code>lms5xx_node.cpp</code>中，在<code>ip_add</code>修改雷达的IP，然后使用<code>catkin_make --pkg laser_node</code>编译。</p>
 <h2 id="数据表示"><a href="#数据表示" class="headerlink" title="数据表示"></a>数据表示</h2><p>激光雷达获取的数据是以以雷达为中心的极坐标系表示， 激光雷达以数据帧的方式返还数据<br><img src="https://i.loli.net/2020/05/31/tRIzCdfQkbwYWNO.png" alt="2020-05-31_105134.png"><br><img src="https://i.loli.net/2020/05/31/gmXSBlCv87Fd9Oc.png" alt="2020-05-31_105250.png"></p>
 <h2 id="雷达的消息和参数"><a href="#雷达的消息和参数" class="headerlink" title="雷达的消息和参数"></a>雷达的消息和参数</h2><h3 id="消息成员"><a href="#消息成员" class="headerlink" title="消息成员"></a>消息成员</h3><p>启动roscore后，用<code>rosrun laser_node laser_node</code>启动驱动程序，会有很多输出信息。<br>使用命令<code>rosnode list</code>查看运行的节点列表，发现了<code>sicklms5xx</code>。</p>
-<p>使用<code>rostopic list</code>查看主题，发现了主题<code>scan</code>，信息如下：<br><img src="https://i.loli.net/2019/08/12/YWV6k2T3dlrpMOm.png"></p>
-<p>其消息类型是<code>sensor_msgs/LaserScan</code>，发布者是<code>sicklidar</code>，其消息成员如下：</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Header header            <span class="comment"># 时间戳是收到第一束激光的时间</span></span><br><span class="line">                         <span class="comment"># in frame frame_id, angles are measured around </span></span><br><span class="line">                         <span class="comment"># the positive Z axis (counterclockwise, if Z is up)</span></span><br><span class="line">                         <span class="comment"># with zero angle being forward along the x axis</span></span><br><span class="line">float32 angle_min        <span class="comment"># 扫描起始角度[rad]</span></span><br><span class="line">float32 angle_max        <span class="comment"># 扫描结束角度[rad]</span></span><br><span class="line">float32 angle_increment  <span class="comment"># 角分辨率，相邻扫描点的角度增量,[弧度]</span></span><br><span class="line">float32 time_increment   <span class="comment"># 每个数据点的时间间隔 [秒]</span></span><br><span class="line">float32 scan_time        <span class="comment"># 当前帧数据与下一帧数据的时间间隔 [秒]</span></span><br><span class="line">float32 range_min        <span class="comment"># 最小的扫描距离 [m]</span></span><br><span class="line">float32 range_max        <span class="comment"># 最大的扫描距离 [m]</span></span><br><span class="line">float32[] ranges         <span class="comment"># 各个方向的扫描数据 [m]</span></span><br><span class="line">float32[] intensities    <span class="comment"># 雷达的强度数据，思岚有，有些SICK雷达没有</span></span><br></pre></td></tr></table></figure>
-<p>使用命令<code>rostopic echo scan</code>可查看雷达扫描到的数据:<br><img src="https://i.loli.net/2019/08/12/dzOrXP3J7RElLWu.png"></p>
+<p>使用<code>rostopic list</code>查看主题，发现了主题<code>scan</code>，信息如下：<br><img src="https://i.loli.net/2019/08/12/YWV6k2T3dlrpMOm.png" alt=""></p>
+<p>其消息类型是<code>sensor_msgs/LaserScan</code>，发布者是<code>sicklidar</code>，其消息成员如下：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Header header            <span class="comment"># 时间戳是收到第一束激光的时间</span></span><br><span class="line">                         <span class="comment"># in frame frame_id, angles are measured around </span></span><br><span class="line">                         <span class="comment"># the positive Z axis (counterclockwise, if Z is up)</span></span><br><span class="line">                         <span class="comment"># with zero angle being forward along the x axis</span></span><br><span class="line">float32 angle_min        <span class="comment"># 扫描起始角度[rad]</span></span><br><span class="line">float32 angle_max        <span class="comment"># 扫描结束角度[rad]</span></span><br><span class="line">float32 angle_increment  <span class="comment"># 角分辨率，相邻扫描点的角度增量,[弧度]</span></span><br><span class="line">float32 time_increment   <span class="comment"># 每个数据点的时间间隔 [秒]</span></span><br><span class="line">float32 scan_time        <span class="comment"># 当前帧数据与下一帧数据的时间间隔 [秒]</span></span><br><span class="line">float32 range_min        <span class="comment"># 最小的扫描距离 [m]</span></span><br><span class="line">float32 range_max        <span class="comment"># 最大的扫描距离 [m]</span></span><br><span class="line">float32[] ranges         <span class="comment"># 各个方向的扫描数据 [m]</span></span><br><span class="line">float32[] intensities    <span class="comment"># 雷达的强度数据，思岚有，有些SICK雷达没有</span></span><br></pre></td></tr></table></figure><br>使用命令<code>rostopic echo scan</code>可查看雷达扫描到的数据:<br><img src="https://i.loli.net/2019/08/12/dzOrXP3J7RElLWu.png" alt=""></p>
 <h3 id="扫描角度"><a href="#扫描角度" class="headerlink" title="扫描角度"></a>扫描角度</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">angle_min: -1.65806281567</span><br><span class="line">angle_max: 1.65806281567</span><br></pre></td></tr></table></figure>
 <p>经过换算，其实就是<code>-95°~95°</code>，而雷达的扫描范围是190°，显然扫描范围是个对称的扇形。雷达角度范围是<code>-1.658~1.658</code>, 角分辨率是<code>0.00872</code>, 这样算出来大概是380, 也就是380个激光束射出。</p>
 <p>雷达有旋转方向的问题，大部分雷达都是逆时针旋转，这和ROS中的习惯一致，少数雷达是顺时针，这就会对建图和定位产生问题。比如<code>EAI YDLIDAR G4</code>既可正转也可反转。</p>
@@ -32,11 +30,8 @@
 <p>ranges是个float32类型数组，但不同雷达的ranges大小不同，获得数组大小的方法是 <code>rostopic echo --noarr /scan/ranges</code>，会不断显示<code>&lt;array type: float32, length: 381&gt;</code>，可以看到ranges的大小是381，和激光束的数量基本对应。</p>
 <p>A2的量程是<code>0.15－12/18</code>，还是基于白色高反光物体测得。<font color = blue size= 3> 使用A2时，不能离障碍物太近，否则会出现ranges数组很多个0的情况，这一点在导航时要注意</font></p>
 <p>LMS511最大检测81m，所以说适合室外。这个参数一般是在良好的反射率情况下得到的，对黑色物体的检测量程没这么大。</p>
-<br>
-
-<p>有时的ranges会出现很多inf和nan的情况，这个对不同雷达的处理可能不同，对于A2，可以看一下源码是这样的:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (read_value == <span class="number">0.0</span>)</span><br><span class="line">    scan_msg.ranges[node_count<span class="number">-1</span>-i] = std::numeric_limits&lt;<span class="keyword">float</span>&gt;::<span class="built_in">infinity</span>();</span><br></pre></td></tr></table></figure>
-<p>也就是读取距离为0时，输出inf</p>
+<p><br></p>
+<p>有时的ranges会出现很多inf和nan的情况，这个对不同雷达的处理可能不同，对于A2，可以看一下源码是这样的:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (read_value == <span class="number">0.0</span>)</span><br><span class="line">    scan_msg.ranges[node_count<span class="number">-1</span>-i] = std::numeric_limits&lt;<span class="keyword">float</span>&gt;::<span class="built_in">infinity</span>();</span><br></pre></td></tr></table></figure><br>也就是读取距离为0时，输出inf</p>
 <p>对于北洋雷达，距离超过测量范围时候的两种情况是INF，其余由于强度或其他原因导致的数据错误会输出。</p>
 <h3 id="强度"><a href="#强度" class="headerlink" title="强度"></a>强度</h3><p>雷达数据强度是反映生成某点的激光雷达脉冲回波强度的一种测量指标（针对每个点而采集）。<font color = blue size =3> 雷达强度数据跟激光的反射情况有关，如果射向黑色物体，可能不会有反馈 </font>数组intensities与ranges中的数据是一一对应的，描述的是每个测量数据的强度。</p>
 <p>雷达在室外跟室内区别, 基本的点就是光照条件的区别</p>
@@ -47,8 +42,8 @@
 <ul>
 <li>启动雷达，雷达未分配到IP，导致无法使用；运行雷达节点时，突然报错，雷达无法扫描到数据，然后雷达IP丢失</li>
 </ul>
-<p><img src="https://i.loli.net/2019/10/17/jSkbuF7ODytMvl1.png"></p>
-<ol start="3">
+<p><img src="https://i.loli.net/2019/10/17/jSkbuF7ODytMvl1.png" alt=""></p>
+<ol>
 <li>雷达扫描的结果比实际偏一定角度</li>
 </ol>
 <p><img src="https://i.loli.net/2020/07/27/cmMPILifAHOJabS.png" alt="偏移的scan.png"><br><img src="https://i.loli.net/2020/07/27/NGhAamf8FxcIozV.png" alt="正常scan.png"><br>再三试验，应当是rviz视角问题</p>
@@ -62,7 +57,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

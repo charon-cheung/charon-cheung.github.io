@@ -27,30 +27,27 @@
 <p>话题的发布在<code>TebVisualization::publishFeedbackMessage</code></p>
 <h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>某些参数不会加载到参数服务器，需要用户在yaml里设置，这是源码决定的</p>
 <h2 id="速度"><a href="#速度" class="headerlink" title="速度"></a>速度</h2><ul>
-<li><p><code>max_vel_x</code>: 1.0</p>
-</li>
+<li><code>max_vel_x</code>: 1.0</li>
 <li><p><code>max_vel_x_backwards</code>: 0.5   最大倒车速度。将此速度设置为0或者负数将导致错误。禁止倒车应在penalty部分将前向行驶的权重设置得极高。 参阅优化参数<code>weight_kinematics_forward_drive</code></p>
 </li>
 <li><p><code>acc_lim_x</code>: 0.5         最大线加速度，m²/s</p>
 </li>
-<li><p><code>max_vel_theta</code>: 1     最大转向角速度，作用在车辆高速行驶时，防止高重心转弯过快翻车</p>
-</li>
+<li><code>max_vel_theta</code>: 1     最大转向角速度，作用在车辆高速行驶时，防止高重心转弯过快翻车</li>
 <li><p><code>acc_lim_theta</code>: 0.3     角加速度限制可以避免车轮打滑，车辆失控。对于低速平稳运行的车辆可以不约束此两项，将二者设为一个足够大的值即可</p>
 </li>
 <li><p><code>max_vel_y</code>: 0.2</p>
 </li>
-<li><p><code>acc_lim_y</code>: 0.5</p>
-</li>
+<li><code>acc_lim_y</code>: 0.5</li>
 </ul>
 <p>以上几个最大值约束会用于<code>saturateVelocity</code>函数</p>
-<p><font color=blue size=4>以下参数仅适用于汽车型机器人 </font></p>
+<font color=blue size=4>以下参数仅适用于汽车型机器人 </font>
+
 <ul>
 <li><p><code>min_turning_radius</code>: 0.0   最小转弯半径，对于差动机器人为0. 转弯半径应在低速时生效.  这个参数让TEB更适合阿克曼模型。为避免规划出不可能实现的移动路径，请动手测量实际车辆的转弯半径。此参数事实上约束了舵机的最大转角。有些车辆转向性能不佳，前轮实际转过角度小于舵机角度，则应当给指令转角乘上一增益后再控制舵机，否则车辆将总是不能实现设置的最小转弯半径。请注意此项应当与最大角速度配合设置。</p>
 </li>
 <li><p><code>cmd_angle_instead_rotvel</code>: false     # not used, is differential</p>
 </li>
-<li><p><code>wheelbase</code>: 默认0.0，目前是1，只有在<code>cmd_angle_instead_rotvel</code>为true时才有效</p>
-</li>
+<li><code>wheelbase</code>: 默认0.0，目前是1，只有在<code>cmd_angle_instead_rotvel</code>为true时才有效</li>
 </ul>
 <h2 id="轮廓"><a href="#轮廓" class="headerlink" title="轮廓"></a>轮廓</h2><ul>
 <li><p><code>footprint_model</code>: # types: “point”, “circular”, “two_circles”, “line”, “polygon”    “point”模型是最简单的，所需的计算时间最少，但准确度也最低；”polygon”多边形模型最复杂，完全考虑到机器人的轮廓形状，计算准确度最高。circular类型把机器人建模为一个简单的圆，半径为<code>/footprint_model/radius</code>，计算距离和Point类型相似，不同点是每次调用函数时机器人半径会被加入到参数<code>min_obstacle_dist</code>。 <font color = blue size=4>因此选择Point类型，然后将半径加到最小障碍物距离来替换，减小计算量 </font></p>
@@ -90,7 +87,8 @@
 <li><p><code>global_plan_prune_distance</code>: 0.6   在<code>TebLocalPlannerROS::pruneGlobalPlan()</code>函数中被使用，因为全局路径是从全局起始点到全局目标点的一条轨迹，而初始的局部路径仅是从机器人当前位置到局部目标点的一小段路径，全局路径裁剪其中一部分即局部路径，该参数决定了从机器人当前位置的后面一定距离开始裁剪</p>
 </li>
 <li><p><code>force_reinit_new_goal_angular</code>: 0.78    原理同上，不过是角度，弧度制</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( teb_.<span class="built_in">sizePoses</span>()&gt;<span class="number">0</span></span><br><span class="line">    &amp;&amp; (goal_.<span class="built_in">position</span>() - teb_.<span class="built_in">BackPose</span>().<span class="built_in">position</span>()).<span class="built_in">norm</span>() &lt; </span><br><span class="line">    cfg_-&gt;trajectory.force_reinit_new_goal_dist</span><br><span class="line">    &amp;&amp; <span class="built_in">fabs</span>(g2o::<span class="built_in">normalize_theta</span>(goal_.<span class="built_in">theta</span>() - teb_.<span class="built_in">BackPose</span>().<span class="built_in">theta</span>()) ) &lt; cfg_-&gt;trajectory.force_reinit_new_goal_angular )</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( teb_.<span class="built_in">sizePoses</span>()&gt;<span class="number">0</span></span><br><span class="line">    &amp;&amp; (goal_.<span class="built_in">position</span>() - teb_.<span class="built_in">BackPose</span>().<span class="built_in">position</span>()).<span class="built_in">norm</span>() &lt; </span><br><span class="line">    cfg_-&gt;trajectory.force_reinit_new_goal_dist</span><br><span class="line">    &amp;&amp; <span class="built_in">fabs</span>(g2o::<span class="built_in">normalize_theta</span>(goal_.<span class="built_in">theta</span>() - teb_.<span class="built_in">BackPose</span>().<span class="built_in">theta</span>()) ) &lt; cfg_-&gt;trajectory.force_reinit_new_goal_angular )</span><br></pre></td></tr></table></figure>
+</li>
 <li><p><code>feasibility_check_no_poses</code>: 3    在判断生成的轨迹是否冲突时使用，此时设置为3，即从轨迹起点开始逐个检查轨迹上的3个点，若3个点均不发生碰撞，则认为本次轨迹有效。若小于0则检查所有路径点。由于teb优化并非硬约束，这里相当于是轨迹生成之后的一层保障，<font color=blue size=4> 这个参数根据机器人的速度和环境复杂程度调整，否则极有可能出现在狭窄环境中走走停停的情况，甚至可以减小到1或0</font>  源码在 <code>isTrajectoryFeasible</code>。 如果<code>isTrajectoryFeasible</code>函数检查的局部路径点太多，有的会超出局部代价地图，结果函数一直返回false</p>
 </li>
 <li><p>min_resolution_collision_check_angular:   默认不加载，需要用户赋值，比如 3.14159265。代价地图的检查碰撞所用的最小角分辨率。如果未达到要求，将增加 intermediate samples.   源码在<code>TebOptimalPlanner::isTrajectoryFeasible</code></p>
@@ -117,16 +115,13 @@
 <li><p><code>oscillation_recovery_min_duration</code>: 10    在这个时间内，是否再次发生FailureDetector检测的振荡，调用在<code>configureBackupModes</code>中</p>
 </li>
 </ul>
-<p>在小车遇到空隙不向前走时，容易出现下面的信息，然后小车来回振荡，有时能导航成功</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ WARN] <span class="function">Clearing costmap to unstuck <span class="title">robot</span> <span class="params">(<span class="number">3.00</span> m)</span>.</span></span><br><span class="line"><span class="function">[ WARN] TebLocalPlannerROS: trajectory is not feasible. Resetting planner...</span></span><br><span class="line"><span class="function">[ WARN] Rotate recovery behavior started.   # 开始振荡  RotateRecovery::<span class="title">runBehavior</span><span class="params">()</span></span></span><br><span class="line"><span class="function">[ INFO] TebLocalPlannerROS: oscillation recovery disabled/expired.</span></span><br><span class="line"><span class="function">[ WARN] TebLocalPlannerROS: possible <span class="title">oscillation</span> <span class="params">(of the robot or its local plan)</span> detected. Activating recovery <span class="title">strategy</span> <span class="params">(prefer current turning direction during optimization)</span>.</span></span><br></pre></td></tr></table></figure>
-
+<p>在小车遇到空隙不向前走时，容易出现下面的信息，然后小车来回振荡，有时能导航成功<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ WARN] <span class="function">Clearing costmap to unstuck <span class="title">robot</span> <span class="params">(<span class="number">3.00</span> m)</span>.</span></span><br><span class="line"><span class="function">[ WARN] TebLocalPlannerROS: trajectory is not feasible. Resetting planner...</span></span><br><span class="line"><span class="function">[ WARN] Rotate recovery behavior started.   # 开始振荡  RotateRecovery::<span class="title">runBehavior</span><span class="params">()</span></span></span><br><span class="line"><span class="function">[ INFO] TebLocalPlannerROS: oscillation recovery disabled/expired.</span></span><br><span class="line"><span class="function">[ WARN] TebLocalPlannerROS: possible <span class="title">oscillation</span> <span class="params">(of the robot or its local plan)</span> detected. Activating recovery <span class="title">strategy</span> <span class="params">(prefer current turning direction during optimization)</span>.</span></span><br></pre></td></tr></table></figure></p>
 <ul>
 <li><p><code>oscillation_filter_duration</code>: 10    <code>failure_detector_</code>中buffer容器的大小是<code>oscillation_filter_duration * controller_frequency)</code> </p>
 </li>
 <li><p><code>oscillation_v_eps</code>:  (0,1)内的 normalized 线速度的平均值的阈值，默认0.1</p>
 </li>
-<li><p><code>oscillation_omega_eps</code>:  (0,1)内的 normalized 角速度的平均值，默认0.1</p>
-</li>
+<li><code>oscillation_omega_eps</code>:  (0,1)内的 normalized 角速度的平均值，默认0.1</li>
 </ul>
 <h2 id="Obstacles"><a href="#Obstacles" class="headerlink" title="Obstacles"></a>Obstacles</h2><ul>
 <li><code>min_obstacle_dist</code>: 0.05   最小障碍物距离，用于限制机器人与障碍物的最小距离，默认0.5。若设置了车辆的轮廓，则不建议使用此参数。使用车辆轮廓配置footprint_model配合膨胀距离即可实现较好效果。<font color=blue, size=4>障碍物惩罚权重很高，TEB不会违背这一最小距离约束，因此会把可以通过的缝隙视作不能通过，并终止运行。</font><br>把<code>min_obstacle_dist</code>提高到机器人外接圆半径以上，可以防止机器人离墙太近，但是对于狭窄通道的情况，反而应该设置的很小</li>
@@ -140,12 +135,11 @@
 </ul>
 <p>距离小于<code>min_obstacle_dist * obstacle_association_force_inclusion_factor</code>值的障碍物点，被强制加入优化框架中，距离大于<code>min_obstacle_dist * obstacle_association_cutoff_factor</code>的障碍物点被直接抛弃不再考虑，然后在剩余的障碍物点中计算机器人左侧最小距离和右侧最小距离。这三个参数的设置非常重要，需要根据机器人的外形尺寸小心调整，否则极易出现狭窄空间机器人无法通过或优化不收敛的情况。</p>
 <ul>
-<li><p><code>inflation_dist</code>: 默认0.0   障碍物膨胀距离。这个值必须大于<code>min_obstacle_dist</code>才有效。源码在<code>AddEdgesObstacles</code>.  此膨胀只是降低通过这些区域的优先级，不应当用此距离迫使车辆远离障碍物。障碍物周边的缓冲区，零惩罚代价，缓冲区会导致规划器减速，源码在<code>AddEdgesObstacles</code>，另外参考<code>weight_inflation</code></p>
-<br></li>
+<li><p><code>inflation_dist</code>: 默认0.0   障碍物膨胀距离。这个值必须大于<code>min_obstacle_dist</code>才有效。源码在<code>AddEdgesObstacles</code>.  此膨胀只是降低通过这些区域的优先级，不应当用此距离迫使车辆远离障碍物。障碍物周边的缓冲区，零惩罚代价，缓冲区会导致规划器减速，源码在<code>AddEdgesObstacles</code>，另外参考<code>weight_inflation</code><br><br></p>
+</li>
 <li><p><code>include_costmap_obstacles</code>: True   这个不是True就不用干了</p>
 </li>
-<li><p><code>costmap_obstacles_behind_robot_dist</code>: 1.0 # distance at which obstacles behind the robot are taken into account</p>
-</li>
+<li><code>costmap_obstacles_behind_robot_dist</code>: 1.0 # distance at which obstacles behind the robot are taken into account</li>
 <li><p><code>legacy_obstacle_association</code>: false   源码在<code>buildGraph</code></p>
 </li>
 <li><p><code>obstacle_poses_affected</code>: 25    对于每一个障碍物（点、线、多边形），距其最近的poses都会被定位出来。参数<code>obstacle_poses_affected</code>个相邻的最近poses都会被考虑进来。略微影响障碍物周围轨迹的平滑度。 如果<code>legacy_obstacle_association</code>是false，则不启用</p>
@@ -162,23 +156,17 @@
 </ul>
 <h2 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h2><p>除了撞击障碍物不被允许外，其余的约束在没有可行方案时可被打破（如规划出事实上不可行的转弯半径）</p>
 <ul>
-<li><p><code>no_inner_iterations</code>: 5   图优化optimizer的迭代次数</p>
-</li>
+<li><code>no_inner_iterations</code>: 5   图优化optimizer的迭代次数</li>
 <li><p><code>no_outer_iterations</code>: 4   每次外部循环迭代都会根据所需的时间分辨率<code>dt_ref</code>自动调整轨迹的大小，并调用内部优化器</p>
 </li>
 <li><p><code>penalty_epsilon</code>   0.1    一次性改变所有的惩罚项，为惩罚函数增加一个小的安全余量，以实现硬约束近似. 例如为速度的约束提供一个缓冲的效果，在到达速度限制前会产生一定的惩罚，让其提前减速达到缓冲的效果<br><img src="https://i.loli.net/2020/11/05/vsDoYlVctLWiJTI.png" alt="penalty_epsilon=0.1.png"><br><img src="https://i.loli.net/2020/11/05/NhRGawjBmgZper2.png" alt="penalty_epsilon=0.5.png"><br><img src="https://i.loli.net/2020/11/05/9HU46WZ5aAdYROC.png" alt="0.5时报警.png"></p>
 </li>
 </ul>
-<br>
-如果选择过高的值，会影响最终的信息矩阵，可能会出现不收敛的情况
-
+<p><br><br>如果选择过高的值，会影响最终的信息矩阵，可能会出现不收敛的情况</p>
 <ul>
-<li><p><code>weight_max_vel_x</code>  2    满足最大允许平移速度的优化权重，还有最大角速度权重，以及加速度，角加速度权重，在整个运动过程中以主要以高速还是低速运行，则是看这些权重的分配</p>
-</li>
-<li><p><code>weight_max_vel_theta</code> (double，默认值：1.0)  满足最大允许角速度的优化权重</p>
-</li>
-<li><p><code>weight_acc_lim_x</code> (double，默认值：1.0)  满足最大允许平移加速度的优化权重</p>
-</li>
+<li><code>weight_max_vel_x</code>  2    满足最大允许平移速度的优化权重，还有最大角速度权重，以及加速度，角加速度权重，在整个运动过程中以主要以高速还是低速运行，则是看这些权重的分配</li>
+<li><code>weight_max_vel_theta</code> (double，默认值：1.0)  满足最大允许角速度的优化权重</li>
+<li><code>weight_acc_lim_x</code> (double，默认值：1.0)  满足最大允许平移加速度的优化权重</li>
 <li><p><code>weight_acc_lim_theta</code> (double，默认值：1.0)   满足最大允许角加速度的优化重量</p>
 </li>
 <li><p><code>weight_multiplier</code></p>
@@ -202,7 +190,8 @@
 <li><p><code>weight_adapt_factor</code>  2.  源码只有<code>optimizeTEB</code>的最后。 每个外部TEB迭代中，一些特殊权重 (当前为weight_obstacle) 会通过此因子重复缩放 (weight_new = weight_old * factor) 。迭代增加权重而不是设置较大的先验值会导致底层优化问题的更好数值条件。</p>
 </li>
 <li><p><code>optimization_verbose</code>: 默认false.  图优化的过程是否显示，可以用于调试</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iteration= 1	 chi2= 0.458692	 time= 9.3481e-05	 cumTime= 0.000284497	 edges= 49	 schur= 0</span><br><span class="line">lambda= 5.804560	 levenbergIter= 2</span><br></pre></td></tr></table></figure></li>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iteration= 1	 chi2= 0.458692	 time= 9.3481e-05	 cumTime= 0.000284497	 edges= 49	 schur= 0</span><br><span class="line">lambda= 5.804560	 levenbergIter= 2</span><br></pre></td></tr></table></figure>
+</li>
 </ul>
 <h2 id="并行规划"><a href="#并行规划" class="headerlink" title="并行规划"></a>并行规划</h2><ul>
 <li><code>enable_homotopy_class_planning</code> (bool，默认：true)  激活并行规划(占用更多的CPU资源) 若在单一路径上运行，则没有必要时用此功能</li>
@@ -245,14 +234,10 @@
 </li>
 </ul>
 <h2 id="提高性能的调试"><a href="#提高性能的调试" class="headerlink" title="提高性能的调试"></a>提高性能的调试</h2><ul>
-<li><p>使用Costmap Converter</p>
-</li>
-<li><p>减小<code>no_outer_iterations</code>  <code>no_inner_iterations</code></p>
-</li>
-<li><p>减小局部地图大小</p>
-</li>
-<li><p>增大<code>dt_ref</code>     <code>obstacle_poses_affected</code></p>
-</li>
+<li>使用Costmap Converter</li>
+<li>减小<code>no_outer_iterations</code>  <code>no_inner_iterations</code></li>
+<li>减小局部地图大小</li>
+<li>增大<code>dt_ref</code>     <code>obstacle_poses_affected</code></li>
 <li><p>关闭多路径并行规划 (效果非常显著) </p>
 </li>
 <li><p>降低 max_lookahead_distance  (一般) </p>
@@ -267,7 +252,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

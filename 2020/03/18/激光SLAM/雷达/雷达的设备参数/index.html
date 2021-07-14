@@ -23,7 +23,7 @@
 <li><p>运动畸变：由于激光雷达在跟随自动驾驶车辆前进的同时，对周围环境进行扫描建模，也就是说车辆相对于周围的环境是运动的，导致对环境测量的实际位置与真实位置存在偏差。但是扫描频率高，速度低时，可以不必考虑。</p>
 </li>
 </ul>
-<p><img src="https://i.loli.net/2021/05/07/ICpiBQHvzquXkJj.png"></p>
+<p><img src="https://i.loli.net/2021/05/07/ICpiBQHvzquXkJj.png" alt=""></p>
 <h2 id="测距范围"><a href="#测距范围" class="headerlink" title="测距范围"></a>测距范围</h2><p>指雷达能够测量的距离范围。如果实际障碍距离超出最大值，那么雷达数据会标记为无效点（不是距离为0）。</p>
 <p>实际情况下，雷达测距的最大值有可能因为工作环境而产生变化。雷达要想测距，需要接收到反射的激光。所以官方在测距范围这一项上添加了备注：“基于白色70%反射率物体”。</p>
 <p>如果是吸收激光比较厉害的物体，例如黑色的表面又几乎不反光的物体，会导致反射光强度很弱，那么距离稍微远点，可能就测距失败了，这时候，该物体即使在标出的12米范围内同样无法测出。针对类似这样的物体，相当于实际测距的最大值变小了。透明的玻璃也是同样原因。</p>
@@ -40,14 +40,13 @@
 <p>角度分辨率越小说明雷达转一圈得到的点数越多。例如，角度分辨率是0.45，则一圈是800个点，角度分辨率是0.9，则一圈是400个点。</p>
 <p>不过，实际的角度分辨率其实不一定是固定的，即两个点之间的间距不一定是相同的，不过都在给出的分辨率范围内。在ROS中，雷达数据的标准格式认为角度分辨率是固定的，为了符合ROS标准，雷达的ROS驱动实际上做了角度补偿，将输出点修正为均匀分布的。</p>
 <h2 id="数据的强度"><a href="#数据的强度" class="headerlink" title="数据的强度"></a>数据的强度</h2><p>激光雷达的激光点是有能量的，不同品牌激光点的能量也不同。当能量太小时，远距离情况下可能存在返回不了数据的情况。</p>
-<p>可以等阳光或者使用光束照射到墙面上，激光雷达再去看被光照射到的墙面，对比这时的点云效果。可以用照度仪测量此时的光强度。倍加福雷达的点云效果在高强度情况下非常好，不愧是用于反光板的雷达。<br><img src="https://i.loli.net/2021/05/07/kvqoJwYV3ItgWmd.png"></p>
+<p>可以等阳光或者使用光束照射到墙面上，激光雷达再去看被光照射到的墙面，对比这时的点云效果。可以用照度仪测量此时的光强度。倍加福雷达的点云效果在高强度情况下非常好，不愧是用于反光板的雷达。<br><img src="https://i.loli.net/2021/05/07/kvqoJwYV3ItgWmd.png" alt=""></p>
 <h2 id="数据的精度"><a href="#数据的精度" class="headerlink" title="数据的精度"></a>数据的精度</h2><p>这是最重要的一个指标，表示激光雷达的数据跳动情况。现在一般厂商的雷达的精度都是2%。也就是100m的情况下，点的跳动幅度为2cm。但是，实际感觉能达到这个精度的雷达不是很多。</p>
 <h2 id="multi-echo"><a href="#multi-echo" class="headerlink" title="multi-echo"></a>multi-echo</h2><p>multi-echo可以分析每个测量光束的两个回波信号，这样在雨雪天可以提供可靠的测量结果。一般激光打到玻璃上会有部分穿透，导致测量不准，multi-echo使激光从玻璃上返回来，还能从玻璃后面的墙上返回来。</p>
 <p>有的雷达具备这种特性，比如<code>SICK-LMS111</code></p>
-<br>
-
+<p><br></p>
 <p><img src="https://i.loli.net/2020/07/17/hifrG8DxmdnAXTJ.png" alt="A2雷达.png"></p>
-<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/tiancailx/article/details/110141867">从零开始搭二维激光SLAM — 激光雷达数据效果对比</a></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/tiancailx/article/details/110141867">从零开始搭二维激光SLAM —- 激光雷达数据效果对比</a></p>
 </div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/">https://charon-cheung.github.io/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/03/21/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/MQTT(%E4%B8%80)%20%E9%85%8D%E7%BD%AE%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%92%8CQt%E5%BA%93/"><i class="fa fa-chevron-left">  </i><span>MQTT (一) 配置服务器和Qt库</span></a></div><div class="next-post pull-right"><a href="/2020/03/16/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/STL%E6%80%BB%E7%BB%93/"><span>STL总结</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
   this.page.url = 'https://charon-cheung.github.io/2020/03/18/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/%E9%9B%B7%E8%BE%BE%E7%9A%84%E8%AE%BE%E5%A4%87%E5%8F%82%E6%95%B0/';
@@ -57,7 +56,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>

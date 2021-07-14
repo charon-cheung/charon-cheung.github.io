@@ -15,17 +15,13 @@
 <p>编辑数学公式的宏包：\usepackage{amsmath}     \usepackage{amssymb}<br>编辑数学定理和证明过程的宏包： \usepackage{amsthm}<br>插入图片的宏包： \usepackage{graphicx}<br>复杂表格的宏包： \usepackage{multirow}</p>
 <h4 id="空格"><a href="#空格" class="headerlink" title="空格"></a>空格</h4><p>直接打空格是无效的，要用字符．<code>\qquad</code>是两个m宽度的空格，<code>\quad</code>是一个m宽度．其实还有其他大小的空格，这两个最常用．</p>
 <p>m的宽度指在当前字体下字符“M”的宽度。</p>
-<h4 id="数学模式"><a href="#数学模式" class="headerlink" title="数学模式"></a>数学模式</h4><p>用两个美元括号括起来是一般的数学模式，例如<code>$y=x+1$</code>，结果是斜体的，这是行内模式．<br>还有行间模式：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">y=x+1</span><br><span class="line">$$</span><br></pre></td></tr></table></figure>
-<p>结果是换行显示公式</p>
+<h4 id="数学模式"><a href="#数学模式" class="headerlink" title="数学模式"></a>数学模式</h4><p>用两个美元括号括起来是一般的数学模式，例如<script type="math/tex">y=x+1</script>，结果是斜体的，这是行内模式．<br>还有行间模式：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$$</span><br><span class="line">y=x+1</span><br><span class="line">$$</span><br></pre></td></tr></table></figure><br>结果是换行显示公式</p>
 <p>行内公式也可以使用 (…) 或者 \begin{math} … \end{math} 来插入。<br>行间公式也可以使用[ … ]  或者 \begin{displaymath} … \end{displaymath} 来插入。</p>
 <h3 id="上下标"><a href="#上下标" class="headerlink" title="上下标"></a>上下标</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$x^38+5$</span><br><span class="line"></span><br><span class="line">$x^&#123;12&#125;+90$</span><br><span class="line"></span><br><span class="line">$x_1+6$</span><br><span class="line"></span><br><span class="line">$x_&#123;12&#125;$</span><br></pre></td></tr></table></figure>
-<p><img src="https://live.staticflickr.com/65535/48035214607_013fc6d399_m.jpg"></p>
+<p><img src="https://live.staticflickr.com/65535/48035214607_013fc6d399_m.jpg" alt=""></p>
 <h4 id="希腊字母"><a href="#希腊字母" class="headerlink" title="希腊字母"></a>希腊字母</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$\pi$   $\alpha$  $\beta$ $\lambda$</span><br><span class="line"></span><br><span class="line">$S=\pi r^2$</span><br></pre></td></tr></table></figure>
-<p><img src="https://live.staticflickr.com/65535/48035214577_599831efc3_m.jpg"></p>
+<p><img src="https://live.staticflickr.com/65535/48035214577_599831efc3_m.jpg" alt=""></p>
 <h4 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$\sqrt&#123;x^2+y^2&#125;$</span><br><span class="line"></span><br><span class="line">$\sqrt[3]&#123;x&#125;$</span><br></pre></td></tr></table></figure>
-
-
 <h4 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h4><p><code>\vec&#123;&#125;</code>可以表示向量，使用更为普遍的是：</p>
 <p> \overrightarrow{AB}</p>
 <p> \overleftarrow{AB}</p>
@@ -33,11 +29,7 @@
 <p>\vec x</p>
 <p>要使用向量的粗体格式，改用 <code>\boldsymbol</code> 即可。</p>
 <h4 id="换行命令"><a href="#换行命令" class="headerlink" title="换行命令"></a>换行命令</h4><p><code>\\</code>：换行，在博客环境下不好用<br><code>\\[offset]</code>：换行，并且与下一行的行间距为原来行间距+offset<br><code>\newline</code>：与\相同，能在博客环境下换行<br><code>\linebreak</code>：强制换行，与\newline的区别为\linebreak的当前行分散对齐</p>
-<p><code>\\</code>会自动让下一行缩进，也就是形成一个段落，有时不是我们需要的<br>回车出一个空行，不会造成缩进，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">abcd</span><br><span class="line"></span><br><span class="line">efg</span><br></pre></td></tr></table></figure>
-<p>运行结果是：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">abcd</span><br><span class="line">efg</span><br></pre></td></tr></table></figure>
-<p>但是无论回车几次，只能换一行，要换多行还是用<code>\\</code></p>
+<p><code>\\</code>会自动让下一行缩进，也就是形成一个段落，有时不是我们需要的<br>回车出一个空行，不会造成缩进，例如：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">abcd</span><br><span class="line"></span><br><span class="line">efg</span><br></pre></td></tr></table></figure><br>运行结果是：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">abcd</span><br><span class="line">efg</span><br></pre></td></tr></table></figure><br>但是无论回车几次，只能换一行，要换多行还是用<code>\\</code></p>
 <h4 id="矩阵"><a href="#矩阵" class="headerlink" title="矩阵"></a>矩阵</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">\begin&#123;bmatrix&#125; </span><br><span class="line">a &amp; b \newline</span><br><span class="line">c &amp; d </span><br><span class="line">\end&#123;bmatrix&#125;</span><br></pre></td></tr></table></figure>
 <p>效果：<br>\begin{bmatrix}<br>a &amp; b \newline<br>c &amp; d<br>\end{bmatrix}</p>
 </div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2019/06/09/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/Latex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/">https://charon-cheung.github.io/2019/06/09/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/Latex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/06/11/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E6%90%AD%E5%BB%BAHexo%E5%8D%9A%E5%AE%A2/"><i class="fa fa-chevron-left">  </i><span>搭建Hexo博客</span></a></div><div class="next-post pull-right"><a href="/2019/05/30/SLAM%E5%B7%A5%E5%85%B7/%E5%9F%BA%E7%A1%80%EF%BC%8C%E7%89%B9%E5%BE%81%E5%80%BC%EF%BC%8C%E5%B9%B3%E7%A7%BB/"><span>基础，特征值，平移</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
@@ -49,7 +41,29 @@ var disqus_config = function () {
 var d = document, s = d.createElement('script');
 s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
 s.setAttribute('data-timestamp', '' + +new Date());
-(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
   $('#nav').addClass('is-mobile')
   $('footer').addClass('is-mobile')
 }</script></body></html>
