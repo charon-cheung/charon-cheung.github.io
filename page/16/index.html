@@ -1,103 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/16/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(六) 1. 插入子图" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/22/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE/" class="article-date">
-  <time class="dt-published" datetime="2020-08-22T08:56:23.000Z" itemprop="datePublished">2020-08-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/22/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE/">(六) 1. 插入子图</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>从<code>InsertIntoSubmap</code>函数开始，就是向子图插入传感器数据的过程，流程：<br><img src="https://i.loli.net/2020/08/22/hIJNcr9yOT3aKqb.png" alt="插入子图.png"></p>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><title>Hexo</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">John Doe</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">440</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><nav id="nav" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Hexo</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Hexo</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/22/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE/">(六) 1. 插入子图</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-22</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>从<code>InsertIntoSubmap</code>函数开始，就是向子图插入传感器数据的过程，流程：<br><img src="https://i.loli.net/2020/08/22/hIJNcr9yOT3aKqb.png" alt="插入子图.png"></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 保存插入Local Slam的一个节点的数据结构</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">// 插入的节点数据，T子图更新时在局部地图中的位姿，以及有传感器原始数据转换之后的点云信息</span></span><br><span class="line">    <span class="comment">// 记录了更新子图的时刻和重力方向</span></span><br><span class="line">    std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt;  constant_data;</span><br><span class="line">    <span class="comment">//已经建立起来的子图列表</span></span><br><span class="line">    std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>在类<code>LocalTrajectoryBuilder2D</code>中，通过对象<code>active_submaps_</code>来维护子图，它是一个<code>ActiveSubmaps2D</code>类型的数据。根据最新版本的代码，<br>除了刚开始构建的时候，没有子图(Submap2D)，其他时候它都维护着两个子图对象。 一个子图用于进行扫描匹配，称为旧图。另一个子图用于插入扫描数据，作为储备，被称为新图。当新图中插入一定数量的数据完成了初始化操作之后，它就会被当作旧图，用于扫描匹配。 对象<code>active_submaps_</code>将抛弃原来的旧图，并重新构建一个新图。下表中列出了所有成员变量<br><img src="https://i.loli.net/2020/08/22/qO73GVfs1yLxYWv.png" alt="变量"></p>
@@ -128,95 +38,11 @@
 <p>函数CreateGrid用于为子图创建栅格信息存储结构。在获取了子图尺寸和分辨率信息之后，就构建了一个<code>ProbabilityGrid</code>类型的栅格存储。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::unique_ptr&lt;GridInterface&gt; <span class="title">ActiveSubmaps2D::CreateGrid</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Eigen::Vector2f&amp; origin)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">constexpr</span> <span class="keyword">int</span> kInitialSubmapSize = <span class="number">100</span>;</span><br><span class="line">  <span class="keyword">float</span> resolution = options_.<span class="built_in">grid_options_2d</span>().<span class="built_in">resolution</span>();</span><br><span class="line">  <span class="comment">// 省略TSDF格式</span></span><br><span class="line">  <span class="comment">// 构建了一个ProbabilityGrid类型的栅格存储</span></span><br><span class="line">  <span class="keyword">return</span> absl::make_unique&lt;ProbabilityGrid&gt;(</span><br><span class="line">      <span class="comment">// 第二个参数是 max，记录了地图的x和y方向上的最大值。</span></span><br><span class="line">         <span class="comment">// 函数只有纯赋值，只保证num_x_cells和num_y_cells大于0</span></span><br><span class="line">      <span class="comment">// 把 kInitialSubmapSize 赋值给CellLimits的成员 num_x_cells和num_y_cells</span></span><br><span class="line">      <span class="built_in">MapLimits</span>(resolution,</span><br><span class="line">          origin.cast&lt;<span class="keyword">double</span>&gt;() + <span class="number">0.5</span> * kInitialSubmapSize *</span><br><span class="line">                                      resolution *</span><br><span class="line">                                      Eigen::Vector2d::<span class="built_in">Ones</span>(),</span><br><span class="line">          <span class="built_in">CellLimits</span>(kInitialSubmapSize, kInitialSubmapSize) ),</span><br><span class="line">      &amp;conversion_tables_  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/22/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE/" data-id="ckr29u75j00n2wglm1j0a2aux" data-title="(六) 1. 插入子图" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS机器人/扫地机器人" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/20/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%AB%E5%9C%B0%E6%9C%BA%E5%99%A8%E4%BA%BA/" class="article-date">
-  <time class="dt-published" datetime="2020-08-20T12:02:48.000Z" itemprop="datePublished">2020-08-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/20/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%AB%E5%9C%B0%E6%9C%BA%E5%99%A8%E4%BA%BA/">扫地机器人</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>对于扫地机器人，目前有雷达SLAM和VSLAM两种方式</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/20/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%AB%E5%9C%B0%E6%9C%BA%E5%99%A8%E4%BA%BA/">扫地机器人</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-20</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>对于扫地机器人，目前有雷达SLAM和VSLAM两种方式</p>
 <p>雷达：成本高，更精确，对bump sensor依赖少，建图速度快，不需要光照。存在false  barriers问题：机器人认为床单、窗帘是障碍物，而不清扫后面的地面。</p>
 <p>VSLAM：建图大概要两三次。需要光照。提供的数据量更丰富，能识别雷达无法识别的障碍，不会有false barriers问题。精度略差，但它是未来的方向。</p>
 <p>常见的方案是：雷达+前方相机         顶部相机+前方相机</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/20/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%89%AB%E5%9C%B0%E6%9C%BA%E5%99%A8%E4%BA%BA/" data-id="ckr29u72i00fcwglm6zecgyqr" data-title="扫地机器人" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(七) ImuTracker" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20ImuTracker/" class="article-date">
-  <time class="dt-published" datetime="2020-08-07T05:54:50.000Z" itemprop="datePublished">2020-08-07</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20ImuTracker/">(七) ImuTracker</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>一般IMU要安装在被测物体的重心上。imu的角速度测量精度往往比线速度好的多，因此在工程上，经常采用imu的角速度数据。陀螺仪输出角速度是瞬时量，角速度在姿态平衡上不能直接使用， 需要角速度与时间积分计算角度，其中积分时间deltaT越小输出的角度越精确。但积分的累积误差会随着时间的而增加，所以陀螺仪只能工作在相对较短的时间内。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20ImuTracker/">(七) ImuTracker</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>一般IMU要安装在被测物体的重心上。imu的角速度测量精度往往比线速度好的多，因此在工程上，经常采用imu的角速度数据。陀螺仪输出角速度是瞬时量，角速度在姿态平衡上不能直接使用， 需要角速度与时间积分计算角度，其中积分时间deltaT越小输出的角度越精确。但积分的累积误差会随着时间的而增加，所以陀螺仪只能工作在相对较短的时间内。</p>
 <p>所以要得到较为真实的姿态角，就要利用<strong>加权算法（一阶低通滤波）</strong>扬长避短，在短时间尺度内增加陀螺仪的权值，在更长的时间内增加加速度的权值，这样系统输出角度就接近真实值了。</p>
 <p><code>ImuTracker</code>是使用角速度和线加速度跟踪<strong>方位角和重力向量</strong>。由于平均化后的线加速度(假设移动很慢)， 是直接测量为g倍数的，roll/pitch不会漂移，但是<strong>重力加速度会漂移</strong>，用IMU测量得到的话题<code>/xqserial_server/IMU/linear_acceleration/z</code>不是固定的9.8</p>
 <h2 id="更新姿态-void-Advance-common-Time-time"><a href="#更新姿态-void-Advance-common-Time-time" class="headerlink" title="更新姿态 void Advance(common::Time time)"></a>更新姿态 void Advance(common::Time time)</h2><p>将姿态更新到时刻time。 通过计算time和上次的时间差，imu的角速度乘时间差得到角位移，在加上原来的姿态 得到新的姿态orientation_；同时更新时间和重力向量。</p>
@@ -227,49 +53,7 @@
 <p>一阶低通滤波，实现了硬件上的RC低通滤波器的功能，滤掉IMU噪声。算法公式为：<br>Y<sub>(n) </sub> = α X<sub> (n) </sub> + (1-α)Y<sub> (n-1)</sub><br><img src="https://i.loli.net/2020/09/09/eja5H8PSvX6Qtrw.png"><br>这里的X就是线加速度，Y是重力向量。</p>
 <p>从公式可以看出，时间差越大,当前的权重越大。其中d为滤波器的常数10</p>
 <p>当数据快速变化时，滤波结果能及时跟进（灵敏度优先）；当数据趋于稳定，在一个固定的点上下振荡时，滤波结果能趋于平稳（平稳度优先）</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B8%83)%20ImuTracker/" data-id="ckr29u75c00mtwglm2epqgo34" data-title="(七) ImuTracker" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(八) 位姿外插器 PoseExtrapolator" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/05/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AB)%20%E4%BD%8D%E5%A7%BF%E5%A4%96%E6%8F%92%E5%99%A8%20PoseExtrapolator/" class="article-date">
-  <time class="dt-published" datetime="2020-08-05T08:17:22.000Z" itemprop="datePublished">2020-08-05</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/05/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AB)%20%E4%BD%8D%E5%A7%BF%E5%A4%96%E6%8F%92%E5%99%A8%20PoseExtrapolator/">(八) 位姿估计器 PoseExtrapolator</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>位姿估计器在<code>Node</code>中有一个，在<code>LocalTrajectoryBuilder</code>也有一个。 <code>Node</code>中的估计器只有在发布<code>LocalTrajectory</code>的时候有用，也就只有执行发布数据的时候才会将<code>local_slam_pose</code>添加到其中。所以重点看后者。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/05/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AB)%20%E4%BD%8D%E5%A7%BF%E5%A4%96%E6%8F%92%E5%99%A8%20PoseExtrapolator/">(八) 位姿估计器 PoseExtrapolator</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-05</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>位姿估计器在<code>Node</code>中有一个，在<code>LocalTrajectoryBuilder</code>也有一个。 <code>Node</code>中的估计器只有在发布<code>LocalTrajectory</code>的时候有用，也就只有执行发布数据的时候才会将<code>local_slam_pose</code>添加到其中。所以重点看后者。</p>
 <p>看<code>LocalTrajectoryBuilder::AddRangeData</code>函数，发现估计器会在两种情况下初始化：如果没在lua里启用IMU，就会在<code>LocalTrajectoryBuilder2D</code>里直接初始化；如果在lua里启用了，会在收到IMU数据后再初始化，否则一直等待。</p>
 <p>从Cartographer流程图可以看出，PoseExtrapolator输入为<strong>scan match反馈的位姿</strong>、 <strong>IMU</strong>、<strong>里程计</strong>三个数据源，估计出下一时刻的位姿，用来作为下次scan match的初值。 </p>
 <p><code>scan match</code>可以获取较高精度的位姿，但是两次扫描匹配之间的运动只有里程计数据，因此里程计误差严重。</p>
@@ -322,49 +106,7 @@
 <li>odometry_imu_tracker_:  存放由里程计得到的信息，表示<code>AddPose</code>到<code>AddOdometryData</code>之间（即 最新优化的位姿时刻 到 最新里程计数据时刻 之间的时间段）的姿态变化</li>
 <li>extrapolation_imu_tracker_:   存放经过数据融合后的结果，表示<code>AddPose</code>到<code>ExtrapolatePose</code>之间（即 最新优化的位姿时刻 到 最新估计位姿时刻 之间的时间段）的姿态变化</li>
 </ol>
-<h3 id="AdvanceImuTracker"><a href="#AdvanceImuTracker" class="headerlink" title="AdvanceImuTracker"></a>AdvanceImuTracker</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PoseExtrapolator::AdvanceImuTracker</span><span class="params">(<span class="keyword">const</span> common::Time time,</span></span></span><br><span class="line"><span class="params"><span class="function">                       ImuTracker* <span class="keyword">const</span> imu_tracker)</span>  <span class="keyword">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">CHECK_GE</span>(time, imu_tracker-&gt;<span class="built_in">time</span>());</span><br><span class="line">  <span class="comment">// 当没有IMU数据时，输入一个假的imu数据</span></span><br><span class="line">  <span class="keyword">if</span> (imu_data_.<span class="built_in">empty</span>() || time &lt; imu_data_.<span class="built_in">front</span>().time) </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// There is no IMU data until &#x27;time&#x27;, so we advance the ImuTracker and use</span></span><br><span class="line">    <span class="comment">// the angular velocities from poses and fake gravity to help 2D stability.</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">Advance</span>(time);  <span class="comment">// 根据时间进行imu数据插值</span></span><br><span class="line">    <span class="comment">// 给定一个理论上的重力向量</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">AddImuLinearAccelerationObservation</span>(Eigen::Vector3d::<span class="built_in">UnitZ</span>());</span><br><span class="line">    <span class="comment">//优先选择里程计得出的角速度给imu</span></span><br><span class="line">    <span class="comment">//当里程计的数据小于2个时，选择从pose；否则选择里程计。因为里程计的精度更高</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">AddImuAngularVelocityObservation</span>(</span><br><span class="line">        odometry_data_.<span class="built_in">size</span>() &lt; <span class="number">2</span> ? angular_velocity_from_poses_</span><br><span class="line">                                  : angular_velocity_from_odometry_ );</span><br><span class="line">    <span class="keyword">return</span>;		<span class="comment">// 没有IMU可以return了</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//有imu时，此处调用了imu数据队列，ImuTracker维护的时间早于IMU数据队列最早的时间</span></span><br><span class="line">  <span class="keyword">if</span> (imu_tracker-&gt;<span class="built_in">time</span>() &lt; imu_data_.<span class="built_in">front</span>().time)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 先把ImuTracker更新到IMU数据来临的那一刻</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">Advance</span>(imu_data_.<span class="built_in">front</span>().time);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 依次取出IMU数据队列中的数据，更新ImuTracker，直到IMU数据的时间比指定时间time要晚</span></span><br><span class="line">  <span class="keyword">auto</span> it = std::<span class="built_in">lower_bound</span>(</span><br><span class="line">      imu_data_.<span class="built_in">begin</span>(), imu_data_.<span class="built_in">end</span>(), imu_tracker-&gt;<span class="built_in">time</span>(),</span><br><span class="line">      [](<span class="keyword">const</span> sensor::ImuData&amp; imu_data, <span class="keyword">const</span> common::Time&amp; time) &#123;</span><br><span class="line">        <span class="keyword">return</span> imu_data.time &lt; time;</span><br><span class="line">      &#125;);</span><br><span class="line">  <span class="comment">// 用imu数据队列进行imu-tracker的数据更新.</span></span><br><span class="line">  <span class="comment">// imu_tracker主要负责对角速度进行插值, 并且估计重力向量</span></span><br><span class="line">  <span class="keyword">while</span> (it != imu_data_.<span class="built_in">end</span>() &amp;&amp; it-&gt;time &lt; time)</span><br><span class="line">  &#123;</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">Advance</span>(it-&gt;time);</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">AddImuLinearAccelerationObservation</span>(it-&gt;linear_acceleration);</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">AddImuAngularVelocityObservation</span>(it-&gt;angular_velocity);</span><br><span class="line">      ++it;</span><br><span class="line">  &#125;</span><br><span class="line">  imu_tracker-&gt;<span class="built_in">Advance</span>(time);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/05/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AB)%20%E4%BD%8D%E5%A7%BF%E5%A4%96%E6%8F%92%E5%99%A8%20PoseExtrapolator/" data-id="ckr29u75i00n1wglm66z72l4p" data-title="(八) 位姿估计器 PoseExtrapolator" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/4. LaunchSubscribers流程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/4.%20LaunchSubscribers%E6%B5%81%E7%A8%8B/" class="article-date">
-  <time class="dt-published" datetime="2020-08-04T03:45:54.000Z" itemprop="datePublished">2020-08-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/4.%20LaunchSubscribers%E6%B5%81%E7%A8%8B/">(四) LaunchSubscribers流程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2020/08/04/xdvXMqPJNOF5ybH.png" alt="流程图1"></p>
+<h3 id="AdvanceImuTracker"><a href="#AdvanceImuTracker" class="headerlink" title="AdvanceImuTracker"></a>AdvanceImuTracker</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">PoseExtrapolator::AdvanceImuTracker</span><span class="params">(<span class="keyword">const</span> common::Time time,</span></span></span><br><span class="line"><span class="params"><span class="function">                       ImuTracker* <span class="keyword">const</span> imu_tracker)</span>  <span class="keyword">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">CHECK_GE</span>(time, imu_tracker-&gt;<span class="built_in">time</span>());</span><br><span class="line">  <span class="comment">// 当没有IMU数据时，输入一个假的imu数据</span></span><br><span class="line">  <span class="keyword">if</span> (imu_data_.<span class="built_in">empty</span>() || time &lt; imu_data_.<span class="built_in">front</span>().time) </span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// There is no IMU data until &#x27;time&#x27;, so we advance the ImuTracker and use</span></span><br><span class="line">    <span class="comment">// the angular velocities from poses and fake gravity to help 2D stability.</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">Advance</span>(time);  <span class="comment">// 根据时间进行imu数据插值</span></span><br><span class="line">    <span class="comment">// 给定一个理论上的重力向量</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">AddImuLinearAccelerationObservation</span>(Eigen::Vector3d::<span class="built_in">UnitZ</span>());</span><br><span class="line">    <span class="comment">//优先选择里程计得出的角速度给imu</span></span><br><span class="line">    <span class="comment">//当里程计的数据小于2个时，选择从pose；否则选择里程计。因为里程计的精度更高</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">AddImuAngularVelocityObservation</span>(</span><br><span class="line">        odometry_data_.<span class="built_in">size</span>() &lt; <span class="number">2</span> ? angular_velocity_from_poses_</span><br><span class="line">                                  : angular_velocity_from_odometry_ );</span><br><span class="line">    <span class="keyword">return</span>;		<span class="comment">// 没有IMU可以return了</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//有imu时，此处调用了imu数据队列，ImuTracker维护的时间早于IMU数据队列最早的时间</span></span><br><span class="line">  <span class="keyword">if</span> (imu_tracker-&gt;<span class="built_in">time</span>() &lt; imu_data_.<span class="built_in">front</span>().time)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 先把ImuTracker更新到IMU数据来临的那一刻</span></span><br><span class="line">    imu_tracker-&gt;<span class="built_in">Advance</span>(imu_data_.<span class="built_in">front</span>().time);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 依次取出IMU数据队列中的数据，更新ImuTracker，直到IMU数据的时间比指定时间time要晚</span></span><br><span class="line">  <span class="keyword">auto</span> it = std::<span class="built_in">lower_bound</span>(</span><br><span class="line">      imu_data_.<span class="built_in">begin</span>(), imu_data_.<span class="built_in">end</span>(), imu_tracker-&gt;<span class="built_in">time</span>(),</span><br><span class="line">      [](<span class="keyword">const</span> sensor::ImuData&amp; imu_data, <span class="keyword">const</span> common::Time&amp; time) &#123;</span><br><span class="line">        <span class="keyword">return</span> imu_data.time &lt; time;</span><br><span class="line">      &#125;);</span><br><span class="line">  <span class="comment">// 用imu数据队列进行imu-tracker的数据更新.</span></span><br><span class="line">  <span class="comment">// imu_tracker主要负责对角速度进行插值, 并且估计重力向量</span></span><br><span class="line">  <span class="keyword">while</span> (it != imu_data_.<span class="built_in">end</span>() &amp;&amp; it-&gt;time &lt; time)</span><br><span class="line">  &#123;</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">Advance</span>(it-&gt;time);</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">AddImuLinearAccelerationObservation</span>(it-&gt;linear_acceleration);</span><br><span class="line">      imu_tracker-&gt;<span class="built_in">AddImuAngularVelocityObservation</span>(it-&gt;angular_velocity);</span><br><span class="line">      ++it;</span><br><span class="line">  &#125;</span><br><span class="line">  imu_tracker-&gt;<span class="built_in">Advance</span>(time);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/4.%20LaunchSubscribers%E6%B5%81%E7%A8%8B/">(四) LaunchSubscribers流程</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p><img src="https://i.loli.net/2020/08/04/xdvXMqPJNOF5ybH.png" alt="流程图1"></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">SensorBridge::HandleLaserScanMessage</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> std::string&amp; sensor_id, <span class="keyword">const</span> sensor_msgs::LaserScan::ConstPtr&amp; msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 转换之后的点云数据和时间戳</span></span><br><span class="line">  carto::sensor::PointCloudWithIntensities point_cloud;</span><br><span class="line">  carto::common::Time time;</span><br><span class="line">  <span class="comment">// 将ROS的消息转换成点云数据，函数在 msg_conversion.cc</span></span><br><span class="line">  <span class="comment">// 只有一句 LaserScanToPointCloudWithIntensities(msg)</span></span><br><span class="line">  std::<span class="built_in">tie</span>(point_cloud, time) = <span class="built_in">ToPointCloudWithIntensities</span>(*msg);</span><br><span class="line">  <span class="built_in">HandleLaserScan</span>(sensor_id, time, msg-&gt;header.frame_id, point_cloud);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>不考虑强度时，用雷达扫描只获得range和angle两个参数，<code>LaserScanToPointCloudWithIntensities(msg)</code>实际是把这两个参数转换为<strong>扫描点在laser坐标系下的坐标</strong>，时间戳以最后一束激光为基准。比如range为3，角度为45°，相应的坐标是(2.12132,2.12132,0)<br><img src="https://i.loli.net/2020/08/05/LT9CMkutv3eqJHf.png" alt="转换示意图.png"><br><br></p>
 <p>接下来的<code>HandleLaserScan</code>按照参数<code>num_subdivisions_per_laser_scan</code>把点云分成了很多小段。然后的<code>HandleRangefinder</code>函数查询<code>tracking_frame---&gt;laser</code>坐标系的变换，把之前在laser坐标系的点云，转换为在tracking_frame坐标系(一般是base_footprint)的点云，类型变成<code>TimedPointCloudData</code>。 也就是把一帧scan拆成几段，每段按一个<code>TimedPointCloudData</code>发送，到了<code>LocalTrajectoryBuilder2D::AddRangeData</code>又把它们拼接起来，作为当前帧输入。</p>
@@ -380,49 +122,7 @@
 <p><code>queue</code>里面是按时间的数据的组织：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Queue</span> &#123;</span></span><br><span class="line">    common::BlockingQueue&lt;std::unique_ptr&lt;Data&gt;&gt; queue;</span><br><span class="line">    Callback callback;   <span class="comment">//回调</span></span><br><span class="line">    <span class="keyword">bool</span> finished = <span class="literal">false</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这里发现了Queue有个成员是callback函数，在<code>Dispatch</code>函数中，如果找出来的数据, 那么就调用这个数据的callback函数。那么在哪儿引入了这个callback函数呢？结果发现是在<code>OrderedMultiQueue::AddQueue</code>，它又在<code>Collator::AddTrajectory</code>中调用，这样就有了另一条线，在下一篇讲解。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/4.%20LaunchSubscribers%E6%B5%81%E7%A8%8B/" data-id="ckr29u75q00ndwglmf3u5g0x6" data-title="(四) LaunchSubscribers流程" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(九) Voxel Filter和Adaptive Voxel Filter" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B9%9D)%20Voxel%20Filter%E5%92%8CAdaptive%20Voxel%20Filter/" class="article-date">
-  <time class="dt-published" datetime="2020-08-04T02:04:43.000Z" itemprop="datePublished">2020-08-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B9%9D)%20Voxel%20Filter%E5%92%8CAdaptive%20Voxel%20Filter/">(九) Voxel Filter和Adaptive Voxel Filter</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>近处的物体经常扫描得到更多的点, 而远处的物体的 点经常比较稀少。为了降低计算量，需要对点云数据进行降采样，但简单的随机采样仍然是这个效果。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B9%9D)%20Voxel%20Filter%E5%92%8CAdaptive%20Voxel%20Filter/">(九) Voxel Filter和Adaptive Voxel Filter</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>近处的物体经常扫描得到更多的点, 而远处的物体的 点经常比较稀少。为了降低计算量，需要对点云数据进行降采样，但简单的随机采样仍然是这个效果。</p>
 <p>cartographer中的VoxelFilter是把空间分为很多个立方体的栅格，然后一个栅格内可能有很多点，只用所有点的重心来近似显示其他点。应该和PCL实现的VoxelGrid类原理一样</p>
 <h2 id="VoxelFilter"><a href="#VoxelFilter" class="headerlink" title="VoxelFilter"></a>VoxelFilter</h2><p>看<code>LocalTrajectoryBuilder2D::AddRangeData</code>函数的最后：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="built_in">AddAccumulatedRangeData</span>(</span><br><span class="line">        time,</span><br><span class="line">        <span class="built_in">TransformToGravityAlignedFrameAndFilter</span>(</span><br><span class="line">            gravity_alignment.cast&lt;<span class="keyword">float</span>&gt;() * range_data_poses.<span class="built_in">back</span>().<span class="built_in">inverse</span>(),</span><br><span class="line">            accumulated_range_data_),</span><br><span class="line">        gravity_alignment, </span><br><span class="line">        sensor_duration);</span><br></pre></td></tr></table></figure>
@@ -440,49 +140,7 @@
 <p>也就是</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PointCloud <span class="title">AdaptiveVoxelFilter::Filter</span><span class="params">(<span class="keyword">const</span> PointCloud&amp; point_cloud)</span> <span class="keyword">const</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">AdaptivelyVoxelFiltered</span>(</span><br><span class="line">      options_, <span class="built_in">FilterByMaxRange</span>(point_cloud, options_.<span class="built_in">max_range</span>())  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>AdaptiveVoxelFilter</code>的构造函数按老规矩还是全赋值option，然后调用<code>Filter</code>，接着就是<code>AdaptivelyVoxelFiltered</code>函数: <strong>调用体素滤波，如果体素滤波后点数大于阈值，则返回;如果小于阈值，则接着使用二分法进行体素滤波，使最终的点云数接近 min_num_points</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PointCloud <span class="title">AdaptivelyVoxelFiltered</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> proto::AdaptiveVoxelFilterOptions&amp; options,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> PointCloud&amp; point_cloud)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (point_cloud.<span class="built_in">size</span>() &lt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">    <span class="comment">// &#x27;point_cloud&#x27; 已经足够稀疏</span></span><br><span class="line">    <span class="keyword">return</span> point_cloud;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 还是先调用VoxelFilter来滤波，其中cell的 size=max_length</span></span><br><span class="line">  PointCloud result = <span class="built_in">VoxelFilter</span>(options.<span class="built_in">max_length</span>()).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">  <span class="comment">// 如果剩下的点大于min_num_points，则返回</span></span><br><span class="line">  <span class="keyword">if</span> (result.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">    <span class="comment">// 经过&#x27;max_length&#x27;滤波，得到的点云足够稠密</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果小于min_num_points，二分法滤波</span></span><br><span class="line">  <span class="comment">// Search for a &#x27;low_length&#x27; that is known to result in a sufficiently</span></span><br><span class="line">  <span class="comment">// dense point cloud. We give up and use the full &#x27;point_cloud&#x27; if reducing</span></span><br><span class="line">  <span class="comment">// the edge     length by a factor of 1e-2 is not enough.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">float</span> high_length = options.<span class="built_in">max_length</span>();</span><br><span class="line">       high_length &gt; <span class="number">1e-2</span>f * options.<span class="built_in">max_length</span>(); </span><br><span class="line">          high_length /= <span class="number">2.f</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">float</span> low_length = high_length / <span class="number">2.f</span>;</span><br><span class="line">    result = <span class="built_in">VoxelFilter</span>(low_length).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">    <span class="keyword">if</span> (result.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>())</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// Binary search to find the right amount of filtering</span></span><br><span class="line">      <span class="comment">// low_length gave a sufficiently dense &#x27;result&#x27;, &#x27;high_length&#x27; did not</span></span><br><span class="line">      <span class="comment">// We stop when the edge length is at most 10% off</span></span><br><span class="line">      <span class="keyword">while</span> ((high_length - low_length) / low_length &gt; <span class="number">1e-1</span>f)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">float</span> mid_length = (low_length + high_length) / <span class="number">2.f</span>;</span><br><span class="line">        <span class="keyword">const</span> PointCloud candidate =</span><br><span class="line">            <span class="built_in">VoxelFilter</span>(mid_length).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">        <span class="keyword">if</span> (candidate.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">          low_length = mid_length;</span><br><span class="line">          result = candidate;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">          high_length = mid_length;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/04/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%B9%9D)%20Voxel%20Filter%E5%92%8CAdaptive%20Voxel%20Filter/" data-id="ckr29u75f00mxwglm08v5a2pb" data-title="(九) Voxel Filter和Adaptive Voxel Filter" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(六) 前端 LocalTrajectoryBuilder2D" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/03/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%20%E5%89%8D%E7%AB%AF%20LocalTrajectoryBuilder2D/" class="article-date">
-  <time class="dt-published" datetime="2020-08-03T03:33:17.000Z" itemprop="datePublished">2020-08-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/03/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%20%E5%89%8D%E7%AB%AF%20LocalTrajectoryBuilder2D/">(六) 前端 LocalTrajectoryBuilder2D</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>在Cartographer中机器人的运动轨迹是由一个个前后串联的节点(TrajectionNode)构成的。每当有新的扫描数据输入， <code>LocalTrajectoryBuilder2D</code>都会先通过扫描匹配器生成一个<code>MatchingResult</code>的对象，但是它的<code>insertion_result</code>字段是留空的。只有当通过运动滤波器成功插入到子图中之后，才会将插入的结果记录下来， 于此同时子图就得到了更新。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">PointCloud <span class="title">AdaptivelyVoxelFiltered</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> proto::AdaptiveVoxelFilterOptions&amp; options,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> PointCloud&amp; point_cloud)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (point_cloud.<span class="built_in">size</span>() &lt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">    <span class="comment">// &#x27;point_cloud&#x27; 已经足够稀疏</span></span><br><span class="line">    <span class="keyword">return</span> point_cloud;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 还是先调用VoxelFilter来滤波，其中cell的 size=max_length</span></span><br><span class="line">  PointCloud result = <span class="built_in">VoxelFilter</span>(options.<span class="built_in">max_length</span>()).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">  <span class="comment">// 如果剩下的点大于min_num_points，则返回</span></span><br><span class="line">  <span class="keyword">if</span> (result.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">    <span class="comment">// 经过&#x27;max_length&#x27;滤波，得到的点云足够稠密</span></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 如果小于min_num_points，二分法滤波</span></span><br><span class="line">  <span class="comment">// Search for a &#x27;low_length&#x27; that is known to result in a sufficiently</span></span><br><span class="line">  <span class="comment">// dense point cloud. We give up and use the full &#x27;point_cloud&#x27; if reducing</span></span><br><span class="line">  <span class="comment">// the edge     length by a factor of 1e-2 is not enough.</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">float</span> high_length = options.<span class="built_in">max_length</span>();</span><br><span class="line">       high_length &gt; <span class="number">1e-2</span>f * options.<span class="built_in">max_length</span>(); </span><br><span class="line">          high_length /= <span class="number">2.f</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">float</span> low_length = high_length / <span class="number">2.f</span>;</span><br><span class="line">    result = <span class="built_in">VoxelFilter</span>(low_length).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">    <span class="keyword">if</span> (result.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>())</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="comment">// Binary search to find the right amount of filtering</span></span><br><span class="line">      <span class="comment">// low_length gave a sufficiently dense &#x27;result&#x27;, &#x27;high_length&#x27; did not</span></span><br><span class="line">      <span class="comment">// We stop when the edge length is at most 10% off</span></span><br><span class="line">      <span class="keyword">while</span> ((high_length - low_length) / low_length &gt; <span class="number">1e-1</span>f)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">float</span> mid_length = (low_length + high_length) / <span class="number">2.f</span>;</span><br><span class="line">        <span class="keyword">const</span> PointCloud candidate =</span><br><span class="line">            <span class="built_in">VoxelFilter</span>(mid_length).<span class="built_in">Filter</span>(point_cloud);</span><br><span class="line">        <span class="keyword">if</span> (candidate.<span class="built_in">size</span>() &gt;= options.<span class="built_in">min_num_points</span>()) &#123;</span><br><span class="line">          low_length = mid_length;</span><br><span class="line">          result = candidate;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">          high_length = mid_length;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/03/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%20%E5%89%8D%E7%AB%AF%20LocalTrajectoryBuilder2D/">(六) 前端 LocalTrajectoryBuilder2D</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>在Cartographer中机器人的运动轨迹是由一个个前后串联的节点(TrajectionNode)构成的。每当有新的扫描数据输入， <code>LocalTrajectoryBuilder2D</code>都会先通过扫描匹配器生成一个<code>MatchingResult</code>的对象，但是它的<code>insertion_result</code>字段是留空的。只有当通过运动滤波器成功插入到子图中之后，才会将插入的结果记录下来， 于此同时子图就得到了更新。</p>
 <p><img src="https://i.loli.net/2020/08/03/78ZXHOIhz3CTE4J.png" alt="LocalTrajectoryBuilder2D类的成员变量.png"></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span> &#123;</span></span><br><span class="line">    <span class="comment">// Node数据</span></span><br><span class="line">    std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt; constant_data;</span><br><span class="line">    <span class="comment">//该Node数据插入的两个submap</span></span><br><span class="line">    std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MatchingResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    common::Time time;    <span class="comment">// 扫描匹配发生的时间</span></span><br><span class="line">    <span class="comment">// tracking 坐标系下的位姿(Local SLAM坐标系下的位姿), 需要乘以</span></span><br><span class="line">    <span class="comment">// tracking frame in map的转换(Local SLAM坐标系到Global SLAM坐标系的转换)才能转到全局坐标系</span></span><br><span class="line">    transform::Rigid3d local_pose;</span><br><span class="line">    <span class="comment">// tracking 坐标系下的点云（即LocalSLAM坐标系下的点云）</span></span><br><span class="line">    sensor::RangeData range_data_in_local;</span><br><span class="line">    <span class="comment">// &#x27;nullptr&#x27; if dropped by the motion filter.</span></span><br><span class="line">    std::unique_ptr&lt;<span class="keyword">const</span> InsertionResult&gt; insertion_result;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
@@ -494,49 +152,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">sensor::RangeData</span></span><br><span class="line"><span class="function"><span class="title">LocalTrajectoryBuilder2D::TransformToGravityAlignedFrameAndFilter</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> transform::Rigid3f&amp; transform_to_gravity_aligned_frame,</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> sensor::RangeData&amp; range_data)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">const</span> sensor::RangeData cropped =</span><br><span class="line">      <span class="comment">// 限定点云z坐标</span></span><br><span class="line">      sensor::<span class="built_in">CropRangeData</span>(sensor::<span class="built_in">TransformRangeData</span>(</span><br><span class="line">              range_data, transform_to_gravity_aligned_frame),</span><br><span class="line">      options_.<span class="built_in">min_z</span>(), options_.<span class="built_in">max_z</span>());</span><br><span class="line">      <span class="comment">// 对 returns 和 misses点云做体素滤波</span></span><br><span class="line">  <span class="keyword">return</span> sensor::RangeData&#123;</span><br><span class="line">      cropped.origin,</span><br><span class="line">      sensor:: (options_.<span class="built_in">voxel_filter_size</span>()).<span class="built_in">Filter</span>(cropped.returns),</span><br><span class="line">      sensor::<span class="built_in">VoxelFilter</span>(options_.<span class="built_in">voxel_filter_size</span>()).<span class="built_in">Filter</span>(cropped.misses) &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">RangeData <span class="title">TransformRangeData</span><span class="params">(<span class="keyword">const</span> RangeData&amp; range_data,</span></span></span><br><span class="line"><span class="params"><span class="function">                             <span class="keyword">const</span> transform::Rigid3f&amp; transform)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> RangeData&#123;</span><br><span class="line">	  transform * range_data.origin,</span><br><span class="line">	  <span class="built_in">TransformPointCloud</span>(range_data.returns, transform),</span><br><span class="line">	  <span class="built_in">TransformPointCloud</span>(range_data.misses, transform),</span><br><span class="line">	&#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 对点云中每一个点做变换</span></span><br><span class="line"><span class="function">PointCloud <span class="title">TransformPointCloud</span><span class="params">(<span class="keyword">const</span> PointCloud&amp;  point_cloud,</span></span></span><br><span class="line"><span class="params"><span class="function">                       <span class="keyword">const</span> transform::Rigid3f&amp;  transform)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	PointCloud result;</span><br><span class="line">	result.<span class="built_in">reserve</span>(point_cloud.<span class="built_in">size</span>()  );</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">const</span> RangefinderPoint&amp; point : point_cloud)</span><br><span class="line">	&#123;</span><br><span class="line">		result.<span class="built_in">emplace_back</span>(transform * point);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>LocalTrajectoryBuilder2D是一个没有闭环处理的完整的slam过程，修改submap的帧的阈值（无限大），则完成了与开源hector slam算法一致的功能。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/03/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E5%85%AD)%20%E5%89%8D%E7%AB%AF%20LocalTrajectoryBuilder2D/" data-id="ckr29u75k00n5wglmefjt8o89" data-title="(六) 前端 LocalTrajectoryBuilder2D" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/(五) GlobalTrajectoryBuilder部分" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/" class="article-date">
-  <time class="dt-published" datetime="2020-08-02T01:53:37.000Z" itemprop="datePublished">2020-08-02</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/">(五) GlobalTrajectoryBuilder部分</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>接上一篇的回调函数路线<br><img src="https://i.loli.net/2020/08/04/vplyBgeraR6iD8Y.png" alt="核心路线.png"></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/">(五) GlobalTrajectoryBuilder部分</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>接上一篇的回调函数路线<br><img src="https://i.loli.net/2020/08/04/vplyBgeraR6iD8Y.png" alt="核心路线.png"></p>
 <p>TrajectoryBuilder是用来创建一个trajectory的。所以，该类首先要保存trajectory上的传感器数据，从一个连续的多帧传感器数据中会抽取若干关键帧。一帧关键帧数据被称为trajectory上的一个节点(注意与ROS中的节点概念相区分)，一条trajectory由一串儿节点组成，所以TrajectoryBuilder要维护一个节点列表，同时，每一帧时的传感器数据相对于该Submap的局部坐标变换要已知；其次，该类要创建并维护一个栅格化的Submap列表，以便在MapBuilder中对所有的submap进行优化，形成一个总的Map。每个Submap相对于世界坐标系的位姿要估计出来，这样PoseGraph才能依据不同的submap各自的位姿变换矩阵把他们tie在一起并做全局优化。</p>
 <h2 id="GlobalTrajectoryBuilder"><a href="#GlobalTrajectoryBuilder" class="headerlink" title="GlobalTrajectoryBuilder"></a>GlobalTrajectoryBuilder</h2><p><img src="https://i.loli.net/2020/08/01/sQ87tlIPLVvhRb9.png" alt="TrajectoryBuilderInterface的继承关系"></p>
 <p>分为前端和后端两部分：local_trajectory_builder和pose_graph。<code>GlobalTrajectoryBuilder</code>实际上是一个模板类，模板列表中的<code>LocalTrajectoryBuilder2D</code>和<code>PoseGraph2D</code>分别是前端和后端的两个核心类型。 它将local slam的一些定位和submap信息，送给后端优化pose_graph，从而完成闭环和优化，从而完成整个SLAM。</p>
@@ -554,49 +170,7 @@
 <h2 id="里程计和IMU的-AddSensorData"><a href="#里程计和IMU的-AddSensorData" class="headerlink" title="里程计和IMU的 AddSensorData"></a>里程计和IMU的 AddSensorData</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddSensorData</span><span class="params">(<span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                   <span class="keyword">const</span> sensor::ImuData&amp; imu_data)</span> <span class="keyword">override</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (local_trajectory_builder_)</span><br><span class="line">    local_trajectory_builder_-&gt;<span class="built_in">AddImuData</span>(imu_data);</span><br><span class="line"></span><br><span class="line">  pose_graph_-&gt;<span class="built_in">AddImuData</span>(trajectory_id_, imu_data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">AddSensorData</span><span class="params">(<span class="keyword">const</span> std::string&amp; sensor_id,</span></span></span><br><span class="line"><span class="params"><span class="function">                   <span class="keyword">const</span> sensor::OdometryData&amp; odometry_data)</span> <span class="keyword">override</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">CHECK</span>(odometry_data.pose.<span class="built_in">IsValid</span>()) &lt;&lt; odometry_data.pose;</span><br><span class="line">  <span class="keyword">if</span> (local_trajectory_builder_)</span><br><span class="line">    <span class="comment">// 实际有用的就一句 extrapolator_-&gt;AddOdometryData(odometry_data);</span></span><br><span class="line">    local_trajectory_builder_-&gt;<span class="built_in">AddOdometryData</span>(odometry_data);</span><br><span class="line">  </span><br><span class="line">  pose_graph_-&gt;<span class="built_in">AddOdometryData</span>(trajectory_id_, odometry_data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>先判定存在前端对象，将数据喂给前端对象进入<code>PoseExtrapolator</code>，然后通过后端的位姿图将传感器的信息添加到全局地图中。</p>
 <p>Cartographer将类似GPS这种具有全局定位能力的传感器输出的位姿称为固定坐标系位姿(fixed frame pose)。由于它们的测量结果是全局的信息，所以没有喂给前端用于局部定位。此外路标数据也可以认为是全局的定位信息，也直接喂给了后端</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/(%E4%BA%94)%20GlobalTrajectoryBuilder%E9%83%A8%E5%88%86/" data-id="ckr29u75h00mzwglmdv1x6grg" data-title="(五) GlobalTrajectoryBuilder部分" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/3. MapBuilder类" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/" class="article-date">
-  <time class="dt-published" datetime="2020-08-01T12:07:54.000Z" itemprop="datePublished">2020-08-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/">(三) MapBuilder类</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>MapBuilder继承了抽象类MapBuilderInterface，是cartographer算法的核心类.MapBuilder包括了两个部分，其中TrajectoryBuilder用于Local Submap的建立与维护；PoseGraph部分用于Loop Closure.</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/">(三) MapBuilder类</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>MapBuilder继承了抽象类MapBuilderInterface，是cartographer算法的核心类.MapBuilder包括了两个部分，其中TrajectoryBuilder用于Local Submap的建立与维护；PoseGraph部分用于Loop Closure.</p>
 <p><img src="https://i.loli.net/2020/08/01/ehp79sbUc6FgOvJ.png"></p>
 <p>源码中使用的变量是<code>map_builder_</code>，属于MapBuilder类型，它的赋值在MapBuilderBridge的构造函数；变量<code>map_builder_bridge_</code>的赋值又在Node的构造函数；最终是在<code>node_main.cc</code>中的</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> map_builder =</span><br><span class="line">  cartographer::common::make_unique&lt;cartographer::mapping::MapBuilder&gt;(</span><br><span class="line">      node_options.map_builder_options );</span><br></pre></td></tr></table></figure>
@@ -622,49 +196,7 @@
 </li>
 </ul>
 <p>Node::HandleSubmapQuery<br>&amp;nbsp&amp;nbsp&amp;nbsp|<br>MapBuilderBridge::HandleSubmapQuery<br>&amp;nbsp&amp;nbsp&amp;nbsp|<br>MapBuilder::SubmapToProto</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/3.%20MapBuilder%E7%B1%BB/" data-id="ckr29u75p00ncwglm9b4dgomy" data-title="(三) MapBuilder类" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/Cartographer/源码解读/2. Node的AddTrajectory函数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-08-01T11:32:24.000Z" itemprop="datePublished">2020-08-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/">(二) Node的AddTrajectory函数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>先看流程图:<br><img src="https://i.loli.net/2020/08/01/76XmnCOHpFjbhWr.png" alt="AddTrajectory.png"></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/">(二) Node的AddTrajectory函数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-08-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>先看流程图:<br><img src="https://i.loli.net/2020/08/01/76XmnCOHpFjbhWr.png" alt="AddTrajectory.png"></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> std::set&lt;cartographer::mapping::TrajectoryBuilderInterface::SensorId&gt;</span><br><span class="line">    expected_sensor_ids = <span class="built_in">ComputeExpectedSensorIds</span>(options, topics);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> trajectory_id = </span><br><span class="line">    map_builder_bridge_.<span class="built_in">AddTrajectory</span>(expected_sensor_ids, options);</span><br><span class="line"><span class="built_in">AddExtrapolator</span>(trajectory_id, options);</span><br><span class="line"><span class="built_in">AddSensorSamplers</span>(trajectory_id, options);</span><br><span class="line"><span class="built_in">LaunchSubscribers</span>(options, topics, trajectory_id);</span><br><span class="line">is_active_trajectory_[trajectory_id] = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sensor_id : expected_sensor_ids)</span><br><span class="line">&#123;  <span class="comment">// unordered_set</span></span><br><span class="line">  subscribed_topics_.<span class="built_in">insert</span>(sensor_id.id);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> trajectory_id;</span><br></pre></td></tr></table></figure>
 
 <h2 id="map-builder-bridge-AddTrajectory"><a href="#map-builder-bridge-AddTrajectory" class="headerlink" title="map_builder_bridge_.AddTrajectory"></a>map_builder_bridge_.AddTrajectory</h2><p>两个参数是<code>const std::set&lt;TrajectoryBuilderInterface::SensorId&gt;&amp;  expected_sensor_ids</code> 和 <code>const TrajectoryOptions&amp; trajectory_options</code></p>
@@ -684,144 +216,7 @@
 <p>类型<code>std::unordered_map&lt;int, TrajectorySensorSamplers&gt; sensor_samplers_;</code></p>
 <p>对cartographer中的采样器(fixed_ratio_sampler.h, fixed_ratio_sampler.cc)的封装，用一个计数器来按照一个指定的频率对原始的数据进行降采样，采样频率可以通过轨迹参数文件来配置</p>
 <h2 id="LaunchSubscribers"><a href="#LaunchSubscribers" class="headerlink" title="LaunchSubscribers"></a>LaunchSubscribers</h2><p>完成传感器消息的订阅,在传感器数据的作用下驱动系统运转，进而完成位姿估计和建图的任务。详细分析见第四篇</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/08/01/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/2.%20Node%E7%9A%84AddTrajectory%E5%87%BD%E6%95%B0/" data-id="ckr29u75p00nawglm5ockgzpd" data-title="(二) Node的AddTrajectory函数" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/15/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><a class="page-number" href="/page/18/">18</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/17/">Next &raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">高斯牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/15/">&lt;i class&#x3D;&quot;fa fa-chevron-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><span class="page-number current">16</span><a class="page-number" href="/page/17/">17</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/17/">&lt;i class&#x3D;&quot;fa fa-chevron-right&quot;&gt;&lt;&#x2F;i&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By John Doe</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>

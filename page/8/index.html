@@ -1,103 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/8/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-路径规划/根据全局路径的目标和多个机器人间距优化速度" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/" class="article-date">
-  <time class="dt-published" datetime="2020-12-14T12:26:43.000Z" itemprop="datePublished">2020-12-14</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/">根据全局路径的目标和多个机器人间距优化速度</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="dist-end-和-distanceToGoal-函数"><a href="#dist-end-和-distanceToGoal-函数" class="headerlink" title="dist_end_ 和 distanceToGoal 函数"></a>dist_end_ 和 distanceToGoal 函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">TebLocalPlannerROS::distanceToGoal</span><span class="params">(std::vector&lt;geometry_msgs::PoseStamped&gt;&amp; global_plan)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> dist_goal = <span class="number">0.0</span>;</span><br><span class="line">    <span class="keyword">int</span> plan_size = global_plan.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span>(plan_size &gt;= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; plan_size <span class="number">-2</span>; ++i)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">double</span> dx = global_plan[i + <span class="number">1</span>].pose.position.x - global_plan[i].pose.position.x;</span><br><span class="line">        <span class="keyword">double</span> dy = global_plan[i + <span class="number">1</span>].pose.position.y - global_plan[i].pose.position.y;</span><br><span class="line">        dist_goal += <span class="built_in">sqrt</span>(dx * dx + dy * dy);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> dist_goal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><title>Hexo</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">John Doe</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">440</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><nav id="nav" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Hexo</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Hexo</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/">根据全局路径的目标和多个机器人间距优化速度</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></span><div class="content"><h3 id="dist-end-和-distanceToGoal-函数"><a href="#dist-end-和-distanceToGoal-函数" class="headerlink" title="dist_end_ 和 distanceToGoal 函数"></a>dist_end_ 和 distanceToGoal 函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">TebLocalPlannerROS::distanceToGoal</span><span class="params">(std::vector&lt;geometry_msgs::PoseStamped&gt;&amp; global_plan)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> dist_goal = <span class="number">0.0</span>;</span><br><span class="line">    <span class="keyword">int</span> plan_size = global_plan.<span class="built_in">size</span>();</span><br><span class="line">    <span class="keyword">if</span>(plan_size &gt;= <span class="number">2</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; plan_size <span class="number">-2</span>; ++i)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">double</span> dx = global_plan[i + <span class="number">1</span>].pose.position.x - global_plan[i].pose.position.x;</span><br><span class="line">        <span class="keyword">double</span> dy = global_plan[i + <span class="number">1</span>].pose.position.y - global_plan[i].pose.position.y;</span><br><span class="line">        dist_goal += <span class="built_in">sqrt</span>(dx * dx + dy * dy);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> dist_goal;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      <span class="keyword">return</span> <span class="number">0.0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>求出全局路径每个路径点的欧氏距离，一直累加，作为到全局路径终点的距离<code>distance_to_goal</code>。函数主要调用在<code>computeVelocityCommands</code>函数:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dist_end_ = <span class="built_in">distanceToGoal</span>(global_plan_);</span><br><span class="line">&#123;</span><br><span class="line">	std_msgs::Float64  distance;</span><br><span class="line">	distance.data = dist_end_;</span><br><span class="line">	dist_to_goal_pub_.<span class="built_in">publish</span>(distance);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -105,49 +15,7 @@
 <h2 id="话题rectangle-distance-和-frontDistanceCB函数"><a href="#话题rectangle-distance-和-frontDistanceCB函数" class="headerlink" title="话题rectangle_distance 和 frontDistanceCB函数"></a>话题rectangle_distance 和 frontDistanceCB函数</h2><p>话题<code>rectangle_distance</code>来自节点<code>queue_follow_node</code>。单独一个车时，<code>rectangle_distance</code>话题对应的消息最大值是4</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">front_dist_sub_ = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/rectangle_distance&quot;</span>, <span class="number">10</span>, &amp;TebLocalPlannerROS::frontDistanceCB, <span class="keyword">this</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 实际上既根据小车到全局路径终点的距离而改变速度，又根据排队之间的距离改变速度</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebLocalPlannerROS::frontDistanceCB</span><span class="params">(<span class="keyword">const</span> std_msgs::Float64::ConstPtr&amp; front_dist_msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">double</span> scale_max_vel_x;</span><br><span class="line">    <span class="keyword">if</span>(front_dist_msg-&gt;data &gt; <span class="number">1.2</span>)</span><br><span class="line">        scale_max_vel_x = std::<span class="built_in">min</span>(<span class="number">1.0</span>, <span class="built_in">sqrt</span>(front_dist_msg-&gt;data / <span class="number">4.0</span>));</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(front_dist_msg-&gt;data &lt;= <span class="number">1.2</span> &amp;&amp; front_dist_msg-&gt;data &gt; <span class="number">0.6</span>)</span><br><span class="line">        scale_max_vel_x = <span class="number">0.3</span>;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        scale_max_vel_x = <span class="number">0.2</span>;  </span><br><span class="line">    </span><br><span class="line">    boost::<span class="function">mutex::scoped_lock <span class="title">l</span><span class="params">(max_vel_mutex_)</span></span>;</span><br><span class="line">    <span class="keyword">if</span>(dist_end_ &lt; <span class="number">2.0</span>)</span><br><span class="line">    &#123;</span><br><span class="line">    	<span class="comment">// robot_goal_ 是子目标</span></span><br><span class="line">        <span class="keyword">double</span> dx = robot_pose_.<span class="built_in">x</span>() - robot_goal_.<span class="built_in">x</span>();</span><br><span class="line">        <span class="keyword">double</span> dy = robot_pose_.<span class="built_in">y</span>() - robot_goal_.<span class="built_in">y</span>();</span><br><span class="line">        <span class="keyword">double</span> distance = <span class="built_in">sqrt</span>(dx * dx + dy * dy);</span><br><span class="line">        <span class="keyword">if</span>(distance &gt; <span class="number">0.5</span>)</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="comment">// 线性速度系数</span></span><br><span class="line">          <span class="keyword">if</span>(!line_k_)</span><br><span class="line">          &#123;</span><br><span class="line">             line_k_ = (robot_vel_.linear.x - <span class="number">0.3</span>) / (distance - <span class="number">0.5</span>);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">double</span> vel = <span class="number">0.3</span> + line_k_ * (distance - <span class="number">0.5</span>);</span><br><span class="line">          </span><br><span class="line">          cfg_.robot.max_vel_x = vel;</span><br><span class="line">          <span class="keyword">if</span>(cfg_.robot.max_vel_x &lt; <span class="number">0.3</span>)</span><br><span class="line">              cfg_.robot.max_vel_x = <span class="number">0.3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(dist_end_ &gt; <span class="number">0.0</span>)</span><br><span class="line">           cfg_.robot.max_vel_x = <span class="number">0.3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(dist_end_ &gt;= <span class="number">2.0</span>)</span><br><span class="line">    &#123;	</span><br><span class="line">    	<span class="comment">// param_max_vel_x_ 是yaml里的配置值，这里是1.25</span></span><br><span class="line">        cfg_.robot.max_vel_x = scale_max_vel_x * param_max_vel_x_;</span><br><span class="line">        <span class="keyword">if</span>(cfg_.robot.max_vel_x &lt; <span class="number">0.3</span>)</span><br><span class="line">            cfg_.robot.max_vel_x = <span class="number">0.3</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 最大速度不能低于0.3，否则实际速度会非常慢</span></span><br><span class="line">    front_max_vel = cfg_.robot.max_vel_x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E6%A0%B9%E6%8D%AE%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%9A%84%E7%9B%AE%E6%A0%87%E5%92%8C%E5%A4%9A%E4%B8%AA%E6%9C%BA%E5%99%A8%E4%BA%BA%E9%97%B4%E8%B7%9D%E4%BC%98%E5%8C%96%E9%80%9F%E5%BA%A6/" data-id="ckr29u6yh006rwglm61l9ceg6" data-title="根据全局路径的目标和多个机器人间距优化速度" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/基于realsense扫描点云的低矮避障/2. 最大线速度的优化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/" class="article-date">
-  <time class="dt-published" datetime="2020-12-11T13:34:55.000Z" itemprop="datePublished">2020-12-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/">(二) 最大线速度优化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>realsense在距离低矮障碍1.8米时才能观测到其点云，如果是更矮的障碍，需要离得更近。 为了能及时避障，在检测到点云时，将**最大速度约束(不是速度)**降到0.25.</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/">(二) 最大线速度优化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></span><div class="content"><p>realsense在距离低矮障碍1.8米时才能观测到其点云，如果是更矮的障碍，需要离得更近。 为了能及时避障，在检测到点云时，将**最大速度约束(不是速度)**降到0.25.</p>
 <p>如果相机的扫描视野和距离更大，效果一定会好很多。 </p>
 <h2 id="根据点云障碍改变最大线速度约束"><a href="#根据点云障碍改变最大线速度约束" class="headerlink" title="根据点云障碍改变最大线速度约束"></a>根据点云障碍改变最大线速度约束</h2><p>在<code>TebLocalPlannerROS::initialize</code>中添加:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 订阅处理过的点云话题</span></span><br><span class="line">pcl_dist_sub = nh.<span class="built_in">subscribe</span>(<span class="string">&quot;/obstacle/PCloud&quot;</span>, <span class="number">1</span>, &amp;TebLocalPlannerROS::pclDistanceCB, <span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
@@ -175,49 +43,7 @@
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( pcl_size &gt; <span class="number">0</span> &amp;&amp; pcl_max_vel&gt;<span class="number">0</span>)</span><br><span class="line">    cfg_.robot.max_vel_x = ( front_max_vel &gt; pcl_max_vel) ? pcl_max_vel : front_max_vel ;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    cfg_.robot.max_vel_x = front_max_vel;</span><br><span class="line"><span class="comment">// actual plan</span></span><br><span class="line"><span class="keyword">bool</span> success = planner_-&gt;<span class="built_in">plan</span>(transformed_plan, &amp;robot_vel_, cfg_.goal_tolerance.free_goal_vel);</span><br><span class="line">         <span class="comment">// ...... 省略</span></span><br><span class="line"><span class="keyword">if</span>( pcl_size &gt; <span class="number">0</span> &amp;&amp; pcl_max_vel&gt;<span class="number">0</span>)</span><br><span class="line">    cfg_.robot.max_vel_x = ( front_max_vel &gt; pcl_max_vel) ? pcl_max_vel : front_max_vel ;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    cfg_.robot.max_vel_x = front_max_vel;</span><br><span class="line"><span class="comment">// Get the velocity command for this sampling interval</span></span><br><span class="line"><span class="keyword">if</span> (!planner_-&gt;<span class="built_in">getVelocityCommand</span>(......)</span><br></pre></td></tr></table></figure>
 
 <p>开始<code>pcl_size</code>没有初始化为0，加上只比较了一次最小值，造成最大速度约束频繁赋值为1.25和0，机器人不停地卡顿，无法行走。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/2.%20%E6%9C%80%E5%A4%A7%E7%BA%BF%E9%80%9F%E5%BA%A6%E7%9A%84%E4%BC%98%E5%8C%96/" data-id="ckr29u74w00lowglmcvjr3ukc" data-title="(二) 最大线速度优化" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/TEB算法/17. 可视化" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/" class="article-date">
-  <time class="dt-published" datetime="2020-12-11T11:44:01.000Z" itemprop="datePublished">2020-12-11</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/">(十七) 可视化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">planner_-&gt;<span class="built_in">visualize</span>();</span><br><span class="line">visualization_-&gt;<span class="built_in">publishObstacles</span>(obstacles_);</span><br><span class="line"><span class="comment">// 很简单，显示 via_point, 坐标来源是 via_points_</span></span><br><span class="line">visualization_-&gt;<span class="built_in">publishViaPoints</span>(via_points_);</span><br><span class="line"><span class="comment">// 很简单，实际调用的是 base_local_planner::publishPlan</span></span><br><span class="line">visualization_-&gt;<span class="built_in">publishGlobalPlan</span>(global_plan_);</span><br></pre></td></tr></table></figure>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/">(十七) 可视化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a></span><div class="content"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">planner_-&gt;<span class="built_in">visualize</span>();</span><br><span class="line">visualization_-&gt;<span class="built_in">publishObstacles</span>(obstacles_);</span><br><span class="line"><span class="comment">// 很简单，显示 via_point, 坐标来源是 via_points_</span></span><br><span class="line">visualization_-&gt;<span class="built_in">publishViaPoints</span>(via_points_);</span><br><span class="line"><span class="comment">// 很简单，实际调用的是 base_local_planner::publishPlan</span></span><br><span class="line">visualization_-&gt;<span class="built_in">publishGlobalPlan</span>(global_plan_);</span><br></pre></td></tr></table></figure>
 
 <h2 id="TebOptimalPlanner-visualize"><a href="#TebOptimalPlanner-visualize" class="headerlink" title="TebOptimalPlanner::visualize"></a>TebOptimalPlanner::visualize</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebOptimalPlanner::visualize</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!visualization_)</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line"> </span><br><span class="line">  visualization_-&gt;<span class="built_in">publishLocalPlanAndPoses</span>(teb_);</span><br><span class="line">  <span class="keyword">if</span> (teb_.<span class="built_in">sizePoses</span>() &gt; <span class="number">0</span>)</span><br><span class="line">      visualization_-&gt;<span class="built_in">publishRobotFootprintModel</span>(teb_.<span class="built_in">Pose</span>(<span class="number">0</span>), *robot_model_);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (cfg_-&gt;trajectory.publish_feedback)</span><br><span class="line">      visualization_-&gt;<span class="built_in">publishFeedbackMessage</span>(*<span class="keyword">this</span>, *obstacles_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>最后部分是发布feedback消息 (single trajectory overload)，话题<code>teb_feedback</code>. 需要设置<code>publish_feedback</code>为true，默认为false</p>
@@ -235,49 +61,7 @@
 
 
 <h2 id="HomotopyClassPlanner-visualize"><a href="#HomotopyClassPlanner-visualize" class="headerlink" title="HomotopyClassPlanner::visualize"></a>HomotopyClassPlanner::visualize</h2><p><code>visualization_</code>的赋值在<code>HomotopyClassPlanner::initialize</code> 最后的 <code>setVisualization(visual);</code></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (visualization_)</span><br><span class="line">&#123;</span><br><span class="line">  		<span class="comment">// Visualize graph</span></span><br><span class="line">  	<span class="keyword">if</span> (cfg_-&gt;hcp.visualize_hc_graph &amp;&amp; graph_search_)</span><br><span class="line">    		visualization_-&gt;<span class="built_in">publishGraph</span>(graph_search_-&gt;graph_);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Visualize active tebs as marker</span></span><br><span class="line">   visualization_-&gt;<span class="built_in">publishTebContainer</span>(tebs_);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Visualize best teb and feedback message if desired</span></span><br><span class="line">   TebOptimalPlannerConstPtr best_teb = <span class="built_in">bestTeb</span>();</span><br><span class="line">   <span class="keyword">if</span> (best_teb)</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="comment">// 只发布best_teb的局部路径，类型是nav_msgs::Path 和 geometry_msgs::PoseArray</span></span><br><span class="line">   	<span class="comment">// 对应话题 local_plan 和 teb_poses</span></span><br><span class="line">     <span class="comment">// 位姿点的z = cfg_-&gt;hcp.visualize_with_time_as_z_axis_scale * </span></span><br><span class="line">   	<span class="comment">// teb.getSumOfTimeDiffsUpToIdx(i)</span></span><br><span class="line"></span><br><span class="line">     visualization_-&gt;<span class="built_in">publishLocalPlanAndPoses</span>(best_teb-&gt;<span class="built_in">teb</span>() );</span><br><span class="line">     <span class="keyword">if</span> (best_teb-&gt;<span class="built_in">teb</span>().<span class="built_in">sizePoses</span>() &gt; <span class="number">0</span>)   <span class="comment">// 路径的位姿点个数</span></span><br><span class="line">         visualization_-&gt;<span class="built_in">publishRobotFootprintModel</span>(best_teb-&gt;<span class="built_in">teb</span>().<span class="built_in">Pose</span>(<span class="number">0</span>), *robot_model_);</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (cfg_-&gt;trajectory.publish_feedback)  <span class="comment">// feedback message</span></span><br><span class="line">     &#123;</span><br><span class="line">       <span class="keyword">int</span> best_idx = <span class="built_in">bestTebIdx</span>();</span><br><span class="line">       <span class="keyword">if</span> (best_idx&gt;=<span class="number">0</span>)</span><br><span class="line">           visualization_-&gt;<span class="built_in">publishFeedbackMessage</span>(tebs_, </span><br><span class="line">                (<span class="keyword">unsigned</span> <span class="keyword">int</span>) best_idx,  *obstacles_  );</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Ignoring HomotopyClassPlanner::visualize() call, since no visualization class was instantiated before.&quot;</span>);</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/11/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/17.%20%E5%8F%AF%E8%A7%86%E5%8C%96/" data-id="ckr29u73t00hzwglm4x8577eq" data-title="(十七) 可视化" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-PCL点云/ROS中的点云消息和解析" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/" class="article-date">
-  <time class="dt-published" datetime="2020-12-09T11:50:05.000Z" itemprop="datePublished">2020-12-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/">点云消息的解析和转换</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><code>sensor_msgs/PointCloud2</code>类型如下:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (visualization_)</span><br><span class="line">&#123;</span><br><span class="line">  		<span class="comment">// Visualize graph</span></span><br><span class="line">  	<span class="keyword">if</span> (cfg_-&gt;hcp.visualize_hc_graph &amp;&amp; graph_search_)</span><br><span class="line">    		visualization_-&gt;<span class="built_in">publishGraph</span>(graph_search_-&gt;graph_);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Visualize active tebs as marker</span></span><br><span class="line">   visualization_-&gt;<span class="built_in">publishTebContainer</span>(tebs_);</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Visualize best teb and feedback message if desired</span></span><br><span class="line">   TebOptimalPlannerConstPtr best_teb = <span class="built_in">bestTeb</span>();</span><br><span class="line">   <span class="keyword">if</span> (best_teb)</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="comment">// 只发布best_teb的局部路径，类型是nav_msgs::Path 和 geometry_msgs::PoseArray</span></span><br><span class="line">   	<span class="comment">// 对应话题 local_plan 和 teb_poses</span></span><br><span class="line">     <span class="comment">// 位姿点的z = cfg_-&gt;hcp.visualize_with_time_as_z_axis_scale * </span></span><br><span class="line">   	<span class="comment">// teb.getSumOfTimeDiffsUpToIdx(i)</span></span><br><span class="line"></span><br><span class="line">     visualization_-&gt;<span class="built_in">publishLocalPlanAndPoses</span>(best_teb-&gt;<span class="built_in">teb</span>() );</span><br><span class="line">     <span class="keyword">if</span> (best_teb-&gt;<span class="built_in">teb</span>().<span class="built_in">sizePoses</span>() &gt; <span class="number">0</span>)   <span class="comment">// 路径的位姿点个数</span></span><br><span class="line">         visualization_-&gt;<span class="built_in">publishRobotFootprintModel</span>(best_teb-&gt;<span class="built_in">teb</span>().<span class="built_in">Pose</span>(<span class="number">0</span>), *robot_model_);</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (cfg_-&gt;trajectory.publish_feedback)  <span class="comment">// feedback message</span></span><br><span class="line">     &#123;</span><br><span class="line">       <span class="keyword">int</span> best_idx = <span class="built_in">bestTebIdx</span>();</span><br><span class="line">       <span class="keyword">if</span> (best_idx&gt;=<span class="number">0</span>)</span><br><span class="line">           visualization_-&gt;<span class="built_in">publishFeedbackMessage</span>(tebs_, </span><br><span class="line">                (<span class="keyword">unsigned</span> <span class="keyword">int</span>) best_idx,  *obstacles_  );</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> <span class="built_in">ROS_DEBUG</span>(<span class="string">&quot;Ignoring HomotopyClassPlanner::visualize() call, since no visualization class was instantiated before.&quot;</span>);</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/">点云消息的解析和转换</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></span><div class="content"><p><code>sensor_msgs/PointCloud2</code>类型如下:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># N维的点云，点的数据以二进制blob形式保存，其layout用fields数组描述</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># The point cloud data may be organized 2d (image-like) or 1d</span></span><br><span class="line"><span class="comment"># (unordered). Point clouds organized as 2d images may be produced by</span></span><br><span class="line"><span class="comment"># camera depth sensors such as stereo or time-of-flight.</span></span><br><span class="line"></span><br><span class="line">Header header</span><br><span class="line"></span><br><span class="line">点云的2D结构，如果点云无序，height是1，width就是点云的length</span><br><span class="line">uint32 height</span><br><span class="line">uint32 width</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用二进制数据blob的形式，描述channels 及其layout</span></span><br><span class="line">PointField[] fields</span><br><span class="line"></span><br><span class="line">bool    is_bigendian</span><br><span class="line">uint32  point_step   <span class="comment"># Length of a point in bytes</span></span><br><span class="line">uint32  row_step     <span class="comment"># Length of a row in bytes</span></span><br><span class="line">uint8[]   data       <span class="comment"># 点的数据，size = row_step * height</span></span><br><span class="line">bool is_dense        <span class="comment"># True if there are no invalid points</span></span><br></pre></td></tr></table></figure>
 <p>PointCloud2的data是序列化后的数据，直接看不到物理意义。只能转为点云1类型</p>
 <p><code>sensor_msgs/PointCloud</code>类型如下:</p>
@@ -307,98 +91,14 @@
 
 <h3 id="pcl-PointCloud-lt-pcl-PointXYZ-gt-转-sensor-msgs-PointCloud2"><a href="#pcl-PointCloud-lt-pcl-PointXYZ-gt-转-sensor-msgs-PointCloud2" class="headerlink" title="pcl::PointCloud &lt; pcl::PointXYZ &gt; 转 sensor_msgs::PointCloud2"></a>pcl::PointCloud &lt; pcl::PointXYZ &gt; 转 sensor_msgs::PointCloud2</h3><p><code>pcl::toROSMsg(*cloud, output);</code></p>
 <p>反过来就是<code>fromROSMsg(const sensor_msgs::PointCloud2 &amp;, pcl::PointCloud&lt;T&gt;&amp;)</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/09/PCL%E7%82%B9%E4%BA%91/ROS%E4%B8%AD%E7%9A%84%E7%82%B9%E4%BA%91%E6%B6%88%E6%81%AF%E5%92%8C%E8%A7%A3%E6%9E%90/" data-id="ckr29u6vu0018wglmatjoaz85" data-title="点云消息的解析和转换" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/代价地图/膨胀层 " class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/" class="article-date">
-  <time class="dt-published" datetime="2020-12-08T13:32:31.000Z" itemprop="datePublished">2020-12-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/">膨胀层</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>膨胀层用于执行每个cell的障碍物膨胀</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/">膨胀层</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></span><div class="content"><p>膨胀层用于执行每个cell的障碍物膨胀</p>
 <ul>
 <li>inflation_radius (double, default: 0.55) 障碍物在地图中向外扩展的膨胀区的半径</li>
 <li>cost_scaling_factor (double, default: 10.0) 膨胀过程中应用到代价值的比例因子。这个值越大，代价衰减越严重</li>
 </ul>
 <p><img src="https://i.loli.net/2020/05/13/zEXgNALkVBIiD7r.png" alt="膨胀层加载过程.png"><br>膨胀层所用的参数：<a target="_blank" rel="noopener" href="http://wiki.ros.org/costmap_2d/hydro/inflation">inflation params</a></p>
 <p>可以修改膨胀层代码 <code>inflation_layer.h</code>， 添加函数<code>double  getInflationRadius() const</code> 和 <code>double   getInscribedRadius() const</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/08/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E8%86%A8%E8%83%80%E5%B1%82%20/" data-id="ckr29u74o00kuwglm52zigofb" data-title="膨胀层" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Linux基础/ldd和ldconfig命令" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/" class="article-date">
-  <time class="dt-published" datetime="2020-12-04T11:44:34.000Z" itemprop="datePublished">2020-12-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/">ldd和ldconfig命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="ldd"><a href="#ldd" class="headerlink" title="ldd"></a>ldd</h2><p>命令的作用是打印共享库的依赖关系</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/">ldd和ldconfig命令</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></span><div class="content"><h2 id="ldd"><a href="#ldd" class="headerlink" title="ldd"></a>ldd</h2><p>命令的作用是打印共享库的依赖关系</p>
 <ol>
 <li><p>ldd不是一个可执行程序，而只是一个shell脚本。ldd能够显示可执行模块的 dependency，其原理是通过设置一系列的环境变量，如下：LD_TRACE_LOADED_OBJECTS、LD_WARN、LD_BIND_NOW、LD_LIBRARY_VERSION、 LD_VERBOSE等。</p>
 </li>
@@ -408,49 +108,7 @@
 <h2 id="ldconfig"><a href="#ldconfig" class="headerlink" title="ldconfig"></a>ldconfig</h2><p>有时装完某个库后，需要使用命令<code>sudo ldconfig -v</code>，否则在程序运行后会出现找不到动态库的问题: <font size =4 color = orange> error while loading shared libraries: liblog4cpp.so.5: cannot open shared object file: No such file or directory </font></p>
 <p>ldconfig是一个动态链接库管理命令，为了让动态链接库为系统所共享,还需运行动态链接库的管理命令</p>
 <p><code>ldconfig</code>通常在系统启动时运行,而当用户安装了一个新的动态链接库时,就需要手工运行这个命令.主要是在默认搜寻目录(/lib和/usr/lib)以及动态库配置文件/etc/ld.so.conf内所列的目录下,搜索出可共享的动态链接库(格式如前介绍,lib*.so*),进而创建出动态装入程序(ld.so)所需的连接和缓存文件.  ldconfig与运行程序时有关，跟编译时一点关系都没有。不管做了什么关于library的变动后，最好都ldconfig一下，不然会出现一些意想不到的结果。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/04/Linux%E5%9F%BA%E7%A1%80/ldd%E5%92%8Cldconfig%E5%91%BD%E4%BB%A4/" data-id="ckr29u6ve000awglmfrmf9zev" data-title="ldd和ldconfig命令" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/基于realsense扫描点云的低矮避障/1. 初步配置和发现的问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-12-04T11:33:05.000Z" itemprop="datePublished">2020-12-04</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/">(一) 初步配置和发现的问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>为了能扫描到低处的障碍，相机的安装也是个问题，realsense435与地面呈一定角度，也就是相机需要低着头，这跟相机的FOV有关，FOV当然是越大越好。在机器人静止状态下，根据rviz中的原始点云情况调试。如果低头太多，等看到低处障碍时，车已经离得太近，躲避不开；如果低头少或者相机平视前方，车近处的障碍看不到，无法避障。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/">(一) 初步配置和发现的问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></span><div class="content"><p>为了能扫描到低处的障碍，相机的安装也是个问题，realsense435与地面呈一定角度，也就是相机需要低着头，这跟相机的FOV有关，FOV当然是越大越好。在机器人静止状态下，根据rviz中的原始点云情况调试。如果低头太多，等看到低处障碍时，车已经离得太近，躲避不开；如果低头少或者相机平视前方，车近处的障碍看不到，无法避障。</p>
 <p>realsense需要加滤波片，其他相机不清楚<br><img src="https://i.loli.net/2021/06/08/fQJGilwkKbeqTPg.png" alt="原始点云的扫描情况"></p>
 <p><img src="https://i.loli.net/2021/06/08/eD9oLa21vK8MhOI.png" alt="机器人, 相机坐标系和障碍.png"></p>
 <p><img src="https://i.loli.net/2020/12/23/L8HBIJea2sgFhvE.png" alt="相机坐标系和点云的关系"></p>
@@ -528,49 +186,7 @@
 <li>点云障碍无法自动请除</li>
 </ul>
 <p>虽然在yaml里设置了<code>observation_persistence</code>，但发现代价地图里的点云障碍会长时间保留，早已超过了配置的值<br><img src="https://i.loli.net/2020/12/18/cg5yEqoRZuPX31H.png" alt="之前的点云障碍不会自动清除"><br>雷达导航没有这个现象，因为雷达扫描的范围很大，马上就清除了。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/04/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/1.%20%E5%88%9D%E6%AD%A5%E9%85%8D%E7%BD%AE%E5%92%8C%E5%8F%91%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98/" data-id="ckr29u74w00llwglm4qxxdq1c" data-title="(一) 初步配置和发现的问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/大轮廓机器人的导航/(五) 导航的其他问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-12-03T03:25:21.000Z" itemprop="datePublished">2020-12-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/">(五) 导航的其他问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="尾部撞障碍"><a href="#尾部撞障碍" class="headerlink" title="尾部撞障碍"></a>尾部撞障碍</h2><p><img src="https://i.loli.net/2020/11/30/8D6iYKqEWo3QCGJ.png" alt="尾部潜在的碰撞.png"><br>车的局部路径明显偏离全局路径，其实是目标点太贴近障碍了，如果按全局路径，尾部就会撞。即使按局部路径，走了一点后还是可能撞，但是<code>isFeasible</code>判断的路径点不够多，所以不会报警。  这其实是全局路径规划的不好</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/">(五) 导航的其他问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></span><div class="content"><h2 id="尾部撞障碍"><a href="#尾部撞障碍" class="headerlink" title="尾部撞障碍"></a>尾部撞障碍</h2><p><img src="https://i.loli.net/2020/11/30/8D6iYKqEWo3QCGJ.png" alt="尾部潜在的碰撞.png"><br>车的局部路径明显偏离全局路径，其实是目标点太贴近障碍了，如果按全局路径，尾部就会撞。即使按局部路径，走了一点后还是可能撞，但是<code>isFeasible</code>判断的路径点不够多，所以不会报警。  这其实是全局路径规划的不好</p>
 <h2 id="禁止后，导致局部路径需要后退时动不了"><a href="#禁止后，导致局部路径需要后退时动不了" class="headerlink" title="禁止后，导致局部路径需要后退时动不了"></a>禁止后，导致局部路径需要后退时动不了</h2><p><img src="https://i.loli.net/2020/11/30/CBGmwdihu7leQVo.png" alt="无法后退1.png"><br><img src="https://i.loli.net/2020/11/30/T6Nf3R4OeYZGU1g.png" alt="无法后退2.png"></p>
 <h2 id="路径点杂乱"><a href="#路径点杂乱" class="headerlink" title="路径点杂乱"></a>路径点杂乱</h2><p>这个很难复现<br><img src="https://i.loli.net/2020/11/30/dDxbKJmkIPoaNZQ.png" alt="路径点杂乱.png"><br><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=ETORdzBcT0w">video</a></p>
 <p><code>HomotopyClassPlanner::plan</code>中的最后部分修改如下:</p>
@@ -580,98 +196,14 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[10:59:26.877] (): Received move_base goal (x: 1.533, y: 4.569, yaw deg: -177, yaw rad: -3.10)</span><br><span class="line">[10:59:44.914 - WARN] (): Robot <span class="keyword">in</span> controlling, but can<span class="string">&#x27;t get new global plan</span></span><br><span class="line"><span class="string">[10:59:44.991] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span></span><br><span class="line"><span class="string">[10:59:47.024 - WARN] (): two valid global plan time gap is too long: 0.032124</span></span><br><span class="line"><span class="string">[10:59:47.057] (): move_base_recovery,state machine is CLEARING, Executing behavior 1 of 2</span></span><br><span class="line"><span class="string">[10:59:49.079 - WARN] (): two valid global plan time gap is too long: 0.018764</span></span><br><span class="line"><span class="string">[10:59:49.091 - ERROR] (): Aborting because a valid plan could not be found. Even after executing all recovery behaviors</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[11:02:20.791] (): Received move_base goal (x: 2.740, y: 4.620, yaw deg: -179, yaw rad: -3.14)</span></span><br><span class="line"><span class="string">[11:02:22.799 - WARN] (): Robot in controlling, but can&#x27;</span>t get new global plan</span><br><span class="line">[11:02:22.833] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span><br><span class="line">[11:02:24.970 - WARN] (): Robot <span class="keyword">in</span> controlling, but can<span class="string">&#x27;t get new global plan</span></span><br><span class="line"><span class="string">[11:02:25.015] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span></span><br><span class="line"><span class="string">[11:02:28.076 - WARN] (): Robot in controlling, but can&#x27;</span>t get new global plan</span><br><span class="line">[11:02:28.089] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span><br><span class="line">[11:02:30.123 - WARN] (): two valid global plan time gap is too long: 0.032326</span><br><span class="line">[11:02:30.156] (): move_base_recovery,state machine is CLEARING, Executing behavior 1 of 2</span><br><span class="line">[11:02:32.671 - WARN] (): Robot <span class="keyword">in</span> controlling, but can<span class="string">&#x27;t get new global plan</span></span><br><span class="line"><span class="string">[11:02:32.694] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span></span><br><span class="line"><span class="string">[11:02:34.728 - WARN] (): two valid global plan time gap is too long: 0.028351</span></span><br><span class="line"><span class="string">[11:02:34.762] (): move_base_recovery,state machine is CLEARING, Executing behavior 1 of 2</span></span><br><span class="line"><span class="string">[11:02:37.029 - WARN] (): Robot in controlling, but can&#x27;</span>t get new global plan</span><br><span class="line">[11:02:37.119] (): move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span><br><span class="line">[11:02:39.153 - WARN] (): two valid global plan time gap is too long: 0.033766</span><br><span class="line">[11:02:39.186] (): move_base_recovery,state machine is CLEARING, Executing behavior 1 of 2</span><br><span class="line">[11:02:41.187 - WARN] (): two valid global plan time gap is too long: 0.001234</span><br><span class="line">[11:02:41.219 - ERROR] (): Aborting because a valid plan could not be found. Even after executing all recovery behaviors</span><br></pre></td></tr></table></figure>
 
 <p>这其实对应<code>makePlan</code>失败的两种情况，在<code>move_base</code>中搜索<code>solution for issue #523</code>可发现，一个的state是<code>CONTROLLING</code>，一个是<code>PLANNING</code>。都添加了<code>publishZeroVelocity</code>禁止小车再移动，但是小车还是会移动，结果撞障碍。 这个现象在仿真中没有出现过。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%BA%94)%20%E5%AF%BC%E8%88%AA%E7%9A%84%E5%85%B6%E4%BB%96%E9%97%AE%E9%A2%98/" data-id="ckr29u75100m2wglmaojbf6pp" data-title="(五) 导航的其他问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/大轮廓机器人的导航/(三) 振荡问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-12-01T02:17:51.000Z" itemprop="datePublished">2020-12-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/">(三) 振荡问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>车到目标附近，有时以很小角速度旋转，一定时间后才到达。如果无法到达，一般是目标的位姿不好，车相当于钻一个狭窄的地方，很容易触发TEB的振荡机制。首先通过试验保证目标点合适，其次适当增加<code>xy_goal_tolerance</code>和<code>yaw_goal_tolerance</code>。由于实际要求的朝向不是0就是π，所以不会有车中心到达位置，但车尾会撞障碍的情况。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/">(三) 振荡问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-12-01</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></span><div class="content"><p>车到目标附近，有时以很小角速度旋转，一定时间后才到达。如果无法到达，一般是目标的位姿不好，车相当于钻一个狭窄的地方，很容易触发TEB的振荡机制。首先通过试验保证目标点合适，其次适当增加<code>xy_goal_tolerance</code>和<code>yaw_goal_tolerance</code>。由于实际要求的朝向不是0就是π，所以不会有车中心到达位置，但车尾会撞障碍的情况。</p>
 <p>修改TEB参数:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 减小后，recently_oscillated 容易是false</span></span><br><span class="line">oscillation_recovery_min_duration: 5</span><br><span class="line">oscillation_v_eps: 0.1</span><br><span class="line">oscillation_omega_eps: 0.1</span><br><span class="line">oscillation_filter_duration: 6</span><br></pre></td></tr></table></figure>
 
 <p>在源码中的部分</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> oscillating = failure_detector_.<span class="built_in">isOscillating</span>();</span><br><span class="line"><span class="comment">// 距离上次振荡过了多久，若小于配置值(10秒)，说明最近也振荡了</span></span><br><span class="line"><span class="keyword">bool</span> recently_oscillated = (ros::Time::<span class="built_in">now</span>()-time_last_oscillation_).<span class="built_in">toSec</span>() &lt; </span><br><span class="line">			cfg_.recovery.oscillation_recovery_min_duration;</span><br><span class="line"><span class="comment">// 如果现在是振荡状态</span></span><br><span class="line"><span class="keyword">if</span> (oscillating)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!recently_oscillated)    <span class="comment">//  最近的状态不是振荡</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// save current turning direction</span></span><br><span class="line">        <span class="comment">// 以下其实都是对 last_preferred_rotdir_ 赋值</span></span><br><span class="line">        <span class="keyword">if</span> (robot_vel_.angular.z &gt; <span class="number">0</span>)</span><br><span class="line">            last_preferred_rotdir_ = RotType::left;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            last_preferred_rotdir_ = RotType::right;</span><br><span class="line">        <span class="built_in">ROS_WARN</span>(<span class="string">&quot;TebLocalPlannerROS: possible oscillation (of the robot </span></span><br><span class="line"><span class="string">            or its local plan) detected. Activating recovery strategy </span></span><br><span class="line"><span class="string">            (prefer current turning direction during optimization) &quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    time_last_oscillation_ = ros::Time::<span class="built_in">now</span>();</span><br><span class="line">    <span class="comment">// 对 prefer_rotdir_ 赋值，最终影响 AddEdgesPreferRotDir</span></span><br><span class="line">    planner_-&gt;<span class="built_in">setPreferredTurningDir</span>(last_preferred_rotdir_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>减小<code>oscillation_recovery_min_duration</code>后，在源码中会容易更新<code>last_preferred_rotdir_</code>，原来是转过了目标点后接着转，现在是转过了以后会朝反方向调整。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/12/01/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/(%E4%B8%89)%20%E6%8C%AF%E8%8D%A1%E9%97%AE%E9%A2%98/" data-id="ckr29u75000lzwglm3m7191ds" data-title="(三) 振荡问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/move_base 分析/move_base参数" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" class="article-date">
-  <time class="dt-published" datetime="2020-11-30T13:22:22.000Z" itemprop="datePublished">2020-11-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/">move_base参数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/">move_base参数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-11-30</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></span><div class="content"><ul>
 <li><p>base_global_planner: 指定全局规划器</p>
 </li>
 <li><p>base_local_planner: 指定局部规划器</p>
@@ -695,144 +227,7 @@
 <li><p>oscillation_distance</p>
 </li>
 </ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/" data-id="ckr29u74a00jgwglm031t5jzm" data-title="move_base参数" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/7/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/9/">Next &raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">高斯牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/">&lt;i class&#x3D;&quot;fa fa-chevron-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/9/">&lt;i class&#x3D;&quot;fa fa-chevron-right&quot;&gt;&lt;&#x2F;i&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By John Doe</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>

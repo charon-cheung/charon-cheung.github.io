@@ -1,149 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/page/21/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="en_US">
-<meta property="article:author" content="John Doe">
-<meta name="twitter:card" content="summary">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
-
-  
-  
-<link rel="stylesheet" href="/css/style.css">
-
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
-
-  
-<meta name="generator" content="Hexo 5.4.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-路径规划/全局路径/Dijkstra算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/Dijkstra%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2020-04-29T13:44:12.000Z" itemprop="datePublished">2020-04-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/Dijkstra%E7%AE%97%E6%B3%95/">Dijkstra算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>以下面的加权图举例，说明算法的过程<br><img src="https://i.loli.net/2020/04/29/J7bChVqudesxPQI.png" alt="加权图"></p>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content=""><meta name="keywords" content=""><meta name="author" content="John Doe"><meta name="copyright" content="John Doe"><title>Hexo</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">John Doe</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">440</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><nav id="nav" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Hexo</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Hexo</div><div id="site-sub-title"></div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/Dijkstra%E7%AE%97%E6%B3%95/">Dijkstra算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></span><div class="content"><p>以下面的加权图举例，说明算法的过程<br><img src="https://i.loli.net/2020/04/29/J7bChVqudesxPQI.png" alt="加权图"></p>
 <p><img src="https://i.loli.net/2020/05/01/xgfC69Z13Y2dit7.png" alt="伪代码.png"></p>
 <p><img src="https://i.loli.net/2020/05/01/ZR2sv4ug7jSJGmF.jpg" alt="过程1.jpg"><br><img src="https://i.loli.net/2020/05/01/pjLBkerx3bF1SJP.jpg" alt="过程2.jpg"></p>
 <p>Dijkstra需要遍历所有节点才能找到最短路径，所以不适合复杂路径等大规模场景。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/Dijkstra%E7%AE%97%E6%B3%95/" data-id="ckr29u74u00lewglmgmag2lqu" data-title="Dijkstra算法" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-路径规划/全局路径/A星算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/A%E6%98%9F%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2020-04-27T14:11:13.000Z" itemprop="datePublished">2020-04-27</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a>►<a class="article-category-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/A%E6%98%9F%E7%AE%97%E6%B3%95/">A星算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><img src="https://i.loli.net/2020/04/27/zydFIWuo2G1wspg.jpg" alt="地图和起点，终点"></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/A%E6%98%9F%E7%AE%97%E6%B3%95/">A星算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></span><div class="content"><p><img src="https://i.loli.net/2020/04/27/zydFIWuo2G1wspg.jpg" alt="地图和起点，终点"></p>
 <p><img src="https://i.loli.net/2020/04/27/uL6lVC4bGaefQ3M.png" alt="算法的伪代码.png"></p>
 <p><img src="https://i.loli.net/2020/04/27/UEmGAD6e2OJQZTx.jpg" alt="1.jpg"></p>
 <p><img src="https://i.loli.net/2020/04/27/8XPvUjhBMxinIly.jpg" alt="2.jpg"></p>
@@ -155,49 +23,7 @@
 <li>对路径上的当前点，<code>A*</code>算法不但记录其到源点的代价，还计算当前点到目标点的期望代价，是一种启发式算法，也可以认为是一种深度优先的算法。</li>
 </ul>
 <p>下图是A星算法的路径，明显不是最短路径<br><img src="https://i.loli.net/2020/09/06/wymSU7b39ocVMEs.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/A%E6%98%9F%E7%AE%97%E6%B3%95/" data-id="ckr29u74t00l9wglm5v0maxkh" data-title="A星算法" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-ROS/ROS机器人/rviz里查看nav_msgs Path" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/25/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rviz%E9%87%8C%E6%9F%A5%E7%9C%8Bnav_msgs%20Path/" class="article-date">
-  <time class="dt-published" datetime="2020-04-25T13:23:46.000Z" itemprop="datePublished">2020-04-25</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ROS/">ROS</a>►<a class="article-category-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/25/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rviz%E9%87%8C%E6%9F%A5%E7%9C%8Bnav_msgs%20Path/">rviz里查看nav_msgs/Path</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>有一次需要写一个简单的Publisher程序，发布一段路径，不过是没有在机器人程序的环境下。消息的类型是<code>nav_msgs/Path</code>：</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/25/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rviz%E9%87%8C%E6%9F%A5%E7%9C%8Bnav_msgs%20Path/">rviz里查看nav_msgs/Path</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>有一次需要写一个简单的Publisher程序，发布一段路径，不过是没有在机器人程序的环境下。消息的类型是<code>nav_msgs/Path</code>：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std_msgs/Header header</span><br><span class="line">geometry_msgs/PoseStamped[] poses</span><br></pre></td></tr></table></figure>
 <p>注意poses是个带header的vector，也就是说消息里有两个相同的header，这是不太好的地方。</p>
 <p>rviz里的global frame是<code>map</code>，如果<code>fixed frame</code>选项设置不正确，那么就会无法显示显示相应的数据信息，并提示一下错误： <code>For frame [XX]: Fixed Frame [map] does not exist</code></p>
@@ -211,49 +37,7 @@
 <p>如果上面的nav_msgs/Path少设置了header，rviz里会报错：<br><img src="https://i.loli.net/2020/04/25/kFpIZbam2uqTYwS.png" alt="frame[] does not exists.png"></p>
 <p>经过以上设置，就可以在rviz查看nav_msgs/Path了</p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/xu_fengyu/article/details/86562827?depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1&utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1">RVIZ中的fixed frame选项</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/coldplayplay/article/details/78930632">rviz无法显示的问题</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/25/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/rviz%E9%87%8C%E6%9F%A5%E7%9C%8Bnav_msgs%20Path/" data-id="ckr29u72b00eqwglmcffzed8o" data-title="rviz里查看nav_msgs/Path" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Matlab/Matlab中使用ROS" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/21/Matlab/Matlab%E4%B8%AD%E4%BD%BF%E7%94%A8ROS/" class="article-date">
-  <time class="dt-published" datetime="2020-04-21T12:00:07.000Z" itemprop="datePublished">2020-04-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Matlab/">Matlab</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/21/Matlab/Matlab%E4%B8%AD%E4%BD%BF%E7%94%A8ROS/">Matlab中使用ROS</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>把Matlab编写的路径规划算法用于ROS中的自主导航，matlab也有ros的接口，可以通过话题直接把算法结果发给ROS环境，控制机器人移动</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/21/Matlab/Matlab%E4%B8%AD%E4%BD%BF%E7%94%A8ROS/">Matlab中使用ROS</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-21</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Matlab/">Matlab</a></span><div class="content"><p>把Matlab编写的路径规划算法用于ROS中的自主导航，matlab也有ros的接口，可以通过话题直接把算法结果发给ROS环境，控制机器人移动</p>
 <h2 id="实现Matlab和ROS的通信"><a href="#实现Matlab和ROS的通信" class="headerlink" title="实现Matlab和ROS的通信"></a>实现Matlab和ROS的通信</h2><p>master可以在Matlab上，但这种需求很少，一般在Ubuntu上，下面演示从Matlab连接ROS的过程</p>
 <p>执行<code>setenv(&#39;ROS_MASTER_URI&#39;,&#39;http://192.168.1.7:11311&#39;)</code>，IP为master</p>
 <p>然后执行<code>rosinit</code>，正常的话会出现下面提示：</p>
@@ -262,140 +46,14 @@
 <p>现在二者通信成功了，可以使用<code>rosnodel list</code>等命令了。但是与标准的ROS命令有所不同，以下列出常用的几个：<br><img src="https://i.loli.net/2020/05/01/c1Eup5Sial8FUKy.png" alt="常用命令.png"></p>
 <p><code>rosshutdown</code>用于退出ROS网络，在此之后Matlab和ROS不再通信。<br><img src="https://i.loli.net/2020/05/01/39FetO2DkAqVTxi.png" alt="rosshutdown.png"></p>
 <p>参考：<a target="_blank" rel="noopener" href="https://www.guyuehome.com/1006">Matlab中的ROS</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/21/Matlab/Matlab%E4%B8%AD%E4%BD%BF%E7%94%A8ROS/" data-id="ckr29u6vg000dwglmgfdc69zw" data-title="Matlab中使用ROS" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-脚本/kill pkill kilalll" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/20/%E8%84%9A%E6%9C%AC/kill%20pkill%20kilalll/" class="article-date">
-  <time class="dt-published" datetime="2020-04-20T11:08:15.000Z" itemprop="datePublished">2020-04-20</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/20/%E8%84%9A%E6%9C%AC/kill%20pkill%20kilalll/">kill pkill killalll</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>总结一下Linux下的pkill, kill, killall:</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/20/%E8%84%9A%E6%9C%AC/kill%20pkill%20kilalll/">kill pkill killalll</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-20</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></span><div class="content"><p>总结一下Linux下的pkill, kill, killall:</p>
 <ul>
 <li>kill pid: 按pid杀死进程</li>
 <li>kill -9 pid: 按pid强制终止进程，但是可能造成数据丢失，轻易不要使用</li>
 <li>killall name: 按名称杀死一个进程组的所有进程，比如killall chrome杀死所有的chrome进程</li>
 </ul>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pkill name: 按名称终止包含name的所有进程</span><br><span class="line">pkill -o chrome   <span class="comment"># 杀死最旧的chrome进程</span></span><br><span class="line">pkill -n chrome   <span class="comment"># 杀死最新的chrome进程</span></span><br><span class="line">pkill -c chrome   <span class="comment"># 杀死所有chrome进程，同时显示数量</span></span><br><span class="line"></span><br><span class="line">pidof  chrome    <span class="comment"># 显示所有进程的pid，进程名必须完整</span></span><br><span class="line">pgrep  sublime  <span class="comment"># 通过名字获取pid，可以是部分进程名</span></span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/20/%E8%84%9A%E6%9C%AC/kill%20pkill%20kilalll/" data-id="ckr29u6xq0052wglmcalueeaz" data-title="kill pkill killalll" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Matlab/Matlab常用操作" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/12/Matlab/Matlab%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" class="article-date">
-  <time class="dt-published" datetime="2020-04-12T11:02:28.000Z" itemprop="datePublished">2020-04-12</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Matlab/">Matlab</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/12/Matlab/Matlab%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">Matlab常用操作</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="matlab执行dos命令"><a href="#matlab执行dos命令" class="headerlink" title="matlab执行dos命令"></a>matlab执行dos命令</h2><p>dos函数： <code>dos(&#39;ping 192.168.0.109&#39;)</code></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/12/Matlab/Matlab%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/" data-id="ckr29u6vh000fwglm86ae3x55" data-title="Matlab常用操作" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/雷达/laser_filters" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/laser_filters/" class="article-date">
-  <time class="dt-published" datetime="2020-04-09T12:37:10.000Z" itemprop="datePublished">2020-04-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/laser_filters/">laser_filters</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p><code>scan_tools</code>提供了一系列用于激光SLAM的工具,在github的分支只到indigo,所以无法从ros直接安装,但可以编译源码安装. 其中重要的有:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">pkill name: 按名称终止包含name的所有进程</span><br><span class="line">pkill -o chrome   <span class="comment"># 杀死最旧的chrome进程</span></span><br><span class="line">pkill -n chrome   <span class="comment"># 杀死最新的chrome进程</span></span><br><span class="line">pkill -c chrome   <span class="comment"># 杀死所有chrome进程，同时显示数量</span></span><br><span class="line"></span><br><span class="line">pidof  chrome    <span class="comment"># 显示所有进程的pid，进程名必须完整</span></span><br><span class="line">pgrep  sublime  <span class="comment"># 通过名字获取pid，可以是部分进程名</span></span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/12/Matlab/Matlab%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C/">Matlab常用操作</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Matlab/">Matlab</a></span><div class="content"><h2 id="matlab执行dos命令"><a href="#matlab执行dos命令" class="headerlink" title="matlab执行dos命令"></a>matlab执行dos命令</h2><p>dos函数： <code>dos(&#39;ping 192.168.0.109&#39;)</code></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/laser_filters/">laser_filters</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></span><div class="content"><p><code>scan_tools</code>提供了一系列用于激光SLAM的工具,在github的分支只到indigo,所以无法从ros直接安装,但可以编译源码安装. 其中重要的有:</p>
 <ul>
 <li><p><strong>laser_scan_matcher</strong>: an incremental laser scan matcher, using Andrea Censi’s Canonical Scan Matcher implementation. It downloads and installs Andrea Censi’s Canonical Scan Matcher [1] locally.</p>
 </li>
@@ -410,49 +68,7 @@
 <p>又比如使用<code>LaserScanAngularBoundsFilter</code>，只取-45°~45°内的scan，结果如下，<font color = blue size=4>要把laser坐标系的x轴放到水平向右的方向观察 </font>：</p>
 <p><img src="https://i.loli.net/2020/07/28/JTmPLzMGa3OeuoB.png" alt="-45°至45°.png"></p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/fantasysolo/article/details/80732014?utm_medium=distribute.pc_feed_404.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&depth_1-utm_source=distribute.pc_feed_404.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecas">scan_filtered的使用</a><br><a target="_blank" rel="noopener" href="http://wiki.ros.org/laser_filters">laser_filters</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/09/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/laser_filters/" data-id="ckr29u73h00h9wglm84p3f9cc" data-title="laser_filters" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/ICP/csm包的源码解读 (一)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%B8%80)/" class="article-date">
-  <time class="dt-published" datetime="2020-04-09T12:29:38.000Z" itemprop="datePublished">2020-04-09</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%B8%80)/">csm包的源码解读 (一)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="sm-params-sm-result"><a href="#sm-params-sm-result" class="headerlink" title="sm_params   sm_result"></a>sm_params   sm_result</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sm_params</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/** First scan (参考帧) */</span></span><br><span class="line">    LDP laser_ref;</span><br><span class="line">    <span class="comment">/** Second scan (&quot;目标帧) */</span></span><br><span class="line">    LDP laser_sens;</span><br><span class="line">    <span class="keyword">double</span> first_guess[<span class="number">3</span>]; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Maximum angular displacement between scans (deg)*/</span></span><br><span class="line">    <span class="keyword">double</span> max_angular_correction_deg;</span><br><span class="line">    <span class="comment">/** Maximum translation between scans (m) */</span></span><br><span class="line">    <span class="keyword">double</span> max_linear_correction;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> max_iterations;</span><br><span class="line">    <span class="comment">/** A threshold for stopping. */</span></span><br><span class="line">    <span class="keyword">double</span> epsilon_xy;</span><br><span class="line">    <span class="comment">/** A threshold for stopping. */</span></span><br><span class="line">    <span class="keyword">double</span> epsilon_theta;</span><br><span class="line">    <span class="comment">/** Maximum distance for a correspondence to be valid */</span></span><br><span class="line">    <span class="keyword">double</span> max_correspondence_dist;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 使用 smart tricks 匹配. 只影响匹配速度，不影响收敛结果 */</span></span><br><span class="line">    <span class="keyword">int</span> use_corr_tricks;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Restart if error under threshold (0 or 1)*/</span></span><br><span class="line">    <span class="keyword">int</span> restart;</span><br><span class="line">    <span class="comment">/** Threshold for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_threshold_mean_error;</span><br><span class="line">    <span class="comment">/** Displacement for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_dt;</span><br><span class="line">    <span class="comment">/** Displacement for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_dtheta;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Functions concerning discarding correspondences.</span></span><br><span class="line"><span class="comment">       THESE ARE MAGIC NUMBERS -- and they need to be tuned. */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Percentage of correspondences to consider: if 0.9,</span></span><br><span class="line"><span class="comment">        always discard the top 10% of correspondences with more error */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_maxPerc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Parameters describing a simple adaptive algorithm for discarding.</span></span><br><span class="line"><span class="comment">        1) Order the errors.</span></span><br><span class="line"><span class="comment">        2) Choose the percentile according to outliers_adaptive_order.</span></span><br><span class="line"><span class="comment">           (if it is 0.7, get the 70% percentile)</span></span><br><span class="line"><span class="comment">        3) Define an adaptive threshold multiplying outliers_adaptive_mult</span></span><br><span class="line"><span class="comment">           with the value of the error at the chosen percentile.</span></span><br><span class="line"><span class="comment">        4) Discard correspondences over the threshold.</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        This is useful to be conservative; yet remove the biggest errors.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_adaptive_order; <span class="comment">/* 0.7 */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_adaptive_mult; <span class="comment">/* 2 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Do not allow two different correspondences to share a point */</span></span><br><span class="line">    <span class="keyword">int</span> outliers_remove_doubles; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Functions that compute and use point orientation for defining matches. */</span></span><br><span class="line">    <span class="comment">/** For now, a very simple max-distance clustering algorithm is used */</span></span><br><span class="line">    <span class="keyword">double</span> clustering_threshold;</span><br><span class="line">    <span class="comment">/** Number of neighbour rays used to estimate the orientation.*/</span></span><br><span class="line">    <span class="keyword">int</span> orientation_neighbourhood;</span><br><span class="line">    <span class="comment">/** Discard correspondences based on the angles */</span></span><br><span class="line">    <span class="keyword">int</span> do_alpha_test;</span><br><span class="line">    <span class="keyword">double</span> do_alpha_test_thresholdDeg;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/** I believe this trick is documented in one of the papers by Guttman (but I can&#x27;t find</span></span><br><span class="line"><span class="comment">        the reference). Or perhaps I was told by him directly. </span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        If you already have a guess of the solution, you can compute the polar angle</span></span><br><span class="line"><span class="comment">        of the points of one scan in the new position. If the polar angle is not a monotone</span></span><br><span class="line"><span class="comment">        function of the readings index, it means that the surface is not visible in the </span></span><br><span class="line"><span class="comment">        next position. If it is not visible, then we don&#x27;t use it for matching.</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        This is confusing without a picture! To understand what&#x27;s going on, make a drawing</span></span><br><span class="line"><span class="comment">        in which a surface is not visible in one of the poses.</span></span><br><span class="line"><span class="comment">        Implemented in the function visibilityTest().</span></span><br><span class="line"><span class="comment">    */</span>  </span><br><span class="line">    <span class="keyword">int</span> do_visibility_test;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** If 1, use PlICP; if 0, use vanilla ICP. */</span></span><br><span class="line">    <span class="keyword">int</span> use_point_to_line_distance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** If 1, the field &quot;true_alpha&quot; is used to compute the incidence</span></span><br><span class="line"><span class="comment">        beta, and the factor (1/cos^2(beta)) used to weight the impact</span></span><br><span class="line"><span class="comment">        of each correspondence. This works fabolously if doing localization,</span></span><br><span class="line"><span class="comment">        that is the first scan has no noise.</span></span><br><span class="line"><span class="comment">        If &quot;true_alpha&quot; is not available, it uses &quot;alpha&quot;.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">int</span> use_ml_weights;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* If 1, the field &quot;readings_sigma&quot; is used to weight the correspondence by 1/sigma^2 */</span></span><br><span class="line">    <span class="keyword">int</span> use_sigma_weights;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Use the method in http://purl.org/censi/2006/icpcov to compute</span></span><br><span class="line"><span class="comment">        the matching covariance. */</span></span><br><span class="line">    <span class="keyword">int</span> do_compute_covariance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Checks that find_correspondences_tricks give the right answer */</span></span><br><span class="line">    <span class="keyword">int</span> debug_verify_tricks;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Pose of sensor with respect to robot: used for computing</span></span><br><span class="line"><span class="comment">        the first estimate given the odometry. */</span></span><br><span class="line">    <span class="keyword">double</span> laser[<span class="number">3</span>]; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Noise in the scan */</span></span><br><span class="line">    <span class="keyword">double</span> sigma;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** mark as invalid ( = don&#x27;t use ) rays outside of this interval */</span></span><br><span class="line">    <span class="keyword">double</span> min_reading, max_reading;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Parameters specific to GPM (unfinished :-/ ) */</span></span><br><span class="line">    <span class="keyword">double</span> gpm_theta_bin_size_deg;</span><br><span class="line">    <span class="keyword">double</span> gpm_extend_range_deg; </span><br><span class="line">    <span class="keyword">int</span> gpm_interval;</span><br><span class="line">    <span class="comment">/* Parameter specific to HSM (unfinished :-/ ) */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">hsm_params</span> <span class="title">hsm</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sm_result</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/** 1 if the result is valid */</span></span><br><span class="line">    <span class="keyword">int</span> valid;</span><br><span class="line">    <span class="comment">/** Scan matching result (x,y,theta) */</span></span><br><span class="line">    <span class="keyword">double</span> x[<span class="number">3</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Number of iterations done */</span></span><br><span class="line">    <span class="keyword">int</span> iterations;</span><br><span class="line">    <span class="comment">/** Number of valid correspondence in the end */</span></span><br><span class="line">    <span class="keyword">int</span> nvalid;</span><br><span class="line">    <span class="comment">/** Total correspondence error */</span></span><br><span class="line">    <span class="keyword">double</span> error;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Fields used for covariance computation */</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">ifndef</span> RUBY</span></span><br><span class="line">        gsl_matrix *cov_x_m;    </span><br><span class="line">        gsl_matrix *dx_dy1_m;</span><br><span class="line">        gsl_matrix *dx_dy2_m;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/09/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%B8%80)/">csm包的源码解读 (一)</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-09</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></span><div class="content"><h2 id="sm-params-sm-result"><a href="#sm-params-sm-result" class="headerlink" title="sm_params   sm_result"></a>sm_params   sm_result</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sm_params</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/** First scan (参考帧) */</span></span><br><span class="line">    LDP laser_ref;</span><br><span class="line">    <span class="comment">/** Second scan (&quot;目标帧) */</span></span><br><span class="line">    LDP laser_sens;</span><br><span class="line">    <span class="keyword">double</span> first_guess[<span class="number">3</span>]; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Maximum angular displacement between scans (deg)*/</span></span><br><span class="line">    <span class="keyword">double</span> max_angular_correction_deg;</span><br><span class="line">    <span class="comment">/** Maximum translation between scans (m) */</span></span><br><span class="line">    <span class="keyword">double</span> max_linear_correction;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> max_iterations;</span><br><span class="line">    <span class="comment">/** A threshold for stopping. */</span></span><br><span class="line">    <span class="keyword">double</span> epsilon_xy;</span><br><span class="line">    <span class="comment">/** A threshold for stopping. */</span></span><br><span class="line">    <span class="keyword">double</span> epsilon_theta;</span><br><span class="line">    <span class="comment">/** Maximum distance for a correspondence to be valid */</span></span><br><span class="line">    <span class="keyword">double</span> max_correspondence_dist;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 使用 smart tricks 匹配. 只影响匹配速度，不影响收敛结果 */</span></span><br><span class="line">    <span class="keyword">int</span> use_corr_tricks;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Restart if error under threshold (0 or 1)*/</span></span><br><span class="line">    <span class="keyword">int</span> restart;</span><br><span class="line">    <span class="comment">/** Threshold for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_threshold_mean_error;</span><br><span class="line">    <span class="comment">/** Displacement for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_dt;</span><br><span class="line">    <span class="comment">/** Displacement for restarting */</span></span><br><span class="line">    <span class="keyword">double</span> restart_dtheta;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Functions concerning discarding correspondences.</span></span><br><span class="line"><span class="comment">       THESE ARE MAGIC NUMBERS -- and they need to be tuned. */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Percentage of correspondences to consider: if 0.9,</span></span><br><span class="line"><span class="comment">        always discard the top 10% of correspondences with more error */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_maxPerc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Parameters describing a simple adaptive algorithm for discarding.</span></span><br><span class="line"><span class="comment">        1) Order the errors.</span></span><br><span class="line"><span class="comment">        2) Choose the percentile according to outliers_adaptive_order.</span></span><br><span class="line"><span class="comment">           (if it is 0.7, get the 70% percentile)</span></span><br><span class="line"><span class="comment">        3) Define an adaptive threshold multiplying outliers_adaptive_mult</span></span><br><span class="line"><span class="comment">           with the value of the error at the chosen percentile.</span></span><br><span class="line"><span class="comment">        4) Discard correspondences over the threshold.</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        This is useful to be conservative; yet remove the biggest errors.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_adaptive_order; <span class="comment">/* 0.7 */</span></span><br><span class="line">    <span class="keyword">double</span> outliers_adaptive_mult; <span class="comment">/* 2 */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Do not allow two different correspondences to share a point */</span></span><br><span class="line">    <span class="keyword">int</span> outliers_remove_doubles; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Functions that compute and use point orientation for defining matches. */</span></span><br><span class="line">    <span class="comment">/** For now, a very simple max-distance clustering algorithm is used */</span></span><br><span class="line">    <span class="keyword">double</span> clustering_threshold;</span><br><span class="line">    <span class="comment">/** Number of neighbour rays used to estimate the orientation.*/</span></span><br><span class="line">    <span class="keyword">int</span> orientation_neighbourhood;</span><br><span class="line">    <span class="comment">/** Discard correspondences based on the angles */</span></span><br><span class="line">    <span class="keyword">int</span> do_alpha_test;</span><br><span class="line">    <span class="keyword">double</span> do_alpha_test_thresholdDeg;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/** I believe this trick is documented in one of the papers by Guttman (but I can&#x27;t find</span></span><br><span class="line"><span class="comment">        the reference). Or perhaps I was told by him directly. </span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        If you already have a guess of the solution, you can compute the polar angle</span></span><br><span class="line"><span class="comment">        of the points of one scan in the new position. If the polar angle is not a monotone</span></span><br><span class="line"><span class="comment">        function of the readings index, it means that the surface is not visible in the </span></span><br><span class="line"><span class="comment">        next position. If it is not visible, then we don&#x27;t use it for matching.</span></span><br><span class="line"><span class="comment">        </span></span><br><span class="line"><span class="comment">        This is confusing without a picture! To understand what&#x27;s going on, make a drawing</span></span><br><span class="line"><span class="comment">        in which a surface is not visible in one of the poses.</span></span><br><span class="line"><span class="comment">        Implemented in the function visibilityTest().</span></span><br><span class="line"><span class="comment">    */</span>  </span><br><span class="line">    <span class="keyword">int</span> do_visibility_test;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** If 1, use PlICP; if 0, use vanilla ICP. */</span></span><br><span class="line">    <span class="keyword">int</span> use_point_to_line_distance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** If 1, the field &quot;true_alpha&quot; is used to compute the incidence</span></span><br><span class="line"><span class="comment">        beta, and the factor (1/cos^2(beta)) used to weight the impact</span></span><br><span class="line"><span class="comment">        of each correspondence. This works fabolously if doing localization,</span></span><br><span class="line"><span class="comment">        that is the first scan has no noise.</span></span><br><span class="line"><span class="comment">        If &quot;true_alpha&quot; is not available, it uses &quot;alpha&quot;.</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="keyword">int</span> use_ml_weights;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* If 1, the field &quot;readings_sigma&quot; is used to weight the correspondence by 1/sigma^2 */</span></span><br><span class="line">    <span class="keyword">int</span> use_sigma_weights;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Use the method in http://purl.org/censi/2006/icpcov to compute</span></span><br><span class="line"><span class="comment">        the matching covariance. */</span></span><br><span class="line">    <span class="keyword">int</span> do_compute_covariance;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Checks that find_correspondences_tricks give the right answer */</span></span><br><span class="line">    <span class="keyword">int</span> debug_verify_tricks;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Pose of sensor with respect to robot: used for computing</span></span><br><span class="line"><span class="comment">        the first estimate given the odometry. */</span></span><br><span class="line">    <span class="keyword">double</span> laser[<span class="number">3</span>]; </span><br><span class="line"></span><br><span class="line">    <span class="comment">/** Noise in the scan */</span></span><br><span class="line">    <span class="keyword">double</span> sigma;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** mark as invalid ( = don&#x27;t use ) rays outside of this interval */</span></span><br><span class="line">    <span class="keyword">double</span> min_reading, max_reading;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* Parameters specific to GPM (unfinished :-/ ) */</span></span><br><span class="line">    <span class="keyword">double</span> gpm_theta_bin_size_deg;</span><br><span class="line">    <span class="keyword">double</span> gpm_extend_range_deg; </span><br><span class="line">    <span class="keyword">int</span> gpm_interval;</span><br><span class="line">    <span class="comment">/* Parameter specific to HSM (unfinished :-/ ) */</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">hsm_params</span> <span class="title">hsm</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sm_result</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/** 1 if the result is valid */</span></span><br><span class="line">    <span class="keyword">int</span> valid;</span><br><span class="line">    <span class="comment">/** Scan matching result (x,y,theta) */</span></span><br><span class="line">    <span class="keyword">double</span> x[<span class="number">3</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Number of iterations done */</span></span><br><span class="line">    <span class="keyword">int</span> iterations;</span><br><span class="line">    <span class="comment">/** Number of valid correspondence in the end */</span></span><br><span class="line">    <span class="keyword">int</span> nvalid;</span><br><span class="line">    <span class="comment">/** Total correspondence error */</span></span><br><span class="line">    <span class="keyword">double</span> error;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/** Fields used for covariance computation */</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">ifndef</span> RUBY</span></span><br><span class="line">        gsl_matrix *cov_x_m;    </span><br><span class="line">        gsl_matrix *dx_dy1_m;</span><br><span class="line">        gsl_matrix *dx_dy2_m;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">correspondence</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">/** 1 if this correspondence is valid  */</span></span><br><span class="line">    <span class="keyword">int</span>  valid; </span><br><span class="line">    <span class="comment">/** Closest point in the other scan.  */</span></span><br><span class="line">    <span class="keyword">int</span>  j1;</span><br><span class="line">    <span class="comment">/** Second closest point in the other scan.  */</span></span><br><span class="line">    <span class="keyword">int</span>  j2;</span><br><span class="line">    <span class="comment">/** Type of correspondence (point to point, or point to line) */</span></span><br><span class="line">    <span class="class"><span class="keyword">enum</span> &#123;</span> corr_pp = <span class="number">0</span>, corr_pl = <span class="number">1</span>&#125; type;</span><br><span class="line">    <span class="comment">/** Squared distance from p(i) to point j1 */</span></span><br><span class="line">    <span class="keyword">double</span>  dist2_j1; </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
@@ -462,49 +78,7 @@
 <p>论文中的所有算法步骤完整的体现在了icp_loop.c文件中的icp_loop函数里。</p>
 <p>雷达rays的合格和不合格数目:<br>int num_valid   = count_equal(ld-&gt;valid, ld-&gt;nrays, 1);<br>int num_invalid = count_equal(ld-&gt;valid, ld-&gt;nrays, 0);</p>
 <p><img src="https://i.loli.net/2020/04/21/9u8WDXIa1m25Ver.png" alt="PLICP标定结果.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/09/%E6%BF%80%E5%85%89SLAM/ICP/csm%E5%8C%85%E7%9A%84%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB%20(%E4%B8%80)/" data-id="ckr29u72m00fmwglm1asx0icp" data-title="csm包的源码解读 (一)" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/ICP/ICP系列算法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/ICP/ICP%E7%B3%BB%E5%88%97%E7%AE%97%E6%B3%95/" class="article-date">
-  <time class="dt-published" datetime="2020-04-08T14:11:14.000Z" itemprop="datePublished">2020-04-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/ICP/ICP%E7%B3%BB%E5%88%97%E7%AE%97%E6%B3%95/">ICP系列算法</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>SLAM前端匹配，是构建方程的过程。后端优化是求解方程的过程。一个好的SLAM算法重点在前端。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/ICP/ICP%E7%B3%BB%E5%88%97%E7%AE%97%E6%B3%95/">ICP系列算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></span><div class="content"><p>SLAM前端匹配，是构建方程的过程。后端优化是求解方程的过程。一个好的SLAM算法重点在前端。</p>
 <p>做帧间的匹配是为了得到机器人前后的局部位姿变换关系，可以认为是一种里程计。其实标定了轮子直径跟间距我们就有了一个里程计了，但是因为轮子打滑等各种因素存在误差会比较大。再用雷达的数据做一次配准可以提高定位精度。</p>
 <ul>
 <li>ICP：迭代最近点</li>
@@ -536,49 +110,7 @@
 <li>PL-ICP对初始值更敏感。不单独使用，其容易陷入局部循环。与里程计、CSM等一起使用，通常用里程计得到一个初始转换矩阵q0给到PL-ICP算法</li>
 </ol>
 <p>ros的csm包实现了ICP和PL-ICP算法。作者给出了一个该功能包的操作说明文件（csm_manual.pdf）。里面详细描述了各项配置参数的含义。其中sm/app文件夹中的sm0.c sm1.c sm2.c sm3.c 相当于是几个使用示例。  主要的算法实现是在<code>csm/icp</code>文件夹中的几个文件里。论文中的所有算法步骤完整的体现在了<code>icp_loop.c</code>文件中的icp_loop函数里。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/08/%E6%BF%80%E5%85%89SLAM/ICP/ICP%E7%B3%BB%E5%88%97%E7%AE%97%E6%B3%95/" data-id="ckr29u72m00flwglm5g615fe4" data-title="ICP系列算法" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-激光SLAM/amcl和粒子滤波/缺陷和问题" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E7%BC%BA%E9%99%B7%E5%92%8C%E9%97%AE%E9%A2%98/" class="article-date">
-  <time class="dt-published" datetime="2020-04-08T14:01:14.000Z" itemprop="datePublished">2020-04-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a>►<a class="article-category-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E7%BC%BA%E9%99%B7%E5%92%8C%E9%97%AE%E9%A2%98/">AMCL的缺陷和遗留问题</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><ol>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E7%BC%BA%E9%99%B7%E5%92%8C%E9%97%AE%E9%A2%98/">AMCL的缺陷和遗留问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></span><div class="content"><h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><ol>
 <li><p>如果AMCL算法无法快速解决绑架问题，添加随机位姿的粒子可能会导致粒子集扩散。失效恢复机制有时能重定位成功(可能花十几秒时间)，有时失败</p>
 </li>
 <li><p>当机器人速度过快时，AMCL定位的更新速度无法匹配运行速度，导致定位丢失。</p>
@@ -601,144 +133,7 @@
 </li>
 </ol>
 <p><img src="https://i.loli.net/2020/10/27/YAnau1QIECPy2ZU.png" alt="连接的master错误.png"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2020/04/08/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E7%BC%BA%E9%99%B7%E5%92%8C%E9%97%AE%E9%A2%98/" data-id="ckr29u72v00g6wglmfy883egk" data-title="AMCL的缺陷和遗留问题" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
-
-  <nav id="page-nav">
-    
-    <a class="extend prev" rel="prev" href="/page/20/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><a class="page-number" href="/page/23/">23</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/22/">Next &raquo;</a>
-  </nav>
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/C/Boost/">Boost</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/C/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Matlab/">Matlab</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/">ROS</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/rviz%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6/">rviz深入研究</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ROS/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%AF%BC%E8%88%AA/">机器人导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Valgrind%E5%92%8C%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">Valgrind和内存管理</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Wireshark/">Wireshark</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/cmake-qmake/">cmake/qmake</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%8D%97%E4%BA%AC%E5%AF%BC%E8%88%AA%E7%A8%8B%E5%BA%8F%E7%9A%84%E7%96%91%E9%9A%BE%E9%97%AE%E9%A2%98/">南京导航程序的疑难问题</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/ICP/">ICP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8D%A1%E5%B0%94%E6%9B%BC%E6%BB%A4%E6%B3%A2/">卡尔曼滤波</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%8F%8D%E5%85%89%E6%9D%BF/">反光板</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%BF%80%E5%85%89SLAM/%E9%9B%B7%E8%BE%BE/">雷达</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%A7%86%E8%A7%89SLAM/">视觉SLAM</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E7%AE%97%E6%B3%95/">全局路径算法</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%9F%BA%E4%BA%8Erealsense%E6%89%AB%E6%8F%8F%E7%82%B9%E4%BA%91%E7%9A%84%E4%BD%8E%E7%9F%AE%E9%81%BF%E9%9A%9C/">基于realsense扫描点云的低矮避障</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%A4%A7%E8%BD%AE%E5%BB%93%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E5%AF%BC%E8%88%AA/">大轮廓机器人的导航</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">web服务器</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" rel="tag">内存管理</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" rel="tag">摄像头</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" rel="tag">编译调试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" rel="tag">面试笔试</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/web%E6%9C%8D%E5%8A%A1%E5%99%A8/" style="font-size: 10px;">web服务器</a> <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">内存管理</a> <a href="/tags/%E6%91%84%E5%83%8F%E5%A4%B4/" style="font-size: 15px;">摄像头</a> <a href="/tags/%E7%BC%96%E8%AF%91%E8%B0%83%E8%AF%95/" style="font-size: 20px;">编译调试</a> <a href="/tags/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/" style="font-size: 10px;">面试笔试</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">July 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">June 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/05/">May 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/03/">March 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/02/">February 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">January 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">November 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">September 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">August 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">July 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">June 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">February 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">January 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">November 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">August 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">高斯牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95/">牛顿法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a>
-          </li>
-        
-          <li>
-            <a href="/2021/07/07/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/AddAccumulatedRangeData%E5%87%BD%E6%95%B0(3)/">AddAccumulatedRangeData函数(3) 加入位姿估计器和插入子图</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2021 John Doe<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.4.1.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/20/">&lt;i class&#x3D;&quot;fa fa-chevron-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/44/">44</a><a class="extend next" rel="next" href="/page/22/">&lt;i class&#x3D;&quot;fa fa-chevron-right&quot;&gt;&lt;&#x2F;i&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By John Doe</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
