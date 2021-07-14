@@ -24,8 +24,8 @@ f(n)= \begin{cases} n/2, & \text {if $n$ is even} \\
 <h2 id="非线性优化中的牛顿法"><a href="#非线性优化中的牛顿法" class="headerlink" title="非线性优化中的牛顿法"></a>非线性优化中的牛顿法</h2><p>普通的函数求极值就是对f’(x)=0进行求解，但是有时导数难以获得，所以把f(x)进行二阶泰勒展开</p>
 <script type="math/tex; mode=display">f(x+\Delta x) \approx f(x) + f'(x)\Delta x + \frac{1}{2}f''(x)\Delta x^2</script><p>右侧对 <script type="math/tex">\Delta x</script> 求导并令其为0，可以获得</p>
 <script type="math/tex; mode=display">\Delta x = - \frac{f'(x)}{f''(x)}</script><p>也就是<script type="math/tex">x_{n+1}= x_{n}- \frac{f'(x)}{f''(x)}</script></p>
-<p>现在放到高维情况下，把最开始的式子在x附近二阶泰勒展开:<br>$ \left|f(x+\Delta x)\right|_2^2 \approx \left|f(x)\right|_2^2 + J(x)\Delta x + \frac{1}{2}\Delta x^TH\Delta x$</p>
-<p>J是关于x的一阶导数，雅克比矩阵；H是二阶导数，海森矩阵。变量的增量就可以获得</p>
+<p>现在放到高维情况下，把最开始的式子在x附近二阶泰勒展开:</p>
+<script type="math/tex; mode=display">\left\|f(x+\Delta x)\right\|_2^2 \approx \left\|f(x)\right\|_2^2 + J(x)\Delta x + \frac{1}{2}\Delta x^TH\Delta x</script><p>J是关于x的一阶导数，雅克比矩阵；H是二阶导数，海森矩阵。变量的增量就可以获得</p>
 <script type="math/tex; mode=display">H\Delta x = -J^T</script><p>牛顿法是二阶收敛，梯度下降是一阶收敛，所以牛顿法就更快。如果更通俗地说的话，比如你想找一条最短的路径走到一个盆地的最底部，梯度下降法每次只从你当前所处位置选一个坡度最大的方向走一步，牛顿法在选择方向时，不仅会考虑坡度是否够大，还会考虑你走了一步之后，坡度是否会变得更大。可以说牛顿法比梯度下降法看得更远一点，能更快地走到最底部。（牛顿法目光更加长远，所以少走弯路；相对而言，梯度下降法只考虑了局部的最优，没有全局思想。）</p>
 <p>从几何上说，牛顿法就是用一个二次曲面去拟合你当前所处位置的局部曲面，而梯度下降法是用一个平面去拟合当前的局部曲面，通常情况下，二次曲面的拟合会比平面更好，所以牛顿法选择的下降路径会更符合真实的最优下降路径。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/ROS/">ROS</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-12</time><div class="content"><ul>
