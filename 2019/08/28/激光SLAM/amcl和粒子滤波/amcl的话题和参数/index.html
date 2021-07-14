@@ -1,0 +1,146 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="amcl的话题和参数"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>amcl的话题和参数 | Silent Assassin</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#amcl%E7%94%A8%E5%88%B0%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.</span> <span class="toc-text">amcl用到的话题和服务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%9D%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">话题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.2.</span> <span class="toc-text">服务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%87%86%E7%A1%AE%E5%AE%9A%E4%BD%8D"><span class="toc-number">2.</span> <span class="toc-text">机器人准确定位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#amcl%E5%8F%82%E6%95%B0"><span class="toc-number">3.</span> <span class="toc-text">amcl参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BB%A4%E6%B3%A2%E5%99%A8%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">滤波器参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BF%80%E5%85%89%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%EF%BC%8C%E9%83%BD%E5%9C%A8%E6%B5%8B%E9%87%8F%E6%A8%A1%E5%9E%8B%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">激光模型参数，都在测量模型中使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8C%E7%A8%8B%E8%AE%A1%E6%A8%A1%E5%9E%8B%E5%8F%82%E6%95%B0%EF%BC%8C%E9%83%BD%E5%9C%A8%E8%BF%90%E5%8A%A8%E6%A8%A1%E5%9E%8B%E9%83%A8%E5%88%86%E4%BD%BF%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">里程计模型参数，都在运动模型部分使用</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">442</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Silent Assassin</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">amcl的话题和参数</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-08-28</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2019/08/28/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/amcl%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E5%8F%82%E6%95%B0/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2019/08/28/激光SLAM/amcl和粒子滤波/amcl的话题和参数/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">3k</span><span class="post-meta__separator">|</span><span>Reading time: 9 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>AMCL定位偶尔会出现定位不准的情况，推测是由于工控机性能不足(粒子滤波很耗时)或地图上大特征较少/小特征较多(其总体结果有随机分布倾向)，造成AMCL无法及时定位</p>
+<p>AMCL中，粒子很分散，定位置信度就很低。如果置信度太低，定位不准，可以停掉导航模块，先通知上层进行重定位。</p>
+<h2 id="amcl用到的话题和服务"><a href="#amcl用到的话题和服务" class="headerlink" title="amcl用到的话题和服务"></a>amcl用到的话题和服务</h2><h3 id="话题"><a href="#话题" class="headerlink" title="话题"></a>话题</h3><p>机器人稍微运动后，<code>amcl</code>节点开始读取<code>scan</code>,<code>map</code>,<code>tf</code>话题上的数据，<font color = blue size=4> 在重采样之后发布话题 amcl_pose， 平时小车不发布位姿坐标的</font>，而重采样的触发条件是里程计显示小车参数<code>update_min_d</code>或者旋转参数<code>update_min_a</code>。我平时获取小车位姿用的是话题<code>robot_pose</code>，它来自<code>robot_pose_publisher</code>包，发布频率是10Hz</p>
+<p>rviz中的<code>particlecloud</code>话题:<br><img src="https://i.loli.net/2019/08/28/AomYJbESe3Q2O5I.png"><br>消息类型是<code>geometry_msgs/PoseArray</code>，由<code>/amcl</code>发布，被rviz订阅。作用是在rviz中显示机器人的可能位置，就是这样的一坨:<br><img src="https://i.loli.net/2019/08/28/lsAYg8LO2ftvPyw.png"><br><br></p>
+<p>amcl还订阅了一个话题<code>initialpose</code>，但是我发现它没有发布者，看来是供用户发布的。</p>
+<p><img src="https://i.loli.net/2020/10/27/haJtYdNRp2ITG4y.png" alt="amcl_pose 带协方差的位姿.png"></p>
+<p><img src="https://i.loli.net/2020/10/27/7q5YgsRXnZiDkvl.png" alt="rviz中的amcl_pose.png"></p>
+<h3 id="服务"><a href="#服务" class="headerlink" title="服务"></a>服务</h3><p>服务<code>global_localization</code>，类型为<code>std_srvs/Empty</code>，初始化全局定位，使所有粒子在地图的自由空间上随机分散，也就是像这样：<br><img src="https://i.loli.net/2019/12/08/HvM6fcBo2zFXRIh.png"><br>call这个服务其实就相当于重新初始化了粒子位置，用于amcl的重新定位，但是我尝试移动机器人，定位经常是错误的。</p>
+<br>
+
+<p>服务<code>static_map</code>，类型<code>nav_msgs/GetMap</code>，它是由<code>map_server</code>发布的，用于获得地图数据进行定位。所以说amcl离不开map_server，其消息成员：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">nav_msgs/OccupancyGrid map</span><br></pre></td></tr></table></figure>
+<p>很简单，请求为空，响应就是地图数据<br><br></p>
+<p><code>request_nomotion_update</code>服务，该服务是手动的来更新粒子并发布新的粒子，可以使用如下命令来调用服务执行更新粒子的操作，该服务一般需要多次调用才能逐渐看到粒子收敛的效果：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosservice call request_nomotion_update <span class="string">&quot;&#123;&#125;&quot;</span></span><br></pre></td></tr></table></figure>
+<p>本质上是让<code>m_force_update</code>为true，进行强制粒子滤波</p>
+<h2 id="机器人准确定位"><a href="#机器人准确定位" class="headerlink" title="机器人准确定位"></a>机器人准确定位</h2><p>机器人定位需要的信息:</p>
+<ul>
+<li>雷达扫描数据</li>
+<li>里程计数据</li>
+<li>扫描地图数据(不是静态地图)</li>
+<li>odom-&gt;base_link-&gt;laser的tf变换</li>
+</ul>
+<br>
+
+<p>初始点位姿参数有6个，均在handleMapMessage函数中使用，最终是在 <code>pf_pdf_gaussian_sample</code>函数</p>
+<p>每次电脑重启后，在同一个点的坐标是不同的，每次都要手动定位。可以在<code>amcl.launch</code>中设置机器人初始化数据。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--初始位姿均值（x），用于初始化高斯分布滤波器。0.0 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_pose_x&quot;</span> <span class="attr">value</span>=<span class="string">&quot;-3.13841&quot;</span>/&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始位姿均值（y），用于初始化高斯分布滤波器。 0.0--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_pose_y&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2.20967&quot;</span>/&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始位姿均值（yaw），用于初始化高斯分布滤波器。 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_pose_a&quot;</span> <span class="attr">value</span>=<span class="string">&quot;2.611510&quot;</span>/&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始位姿协方差（x*x），用于初始化高斯分布滤波器。 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_cov_xx&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0.5*0.5&quot;</span>/&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始位姿协方差（y*y），用于初始化高斯分布滤波器。 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_cov_yy&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0.5*0.5&quot;</span>/&gt;</span> </span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--初始位姿协方差（yaw*yaw），撒粒子的方差，使粒子均匀的围绕初始化点,用于初始化高斯分布滤波器  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">param</span> <span class="attr">name</span>=<span class="string">&quot;initial_cov_aa&quot;</span> <span class="attr">value</span>=<span class="string">&quot;(π/12)*(π/12)&quot;</span>/&gt;</span> </span><br></pre></td></tr></table></figure>
+<p>粒子收敛会使得covariance参数变小：<br><img src="https://i.loli.net/2019/12/21/PNWvMjmZJDhIdsc.png"></p>
+<p>covariance是一个6x6的协方差矩阵，6个状态量是x,y,z,绕x轴的旋转(roll),绕y轴的旋转(pitch),绕z轴的旋转(yaw)。矩阵对角线的6个元素就是6个状态量的方差，由于z,pitch,roll都是0，所以只看第1,2和最后的元素，<font color = blue size=4>也就是矩阵的第1,8和最后的元素，分别是x,y,yaw的方差</font></p>
+<p>在<code>pf_pdf_gaussian_alloc</code>函数中，对协方差矩阵进行了特征值分解。也就是协方差矩阵<font color = blue size=4>cx=cr * cd * cr<sup>T </sup> </font> ，cd是对角矩阵，取cd的三个对角元素开平方后，传入<code>pf_ran_gaussian</code>函数，作为<code>set_a</code>粒子集的初始化的标准差。yaw的方差在对角矩阵cd里不变，cd的最后一个元素仍然是<code>initial_cov_aa</code></p>
+<p>主要是前三项参数，在建好地图后，选择一个启动点的坐标，将朝向转换获得yaw，以后每次启动机器人时，都要让机器人在这个位姿。因为每次启动move_base.launch后，只调整机器人位姿无法定位准确，还需要rviz手动定位，有了这个初始位姿之后，不必rviz手动定位了，只调整机器人位姿就可以了，调整方式是先让机器人到某个点。</p>
+<p>在机器人移动时，才会发布<code>/amcl_pose</code>的消息，类型为<code>geometry_msgs/PoseWithCovarianceStamped</code>，也就是带协方差的消息。<code>robot_pose_publisher</code>发布了<code>/base_link</code>坐标系和<code>/map</code>坐标系的转换， 一般放在机器人开机启动的节点里，发布话题<code>robot_pose</code>(geometry_msgs/Pose)。常用这两个话题获取机器人当前位置</p>
+<p>在远离初始点的位置,执行<code>rosparam get amcl/initial_pose_x</code>，发现它的值实际是当前的位姿x坐标，<font color = blue size=4> 而不是amcl.launch中的参数了，显然是参数服务器在更新这个参数</font></p>
+<h2 id="amcl参数"><a href="#amcl参数" class="headerlink" title="amcl参数"></a>amcl参数</h2><p>蓝色的是需要自己修改的</p>
+<h3 id="滤波器参数"><a href="#滤波器参数" class="headerlink" title="滤波器参数"></a>滤波器参数</h3><p>handleMapMessage函数中的<code>pf_alloc</code>所用：</p>
+<ul>
+<li><font color = blue size=4>min_particles和max_particles </font>是允许的粒子数量的最小值和最大值，也就是在rviz里看到的箭头数量。分别对应程序里的变量<code>min_samples</code>和<code>max_samples</code>。前者默认100，后者默认5000。原则上越大，定位精度越好，但会影响占用的CPU</li>
+</ul>
+<p>AMCL收敛速度不够快，在初值比较好的情况下，如果设置<code>min_particles</code>为300，<code>max_particles</code>为5000，重采样需要<code>14~20</code>次才能收敛到300个粒子。如果设置得更小，收敛速度就更慢。 重采样几次时，有的粒子权重还是另一些粒子权重的三四倍。</p>
+<p><code>min_particles</code>不能太大，应该比<code>pf_resample_limit</code>函数返回值小，否则set_b偏大，位姿不够精确。 我见过<code>pf_resample_limit</code>最小返回值是66，一般都大于100，所以<code>min_particles</code>取100即可。</p>
+<p><code>max_particles</code>不能太小，一方面难以筛选权重大的粒子，另一方面在初值不太准确时，粒子集不能有效覆盖真实初值的的周边。但也不能太大，否则占用CPU上升。经过反复试验，<code>max_particles</code>取3000，此时AMCL占用CPU 2%左右</p>
+<ul>
+<li><p>kld_err: 初始粒子真实分布和估计分布之间的最大误差，默认0.01</p>
+</li>
+<li><p>kld_z: 上标准分位数（1-p），其中p是估计分布上误差小于kld_err的概率，默认0.99，但实际在<code>pf_alloc</code>为3</p>
+</li>
+<li><p><font color = blue size=4> recovery_alpha_slow</font>: 慢速的平均权重滤波的指数衰减频率，用作决定什么时候通过增加随机位姿来recover，默认0（disable），可能0.001是一个不错的值</p>
+</li>
+<li><p><font color = blue size=4> recovery_alpha_fast</font>: 快速的平均权重滤波的指数衰减频率，用作决定什么时候通过增加随机位姿来recover，默认0（disable），可能0.1是个不错的值</p>
+</li>
+</ul>
+<p>这两个参数在AMCL失效恢复中，用于短期和长期的似然平均，要求 <strong>0 &lt; alpha_slow &lt;&lt; alpha_fast</strong>，用于计算w_slow和w_fast，最终判断是否触发recover机制，增加随机位姿， 用以削弱粒子滤波器的粒子匮乏问题的影响。</p>
+<p>运动模型准备工作中所用：</p>
+<ul>
+<li><font color = blue size=4>update_min_d </font>: 在执行滤波更新前平移运动的最小距离，默认0.2m，可改为0.05</li>
+<li><font color = blue size=4>update_min_a</font>: 执行滤波更新前旋转的最小角度，单位弧度，默认 pi/6<br></li>
+</ul>
+<p>重采样所用：</p>
+<ul>
+<li><font color = blue size=4>resample_interval </font>: 在重采样前需要等待的滤波次数，默认2。越大，重采样频率越低</li>
+</ul>
+<p>源码里对应：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(  !(++resample_count_ % resample_interval_)  )</span><br><span class="line">&#123;</span><br><span class="line">  <span class="built_in">pf_update_resample</span>(pf_);</span><br><span class="line">  resampled = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段在<code>laserReceived</code>回调里，<code>resample_count_</code>初始化为0，每次回调一次就增加一次，所以resample_interval越大，重采样频率越低。</p>
+<p>如何接受地图数据：</p>
+<ul>
+<li><p>use_map_topic: 导航时设置为false。 当设置为true时，AMCL将会订阅map话题，而不是调用服务返回地图。也就是说，当设置为true时，有另外一个节点实时的发布map话题，也就是机器人在实时的进行地图构建，并供给amcl话题使用；当设置为false时，通过map server，也就是调用已经构建完成的地图</p>
+</li>
+<li><p>first_map_only: 用于mapReceived函数，可以不看。当设置为true时，AMCL将仅仅使用订阅的第一个地图，而不是每次接收到新的时更新为一个新的地图，导航时设置为false</p>
+</li>
+<li><p>transform_tolerance: tf变换发布推迟的时间，为了说明tf变换在未来时间内是可用的，默认0.1</p>
+</li>
+<li><p>gui_publish_rate: 扫描和路径发布到可视化软件的最大频率，默认参数-1.0表示disable，可以设置为10</p>
+</li>
+<li><p>save_pose_rate: 存储上一次估计的位姿和协方差到参数服务器的最大速率。被保存的位姿将会用在连续的运动上来初始化滤波器。默认参数-1.0表示disable，可以用0.5</p>
+</li>
+</ul>
+<h3 id="激光模型参数，都在测量模型中使用"><a href="#激光模型参数，都在测量模型中使用" class="headerlink" title="激光模型参数，都在测量模型中使用"></a>激光模型参数，都在测量模型中使用</h3><ul>
+<li><p>laser_model_type: 模型使用，可以是beam, likehood_field, likehood_field_prob（和likehood_field一样但是融合了beamskip特征），默认是 likehood_field</p>
+</li>
+<li><p><font color = blue size=4> laser_min_range</font>: 被考虑的最小扫描范围；默认参数-1.0，将会使用激光上报的最小扫描范围</p>
+</li>
+<li><p><font color = blue size=4> laser_max_range</font>: 被考虑的最大扫描范围；默认参数-1.0时，将会使用激光上报的最大扫描范围</p>
+</li>
+<li><p>laser_max_beams: 更新滤波器时，每次扫描中多少个等间距的光束被使用，默认30</p>
+</li>
+<li><p>laser_z_hit: 模型的z_hit部分的最大权值，默认0.95，可以用0.5</p>
+</li>
+<li><p>laser_z_rand: 模型的z_rand部分的最大权值，默认0.05</p>
+</li>
+<li><p>laser_sigma_hit: 被用在模型的z_hit部分的高斯模型的标准差，默认0.2m</p>
+</li>
+</ul>
+<p>以下几个参数不在似然域模型中使用：</p>
+<ul>
+<li>laser_z_short: 模型的z_short部分的最大权值，默认0.1</li>
+<li>laser_z_max: 模型的z_max部分的最大权值，默认0.05</li>
+<li>laser_lambda_short: 模型z_short部分的指数衰减参数，默认0.1</li>
+<li>laser_likehood_max_dist: 地图上做障碍物膨胀的最大距离，用作likehood_field模型，默认2m</li>
+</ul>
+<h3 id="里程计模型参数，都在运动模型部分使用"><a href="#里程计模型参数，都在运动模型部分使用" class="headerlink" title="里程计模型参数，都在运动模型部分使用"></a>里程计模型参数，都在运动模型部分使用</h3><ul>
+<li><p>odom_model_type: 模型使用，默认diff，还可以是omni(全向轮), diff-corrected, omni-corrected，后面两个是对老版本里程计模型的矫正，相应的里程计参数需要做一定的减小。一般用diff</p>
+<br></li>
+<li><p><font color = blue size=4>odom_alpha1 </font>: 指定由机器人运动部分的旋转分量估计的里程计旋转的期望噪声，默认0.2。增大该值，机器人发生有旋转运动时，就会出现扇形噪声粒子云<br><img src="https://i.loli.net/2020/03/30/aAmDSItlkByJph7.png" alt="odom_alpha1"></p>
+</li>
+<li><p><font color = blue size=4> odom_alpha2</font>: 指定由机器人运动部分的平移分量估计的里程计旋转的期望噪声，默认0.2<br><img src="https://i.loli.net/2020/03/30/b4we3B6IQYjTkg2.png" alt="odom_alpha2"></p>
+</li>
+<li><p><font color = blue size=4> odom_alpha3</font>: 指定由机器人运动部分的平移分量估计的里程计平移的期望噪声，默认0.2。纵向分量运动噪声，沿着机器人前进方向分布<br><img src="https://i.loli.net/2020/03/30/jXJ9EOToCkF2qA5.png" alt="odom_alpha3"></p>
+</li>
+<li><p><font color = blue size=4> odom_alpha4</font>: 指定由机器人运动部分的旋转分量估计的里程计平移的期望噪声，默认0.2。斜角方向上的运动噪声<br><img src="https://i.loli.net/2020/03/30/nlCbEvM1f8hckXu.png" alt="odom_alpha4"></p>
+</li>
+<li><p>odom_alpha5: 平移相关的噪声参数（仅用于模型是omni的情况），默认0.1</p>
+</li>
+<li><p>odom_frame_id: 里程计默认使用的坐标系，默认odom</p>
+</li>
+<li><p>base_frame_id: 机器人的基坐标系，默认base_link</p>
+</li>
+<li><p>global_frame_id: 由定位系统发布的坐标系名称，默认map</p>
+</li>
+<li><p>tf_broadcast: 设置为false会阻止amcl发布全局坐标系和里程计坐标系之间的tf变换，一般为true</p>
+</li>
+</ul>
+<p>参数：<a target="_blank" rel="noopener" href="http://docs.ros.org/melodic/api/geometry_msgs/html/msg/PoseWithCovariance.html">geometry_msgs/PoseWithCovariance</a></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2019/08/28/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/amcl%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E5%8F%82%E6%95%B0/">https://charon-cheung.github.io/2019/08/28/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/amcl%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E5%8F%82%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/08/29/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE2%20%20%E8%AF%9D%E9%A2%98%E6%9C%8D%E5%8A%A1%E5%92%8C%E9%83%A8%E5%88%86%E6%BA%90%E7%A0%81/"><i class="fa fa-chevron-left">  </i><span>代价地图(二) 话题服务和部分源码</span></a></div><div class="next-post pull-right"><a href="/2019/08/26/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE1%20%20%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE/"><span>代价地图(一) 基础配置</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2019/08/28/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/amcl%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E5%8F%82%E6%95%B0/';
+  this.page.identifier = '2019/08/28/激光SLAM/amcl和粒子滤波/amcl的话题和参数/';
+  this.page.title = 'amcl的话题和参数';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>

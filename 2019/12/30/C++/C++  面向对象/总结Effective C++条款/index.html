@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="总结Effective C++条款"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>总结Effective C++条款 | Silent Assassin</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE2"><span class="toc-number">1.</span> <span class="toc-text">条款2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE3"><span class="toc-number">2.</span> <span class="toc-text">条款3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE4"><span class="toc-number">3.</span> <span class="toc-text">条款4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE5"><span class="toc-number">4.</span> <span class="toc-text">条款5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE6"><span class="toc-number">5.</span> <span class="toc-text">条款6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE7"><span class="toc-number">6.</span> <span class="toc-text">条款7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE8"><span class="toc-number">7.</span> <span class="toc-text">条款8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE9"><span class="toc-number">8.</span> <span class="toc-text">条款9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE10"><span class="toc-number">9.</span> <span class="toc-text">条款10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE12"><span class="toc-number">10.</span> <span class="toc-text">条款12</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE15"><span class="toc-number">11.</span> <span class="toc-text">条款15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE16"><span class="toc-number">12.</span> <span class="toc-text">条款16</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE18"><span class="toc-number">13.</span> <span class="toc-text">条款18</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE21"><span class="toc-number">14.</span> <span class="toc-text">条款21</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE22"><span class="toc-number">15.</span> <span class="toc-text">条款22</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE24"><span class="toc-number">16.</span> <span class="toc-text">条款24</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE26"><span class="toc-number">17.</span> <span class="toc-text">条款26</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE27"><span class="toc-number">18.</span> <span class="toc-text">条款27</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE32"><span class="toc-number">19.</span> <span class="toc-text">条款32</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE34"><span class="toc-number">20.</span> <span class="toc-text">条款34</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E6%AC%BE36"><span class="toc-number">21.</span> <span class="toc-text">条款36</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">442</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Silent Assassin</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">总结Effective C++条款</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-30</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2019/12/30/C++/C++  面向对象/总结Effective C++条款/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.5k</span><span class="post-meta__separator">|</span><span>Reading time: 4 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>最近重读了《Effective  C++》，对一些复杂的知识点会专门写文章分析，这里将一些小的知识点总结一下，但不会涵盖书里的所有内容。</p>
+<h2 id="条款2"><a href="#条款2" class="headerlink" title="条款2"></a>条款2</h2><ul>
+<li><p>良好的用户自定义类型的特征是它尽量能与内置类型兼容</p>
+</li>
+<li><p>宁可用编译器替换预处理器</p>
+</li>
+<li><p>尽量多用const,而不是宏定义.宏属于模块化的设计概念,会破坏封装性</p>
+</li>
+<li><p>常量可能比<code>#define</code>产生较小量的代码.</p>
+</li>
+<li><p>如果类需要用到多个常量,不要用const数组,而是改用枚举</p>
+</li>
+<li><p>对于宏形式的函数,最好用内联函数取代</p>
+</li>
+</ul>
+<h2 id="条款3"><a href="#条款3" class="headerlink" title="条款3"></a>条款3</h2><ul>
+<li>希望迭代器指向的东西不可改动,需要<code>const_iterator</code></li>
+</ul>
+<h2 id="条款4"><a href="#条款4" class="headerlink" title="条款4"></a>条款4</h2><ul>
+<li><p>永远在使用对象前初始化.对于<code>int x;</code>,有些编译器会将x初始化为0,有些却不会,所以无论之后有没有用到x,都要先对其初始化,比如<code>int x=0;</code></p>
+</li>
+<li><p>成员变量如果是const或引用,它们只能用<strong>成员列表初始化</strong>的方法进行初始化</p>
+</li>
+</ul>
+<h2 id="条款5"><a href="#条款5" class="headerlink" title="条款5"></a>条款5</h2><ul>
+<li><p>编译器自动生成的析构函数不是virtual,除非这个类的基类的析构函数是virtural</p>
+</li>
+<li><p>编译器自动生成的4个函数都是public</p>
+</li>
+<li><p>如果基类的copy构造函数和copy运算符是private,编译器不会为派生类生成它们</p>
+</li>
+<li><p>派生类的copy构造函数可以尽量不定义</p>
+</li>
+</ul>
+<h2 id="条款6"><a href="#条款6" class="headerlink" title="条款6"></a>条款6</h2><ul>
+<li><p>定义uncopyable类是很好的禁止使用copy构造函数和copy运算符的方法，它的析构函数可以不是virtual,派生类不必以public继承它,也没有成员变量,也可以用于多重继承</p>
+</li>
+<li><p>类的不可拷贝特性是可以继承的，例如凡是继承自uncopyable的类都不能使用copy构造函数和赋值运算符</p>
+</li>
+</ul>
+<h2 id="条款7"><a href="#条款7" class="headerlink" title="条款7"></a>条款7</h2><ul>
+<li><p>如果基类析构函数不声明为virtual，析构时不会调用派生类的析构，可查看<a href="https://charon-cheung.github.io/2018/07/05/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E4%B8%8E%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0/#%E8%99%9A%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0">原因分析</a></p>
+</li>
+<li><p>如果一个类不做基类，就不要有virtual析构函数或其他虚函数，因为虚指针会增大类的体积。 反过来，只要一个类做基类，就要有virtual函数</p>
+</li>
+<li><p>当类至少有一个虚函数时，为它声明virtual析构函数，否则编译器有报警<br><img src="https://i.loli.net/2020/01/03/VMqy7Ti53RCkgcJ.png"></p>
+</li>
+<li><p>对于抽象类，可以将析构函数声明为pure virtual析构函数</p>
+</li>
+</ul>
+<h2 id="条款8"><a href="#条款8" class="headerlink" title="条款8"></a>条款8</h2><ul>
+<li>析构函数里不要抛出异常，否则会导致不确定行为</li>
+</ul>
+<h2 id="条款9"><a href="#条款9" class="headerlink" title="条款9"></a>条款9</h2><ul>
+<li><p>构造函数和析构函数中都不要调用virtual函数，因为基类构造时，virtual函数不会下降到派生类阶层，或者说此时的virtual函数还不是virtual函数</p>
+</li>
+<li><p>对于存在多个构造函数的情况，为避免代码重复，要把同样的代码放到一个函数里，比如init</p>
+</li>
+</ul>
+<h2 id="条款10"><a href="#条款10" class="headerlink" title="条款10"></a>条款10</h2><ul>
+<li>赋值运算符(包括<code>+= -= *=</code>)的返回最好是<code>return *this</code>，这符合STL等标准库的风格</li>
+</ul>
+<h2 id="条款12"><a href="#条款12" class="headerlink" title="条款12"></a>条款12</h2><ul>
+<li><p>自定义copy构造函数或运算符时，需要复制所有的成员变量，如果少复制了，编译器不会报警或报错</p>
+</li>
+<li><p>派生类的copy构造函数或运算符，无法像平时那样对基类的private成员变量赋值，因为无法访问private的变量，只能显式调用基类的operator =， 比如： Base::operator=(obj);</p>
+</li>
+</ul>
+<p><img src="https://i.loli.net/2019/12/30/wvPezFH9E2OMD7l.png"></p>
+<h2 id="条款15"><a href="#条款15" class="headerlink" title="条款15"></a>条款15</h2><ul>
+<li>多使用智能指针shared_ptr，它可以返回原始指针，显式方法是get()函数，隐式方法是取指针操作符-&gt;</li>
+</ul>
+<h2 id="条款16"><a href="#条款16" class="headerlink" title="条款16"></a>条款16</h2><ul>
+<li>new和delete必须配对，[]必须都有或都没有。千万避免new没有[]，delete有[]，这会导致程序不停运行析构函数</li>
+</ul>
+<h2 id="条款18"><a href="#条款18" class="headerlink" title="条款18"></a>条款18</h2><ul>
+<li><p>有时的形参可以用wrapper类型，而不是内置类型</p>
+</li>
+<li><p>保证接口的一致，比如STL容器都有个size的成员函数</p>
+</li>
+<li><p>可以让一些返回指针的函数返回智能指针，比如工厂函数</p>
+</li>
+</ul>
+<h2 id="条款21"><a href="#条款21" class="headerlink" title="条款21"></a>条款21</h2><ul>
+<li>函数内返回对象时，不要返回其引用。因为引用指向局部变量，而局部变量在函数退出前销毁，所以会出现无定义行为。</li>
+</ul>
+<h2 id="条款22"><a href="#条款22" class="headerlink" title="条款22"></a>条款22</h2><ul>
+<li><p>成员变量应该都是private，将它们隐藏在函数接口的背后，如果放到public，直接使用成员变量会降低封装性。如果破坏了成员变量，会破坏太多的客户码</p>
+</li>
+<li><p>成员变量的封装性和成员变量的内容改变时破坏的代码量成反比</p>
+</li>
+<li><p>protected变量被消灭时，所有用到它的派生类的代码都要破坏，所以封装性也很差</p>
+</li>
+</ul>
+<h2 id="条款24"><a href="#条款24" class="headerlink" title="条款24"></a>条款24</h2><ul>
+<li><p>若函数参数都要进行类型转换，应该使用非成员函数</p>
+</li>
+<li><p>成员函数的反面是非成员函数，不是friend函数，friend应该尽量避免</p>
+</li>
+</ul>
+<h2 id="条款26"><a href="#条款26" class="headerlink" title="条款26"></a>条款26</h2><ul>
+<li><p>如果某个类的对象没有用到，就不应该声明，否则运行构造和析构函数都会耗费成本</p>
+</li>
+<li><p>对象初始化用构造函数比=运算符的效率高</p>
+</li>
+<li><p>对变量定义后应马上初始化，然后马上使用，中间不要隔太远</p>
+</li>
+<li><p>变量定义在循环内比外面更好，后者造成作用域更大，对程序维护性不好</p>
+</li>
+</ul>
+<h2 id="条款27"><a href="#条款27" class="headerlink" title="条款27"></a>条款27</h2><ul>
+<li><p>代码中尽量避免dynamic_cast，它会降低效率</p>
+</li>
+<li><p>避免连续的cast转型，尤其是dynamic_cast</p>
+</li>
+</ul>
+<h2 id="条款32"><a href="#条款32" class="headerlink" title="条款32"></a>条款32</h2><ul>
+<li><p>public继承是一种<code>is-a</code>的关系，每一个派生类的对象也是基类的对象</p>
+</li>
+<li><p>程序的错误最好能在编译期检测出来，而不是运行期</p>
+</li>
+</ul>
+<h2 id="条款34"><a href="#条款34" class="headerlink" title="条款34"></a>条款34</h2><ul>
+<li><p>public继承涉及到函数接口继承和实现的继承</p>
+</li>
+<li><p>纯虚函数实际上是可以提供定义的，这个用法比较罕见，知道即可</p>
+</li>
+<li><p>虚函数使派生类继承了其缺省实现，但这可能造成危险</p>
+</li>
+</ul>
+<h2 id="条款36"><a href="#条款36" class="headerlink" title="条款36"></a>条款36</h2><ul>
+<li>不要重新定义继承而来的non-virtual函数，虽然没有错误，但违反了<code>is-a</code>原则，这种情况下干脆不要使用public继承</li>
+</ul>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/">https://charon-cheung.github.io/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0/"><i class="fa fa-chevron-left">  </i><span>内联函数</span></a></div><div class="next-post pull-right"><a href="/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%9A%84%E6%88%90%E5%91%98%E5%88%9D%E5%A7%8B%E5%8C%96%E5%88%97%E8%A1%A8(%E4%BA%8C)/"><span>构造函数的成员初始化列表 (二)</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2019/12/30/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%80%BB%E7%BB%93Effective%20C++%E6%9D%A1%E6%AC%BE/';
+  this.page.identifier = '2019/12/30/C++/C++  面向对象/总结Effective C++条款/';
+  this.page.title = '总结Effective C++条款';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
