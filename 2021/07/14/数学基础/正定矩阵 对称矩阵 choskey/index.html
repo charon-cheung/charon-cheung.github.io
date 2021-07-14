@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="正定矩阵 对称矩阵 choskey"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>正定矩阵 对称矩阵 choskey | Silent Assassin</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5"><span class="toc-number">1.</span> <span class="toc-text">正定矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%8A%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5"><span class="toc-number">2.</span> <span class="toc-text">半正定矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A5%87%E5%BC%82%E7%9F%A9%E9%98%B5"><span class="toc-number">3.</span> <span class="toc-text">奇异矩阵</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%97%85%E6%80%81%E7%9F%A9%E9%98%B5"><span class="toc-number">4.</span> <span class="toc-text">病态矩阵</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">444</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Silent Assassin</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">正定矩阵 对称矩阵 choskey</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2021/07/14/数学基础/正定矩阵 对称矩阵 choskey/"></span></a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="正定矩阵"><a href="#正定矩阵" class="headerlink" title="正定矩阵"></a>正定矩阵</h2><p>定义: A是n阶方阵，如果对任何非零向量x，都有 <script type="math/tex">x^TAx</script> &gt;0，其中 <script type="math/tex">x^T</script> 表示x的转置，就称A正定矩阵。</p>
+<p>性质:</p>
+<ul>
+<li>正定矩阵的行列式恒为正</li>
+<li>正定矩阵可逆。若矩阵A正定，则必有|A|（矩阵A的行列式）&gt;0，所以矩阵A可逆</li>
+<li>实对称矩阵A正定当且仅当A与单位矩阵合同</li>
+<li>两个正定矩阵的和是正定矩阵</li>
+<li>正实数与正定矩阵的乘积是正定矩阵</li>
+</ul>
+<font color = blue size=4>正定矩阵在实数域上是对称矩阵，在复数域上是厄米特矩阵（共轭对称）。 </font>
+
+<p>举个例子，下面这个矩阵就是正定的，但很明显它并不对称。但不能从顺序主子式可以判断</p>
+<script type="math/tex; mode=display">\left[ \begin{matrix}   1 & -1 \\   1 & 0 \\ \end{matrix}  \right] \</script><p>判别<strong>实对称矩阵</strong>A的正定性有两种方法：</p>
+<ol>
+<li><p>求出A的所有特征值，若全为正数，则A是正定的；若特征值全为负数，则A为负定的。</p>
+</li>
+<li><p>计算A的各阶顺序主子式。若A的各阶顺序主子式均大于零，则A是正定的；若A的各阶顺序主子式中，奇数阶主子式为负，偶数阶为正，则A为负定的。</p>
+</li>
+</ol>
+<h2 id="半正定矩阵"><a href="#半正定矩阵" class="headerlink" title="半正定矩阵"></a>半正定矩阵</h2><p><img src="https://i.loli.net/2021/07/14/REgfe7GhsnmdDMZ.png" alt=""><br><img src="https://i.loli.net/2021/07/14/ZCmhcBkvgdl9HXx.png" alt=""></p>
+<h2 id="奇异矩阵"><a href="#奇异矩阵" class="headerlink" title="奇异矩阵"></a>奇异矩阵</h2><p>奇异矩阵是线性代数的概念，就是对应的行列式等于0的矩阵。<br>对一个n阶的非零矩阵 A，如果存在一个矩阵 B 使 <code>AB = BA =I</code>（I是单位矩阵），则称 A 是可逆的，也称 A 为非奇异矩阵。</p>
+<p>奇异矩阵的判定方法: 行列式|A|是否等于0，若等于0，称矩阵A为奇异矩阵</p>
+<p>非奇异矩阵的判定方法：</p>
+<ul>
+<li>一个矩阵非奇异 当且仅当 它的行列式不为零</li>
+<li>一个矩阵非奇异 当且仅当 它的秩为n</li>
+<li>可逆矩阵就是非奇异矩阵，非奇异矩阵也是可逆矩阵</li>
+</ul>
+<h2 id="病态矩阵"><a href="#病态矩阵" class="headerlink" title="病态矩阵"></a>病态矩阵</h2><p>求解方程组<code>Ax=b</code>时如果对数据进行较小的扰动，则得出的结果具有很大波动，这样的矩阵称为病态矩阵。<br><img src="https://i.loli.net/2021/07/14/t3JPWIAwaXrqYsf.png" alt=""></p>
+<p>最根本的原因在于矩阵的列之间的相关性过大。<br><img src="https://i.loli.net/2021/07/14/edfVsN54KmI3Oar.png" alt=""></p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">Author: </span><span class="post-copyright-info"><a href="mailto:undefined">Charon Cheung</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">Link: </span><span class="post-copyright-info"><a href="https://charon-cheung.github.io/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/">https://charon-cheung.github.io/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%A2%AF%E5%BA%A6%20%E9%9B%85%E5%85%8B%E6%AF%94%E7%9F%A9%E9%98%B5%20%20%E6%B5%B7%E6%A3%AE%E7%9F%A9%E9%98%B5/"><span>梯度 雅克比矩阵  海森矩阵</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/';
+  this.page.identifier = '2021/07/14/数学基础/正定矩阵 对称矩阵 choskey/';
+  this.page.title = '正定矩阵 对称矩阵 choskey';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + 'charon-cheung-github-io' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://charon-cheung-github-io.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2013 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
