@@ -11,7 +11,15 @@
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/15/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E5%88%A9%E6%96%87%E4%BC%AF%E6%A0%BC%E6%B3%95/">利文伯格法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>L-M方法是对高斯牛顿法的改进，是把梯度下降法与高斯-牛顿法进行线性组合，以充分利用两种算法的优势。通过在海森矩阵中加入阻尼系数λ来控制每一步迭代的步长以及方向：<br><img src="https://i.loli.net/2021/07/15/ebjUMXR8fW7BmnL.png" alt="1.png"></p>
 <p><img src="https://i.loli.net/2021/07/15/q5wDpblLVKH8iR9.png" alt="推导.png"></p>
 <p><img src="https://i.loli.net/2021/07/15/jAb3T9D867QnaJC.png" alt="算法流程.png"><br><img src="https://i.loli.net/2021/07/15/2xch5IvYLSHt8XK.png" alt="3.png"><br>在曲线拟合实践中，α 通常选取 0.1， β 选取10</p>
-<p>即使初值距离(局部)最优解非常远，仍然可以保证求解成功。利文伯格法的收敛速度要稍微低于高斯牛顿法。</p>
+<ul>
+<li><p>即使初值距离(局部)最优解非常远，利文伯格法仍可以求解成功</p>
+</li>
+<li><p>利文伯格法的收敛速度要稍微低于高斯牛顿法。</p>
+</li>
+<li><p>可以在一定程度避免系数矩阵的奇异和病态问题</p>
+</li>
+</ul>
+<p>对于以上几种方法，<font color = blue size=4> 不会直接求系数矩阵的逆，而是用矩阵分解，例如QR, Cholesky分解</font>，这个矩阵往往有稀疏形式，为SLAM的实时求解提供了可能。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/">正定矩阵 对称矩阵 choskey</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="正定矩阵"><a href="#正定矩阵" class="headerlink" title="正定矩阵"></a>正定矩阵</h2><p>定义: A是n阶方阵，如果对任何非零向量x，都有 <script type="math/tex">x^TAx</script> &gt;0，其中 <script type="math/tex">x^T</script> 表示x的转置，就称A正定矩阵。</p>
 <p>性质:</p>
 <ul>
