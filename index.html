@@ -24,7 +24,9 @@
 <li><p>可以在一定程度避免系数矩阵的奇异和病态问题</p>
 </li>
 </ul>
-<p>对于以上几种方法，<font color = blue size=4> 不会直接求系数矩阵的逆，而是用矩阵分解，例如QR, Cholesky分解</font>，这个矩阵往往有稀疏形式，为SLAM的实时求解提供了可能。</p>
+<p>对于以上几种方法，<font color = blue size=4> 不会直接求系数矩阵的逆，而是用矩阵分解，例如QR, Cholesky分解</font>，这个矩阵往往有稀疏形式，为SLAM的实时求解提供了可能。SLAM中，Pose Graph的结构会越来越大，H矩阵如果不是稀疏的，维数会达到几千，求逆矩阵会极其耗时，不可能实时求解。</p>
+<font color = blue size=4>矩阵之所以是稀疏，根本原因是约束只和它周边少数的节点有关。</font>
+
 <p>QR分解使用三方库eigen；Cholesky分解用三方库SuiteSparse<br><img src="https://i.loli.net/2021/07/15/4qfYZzrGiKEuDlX.png" alt=""></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/">正定矩阵 对称矩阵</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="正定矩阵"><a href="#正定矩阵" class="headerlink" title="正定矩阵"></a>正定矩阵</h2><p>定义: A是n阶方阵，如果对任何非零向量x，都有 <script type="math/tex">x^TAx</script> &gt;0，其中 <script type="math/tex">x^T</script> 表示x的转置，就称A正定矩阵。</p>
 <p>性质:</p>
