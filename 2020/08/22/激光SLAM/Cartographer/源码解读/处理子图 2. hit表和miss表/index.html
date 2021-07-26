@@ -28,8 +28,7 @@
 <p><code>uint16</code>的范围是<code>[0, 65535]</code>，定义的vector有 32768 个元素，先根据参数 <code>odds</code>插入了一个元素，然后在for循环里又插入了剩下的32767个元素。</p>
 <p>对第一个元素，把参数odds(lua中配置的hit和miss概率)转为空闲概率对应的[1, 32767]的索引值，然后再加上32768，结果的范围是<code>[32768+1, 65535]</code>。 <code>CorrespondenceCostToValue</code>函数极为复杂，不用研究细节了。</p>
 <p>对剩下的元素，所有odds均乘以更新系数（<script type="math/tex">C_{hit}</script> 和 <script type="math/tex">C_{miss}</script>）并放入表格中</p>
-<p>对于参数<code>hit_probability=0.55</code>, <code>hit_table_</code>的结果是：55097，然后是从35557到65535的一大堆数（间隔1或2），剩下是65535</p>
-<p>对于参数<code>miss_probability=0.49</code>, <code>miss_table_</code>的结果是：56162，然后是从36244到65535的一大堆数（间隔1或2），剩下是65535</p>
+<p>对于参数<code>hit_probability=0.55</code>, <code>hit_table_</code>第一个成员是47104。  对于参数<code>miss_probability=0.49</code>, <code>miss_table_</code>第一个成员是49562。  两个表大不相同。</p>
 <p>变量<code>kValueToCorrespondenceCost</code>的定义：<code>const std::vector&lt;float&gt;* const kValueToCorrespondenceCost =
     PrecomputeValueToCorrespondenceCost().release();</code>，其实是一系列的浮点数，查看定义会发现相应函数的参数全都写死了。我运行了一下，发现结果是<strong>0和0.1到0.9的32768个数</strong>，其中0.1到0.9之间的一大堆数，间隔大约是0.24</p>
 <font color = blue size=4> 两个表的数据只取决于参数 hit_probability 和 miss_probability </font>
