@@ -22,7 +22,7 @@
 <li><p>至于偏航角，有两种方法获取：编码器和IMU。编码器很依赖精度，效果不如IMU。使用IMU的话，θ就是其返回的偏航角Yaw，IMU上电时的Yaw为0，与小车航向一致，只是还要根据公式转换到<code>(-π，π]</code></p>
 </li>
 </ul>
-<h2 id="tf关系"><a href="#tf关系" class="headerlink" title="tf关系"></a>tf关系</h2><p>用到的tf父子关系为： <font color = blue size=4> </font> map–&gt;odometry–&gt;base_link &lt;/font&gt; &lt;/font&gt;，随着机器人的移动，我们需要生成机器人的里程计信息，如此可以提供机器在map中大致的位置，一般在一个节点里发出<code>odometry-&gt;base_link</code>的tf广播，它们的转换信息是每时每刻都在发布的。</p>
+<h2 id="tf关系"><a href="#tf关系" class="headerlink" title="tf关系"></a>tf关系</h2><p>用到的tf父子关系为： <font color = blue size=4> </font> map–&gt;odometry–&gt;base_link &lt;/font&gt;，随着机器人的移动，我们需要生成机器人的里程计信息，如此可以提供机器在map中大致的位置，一般在一个节点里发出<code>odometry-&gt;base_link</code>的tf广播，它们的转换信息是每时每刻都在发布的。</p>
 <p>odom的原点是机器人启动的位置，因为每次机器人启动的位置不同，所以一开始odom在map上的位置或转换矩阵是未知的，但是<code>AMCL</code>可以根据最佳粒子的位置推算出<code>map-&gt;odom</code>（就是说通过最佳粒子推算出机器人在地图的中的位置）的tf转换信息并发布到<code>tf</code>主题上，这样三者的tf父子关系就建立起来了，我们也就知道了<code>base_link</code>在<code>map</code>中的坐标。</p>
 <p>不管机器人在哪启动，odom和map坐标系之间的tf理论上是不变的，发生的改变就是里程计的累计误差</p>
 <p>一般来说map坐标系的坐标是通过传感器的信息不断的计算更新而来。比如激光雷达，视觉定位等等。因此能够有效的减少累积误差，但是也导致每次坐标更新可能会产生跳跃。map坐标系是一个很有用的长期全局坐标系。但是由于坐标会跳跃改变，这是一个比较差的局部坐标系（不适合用于避障和局部操作）。</p>
