@@ -237,7 +237,7 @@
 </div>
 <h3 id="rosservice-call"><a href="#rosservice-call" class="headerlink" title="rosservice  call"></a>rosservice  call</h3><p><code>rosservice call addTwoNum 3 4</code>: 调用服务，<code>addTwoNum</code>是服务名称，<font color = blue size= 3> 名称不加引号</font>，3和4是服务中的req变量的值，注意必须按服务文件中的顺序赋值。</p>
 <p>但上面是简单情况，srv文件稍微有点复杂时，就会怎么填也不对，个人认为这是ROS Service很失败的一个地方。<br>例如srv文件的请求部分是这样的：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">string request_string</span><br><span class="line">string album</span><br></pre></td></tr></table></figure><br>我试了很多种组合，都不正确。其实这种情况也好办，在<code>call srvname</code>之后直接Tab，会给出一个模板：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rosservice call service_name &quot;request_string: &#x27;&#x27;</span><br><span class="line">album: &#x27;&#x27;&quot;</span><br></pre></td></tr></table></figure><br>我们要做的就是把内容填到单引号里面，不要再自己修改模板，否则容易出错。</p>
-<p><code>call</code>执行成功时，终端不会有任何结果。但是经常出现这样的错误：<font color = orange>  <font size= 3> ERROR: service [/control_cam] responded with an error:  </font>，但程序执行没有问题。原因是 <font color = blue size=4> </font> 程序中对srv文件中的应答没有处理 &lt;/font&gt;</p>
+<p><code>call</code>执行成功时，终端不会有任何结果。但是经常出现这样的错误：<font color = orange size= 3> </font> ERROR: service [/control_cam] responded with an error:  &lt;/font&gt;，但程序执行没有问题。原因是 <font color = blue size=4> </font> 程序中对srv文件中的应答没有处理 &lt;/font&gt;</p>
 <p>其他常用命令：</p>
 <ul>
 <li>rosservice list: 显示当前所有活动的服务</li>
