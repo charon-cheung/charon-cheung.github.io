@@ -55,12 +55,13 @@
 <ul>
 <li>置信域法Trust Region: 在搜索空间的子集内应用模型函数（通常是二次方程）来近似目标函数，这个空间被称为置信域。如果模型函数成功地使真正的目标函数最小化，则扩大置信域。否则收缩置信域并且再次尝试求解模型函数的优化问题。</li>
 </ul>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5%20choskey/">正定矩阵 对称矩阵</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="正定矩阵"><a href="#正定矩阵" class="headerlink" title="正定矩阵"></a>正定矩阵</h2><p>定义: A是n阶方阵，如果对任何非零向量x，都有 <script type="math/tex">x^TAx</script> &gt;0，其中 <script type="math/tex">x^T</script> 表示x的转置，就称A正定矩阵。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5/">正定矩阵 对称矩阵</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="正定矩阵"><a href="#正定矩阵" class="headerlink" title="正定矩阵"></a>正定矩阵</h2><p>定义: A是n阶方阵，如果对任何非零向量x，都有 <script type="math/tex">x^TAx</script> &gt;0，其中 <script type="math/tex">x^T</script> 表示x的转置，就称A正定矩阵。</p>
 <p>性质:</p>
 <ul>
-<li>正定矩阵的行列式恒为正</li>
+<li>行列式恒为正</li>
 <li>正定矩阵可逆。若矩阵A正定，则必有|A|（矩阵A的行列式）&gt;0，所以矩阵A可逆</li>
-<li>实对称矩阵A正定当且仅当A与单位矩阵合同</li>
+<li>所有的特征值都是正的</li>
+<li>实对称矩阵A正定 当且仅当 A与单位矩阵合同</li>
 <li>两个正定矩阵的和是正定矩阵</li>
 <li>正实数与正定矩阵的乘积是正定矩阵</li>
 </ul>
@@ -68,14 +69,18 @@
 
 <p>判别<strong>实对称矩阵</strong>A的正定性有两种方法：</p>
 <ol>
-<li><p>求出A的所有特征值，若全为正数，则A是正定的；若特征值全为负数，则A为负定的。</p>
+<li><p>求出A的所有特征值，若全为正数，则A是正定的； 若特征值全为负数，则A为负定的。</p>
 </li>
-<li><p>计算A的各阶顺序主子式。若A的各阶顺序主子式均大于零，则A是正定的；若A的各阶顺序主子式中，奇数阶主子式为负，偶数阶为正，则A为负定的。</p>
+<li><p>若A的各阶顺序主子式均大于零，则A是正定的；  若A的奇数阶顺序主子式为负，偶数阶为正，则A为负定的。</p>
 </li>
 </ol>
-<h2 id="半正定矩阵"><a href="#半正定矩阵" class="headerlink" title="半正定矩阵"></a>半正定矩阵</h2><p><img src="https://i.loli.net/2021/07/14/REgfe7GhsnmdDMZ.png" alt=""><br><img src="https://i.loli.net/2021/07/14/ZCmhcBkvgdl9HXx.png" alt=""></p>
+<h2 id="半正定矩阵"><a href="#半正定矩阵" class="headerlink" title="半正定矩阵"></a>半正定矩阵</h2><p><img src="https://i.loli.net/2021/07/14/REgfe7GhsnmdDMZ.png" alt=""></p>
+<p><br></p>
+<p>正定矩阵的几何意义：</p>
+<script type="math/tex; mode=display">x^TAx>0$$ 变为 $$x^TY>0$$ ($$Y=Ax$$)，那么有
+$$cos(\theta)=\frac{x^T Y}{\Vert x \Vert \Vert Y \Vert} > 0</script><p>也就是说，一个向量x经过矩阵A变换后(左乘)，与原来向量x的夹角小于90°</p>
 <h2 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h2><p>在矩阵中，若数值为0的元素数目远远多于非0元素的数目，并且非0​元素分布没有规律时，则称该矩阵为稀疏矩阵</p>
-<h2 id="奇异矩阵"><a href="#奇异矩阵" class="headerlink" title="奇异矩阵"></a>奇异矩阵</h2><p>奇异矩阵是线性代数的概念，就是对应的行列式等于0的矩阵。<br>对一个n阶的非零矩阵 A，如果存在一个矩阵 B 使 <code>AB = BA =I</code>（I是单位矩阵），则称 A 是可逆的，也称 A 为非奇异矩阵。</p>
+<h2 id="奇异矩阵"><a href="#奇异矩阵" class="headerlink" title="奇异矩阵"></a>奇异矩阵</h2><p>奇异和非奇异矩阵仅针对n阶方阵。 奇异矩阵就是对应的行列式等于0的矩阵。  若一个n阶矩阵是可逆的，则称它为非奇异矩阵。</p>
 <p>奇异矩阵的判定方法: 行列式|A|是否等于0，若等于0，称矩阵A为奇异矩阵</p>
 <p>非奇异矩阵的判定方法：</p>
 <ul>
