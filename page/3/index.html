@@ -13,7 +13,12 @@
 <p>看到预测值和观测值的差，很容易想到cartographer，PoseExtrapolator提供预测值，Scan Matcher提供观测值。</p>
 <h2 id="推导过程"><a href="#推导过程" class="headerlink" title="推导过程"></a>推导过程</h2><p><img src="https://i.loli.net/2021/07/14/NKmOJRVD4hsdjHZ.jpg" alt=""><br>有些人可能产生疑问，为什么通过最小二乘而不是其他方式获得最优函数，比如说最小化误差的绝对值的和？这里的推导使用最大似然估计推导出 <script type="math/tex">X^* = argmin\Sigma e_i^T \Omega e_i</script> 就提供了概率学基础</p>
 <p><img src="https://i.loli.net/2021/07/14/BNEa93lomCu2njP.jpg" alt=""><br><img src="https://i.loli.net/2021/07/14/s8MXzitu7bvUfwr.jpg" alt=""></p>
-<p>要求H正定，但实际只保证半正定。可能出现H为奇异矩阵或病态矩阵，此时增量的稳定性较差，算法会不收敛。即使H非奇异非病态，如果步长 <script type="math/tex">\Delta x</script> 太大，也会导致迭代发散。</p>
+<ul>
+<li>要求H正定，但实际只保证半正定。</li>
+<li>可能出现H为奇异矩阵或病态矩阵，此时增量的稳定性较差，算法会不收敛。</li>
+<li>即使H非奇异非病态，如果步长 <script type="math/tex">\Delta x</script> 太大，也会导致迭代发散。</li>
+<li>只能在展开点附近有好的近似效果</li>
+</ul>
 <p>参考:<br><a target="_blank" rel="noopener" href="https://heyijia.blog.csdn.net/article/details/47731631">graph slam tutorial ：从推导到应用２</a><br><a target="_blank" rel="noopener" href="https://scm_mos.gitlab.io/algorithm/newton-and-gauss-newton/">牛顿法 高斯牛顿法</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boksic/article/details/79055298">非线性优化整理-2.高斯牛顿法</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/13/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95%20%20%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95/">牛顿法 梯度下降法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>我们考虑的最小二乘问题是这样的</p>
 <script type="math/tex; mode=display">\mathop{min}\limits_{x}{\frac{1}{2}\left\|f(x)\right\|_2^2}   \tag{1}</script><p>自变量x是一个向量，f是一个非线性函数。我们一般用李代数表示机器人的平移和旋转，常常无法对f进行直接求导。所以使用迭代的方式求解，非线性优化的几个解法都是使用迭代，从一个初值出发，不断更新当前的优化变量，使目标函数f(x)下降。</p>
