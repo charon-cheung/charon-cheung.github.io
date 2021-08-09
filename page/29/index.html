@@ -171,13 +171,15 @@
 <p>不过对于内置类型和STL的iterator，函数对象，还是用值传递的方式比较好</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/12/19/%E6%BF%80%E5%85%89SLAM/gmapping/(%E4%B8%80)%20%E8%AE%BA%E6%96%87%E8%A7%A3%E8%AF%BB/">(一) 论文解读</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-19</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/gmapping/">gmapping</a></span><div class="content"><p>gmapping其实就是优化版的RBPF，它主要有两大优化: </p>
 <ol>
-<li>计算提议分布时，不仅考虑机器人的运动，而且考虑了最近的观测，使地图更精确而且减少了所需的粒子数</li>
-<li>选择性重采样，减少粒子退化，并且只在需要时重采样</li>
+<li><p>计算提议分布时，不仅考虑机器人的运动，而且考虑了最近的观测，使地图更精确而且减少了所需的粒子数。之前的提议分布是 <script type="math/tex">P(x_t|x_{t-1}, u_{t-1} )</script>，优化之后是 <script type="math/tex">P(x{_t}|x_{t-1}, u_{t-1} ,m_{t-1},z_t )</script> </p>
+</li>
+<li><p>选择性重采样，减少粒子退化，并且只在需要时重采样</p>
+</li>
 </ol>
 <p>RBPF的一般过程：</p>
 <ol>
-<li>时间t的粒子群{X<sub>t</sub><sup>(i)</sup>} 是{X<sup>(i)</sup><sub>(t-1)</sub>} 从提议分布中采样获得的，提议分布往常是里程计运动模型</li>
-<li>粒子权重w<sup>(i)</sup> 是目标分布和提议分布的比，用来描述提议分布和目标分布的差别，越大说明提议分布越好</li>
+<li>时间t的粒子群 <script type="math/tex">X^ \left( i \right)_t</script> 是 <script type="math/tex">X^ \left( i \right)_{t-1}</script> 从提议分布中采样获得的，提议分布往常是里程计运动模型</li>
+<li>粒子权重 <script type="math/tex">w^ \left( i \right)</script> 是目标分布和提议分布的比，用来描述提议分布和目标分布的差别，越接近1说明提议分布越好</li>
 <li>重采样：只有部分粒子用于估计目标分布，重采样之后，所有粒子权重相同。<font color = blue size=4> 如果能直接从目标分布采样，所有粒子权重都相同，实际上只用1个粒子就行，或者说没有采样的概念了。因此，提议分布越差，粒子群的权重差别越大，N<sub>eff</sub> (粒子归一化权重的平方和的倒数)就越大。</font> 当N<sub>eff</sub> 小于粒子数一半时，说明粒子分布和真实分布差距很大，某些粒子离真实值近，某些远，执行重采样。</li>
 <li>根据轨迹各个位姿x<sup>(i)</sup><sub>1:t</sub> 和各个观测Z<sub>1:t</sub> 估计地图</li>
 </ol>
