@@ -176,8 +176,7 @@
 <li>重采样：只有部分粒子用于估计目标分布，重采样之后，所有粒子权重相同。<font color = blue size=4> 如果能直接从目标分布采样，所有粒子权重都相同，实际上只用1个粒子就行，或者说没有采样的概念了。因此，提议分布越差，粒子群的权重差别越大，N<sub>eff</sub> (粒子归一化权重的平方和的倒数)就越大。</font> 当N<sub>eff</sub> 小于粒子数一半时，说明粒子分布和真实分布差距很大，某些粒子离真实值近，某些远，执行重采样。</li>
 <li>根据轨迹各个位姿 <script type="math/tex">X^ \left( i \right)_{1:t}</script> 和各个观测 <script type="math/tex">Z^ \left( i \right)_{1:t}</script> 估计地图</li>
 </ol>
-<p>gmappping主要有两大优化: </p>
-<h2 id="优化提议分布时"><a href="#优化提议分布时" class="headerlink" title="优化提议分布时"></a>优化提议分布时</h2><p>不仅考虑机器人的运动，而且考虑了最近的观测，使得提议分布更接近目标分布，从而减少了所需的粒子数。之前的提议分布是 <script type="math/tex">P(x_t\ |x_{t-1}\ , u_{t-1}\ )</script>，优化之后是 <script type="math/tex">P(x{_t}\ |x_{t-1}\ , \ u_{t-1}\ , \ m_{t-1}\ , \ z_t)</script> </p>
+<h2 id="gmappping的优化"><a href="#gmappping的优化" class="headerlink" title="gmappping的优化"></a>gmappping的优化</h2><h3 id="优化提议分布"><a href="#优化提议分布" class="headerlink" title="优化提议分布"></a>优化提议分布</h3><p>不仅考虑机器人的运动，而且考虑了最近的观测，使得提议分布更接近目标分布，从而减少了所需的粒子数。之前的提议分布是 <script type="math/tex">P(x_t\ |x_{t-1}\ , u_{t-1}\ )</script>，优化之后是 <script type="math/tex">P(x{_t}\ |x_{t-1}\ , \ u_{t-1}\ , \ m_{t-1}\ , \ z_t)</script> </p>
 <p>粒子权重计算比较简单: <script type="math/tex">w^ \left( i \right)_t \propto w^ \left( i \right)_{t-1}\ \cdot  p(z_t\ | m^ \left( i \right)_{t-1}\ , x^ \left( i \right)_t)</script>。 但是这样的置信区间太大，似然又太小，导致各个粒子的权重差别很大，实际上有意义的只有一小部分，所以就需要很多粒子。</p>
 <p>相比之下，雷达观测的置信区间小，似然大，所需粒子就少了很多。优化之后，粒子权重公式为公式13</p>
 <p>因为观测似然函数的不确定形态，提议分布没有闭式解，所以方法是用采样对提议分布做估计。</p>
@@ -186,13 +185,13 @@
 <li>对置信区间采样，对采样点进行评价</li>
 <li>对每个粒子计算，计算K个粒子的期望方差，计算时考虑了里程计运动信息，公式15和16</li>
 </ol>
-<h2 id="减少重采样"><a href="#减少重采样" class="headerlink" title="减少重采样"></a>减少重采样</h2><p>选择性重采样，减少粒子退化</p>
+<h3 id="减少重采样"><a href="#减少重采样" class="headerlink" title="减少重采样"></a>减少重采样</h3><p>选择性重采样，减少粒子退化</p>
 <p>GMapping依靠粒子的多样性， 回环时消除累积的误差。<font color = blue size=4>起始位置需要选择特征较为丰富的地方， </font>这样能在回环时提高正确粒子权重。<br><br></p>
 <h2 id="算法复杂度"><a href="#算法复杂度" class="headerlink" title="算法复杂度"></a>算法复杂度</h2><p>主要影响因素是计算提议分布，更新地图，计算权重，检测是否需要重采样，重采样。  结合源码，最大的影响参数是<code>particles</code>,  其次是<code>resampleThreshold</code>, <code>map_update_interval</code>, <code>throttle_scans</code>, <code>lskip</code></p>
 <h2 id="N-eff"><a href="#N-eff" class="headerlink" title="N_{eff}"></a><script type="math/tex">N_{eff}</script></h2><ol>
 <li>机器人经过未知区域时，<script type="math/tex">N_{eff}</script> 下降很慢</li>
 <li>机器人经过已知区域时，每个粒子都在各自的地图中保持定位，权重都相差不大</li>
-<li><font color = blue size=4> 当closing loop时，</font> N<sub>eff</sub>会显著下降，有些粒子能保持定位，有些则丢失了定位，权重相差很大，执行重采样</li>
+<li><font color = blue size=4> 当closing loop时，</font> N<sub>eff</sub>会显著下降，有些粒子能保持定位，有些则丢失了定位，权重相差很大，此时执行重采样</li>
 </ol>
 <h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>从论文和源码上看，gmapping算法有以下缺陷:</p>
 <ol>
