@@ -199,19 +199,17 @@
 <h2 id="N-eff"><a href="#N-eff" class="headerlink" title="N_{eff}"></a><script type="math/tex">N_{eff}</script></h2><ol>
 <li>机器人经过未知区域时，<script type="math/tex">N_{eff}</script> 下降很慢</li>
 <li>机器人经过已知区域时，每个粒子都在各自的地图中保持定位，权重都相差不大</li>
-<li><font color = blue size=4> 当closing loop时，</font>  <script type="math/tex">N_{eff}</script>会显著下降，有些粒子能保持定位，有些则丢失了定位，权重相差很大，此时执行重采样</li>
+<li><font color = blue size=4> 当closing loop时，</font>  <script type="math/tex">N_{eff}</script> 会显著下降，有些粒子能保持定位，有些则丢失了定位，权重相差很大，此时执行重采样</li>
 </ol>
 <h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>从论文和源码上看，gmapping算法有以下缺陷:</p>
 <ol>
 <li><p>观测信息比里程计估计要精确的多，而且置信区间小，似然很大．但是用户设置的<code>miniScore</code>参数过大时(超过170)，scan match失败，转而使用里程计进行位姿估计．但这样就更不准了，而且gmapping算法里没有提示</p>
 </li>
-<li><p>scan matcher 计算的是观测似然函数的置信区间，但函数可能是多峰的，比如closing loop的时候，这就造成了问题，粒子群的权重会有很大波动， <script type="math/tex">N_{eff}</script>会显著下降，当低于resample<em>Threshold时，就会执行重采样，然后恢复 $$N</em>{eff}<script type="math/tex">最大值．</script>N_{eff}$$之所以大幅下降，就是因为观测似然出现多峰，使得提议分布与目标分布差别太大，导致粒子权重减小．因此不适用于多闭环的环境</p>
+<li><p>scan matcher 计算的是观测似然函数的置信区间，但函数可能是多峰的，比如closing loop的时候，这就造成了问题，粒子群的权重会有很大波动， <script type="math/tex">N_{eff}</script> 会显著下降，当低于resample<em>Threshold时，就会执行重采样，然后恢复 $$N</em>{eff}<script type="math/tex">最大值．</script>N_{eff}$$ 之所以大幅下降，就是因为观测似然出现多峰，使得提议分布与目标分布差别太大，导致粒子权重减小．因此不适用于多闭环的环境</p>
 </li>
 <li><p>遇到长走廊或很空旷的环境，雷达数据没有什么特征，比如测距都是最大值，造成位姿在走廊方向的严重不确定，此时里程计精度就很重要了，有利于粒子群的收敛。如果里程计精度不好，增加粒子数也可以解决这个问题。</p>
 </li>
 <li><p>随着场景增大所需的粒子也增加，内存和计算量都会增加，实际中建的地图不到几千平米时就会发生错误</p>
-</li>
-<li><p>没有回环检测，因此在回环闭合时可能会造成地图错位，虽然增加粒子数目可以使地图闭合，但是以增加计算量和内存为代价</p>
 </li>
 <li><p>机器人的轨迹估计与真实的轨迹有一定差异，轨迹出现较大畸变的地方导致了＂假墙＂．这是粒子多样性降低造成的，需要增加粒子数．<br><img src="https://i.loli.net/2020/06/15/mb7DlacCHytT5F9.png" alt="假墙.png"></p>
 </li>
