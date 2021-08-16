@@ -24,7 +24,7 @@
 <ul>
 <li>运动模型</li>
 </ul>
-<p>概率模型是 <script type="math/tex">p(x_t\ | \ u_t, u_{t-1})</script>， 使用里程计模型进行估计。对每一个粒子更新位姿。位姿是从运动模型中采样获得的，机器人从t-1时刻运动到t时刻，获得相对运动参数<code>rot1,trans,rot2</code></p>
+<p>概率模型是 <script type="math/tex">p(x_t\ | \ x_{t-1},\ u_t)</script>， 使用里程计模型进行估计。对每一个粒子更新位姿。位姿是从运动模型中采样获得的，机器人从t-1时刻运动到t时刻，获得相对运动参数<code>rot1,trans,rot2</code></p>
 <p>最终，对于每个粒子的位姿， x加上相对平移量在x轴的分量(乘以cos), y加上相对平移量在y轴的分量， theta加上两次旋转的参数。这些分量除了跟rot1,trans,rot2有关，还跟AMCL中的四个运动噪声参数<code>alpha1~alpha4</code>有关</p>
 <ul>
 <li>感知模型</li>
