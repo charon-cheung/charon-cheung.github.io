@@ -31,7 +31,7 @@
 </ul>
 <p>概率模型是 <script type="math/tex">p(z_t\ | \ x_t)</script>，使用似然域模型，用于更新每一个粒子的权重。  </p>
 <p>似然域测量模型认为测量的结果包含一个高斯分布噪声和随机噪声。<br>激光测量距离（x,y）变换到map坐标系。找到距离激光点最近的障碍，查表获得它们的最近距离dist。 这个dist也是高斯噪声的均值，所以dist越大，打到障碍物的可能性越小，则粒子不可信，权重越小。</p>
-<p><script type="math/tex">\omega = \prod_{i=1}^N \left\{ z_{hit}*prob(dist_i, \sigma_{hit})+\frac{z_{rand}}{z_{max}}  \right\}\ \</script>   N为一帧激光的点数</p>
+<p><script type="math/tex">\omega = \prod_{i=1}^N \left\{ z_{hit}*prob(dist_i, \sigma_{hit})+\frac{z_{rand}}{z_{max}}  \right\}\ \ \</script>   N为一帧激光的点数</p>
 <p>似然域测量模型比较理想，因此在场景有些变化，和动态人存在干扰的情况，估计的pose精度会下降。放大测量方差或许会有效果，最好要是能引入类似非线性优化中的核函数（损失函数）或许不错。</p>
 <ul>
 <li>失效恢复的准备</li>
