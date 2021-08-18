@@ -217,10 +217,10 @@
 <li><font color = blue size=4> laser_max_range</font>: 被考虑的最大扫描范围；默认参数-1.0时，将会使用激光上报的最大扫描范围</li>
 <li><p>laser_max_beams: 更新滤波器时，每次扫描中多少个等间距的光束被使用，默认30</p>
 </li>
-<li><p>laser_z_hit: 模型的z_hit部分的最大权值，默认0.95，可以用0.5</p>
+<li><p>laser_z_hit: 似然域模型的高斯噪声的最大权值，默认0.95</p>
 </li>
-<li>laser_z_rand: 模型的z_rand部分的最大权值，默认0.05</li>
-<li>laser_sigma_hit: 被用在模型的z_hit部分的高斯模型的标准差，默认0.2m</li>
+<li>laser_z_rand: 似然域模型的随机噪声的最大权值，默认0.05</li>
+<li>laser_sigma_hit: 高斯噪声模型的标准差，默认0.2m</li>
 </ul>
 <p>以下几个参数不在似然域模型中使用：</p>
 <ul>
