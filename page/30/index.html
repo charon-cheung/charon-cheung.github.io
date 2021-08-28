@@ -7,16 +7,7 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">465</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">45</span></a></div></div></div><nav id="nav" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Silent Assassin</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Silent Assassin</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/12/16/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BF%90%E5%8A%A8%E6%A8%A1%E5%9E%8B/">机器人运动模型</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><h2 id="用于估计的二轮差速里程计模型"><a href="#用于估计的二轮差速里程计模型" class="headerlink" title="用于估计的二轮差速里程计模型"></a>用于估计的二轮差速里程计模型</h2><p>二轮差速模型的航迹推演原理图，后方两个驱动轮，前面两个万向轮<br><img src="https://i.loli.net/2019/12/16/Hl2Fz8Mqdo3bY5t.png" alt=""></p>
-<ul>
-<li>IMU只提供yaw</li>
-<li>根据航迹推演，两驱车的线速度是两个轮子线速度的平均值，角速度是 差/底盘长度;两个参数作为<code>raw_vel</code>话题发布</li>
-<li>机器人切线运动模型<br>base_controller节点正确读取到底层（比如嵌入式控制板）传回的速度后进行积分，计算出机器人的估计位置和姿态，并将里程计信息和tf变换发布出去。</li>
-<li>机器人中通过运行底盘控制ROS驱动，来实现读取串口的速度反馈，利用航迹推演算法计算得到里程计并发布到/odom这个主题</li>
-</ul>
-<p>之所以说这个是粗略的定位，是因为在实际情况中可能会碰到轮子打滑，地面不平整等因素的干扰，里程计的运动增量带有噪声，对速度积分进行航迹推算得到的里程计累积误差会越来越大。当然上层会通过激光信息来匹配校准。</p>
-<p>IMU姿态的协方差矩阵代表了姿态测量的不确定度。</p>
-<h2 id="用于规划的速度模型"><a href="#用于规划的速度模型" class="headerlink" title="用于规划的速度模型"></a>用于规划的速度模型</h2></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/12/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%89)%20%E6%A0%87%E5%AE%9A%E5%86%85%E5%A4%96%E5%8F%82/">IMU在ROS中的使用 (三) 标定内外参</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>IMU线加速度噪声积分后根本不能用做线速度</p>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="/img/avatar.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">464</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">45</span></a></div></div></div><nav id="nav" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">Silent Assassin</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">Silent Assassin</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/12/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%B8%89)%20%E6%A0%87%E5%AE%9A%E5%86%85%E5%A4%96%E5%8F%82/">IMU在ROS中的使用 (三) 标定内外参</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>IMU线加速度噪声积分后根本不能用做线速度</p>
 <p>IMU在制造过程中，由于物理因素，导致实际的坐标轴与理想的坐标轴之间会有一定的偏差，同时三轴加速度、三轴角速度、三轴磁力计的原始值会与真实值有一个固定的偏差等。自校准就是要通过给的补偿值来减小坐标轴的偏差及原始值的固定偏差，也就是所谓的<strong>IMU内参标定</strong>，是为了获得噪声参数。</p>
 <p>如果将IMU安装到机器人或摄像头上后，需要知道IMU与机器人或摄像头的相对位置，这个时候进行的标定就是所谓的<strong>IMU外参标定</strong></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/12/10/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/IMU%E5%9C%A8ROS%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%20(%E4%BA%8C)%20%E5%8F%91%E5%B8%83%E8%AF%9D%E9%A2%98/">IMU在ROS中的使用 (二) 发布话题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-12-10</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>通过IMU获得的是odom坐标系下的坐标，<code>sensor_msgs/Imu</code>消息：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 保存IMU的数据</span></span><br><span class="line"><span class="comment"># 加速度单位 m/s^2 (not in g&#x27;s), 角速度单位 rad/sec</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># If the covariance of the measurement is known, it should be filled in (if all you know is the </span></span><br><span class="line"><span class="comment"># variance of each measurement, e.g. from the datasheet, just put those along the diagonal)</span></span><br><span class="line"><span class="comment"># 如果协方差矩阵元素全是0，那么认为是未知协方差。</span></span><br><span class="line"><span class="comment"># If you have no estimate for one of the data elements (e.g. your IMU doesn&#x27;t produce an orientation </span></span><br><span class="line"><span class="comment"># estimate), please set element 0 of the associated covariance matrix to -1</span></span><br><span class="line"><span class="comment"># If you are interpreting this message, please check for a value of -1 in the first element of each </span></span><br><span class="line"><span class="comment"># covariance matrix, and disregard the associated estimate.</span></span><br><span class="line"></span><br><span class="line">Header header</span><br><span class="line">geometry_msgs/Quaternion orientation   <span class="comment"># IMU的当前姿态，4元数的形式表示</span></span><br><span class="line">float64[9] orientation_covariance   <span class="comment"># 姿态的协方差</span></span><br><span class="line"></span><br><span class="line">geometry_msgs/Vector3 angular_velocity  	 <span class="comment"># IMU的3轴角速度</span></span><br><span class="line">float64[9] angular_velocity_covariance</span><br><span class="line"></span><br><span class="line">geometry_msgs/Vector3 linear_acceleration  	 <span class="comment"># IMU的3轴加速度</span></span><br><span class="line">float64[9] linear_acceleration_covariance</span><br></pre></td></tr></table></figure></p>
@@ -110,6 +101,89 @@
 <p><br><br></p>
 <p>有些package需要依赖自定义的消息或服务文件，也就是一个特殊的package，这就更简单了，有专门的命令： <code>add_dependencies(your_program $&#123;catkin_EXPORTED_TARGETS&#125;)</code>，不必用专门的package名称，用message函数可以看这个宏的内容，它是一大堆消息和服务名称。这样在编译的时候会出现这样的信息：<br><img src="https://i.loli.net/2019/11/08/STD8ia4NUoZH51X.png" alt=""></p>
 <p>现在编译就快捷多了，直接用<code>catkin_make</code>就可以编译整个工作空间，不必自己改编译顺序了。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/11/07/%E6%BF%80%E5%85%89SLAM/%E6%BF%80%E5%85%89SLAM%E7%AE%80%E4%BB%8B/">激光SLAM综述</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-11-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/%E5%85%B6%E4%BB%96/">其他</a></span><div class="content"><p>机器人依据自由度的可控性(controllable)划分为<code>nonholonomic</code>或者<code>holonomic robot</code></p>
+<ul>
+<li><p>holonomic robot: 在所有的自由度上都可控的，比如基于万向轮的机器人（robot built on Omni-wheels）</p>
+</li>
+<li><p>nonholonomic robot: 差速车或阿克曼车。可控的自由度维数小于机器人自身的自由度，比如car自身有3个自由度（x，y，theta），即平面坐标和车身朝向，但car可控的自由度是2（加减速度，转动方向盘，不能随意的漂移运动）</p>
+</li>
+</ul>
+<p>从另一个直观通俗的角度可以理解为：如果机器人可以在N维空间中朝任意方向移动，则对于N维空间是完整性的。<strong>机器人在N维空间中不能朝任意方向移动，则认为是非完整性约束。</strong></p>
+<p><br></p>
+<p>激光雷达采集到的物体信息呈现出一系列分散的、具有准确角度和距离信息的点，被称为点云。通常，激光SLAM系统通过对不同时刻两片点云的匹配与比对，计算激光雷达相对运动的距离和姿态的改变，也就完成了对机器人自身的定位。</p>
+<font color = blue size=4>激光雷达不能用于非常混乱的环境 </font>
+
+<p><img src="https://i.loli.net/2020/03/02/iuAf1Wn89SOG3Fs.png" alt="2D激光SLAM所有流派"></p>
+<h2 id="传感器"><a href="#传感器" class="headerlink" title="传感器"></a>传感器</h2><p>IMU：</p>
+<ul>
+<li>直接测量角速度和线加速度</li>
+<li>角速度的测量精度高</li>
+</ul>
+<p>轮式里程计：</p>
+<ul>
+<li>直接测量机器人的位移和角度</li>
+<li>较高的局部角度和位置测量精度</li>
+<li>更新速度高 <code>(100Hz~200Hz)</code></li>
+</ul>
+<p>传感器辅助(odom+IMU)</p>
+<ul>
+<li>极高的位姿更新频率，可以比较准确反应运动情况</li>
+<li>高精度的局部位姿估计</li>
+<li>跟状态估计解耦，所有信息都来自传感器，不需要匹配</li>
+</ul>
+<p><br></p>
+<p>数据预处理：</p>
+<ul>
+<li>轮式里程计的标定：轮式里程计的机械标称值并不代表真实值，实际误差可能较大</li>
+<li>激光雷达运动畸变去除：每一帧激光数据的采集需要时间，在采集期间如果机器人运动会使测量值产生畸变。运动产生的畸变会让数据严重失真，影响匹配精度。</li>
+<li>不同系统之间时间同步（不同CPU）</li>
+</ul>
+<p>实际环境中的问题：</p>
+<ul>
+<li>大尺度的动态环境，即有高动态（行走的人和移动前后的物体）</li>
+<li><p>环境变化</p>
+</li>
+<li><p>几何结构相似的环境，比如在一个又长又直、两侧是墙壁的环境</p>
+</li>
+<li><p>全局定位：信息量小</p>
+</li>
+<li><p>地面材质的变化</p>
+</li>
+<li>地面凹凸不平</li>
+<li>机器人载重改变（与前两条一起影响里程计）</li>
+</ul>
+<p>后面几条为传感器融合可以解决的问题<br><br></p>
+<p>激光slam的问题：</p>
+<ul>
+<li>退化环境： 对于2D激光雷达来说是hallway走廊; 对于3D激光雷达来说,很空旷的环境</li>
+<li>地图的动态更新</li>
+<li>全局地位</li>
+<li>动态环境定位：动态物体检测与跟踪解决</li>
+</ul>
+<h2 id="实际问题"><a href="#实际问题" class="headerlink" title="实际问题"></a>实际问题</h2><ul>
+<li><p>环境中的透明玻璃和网状结构，怎么解决<br>玻璃也有一定的反射率，大约10%。建图之后，可以直接把玻璃漏光部分直接编辑为黑线。</p>
+</li>
+<li><p>多线激光常见方案：NDT-mapping和LOAM。3D激光SLAM一般与视觉融合，这是常用方法。LOAM不适合2D激光</p>
+</li>
+<li><p>主流的激光SLAM可以在普通ARM CPU上实时运行。激光雷达主动发射，在较多机器人时可能产生干扰。尤其是固态激光雷达的大量使用，可能使得场景中充满了信号污染，从而影响激光SLAM的效果。</p>
+</li>
+<li><p>非结构化环境：不存在特定的平面，比如马路（特定的平面和标志）。</p>
+</li>
+<li><p>开发农作物网面的识别和采集地图，需要用激光雷达好还是用3D摄像头来开发（采集环境信息然后写识别算法去识别需要找的农作物目的）好？ </p>
+</li>
+</ul>
+<p>因为农作物的环境比较复杂，准确度要求也比较高，所以使用Realsense，16线雷达的数据不够，32线又太贵了</p>
+<h2 id="机器人绑架问题"><a href="#机器人绑架问题" class="headerlink" title="机器人绑架问题"></a>机器人绑架问题</h2><p>机器人定位分为三大问题：<strong>全局定位</strong>、<strong>位姿跟踪</strong> 和 <strong>绑架劫持</strong></p>
+<ul>
+<li><p>全局定位：初始位置未知，机器人靠自身运动确定自己在地图中的位姿。</p>
+</li>
+<li><p>位姿跟踪：已知自身位姿或者已经通过全局定位得到了一个较好的位姿估计初值，在后续运动时补偿精度较差的运动控制误差</p>
+</li>
+<li><p>绑架劫持：机器人在已知自身位姿的情况下，得到了一个错误的位姿或者外界将其放到另外一个位姿，而里程计信息给出了错误的信息甚至没有给出控制信息。</p>
+</li>
+</ul>
+<p>最典型的粒子就是人把机器人搬走，机器人就找不到自己位置。这时用激光和里程计都不起作用了，可以用视觉辅助定位。用摄像头建一个特征地图，视觉SLAM和激光SLAM并行使用，激光SLAM失效时换视觉。比如使用二维码全局定位。</p>
+<p>另外在绑架发生之前，保存当前状态，则可以使用除视觉传感器之外的传感器，比如反光板</p>
 </div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/29/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/29/">29</a><span class="page-number current">30</span><a class="page-number" href="/page/31/">31</a><span class="space">&hellip;</span><a class="page-number" href="/page/47/">47</a><a class="extend next" rel="next" href="/page/31/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://i.loli.net/2021/07/13/RCLw5Bx8aFPN74b.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2021 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
