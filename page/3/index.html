@@ -45,24 +45,21 @@
 <li>行列式恒为正</li>
 <li>正定矩阵可逆。若矩阵A正定，则必有|A|（矩阵A的行列式）&gt;0，所以矩阵A可逆</li>
 <li>所有的特征值都是正的</li>
-<li>实对称矩阵A正定 当且仅当 A与单位矩阵合同</li>
-<li>两个正定矩阵的和是正定矩阵</li>
-<li>正实数与正定矩阵的乘积是正定矩阵</li>
+<li>实对称矩阵A正定， 当且仅当 A与单位矩阵合同</li>
+<li>两个正定矩阵的和是正定矩阵， 乘积也是正定矩阵</li>
 </ul>
-<font color = blue size=4>正定矩阵在实数域上是对称矩阵，在复数域上是厄米特矩阵（共轭对称）</font>
+<font color = blue size=4>实数域上所说的正定矩阵都是对称矩阵，在复数域上是厄米特矩阵（共轭对称）</font>
 
 <p>判别<strong>实对称矩阵</strong>A的正定性有两种方法：</p>
 <ol>
 <li><p>求出A的所有特征值，若全为正数，则A是正定的； 若特征值全为负数，则A为负定的。</p>
 </li>
-<li><p>若A的各阶顺序主子式均大于零，则A是正定的；  若A的奇数阶顺序主子式为负，偶数阶为正，则A为负定的。</p>
+<li><p>若A的所有顺序主子式都大于零，则A是正定的；  若A的奇数阶顺序主子式为负，偶数阶为正，则A为负定的。</p>
 </li>
 </ol>
 <h2 id="半正定矩阵"><a href="#半正定矩阵" class="headerlink" title="半正定矩阵"></a>半正定矩阵</h2><p><img src="https://i.loli.net/2021/07/14/REgfe7GhsnmdDMZ.png" alt=""></p>
 <p><br></p>
-<p>正定矩阵的几何意义：</p>
-<script type="math/tex; mode=display">x^TAx>0$$ 变为 $$x^TY>0$$ ($$Y=Ax$$)，那么有
-$$cos(\theta)=\frac{x^T Y}{\Vert x \Vert \Vert Y \Vert} > 0</script><p>也就是说，一个向量x经过矩阵A变换后(左乘)，与原来向量x的夹角小于90°</p>
+<p>正定矩阵的几何意义：<br>定义中的 <script type="math/tex">x^TAx>0</script> 变为 <script type="math/tex">x^TY>0</script> (<script type="math/tex">Y=Ax</script>)<br>那么有 <script type="math/tex">cos(\theta)=\frac{x^T Y}{\Vert x \Vert \Vert Y \Vert} > 0</script><br>也就是说，一个向量x经过矩阵A变换后(左乘)，与原来向量x的夹角小于90°</p>
 <h2 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h2><p>在矩阵中，若数值为0的元素数目远远多于非0元素的数目，并且非0​元素分布没有规律时，则称该矩阵为稀疏矩阵</p>
 <h2 id="奇异矩阵"><a href="#奇异矩阵" class="headerlink" title="奇异矩阵"></a>奇异矩阵</h2><p>奇异和非奇异矩阵仅针对n阶方阵。 奇异矩阵就是对应的行列式等于0的矩阵。  若一个n阶矩阵是可逆的，则称它为非奇异矩阵。</p>
 <p>奇异矩阵的判定方法: 行列式|A|是否等于0，若等于0，称矩阵A为奇异矩阵</p>
