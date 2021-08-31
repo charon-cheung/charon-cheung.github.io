@@ -41,7 +41,7 @@
 </ol>
 <h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>从论文和源码上看，gmapping算法有以下缺陷:</p>
 <ol>
-<li><p>scan matcher 计算的是观测似然函数的置信区间，但函数可能是多峰的，比如closing loop的时候，这就造成了问题，粒子群的权重会有很大波动， <script type="math/tex">N_{eff}</script> 会显著下降，当低于<code>resample_Threshold</code>时，就会执行重采样，然后恢复 <script type="math/tex">N_{eff}</script>最大值． <script type="math/tex">N_{eff}</script> 之所以大幅下降，就是因为观测似然出现多峰，使得提议分布与目标分布差别太大，导致粒子权重减小．因此不适用于多闭环的环境</p>
+<li><p>scan matcher 计算的是观测似然函数的置信区间，但函数可能是多峰的，比如closing loop的时候，这就造成了问题，粒子群的权重会有很大波动， <script type="math/tex">N_{eff}</script> 会显著下降，当低于<code>resample_Threshold</code>时，就会执行重采样，然后恢复 <script type="math/tex">N_{eff}</script> 最大值． <script type="math/tex">N_{eff}</script> 之所以大幅下降，就是因为观测似然出现多峰，使得提议分布与目标分布差别太大，导致粒子权重减小．因此不适用于多闭环的环境</p>
 </li>
 <li><p>遇到长走廊或很空旷的环境，雷达数据没有什么特征，比如测距都是最大值，造成位姿在走廊方向的严重不确定，此时里程计精度就很重要了，有利于粒子群的收敛。如果里程计精度不好，增加粒子数也可以解决这个问题。</p>
 </li>
