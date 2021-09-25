@@ -201,31 +201,33 @@
 <p>概率栅格地图的Odds are updated according to “hits” (where the range data is measured) and “misses” (the free space between the sensor and the measured points)。可以根据对被占据 occupied 和 free space 的雷达数据的置信度，加减 hits 和 misses 的 weight 值（Both hits and misses can have a different weight in occupancy probability calculations giving more or less trust to occupied or free space measurements）。</p>
 <p>在2D中，每个子图只有一个概率栅格地图被存储。在3D中，由于scan matching性能的原因，两个混合的概率栅格被使用，并分别应用了一个adaptive_voxel_filter。对于远距离测量，使用一个低分辨率的混合栅格；对于近距离测量，使用一个高分辨率的混合栅格；scan matching先使用低分辨率的点云来与低分辨率的栅格进行对齐，然后通过高分辨率的近处点云与高分辨率的 hybrid grid 对齐来 refine pose。</p>
 <p>RViz插件可以观察子图，可以根据索引选择子图</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/11/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AE%E5%B0%8F%E5%BC%BA%E7%9A%84vncserver/">配置小强的vncserver</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>SSH是不带界面的协议，之前在机器人远程机配置vnc4server，从本地连接到远程机，希望能在远程机直接运行rviz以进行观测，不知道失败了多少次，今天又试了试，这次得到如下结果：<br><img src="https://i.loli.net/2020/07/11/ygLBFvqMCIOr8DR.png" alt="vnc4server环境加载rviz失败.png"><br>这是因为rviz是基于Qt和OpenGL的，但是vnc4server对OpenGL的支持有问题，所以报错</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/11/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E9%85%8D%E7%BD%AE%E5%B0%8F%E5%BC%BA%E7%9A%84vncserver/">配置 vnc server</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>SSH是不带界面的协议，之前在机器人远程机配置vnc4server，从本地连接到远程机，希望能在远程机直接运行rviz以进行观测，不知道失败了多少次，今天又试了试，这次得到如下结果：<br><img src="https://i.loli.net/2020/07/11/ygLBFvqMCIOr8DR.png" alt="vnc4server环境加载rviz失败.png"><br>这是因为rviz是基于Qt和OpenGL的，但是vnc4server对OpenGL的支持有问题，所以报错</p>
 <p>目前最好的就是x11vnc。这个程序不仅不收费，是开源的，而且还支持opengl程序，rviz之类的程序也可以正常打开了。</p>
 <ol>
 <li>安装x11vnc</li>
 </ol>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install x11vnc -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y x11vnc net-tools</span><br></pre></td></tr></table></figure>
 <ol>
 <li>设置访问密码</li>
 </ol>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo x11vnc -storepasswd /etc/x11vnc.pass</span><br></pre></td></tr></table></figure>
-<p>按提示设置密码</p>
+<p>按提示设置密码，密码一般放在<code>/home/user/.vnc/passwd</code></p>
 <ol>
 <li>创建服务文件</li>
 </ol>
-<p>在<code>/etc/init</code>下创建一个x11vnc.conf的文件，文件内容如下:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">description <span class="string">&quot;xiaoqiang vnc server&quot;</span></span><br><span class="line">start on runlevel [2345]</span><br><span class="line">stop on runlevel [06]</span><br><span class="line"></span><br><span class="line">script</span><br><span class="line">    <span class="built_in">exec</span> /usr/bin/x11vnc -auth guess -capslock -forever -loop -noxdamage -repeat -rfbauth /etc/x11vnc.pass -rfbport 5900 -shared</span><br><span class="line">end script</span><br></pre></td></tr></table></figure></p>
+<p>在<code>/etc/init</code>下创建一个x11vnc.conf的文件，文件内容如下:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">description <span class="string">&quot;xiaoqiang vnc server&quot;</span></span><br><span class="line">start on runlevel [2345]</span><br><span class="line">stop on runlevel [06]</span><br><span class="line"></span><br><span class="line">respawn</span><br><span class="line">respawn <span class="built_in">limit</span> 20 5</span><br><span class="line"></span><br><span class="line">script</span><br><span class="line">    <span class="built_in">exec</span> /usr/bin/x11vnc -auth guess -capslock -forever -loop -noxdamage -repeat -rfbauth /etc/x11vnc.pass -rfbport 5900 -shared</span><br><span class="line">end script</span><br></pre></td></tr></table></figure></p>
 <ol>
-<li><p>启动服务: <code>sudo service x11vnc start</code></p>
-</li>
-<li><p>客户端</p>
-</li>
+<li>启动服务: <code>sudo service x11vnc start</code></li>
+</ol>
+<p>一般来说，经过上面步骤就成功了。但是可能出现下面错误<br><img src="https://i.loli.net/2021/09/25/RwUnJkdHSKyox8p.png" alt="status running.png"><br><img src="https://i.loli.net/2021/09/25/WfPSG7OL3htRgNn.png" alt="failed for display.png"></p>
+<p>其实上面一大堆配置都是为了开机启动，在<code>4</code>之前可以先手动运行，直接<code>x11vnc</code>即可，看输出的文本是否正常，端口有可能是5901，可以用<code>netstat</code>命令检查</p>
+<ol>
+<li>客户端</li>
 </ol>
 <p>下载<a target="_blank" rel="noopener" href="https://www.realvnc.com/en/connect/download/viewer/">vnc viewer</a>，输入目标IP，端口5900，之后就可以正常连接了，比如<code>192.168.0.103:5900</code></p>
 <p>如果在不插显示器使用rviz时还是报错，插上hdmi转vga的转接头（不接显示器，只是转接头）就可以打开正常使用了。在设置里面调整分辨率和比例</p>
-<p><strong>VNC速度慢的问题</strong></p>
-<p>可以禁用Compiz</p>
+<p>如果感觉VNC速度慢，可以禁用Compiz</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gftz-hww/p/14805765.html">ubuntu18.04安装x11vnc</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/07/06/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/(%E4%B8%89)%20%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE/">(三) 常用参数配置</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-07-06</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></span><div class="content"><p>launch 和 lua 配置文件都是在<code>install_isolated/share/cartographer_ros/launch/</code> 和 <code>install_isolated/share/cartographer_ros/configuration_files/</code> 下，所以如果只修改了cartographer_ros软件包中的launch 和 lua 文件之后是需要重新编译的，编译之后才能将修改的文件安装到install_isolated文件中。</p>
 <p>从cartographer启动时输出的信息可知，我们自己的lua加载的其他lua有：<code>map_builder.lua</code>, <code>pose_graph.lua</code>, <code>trajectory_builder.lua</code>, <code>trajectory_builder_2d.lua</code>.  它们的路径都在<code>/usr/local/share/cartographer/configuration_files</code>。如果我们需要改这些基本lua的参数，可以在自己lua里覆盖地修改，直接改原文件不太好，它们的关系如下：<br><img src="https://i.loli.net/2020/07/07/cWHdEYj4VXK7ymL.png" alt=""></p>
 <p><code>map_builder.lua</code>和<code>trajectory_build.lua</code>起着总领的作用，前者包括的<code>pose_graph.lua</code>为后端优化的具体参数配置； 后者是前端的参数配置，分为2d和3d两个文件。</p>
