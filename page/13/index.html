@@ -25,6 +25,8 @@
 </li>
 </ul>
 <p><img src="https://i.loli.net/2020/05/13/jehHtE1IFTVZmRB.png" alt="障碍层加载过程.png"><br>障碍层所用的参数：<a target="_blank" rel="noopener" href="http://wiki.ros.org/costmap_2d/hydro/obstacles">obstacles params</a></p>
+<h2 id="不能将近处障碍添加到代价地图"><a href="#不能将近处障碍添加到代价地图" class="headerlink" title="不能将近处障碍添加到代价地图"></a>不能将近处障碍添加到代价地图</h2><p><img src="https://i.loli.net/2021/10/25/3VBeRJCA2cTpnzq.png" alt=""><br>调来调去，发现<code>min_obstacle_height</code>还是要设置为<code>-0.3</code>比较合适，这时因为地面的原因，导致局部代价地图的四角都有了障碍，因此再降低<code>obstacle_range</code>避免这一现象<br><img src="https://i.loli.net/2021/10/25/YspnHLhNCEAcDt1.png" alt="obstacle_range大于2.5.png"></p>
+<p><img src="https://i.loli.net/2021/10/25/ZMU7XC8H5obr4t2.png" alt="obstacle_range=2.2.png"></p>
 <h2 id="局部代价地图中无法清除不在视野的障碍"><a href="#局部代价地图中无法清除不在视野的障碍" class="headerlink" title="局部代价地图中无法清除不在视野的障碍"></a>局部代价地图中无法清除不在视野的障碍</h2><p>costmap raytraces to clear out obstacles. 障碍物要想从地图上清除，它所占据的空间必须被新的观测看到。但是参数<code>observation_persistence</code>常常无效。</p>
 <p><code>last_updated_</code> is updated on every new cloud that needs to be added to the buffer. <code>purgeStaleObservations</code>函数 checks the cloud’s time stamp with <code>last_updated_</code>. When we stop publishing a point cloud <code>last_updated_</code> will never be updated. Hence the observations will not time-out and remain in the <code>observation_list_</code>.  This may result in the following warning, when the robot drives away from the clouds in <code>observation_list_</code>:   <font size =4 color = orange> Sensor origin at (x, y) is out of map bounds. The costmap cannot raytrace for it  </font></p>
  <font color = orange size=4> 只适用于ROS2的navigation</font>
