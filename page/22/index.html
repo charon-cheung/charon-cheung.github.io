@@ -66,6 +66,8 @@
 </li>
 <li><p>rostopic echo /odom/pose/pose/position， 直接显示odom话题中的position部分</p>
 </li>
+<li><p>rostopic bw &lt;/topic_name&gt;：  用于显示主题所使用的带宽。</p>
+</li>
 </ul>
 <p>以下命令可以组合使用：</p>
 <ul>
@@ -79,14 +81,18 @@
 </li>
 </ul>
 <h2 id="rosmsg-rosnode"><a href="#rosmsg-rosnode" class="headerlink" title="rosmsg  rosnode"></a>rosmsg  rosnode</h2><ul>
-<li>rosmsg package [package_name], 显示所有在这个包里面的消息</li>
+<li><p>rosmsg package [package_name], 显示所有在这个包里面的消息</p>
+</li>
 <li><p>rosmsg md5 [message],  显示某个消息的md5sum</p>
 </li>
 <li><p>rosnode cleanup，清除僵尸节点, 也就是清除那些实际关闭但能用<code>rosnode list</code>查看到的节点</p>
 </li>
+<li><p>rosnode machine <hostname>：  用于列出指定计算机上运行的节点</p>
+</li>
 <li><p>rospack find turtlesim, 输出指定package的路径, 输出<code>/opt/ros/kinetic/share/turtlesim</code></p>
 </li>
-<li>rospack depends turtlesim, 查看package的依赖项</li>
+<li><p>rospack depends turtlesim, 查看package的依赖项</p>
+</li>
 </ul>
 <h2 id="roslaunch"><a href="#roslaunch" class="headerlink" title="roslaunch"></a>roslaunch</h2><ul>
 <li><code>--wait</code>, 延迟launch直到检测到roscore</li>
