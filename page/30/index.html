@@ -44,14 +44,16 @@
 <p><code>pcd_viewer &lt;filename&gt;</code></p>
 <p><code>pcl_viewer -multiview 1 pcd_file</code> </p>
 <p><code>rosrun perception_pcl pcd_viewer &lt;filename&gt;</code></p>
+<h3 id="pcl-ros-包"><a href="#pcl-ros-包" class="headerlink" title="pcl_ros 包"></a>pcl_ros 包</h3><p>这个包的工具如下：<br><img src="https://i.loli.net/2020/03/09/UrXntZwKoOFR9vd.png" alt="pcl_ros包.png"></p>
+<p>如果想获得雷达的点云数据，可以发布<code>PointCloud2</code>类型的话题，同时用<code>rosbag record</code>录制得到bag文件，然后使用<code>pcl_ros</code>包中的<code>bag_to_pcd</code>得到pcd点云文件，用法：<code>rosrun pcl_ros bag_to_pcd input.bag topic output_directory</code>，过程：<br><img src="https://i.loli.net/2020/03/09/nZbwL31r7tRAF4N.png" alt="转换过程.png"></p>
+<p>注意输出是个目录，因为<strong>bag文件的消息数量就是生成的pcd文件数量</strong>，bag文件的消息数量可以用<code>rosbag info</code>查看<br><img src="https://i.loli.net/2020/03/09/EZ8yGRJhl2Bj9nN.png" alt="rosbag info.png"></p>
+<p>可以用<code>pcl_viewer</code>工具查看pcd，<strong>然后就是点云拼接了。</strong>  但是这样转换出的点云pcd文件在用<code>Cloud Compare</code><strong>打开时报错</strong></p>
+<p><br></p>
+<p>在当前路径将点云ROS数据转为pcd文件，也就是一个pcd对应一帧点云，但是会不停地转换<br><code>rosrun pcl_ros pointcloud_to_pcd  input:=/hesai/pandar  _prefix:=./pcd</code></p>
 <h3 id="pointcloud-to-laserscan包"><a href="#pointcloud-to-laserscan包" class="headerlink" title="pointcloud_to_laserscan包"></a>pointcloud_to_laserscan包</h3><p>将3D点云转换为2D的雷达scan, 最适用于把Kinect相机用作雷达，再使用2D算法。<a target="_blank" rel="noopener" href="http://wiki.ros.org/pointcloud_to_laserscan">详细使用</a></p>
 <p>我们可以直接利用kinect的点云数据，因为costmap2D的接口是直接调用点云。问题是计算量很大，点云规模太大，可以把点云数量降下去，但这样效果又不好了，可能无法识别障碍。点云覆盖信息大，对障碍物信息敏感。计算量大，实时性差。从障碍物进入相机视野出现到加入代价地图有1.5秒时间</p>
 <h3 id="depthimage-to-laserscan"><a href="#depthimage-to-laserscan" class="headerlink" title="depthimage_to_laserscan"></a>depthimage_to_laserscan</h3><p>如果想从RGBD相机创建虚拟的雷达scan，这个包的效果更好，它直接处理图像数据而不是点云。<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/depthimage_to_laserscan">详细使用</a></p>
 <p>使用Kinect的一个方案是把点云或深度图降维生成线激光，本质上是当成2D激光雷达，在平坦地面环境用。还是用gmapping、hector SLAM、cartographer等手段建图</p>
-<h3 id="pcl-ros-包"><a href="#pcl-ros-包" class="headerlink" title="pcl_ros 包"></a>pcl_ros 包</h3><p>这个包的工具如下：<br><img src="https://i.loli.net/2020/03/09/UrXntZwKoOFR9vd.png" alt="pcl_ros包.png"></p>
-<p>如果想获得雷达的点云数据，可以发布<code>PointCloud2</code>类型的话题，同时用<code>rosbag record</code>录制得到bag文件，然后使用<code>pcl_ros</code>包中的<code>bag_to_pcd</code>得到pcd点云文件，用法：<code>rosrun pcl_ros bag_to_pcd input.bag topic output_directory</code>，过程：<br><img src="https://i.loli.net/2020/03/09/nZbwL31r7tRAF4N.png" alt="转换过程.png"></p>
-<p>注意输出是个目录，因为<strong>bag文件的消息数量就是生成的pcd文件数量</strong>，bag文件的消息数量可以用<code>rosbag info</code>查看<br><img src="https://i.loli.net/2020/03/09/EZ8yGRJhl2Bj9nN.png" alt="rosbag info.png"></p>
-<p>可以用<code>pcl_viewer</code>工具查看pcd，<strong>然后就是点云拼接了。</strong> 如果只有雷达<code>scan</code>数据，那只能先转为点云数据，才能转为pcd文件</p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/Mr_yangsir/article/details/94559945">ROS中解析bag包中的点云文件到pcd格式</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/banrixianxin/p/6378789.html">激光雷达bag文件播放和转PCD文件</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/03/04/PCL%E7%82%B9%E4%BA%91/(%E4%BA%8C)%20ICP%E7%AE%97%E6%B3%95/">(二) ICP算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-03-04</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/PCL%E7%82%B9%E4%BA%91/">PCL点云</a></span><div class="content"><p>ICP算法采用最小二乘估计计算变换矩阵，原理简单且具有较好的精度，但是由于采用了迭代计算，导致算法计算速度较慢，而且采用ICP进行配准计算时，其对待配准点云的初始位置有一定要求，若所选初始位置不合理，则会导致算法陷入局部最优。</p>
 <p>IterativeClosestPoint类提供了标准ICP算法的实现（The transformation is estimated based on SVD），算法迭代结束条件有如下几个:</p>
