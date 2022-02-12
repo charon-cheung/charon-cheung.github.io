@@ -18,7 +18,9 @@
 <li>使scan数据和state estimation之间的processing对时间同步不太敏感</li>
 <li>多个registered scans可以 stacked 到一起，从中提取丰富的几何环境信息</li>
 </ul>
-<p><strong>这套框架不能用于汽车型机器人</strong></p>
+<font size="4" color="blue">  这套框架不能用于汽车型机器人 </font>
+
+
 <h2 id="目前我实现的效果"><a href="#目前我实现的效果" class="headerlink" title="目前我实现的效果"></a>目前我实现的效果</h2><p>由于LOAM的问题，z坐标不可靠，所以我在代码里都把里程计返回的z按0处理，so far只在没有上下坡的情况下测试过。目前基本可以正常导航，环境中可以有动态障碍，可以调整线速度和角速度，可以倒退，不会有路径混乱、花费时间长的情况。<br><a target="_blank" rel="noopener" href="https://youtu.be/UmYR9Z8aCcY">成功的导航</a><br><img src="https://s2.loli.net/2022/01/22/6kilZRebg2HIDTB.gif" alt="点云障碍的生成和清除"></p>
 <p>目前在线速度<code>0.5m/s</code>的情况下，还是有一定误差的，亟待优化<br>|  目标   | 实际  |<br>|  :——:  | :——:  |<br>| (-29.702, -34.33)  | (-29.637, -34.252) |<br>| (-61.45,  -35.03)  | (-61.363, -35.046) |<br>| (-25.37,  -32.89)  | (-25.26, -32.958)  |</p>
 </div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/11/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E7%9A%84CPU%E5%8D%A0%E7%94%A8%E5%92%8C%E4%B8%A4%E4%B8%AA%E5%B8%B8%E8%A7%81%E6%8A%A5%E8%AD%A6/"><i class="fa fa-chevron-left">  </i><span>move_base的CPU占用和两个常见报警</span></a></div><div class="next-post pull-right"><a href="/2021/11/18/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84/%E5%85%A8%E5%B1%80%E8%B7%AF%E5%BE%84%E6%97%A0%E6%B3%95%E8%B5%B0%E5%87%BA%E9%9A%9C%E7%A2%8D/"><span>全局路径无法走出障碍</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
