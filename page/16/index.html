@@ -47,7 +47,8 @@
 </ol>
 <h2 id="ldconfig"><a href="#ldconfig" class="headerlink" title="ldconfig"></a>ldconfig</h2><p>有时装完某个库后，需要使用命令<code>sudo ldconfig -v</code>，否则在程序运行后会出现找不到动态库的问题: <font size =4 color = orange> error while loading shared libraries: liblog4cpp.so.5: cannot open shared object file: No such file or directory </font></p>
 <p>ldconfig是一个动态链接库管理命令，为了让动态链接库为系统所共享,还需运行动态链接库的管理命令</p>
-<p><code>ldconfig</code>通常在系统启动时运行,而当用户安装了一个新的动态链接库时,就需要手工运行这个命令.主要是在默认搜寻目录(/lib和/usr/lib)以及动态库配置文件/etc/ld.so.conf内所列的目录下,搜索出可共享的动态链接库(格式如前介绍,lib<em>.so</em>),进而创建出动态装入程序(ld.so)所需的连接和缓存文件.  ldconfig与运行程序时有关，跟编译时一点关系都没有。不管做了什么关于library的变动后，最好都ldconfig一下，不然会出现一些意想不到的结果。</p>
+<p><code>ldconfig</code>通常在系统启动时运行,而当用户安装了一个新的动态链接库时,就需要手工运行这个命令.主要是在默认搜寻目录(<code>/lib</code>和<code>/usr/lib</code>)以及动态库配置文件<code>/etc/ld.so.conf</code>内所列的目录下，搜索出可共享的动态链接库(格式如<code>lib*.so*</code>)，进而创建出动态装入程序(<code>ld.so</code>)所需的连接和缓存文件.  </p>
+<p>ldconfig与运行程序时有关，跟编译时一点关系都没有。 不管做了什么动态库的变动后，最好都ldconfig一下</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/11/30/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%8F%82%E6%95%B0/">move_base 所有参数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-11-30</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a></span><div class="content"><ul>
 <li><p>base_global_planner: 指定全局规划器</p>
 </li>
