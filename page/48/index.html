@@ -51,7 +51,7 @@
 </ol>
 <p>Effective C++条款6规定，如果不想用编译器自动生成的函数，就应该明确拒绝。方法一般有三种：</p>
 <ol>
-<li>C++11对函数声明加delete关键字：<code>Base(const Base&amp; obj) = delete;</code>，不必有函数体，这时再调用拷贝构造会报错   <code>尝试引用已删除的函数</code>。</li>
+<li>C++11对函数声明加delete关键字：<code>Base(const Base&amp; obj) = delete;</code>，不必有函数体，这时再调用拷贝构造会报错</li>
 <li>最简单的方法是将copy构造函数声明为private</li>
 <li>条款6给出了更好的处理方法：创建一个基类，声明copy构造函数，但访问权限是private，使用的类都继承自这个基类。默认copy构造函数会自动调用基类的copy构造函数，而基类的copy构造函数是private，那么它无法访问，也就无法正常生成copy构造函数。</li>
 </ol>
