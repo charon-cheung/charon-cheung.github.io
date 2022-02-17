@@ -23,7 +23,7 @@
 <li>类型转换运算符只能以成员函数方式重载</li>
 <li>流运算符只能以友元的方式重载</li>
 </ul>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">copy构造函数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></span><div class="content"><h2 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h2><ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/03/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/">拷贝构造函数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></span><div class="content"><h2 id="基本规则"><a href="#基本规则" class="headerlink" title="基本规则"></a>基本规则</h2><ul>
 <li><p>copy构造函数是一种特殊的构造函数，函数的名称必须和类名称一致，没有返回值。它必须的一个参数是本类型的一个引用变量，如果形参是对象做值传递, 将实参传进函数时, 我们实际是拷贝一个副本,这样又要调用拷贝构造函数, 层层递归, 会把栈堆满。类中可以存在多个copy构造函数。</p>
 </li>
 <li><p>编译器会自动生成默认copy构造函数，这个构造函数很简单，仅仅使用“老对象”的数据成员的值对“新对象”的数据成员逐个进行赋值，也就是<strong>浅拷贝</strong>。</p>
@@ -55,27 +55,12 @@
 <li>最简单的方法是将copy构造函数声明为private</li>
 <li>条款6给出了更好的处理方法：创建一个基类，声明copy构造函数，但访问权限是private，使用的类都继承自这个基类。默认copy构造函数会自动调用基类的copy构造函数，而基类的copy构造函数是private，那么它无法访问，也就无法正常生成copy构造函数。</li>
 </ol>
-<p>Qt就是这样做的，QObject定义中有这样一段，三条都利用了:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">Q_DISABLE_COPY</span>(QMainWindow)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Q_DISABLE_COPY(Class) \</span></span><br><span class="line"><span class="meta">    Class(const Class &amp;) Q_DECL_EQ_DELETE;\</span></span><br><span class="line"><span class="meta">    Class &amp;operator=(const Class &amp;) Q_DECL_EQ_DELETE;</span></span><br></pre></td></tr></table></figure></p>
-<font color = blue size =3> 类的不可拷贝特性是可以继承的， </font>例如凡是继承自QObject的类都不能使用copy构造函数和赋值运算符。
-
-### 有没有定义派生类copy构造函数的情况的不同结果
-
-先是没有定义派生类copy构造函数的情况：
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Derived f;</span><br><span class="line"><span class="function">Derived <span class="title">ff</span><span class="params">(f)</span></span>;</span><br></pre></td></tr></table></figure>
-
-运行结果是这样：
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Base constrct      0x75fd20</span><br><span class="line">Derived construct  0x75fd20</span><br><span class="line">Base copy constrct    0x75fd10</span><br><span class="line">*************</span><br><span class="line">Derived deconstruct   0x75fd10</span><br><span class="line">Base deconstrct       0x75fd10</span><br><span class="line">Derived deconstruct  0x75fd20</span><br><span class="line">Base deconstrct      0x75fd20</span><br></pre></td></tr></table></figure>
-对于副本的对象，只调用了基类copy构造函数。
-
-<br>
-
-然后是定义的情况，运行结果是这样：
-![](https://i.loli.net/2019/12/26/Ju65as8BU7VOLeh.png)
-先是f的基类构造和派生类构造，然后进入ff，这里的对象是个副本，所以this指针的地址不同了，<font color = blue size =3> 先是基类构造然后是派生类拷贝构造， </font>销毁时倒没什么特别。
-
-这样看来，<font color = blue size=4> 派生类的copy构造函数可以尽量不定义。</font>
-
-
+<p>Qt就是这样做的，QObject定义中有这样一段，三条都利用了:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="built_in">Q_DISABLE_COPY</span>(QMainWindow)</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> Q_DISABLE_COPY(Class) \</span></span><br><span class="line"><span class="meta">    Class(const Class &amp;) Q_DECL_EQ_DELETE;\</span></span><br><span class="line"><span class="meta">    Class &amp;operator=(const Class &amp;) Q_DECL_EQ_DELETE;</span></span><br></pre></td></tr></table></figure><br><strong>类的不可拷贝特性是可以继承的，凡是继承自QObject的类都不能使用copy构造函数和赋值运算符</strong></p>
+<h3 id="有没有定义派生类copy构造函数的情况的不同结果"><a href="#有没有定义派生类copy构造函数的情况的不同结果" class="headerlink" title="有没有定义派生类copy构造函数的情况的不同结果"></a>有没有定义派生类copy构造函数的情况的不同结果</h3><p>先是没有定义派生类copy构造函数的情况：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Derived f;</span><br><span class="line"><span class="function">Derived <span class="title">ff</span><span class="params">(f)</span></span>;</span><br></pre></td></tr></table></figure></p>
+<p>运行结果是这样：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Base constrct      0x75fd20</span><br><span class="line">Derived construct  0x75fd20</span><br><span class="line">Base copy constrct    0x75fd10</span><br><span class="line">*************</span><br><span class="line">Derived deconstruct   0x75fd10</span><br><span class="line">Base deconstrct       0x75fd10</span><br><span class="line">Derived deconstruct  0x75fd20</span><br><span class="line">Base deconstrct      0x75fd20</span><br></pre></td></tr></table></figure><br>对于副本的对象，只调用了基类copy构造函数。</p>
+<p><br></p>
+<p>然后是定义的情况，运行结果是这样：<br><img src="https://i.loli.net/2019/12/26/Ju65as8BU7VOLeh.png" alt=""><br>先是f的基类构造和派生类构造，然后进入ff，这里的对象是个副本，所以this指针的地址不同了，<font color = blue size =3> 先是基类构造然后是派生类拷贝构造， </font>销毁时倒没什么特别。</p>
+<p>这样看来，<font color = blue size=4> 派生类的copy构造函数可以尽量不定义。</font></p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/lwbeyond/article/details/6202256">详解copy构造函数</a><br><a target="_blank" rel="noopener" href="http://blog.guorongfei.com/2016/04/24/why-delete-copy-constructor/">为什么很多人禁用拷贝（复制）构造函数</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2018/08/03/C++/C++%20%20%E5%9F%BA%E7%A1%80/%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/">结构体与类的字节对齐(终极方案，简单易懂)</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2018-08-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></span><div class="content"><p>先记住常用类型在32和64位的字节</p>
 <div class="table-container">
