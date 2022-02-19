@@ -19,10 +19,9 @@
 <h3 id="用于求线性方程组"><a href="#用于求线性方程组" class="headerlink" title="用于求线性方程组"></a>用于求线性方程组</h3><p>对于直接求解线性方程组的逆，用QR分解的方法求解会更具有数据的稳定性。 对于求解一个线性系统<code>Ax = b</code>, 这里A的维度是 m x n。<br><img src="https://i.loli.net/2021/07/15/UoxY5T3nZfP8z1L.png" alt=""><br><br></p>
 <p>上三角矩阵R的逆矩阵仍然是上三角矩阵，可以用分块矩阵迭代的方法很容易地求出来<br><img src="https://i.loli.net/2021/07/15/GVjJYAs8kIDuSZy.png" alt=""></p>
 <p>下三角矩阵的逆矩阵也是类似求法<br><img src="https://s2.loli.net/2022/02/18/YxKndwDGT7ticC2.png" alt=""></p>
-<h2 id="SVD分解-奇异值分解"><a href="#SVD分解-奇异值分解" class="headerlink" title="SVD分解 - 奇异值分解"></a>SVD分解 - 奇异值分解</h2><p>特征值分解仅针对方阵，而不是方阵的矩阵就有了SVD分解： <script type="math/tex">A=U\Sigma V^T</script><br>其中A为<code>m x n</code>的矩阵， 正交矩阵 U(<code>m x m</code>阶) 和 V(<code>n x n</code>阶)。  </p>
-<script type="math/tex; mode=display">\Sigma_{mn} = \left[ \begin{matrix} \Sigma_1 & 0 \\ 0 & 0 \\ \end{matrix} \right]$$ ， 
-
-$$\Sigma_1=diag(\sigma_1....\sigma_r)$$ ， 其中 $$\sigma_i$$ 是矩阵 $$\Sigma_{1}$$ 的特征值
+<h2 id="SVD分解-奇异值分解"><a href="#SVD分解-奇异值分解" class="headerlink" title="SVD分解 - 奇异值分解"></a>SVD分解 - 奇异值分解</h2><p>特征值分解仅针对方阵，而不是方阵的矩阵就有了SVD分解： <script type="math/tex">A=U\Sigma V^T</script></p>
+<p>其中A为<code>m x n</code>的矩阵， 正交矩阵 U(<code>m x m</code>阶) 和 V(<code>n x n</code>阶)。</p>
+<script type="math/tex; mode=display">\Sigma_{mn} = \left[ \begin{matrix} \Sigma_1 & 0 \\ 0 & 0 \\ \end{matrix} \right]</script><script type="math/tex; mode=display">\Sigma_1=diag(\sigma_1....\sigma_r)$$ , 其中 $$\sigma_i$$ 是矩阵 $$\Sigma_{1}$$ 的特征值
 
 矩阵U的列称为左奇异向量，是正交的。 矩阵V的列向量(也称为右奇异向量)也是正交的. 
 
