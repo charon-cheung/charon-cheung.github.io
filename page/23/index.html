@@ -23,18 +23,6 @@
 <h3 id="AddImuData-和-AddOdometryData"><a href="#AddImuData-和-AddOdometryData" class="headerlink" title="AddImuData 和 AddOdometryData"></a>AddImuData 和 AddOdometryData</h3><p><code>PoseExtrapolator</code>管理里程计数据和经过ImuTracker的IMU数据，这两个函数的调用的最终源头是<code>LocalTrajectoryBuilder2D::AddOdometryData</code>和<code>LocalTrajectoryBuilder2D::AddImuData</code></p>
 <p><code>AddImuData</code>比较简单，主要是把IMU数据加入<code>imu_data_</code>队列，清除旧的imu数据。<code>AddOdometryData</code>除了添加里程计数据，删除比最新位姿旧的odom数据，还根据首尾的odometry数据，计算tracking frame下的线速度和角速度。</p>
 <p><code>AddPose</code>, <code>ExtrapolatePose</code>, <code>EstimateGravityOrientation</code>，这三个函数在<code>LocalTrajectoryBuilder2D::AddRangeData</code>中调用</p>
-<h3 id="AddPose"><a href="#AddPose" class="headerlink" title="AddPose"></a>AddPose</h3><p>只在<code>Node::PublishTrajectoryStates</code>和<code>LocalTrajectoryBuilder2D::AddAccumulatedRangeData</code>调用。重点是后者，这个pose是Scan Match反馈给估计器以修正估计值, 也就是添加到<code>timed_pose_queue_</code>队列</p>
-<p>函数大致流程:</p>
-<ul>
-<li><p>确保ImuTracker实例化：实例化时需要用 到重力加速度常数，初始时间。重力常数主要用来做距离的修正。</p>
-</li>
-<li><p>将该位姿pose加入到<code>timed_pose_queue_</code>中，删除其中比加入时间早 <code>pose_queue_duration_</code>的位姿。</p>
-</li>
-<li><p>根据<code>timed_pose_queue_</code>中的位姿估计速度：找出队列中最久和最新的位姿和时间， 通过除以时间得到线速度(linear<em>velocity_from_poses</em>)和角速度(<code>angular_velocity_from_poses_</code>)。 计算角速度的时候是使用四元数<code>old_q.inverse() * new_q</code> 得到old_q 到 new_q 的角位移，然后除以时间得到的。队列中的位姿时间要求如下：<br><img src="https://i.loli.net/2020/09/11/BtvouKcYq2DRx9i.png" alt="timed_pose_queue队列"><br>一般选择1ms以内的姿态来估计，而且旧的数据要删除掉。</p>
-</li>
-<li><p>进一步处理<code>ImuTracker</code>：如果到该时间之前没有imu数据，那么使用从poses中推断的角速度和一个假的重力来保障2d的稳定。如果有IMU，使用IMU数据进行姿态估计（<code>imu_tracker_</code>），并将此时估计出的姿态用于计算 里程计线速度 和最新估计姿态 的初值（<code>odometry_imu_tracker_</code>   <code>extrapolation_imu_tracker_</code>）</p>
-</li>
-</ul>
 <h3 id="ExtrapolatePose"><a href="#ExtrapolatePose" class="headerlink" title="ExtrapolatePose"></a>ExtrapolatePose</h3><p>假设传感器数据之间，机器人以恒定线速度和恒定角速度移动</p>
 <p>估计的线速度有2种方式组成，优先级参见<code>ExtrapolateTranslation</code>：</p>
 <ol>
@@ -49,6 +37,18 @@
 </ol>
 <p>以上估计线速度和角速度所用的两次scan mathch的位姿的处理都在<code>UpdateVelocitiesFromPoses</code>。如果出现了报警： <code>Queue too short for velocity estimation</code>，可以尝试降低<code>odometry_sampling_ratio</code> 和 <code>imu_sampling_ratio</code>，先从1降到0.5</p>
 <p>最后针对线速度和角速度进行实时积分，输出当前时间的融合的估计位姿</p>
+<h3 id="AddPose"><a href="#AddPose" class="headerlink" title="AddPose"></a>AddPose</h3><p>只在<code>Node::PublishTrajectoryStates</code>和<code>LocalTrajectoryBuilder2D::AddAccumulatedRangeData</code>调用。重点是后者，这个pose是Scan Match反馈给估计器以修正估计值, 也就是添加到<code>timed_pose_queue_</code>队列</p>
+<p>函数大致流程:</p>
+<ul>
+<li><p>确保ImuTracker实例化：实例化时需要用 到重力加速度常数，初始时间。重力常数主要用来做距离的修正。</p>
+</li>
+<li><p>将该位姿pose加入到<code>timed_pose_queue_</code>中，删除其中比加入时间早 <code>pose_queue_duration_</code>的位姿。</p>
+</li>
+<li><p>根据<code>timed_pose_queue_</code>中的位姿估计速度：找出队列中最久和最新的位姿和时间， 通过除以时间得到线速度(<code>linear_velocity_from_poses_</code>)和角速度(<code>angular_velocity_from_poses_</code>)。 计算角速度的时候是使用四元数<code>old_q.inverse() * new_q</code> 得到old_q 到 new_q 的角位移，然后除以时间得到的。队列中的位姿时间要求如下：<br><img src="https://i.loli.net/2020/09/11/BtvouKcYq2DRx9i.png" alt="timed_pose_queue队列"><br>一般选择1ms以内的姿态来估计，而且旧的数据要删除掉。</p>
+</li>
+<li><p>进一步处理<code>ImuTracker</code>：如果到该时间之前没有imu数据，那么使用从poses中推断的角速度和一个假的重力来保障2d的稳定。如果有IMU，使用IMU数据进行姿态估计（<code>imu_tracker_</code>），并将此时估计出的姿态用于计算 里程计线速度 和最新估计姿态 的初值（<code>odometry_imu_tracker_</code>   <code>extrapolation_imu_tracker_</code>）</p>
+</li>
+</ul>
 <p><br></p>
 <p>在位姿融合中,因为IMU和里程计的采集速率比激光雷达高很多，因而在一定时间段内，可能没有scan match估计的位姿数据，这时需要通过 IMU 和里程计数据进行推断，但因为这两个传感器存在相对激光扫描较大的累积误差，所以需要对两者进行一些更新和初始化消除累积误差</p>
 <p>最后以里程计数据为例，补上整个的处理流程<br><img src="https://i.loli.net/2021/08/20/y1gvKinFlV2hCSJ.png" alt=""></p>
