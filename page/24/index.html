@@ -265,6 +265,7 @@
 <li>为什么3D必须有IMU，而2D可以不用？</li>
 </ul>
 <p>在2D中，Cartographer支持运行相关的扫描匹配器，用于局部SLAM中寻找循环关闭的约束条件。它的计算代价很大，但通常会使odometry或IMU数据的加入变得不必要。2D也有假设平坦世界的好处，也就是说，上升是隐式定义的。<br>在三维中，IMU主要用于测量重力。重力在测量中是一个很有用的量，因为它不漂移，而且是一个非常强的信号，而且通常包含了大部分所要测量的加速度。</p>
+<p><code>Node::LaunchSubscribers</code>函数中有一段：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (node_options_.map_builder_options.<span class="built_in">use_trajectory_builder_3d</span>() ||</span><br><span class="line">      (node_options_.map_builder_options.<span class="built_in">use_trajectory_builder_2d</span>() &amp;&amp;</span><br><span class="line">       options.trajectory_builder_options.<span class="built_in">trajectory_builder_2d_options</span>()</span><br><span class="line">           .<span class="built_in">use_imu_data</span>() )  )</span><br></pre></td></tr></table></figure><br>显然源码里已经做了规定</p>
 <ul>
 <li>屏蔽机器人的里程计</li>
 </ul>
