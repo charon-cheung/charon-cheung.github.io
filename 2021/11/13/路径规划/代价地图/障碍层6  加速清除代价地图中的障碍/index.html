@@ -18,7 +18,7 @@
 </li>
 </ul>
 <p><strong>最后还要在通用代价地图中设置<code>inf_is_valid</code>参数为true</strong></p>
-<font color = blue size = 4>  但是这只适用于单线雷达，如果是多线雷达或相机的深度点云，回调函数就是`pointCloud2Callback`，不能用这个方法了。</font>
+<font color = blue size = 4>  但是这只适用于单线雷达，如果是多线雷达或相机的深度点云，回调函数就是 pointCloud2Callback，不能用这个方法了。</font>
 
 
 <h2 id="地图分辨率高于激光雷达分辨率"><a href="#地图分辨率高于激光雷达分辨率" class="headerlink" title="地图分辨率高于激光雷达分辨率"></a>地图分辨率高于激光雷达分辨率</h2><p>在<code>costmap_common_params.yaml</code>中有两个配置参数<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">obstacle_range: 2.5  //只有障碍物在这个范围内才会被标记</span><br><span class="line">raytrace_range: 3    //这个范围内不存在的障碍物都会被清除</span><br></pre></td></tr></table></figure><br>当<code>raytrace_range = 3</code>时，假设激光雷达的角分辨率是1，即360度每一度一个激光点时，每个激光点之间的距离大约是0.052(1x3.14/180 x3), 如果此时地图的分辨率是0.01，在靠近激光点附近有一个障碍物，但是始终在激光雷达两条射线之间的话，也就是始终没有扫描到的话，那这个障碍始终无法被清除掉。所以参数<code>raytrace_range</code>不是越大越好</p>
