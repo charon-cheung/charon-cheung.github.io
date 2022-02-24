@@ -36,8 +36,8 @@
 <ul>
 <li>DENSE_NORMAL_CHOLESKY &amp; SPARSE_NORMAL_CHOLESKY</li>
 </ul>
-<p>大规模的非线性最小二乘问题通常是稀疏的。对于这种情况使用密集QR分解是低效率的，改用Cholesky因式分解</p>
-<p><code>DENSE_NORMAL_CHOLESKY</code>是执行正态方程的密集Cholesky分解。 Ceres使用Eigen密集的<code>LDLT</code>因式分解算法。</p>
+<p>大规模的非线性最小二乘问题通常是稀疏的。对于这种情况使用稠密QR分解是低效率的，改用Cholesky因式分解</p>
+<p><code>DENSE_NORMAL_CHOLESKY</code>是执行正态方程的稠密Cholesky分解。 Ceres使用Eigen稠密的<code>LDLT</code>因式分解算法。</p>
 <p><code>SPARSE_NORMAL_CHOLESKY</code>是执行Normal Equation方程的稀疏Cholesky分解。这为大量稀疏问题节省了大量的时间和内存消耗。Ceres使用<code>SuiteSparse</code> 或 <code>CXSparse</code>库中的稀疏Cholesky分解算法或 Eigen中的稀疏Cholesky分解算法。</p>
 <p>如果Ceres编译时支持了这三个库，那么<code>linear_solver_type</code>默认值是<code>SPARSE_NORMAL_CHOLESKY</code>，否则就是<code>DENSE_QR</code>。使用最多的是<code>DENSE_QR</code>，cartographer前端的ceres scan mather用的也是<code>DENSE_QR</code></p>
 <ul>
