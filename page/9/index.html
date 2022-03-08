@@ -104,6 +104,8 @@
 <p>看到预测值和观测值的差，很容易想到cartographer，PoseExtrapolator提供预测值，Scan Matcher提供观测值。</p>
 <h2 id="推导过程"><a href="#推导过程" class="headerlink" title="推导过程"></a>推导过程</h2><p><img src="https://i.loli.net/2021/07/14/NKmOJRVD4hsdjHZ.jpg" alt=""><br>有些人可能产生疑问，为什么通过最小二乘而不是其他方式获得最优函数，比如说最小化误差的绝对值的和？这里的推导使用最大似然估计推导出 <script type="math/tex">X^* = argmin\Sigma e_i^T \Omega e_i</script> 就提供了概率学基础</p>
 <p><img src="https://i.loli.net/2021/07/14/BNEa93lomCu2njP.jpg" alt=""><br><img src="https://i.loli.net/2021/07/14/s8MXzitu7bvUfwr.jpg" alt=""></p>
+<p>或者简单的推导<br><img src="https://s2.loli.net/2022/03/08/xljAdo5WF8akgtb.png" alt="推导 1.png"><br><img src="https://s2.loli.net/2022/03/08/7AO5FrEumXGhwel.png" alt="推导 2.png"><br><br></p>
+<p>特点：</p>
 <ul>
 <li>要求H正定，但实际只保证半正定。</li>
 <li>可能出现H为奇异矩阵或病态矩阵，此时增量的稳定性较差，算法会不收敛。</li>
