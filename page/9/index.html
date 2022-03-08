@@ -31,7 +31,17 @@
 <p><img src="https://i.loli.net/2021/07/15/q5wDpblLVKH8iR9.png" alt="推导.png"></p>
 <p><img src="https://i.loli.net/2021/07/15/2xch5IvYLSHt8XK.png" alt="3.png"><br>一直到 <script type="math/tex">J(x_k)</script> 满足Lipschitz连续且非奇异，算法二次收敛</p>
 <p>Lipschitz条件，即利普希茨连续。定义为：对于函数 f(x)，若其任意定义域中的 <script type="math/tex">x_1</script>, <script type="math/tex">x_2</script>，都存在 <script type="math/tex">L>0</script>，使得</p>
-<script type="math/tex; mode=display">\left| \ f(x_1)-f(x_2) \right| \leq L\left| \ x_1-x_2 \right|</script><ul>
+<script type="math/tex; mode=display">\left| \ f(x_1)-f(x_2) \right| \leq L\left| \ x_1-x_2 \right|</script><p>阻尼因子μ作用如下：</p>
+<ul>
+<li><p>μ大于0保证了<script type="math/tex">J^TJ+\mu I</script>的正定，迭代朝着下降方向进行。</p>
+</li>
+<li><p>μ非常大，说明此时高斯牛顿的一次泰勒展开近似效果不好，更新方式偏向近似最速下降法。</p>
+</li>
+<li><p>μ比较小，说明此时高斯牛顿的一次泰勒展开近似效果挺好的，更新方式偏向近似高斯牛顿法。</p>
+</li>
+</ul>
+<p>利文伯格法的特点：</p>
+<ul>
 <li><p>即使初值距离(局部)最优解非常远，利文伯格法仍可以求解成功</p>
 </li>
 <li><p>利文伯格法的收敛速度要稍微低于高斯牛顿法，但更鲁棒</p>
@@ -101,9 +111,16 @@
 </ul>
 <p>根据十四讲的推导过程，牛顿法是对 <script type="math/tex">\left\|f(x+\Delta x)\right\|_2^2</script> 的二阶展开，高斯牛顿法是对 <script type="math/tex">\left\|f(x) + J\Delta x\right\|_2^2</script> 的展开</p>
 <p>参考:<br><a target="_blank" rel="noopener" href="https://heyijia.blog.csdn.net/article/details/47731631">graph slam tutorial ：从推导到应用２</a><br><a target="_blank" rel="noopener" href="https://scm_mos.gitlab.io/algorithm/newton-and-gauss-newton/">牛顿法 高斯牛顿法</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/boksic/article/details/79055298">非线性优化整理-2.高斯牛顿法</a></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/13/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95%20%20%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95/">牛顿法 梯度下降法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>我们考虑的最小二乘问题是这样的</p>
-<script type="math/tex; mode=display">\mathop{min}\limits_{x}{\frac{1}{2}\left\|f(x)\right\|_2^2}   \tag{1}</script><p>自变量x是一个向量，f是一个非线性函数。我们一般用李代数表示机器人的平移和旋转，常常无法对f进行直接求导。所以使用迭代的方式求解，非线性优化的几个解法都是使用迭代，从一个初值出发，不断更新当前的优化变量，使目标函数f(x)下降。</p>
-<p>让求解非线性函数的导数为0问题，转为不断寻找梯度并下降的过程，直到<strong>满足迭代次数或者目标函数变化非常小</strong>为止。此时认为算法收敛，目标函数达到极小值。 <strong>问题就在于如何寻找增量</strong> <script type="math/tex">\Delta x_k</script></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/13/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E7%89%9B%E9%A1%BF%E6%B3%95%20%20%E6%9C%80%E9%80%9F%E4%B8%8B%E9%99%8D%E6%B3%95/">非线性优化 牛顿法 梯度下降法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><h2 id="非线性优化"><a href="#非线性优化" class="headerlink" title="非线性优化"></a>非线性优化</h2><p>非线性优化问题就是针对一个非线性函数求最值的问题，但很难通过求导数的方式求解。<br>非线性最小二乘问题的形式如下：</p>
+<script type="math/tex; mode=display">\min_{x} \frac{1}{2} {\mid \mid f(x) \mid \mid}^2_{2}</script><p>自变量 <script type="math/tex">x\in R^n</script>，f 是任意的非线性函数，我们可以假设它有m维： <script type="math/tex">f(x)\in R^m</script></p>
+<p>我们一般用李代数表示机器人的平移和旋转，常常无法对f进行直接求导，所以使用迭代的方式求解，非线性优化的几个解法都是使用迭代</p>
+<ol>
+<li>给定某个初始值<script type="math/tex">x_0</script></li>
+<li>对于第k次迭代，寻找一个增量<script type="math/tex">\Delta{x_k}</script>， 使得 <script type="math/tex">{\mid \mid f(x)+\Delta{x_k} \mid \mid}^2_{2}</script> 达到极小值</li>
+<li>若<script type="math/tex">\Delta{x_k}</script>足够小，则停止</li>
+<li>否则，令 <script type="math/tex">{x_{k+1}} = x_k + \Delta{x_k}</script> ， 返回第2步</li>
+</ol>
+<p>非线性最小二乘问题就转为寻找 <script type="math/tex">\Delta{x_k}</script> 的问题，直到<strong>满足迭代次数或者目标函数变化非常小</strong>为止。此时认为算法收敛，目标函数达到极小值。</p>
 <h2 id="数值分析中的牛顿法"><a href="#数值分析中的牛顿法" class="headerlink" title="数值分析中的牛顿法"></a>数值分析中的牛顿法</h2><p>牛顿法是一种在实数域和复数域上近似求解方程的方法。方法使用函数f(x)的泰勒级数的前面几项来寻找方程f(x) = 0的根。牛顿法最大的特点就在于它的收敛速度很快。</p>
 <p>首先，选择一个<strong>接近函数f(x)零点的 x0</strong>，计算相应的f(x0) 和切线斜率f’(x0)。然后我们计算穿过点<code>(x0, f(x0) )</code>并且斜率为f’(x0)的直线和 x 轴的交点的x坐标，也就是求如下方程的解：<br>f’(x<sub>0</sub>)(x-x<sub>0</sub>) + f(x<sub>0</sub>) = 0</p>
 <p>这样将新求得的点的x坐标命名为x<sub>1</sub>，通常x<sub>1</sub>会比x<sub>0</sub>更接近方程f(x) = 0的解。因此可以利用x<sub>1</sub>开始下一轮迭代，迭代公式如下所示:<br><img src="https://i.loli.net/2021/07/14/4cAgeqyZajVHzuC.png" alt=""></p>
