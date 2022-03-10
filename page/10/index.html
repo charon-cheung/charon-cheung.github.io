@@ -144,7 +144,7 @@
 <p><code>MatchingResult</code>里也有一个<code>local_pose</code>，<font color = blue size=4> 和 <code>constant_data</code> 的那个<code>local_pose</code>是相同的，赋值用的都是下一帧位姿的观测值</font>。不过在后端里用的是<code>InsertionResult</code>的<code>local_pose</code>，源码在<code>PoseGraph2D::AddNode</code>。这个是在<code>AddSubmap</code>函数中创建新的submap的时候加入的，是创建submap时的第一个ranges的原点。</p>
 <p><code>constant_data</code>还有一个成员<code>global_pose</code>，这是submap(node)在<code>global map frame</code>的位姿。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/03/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%20%E5%9B%BE%E4%BC%98%E5%8C%96/">非线性最小二乘 图优化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p><img src="https://i.loli.net/2021/07/14/cZX2weE5PBKrnWt.png" alt="Pose Graph"></p>
-<script type="math/tex; mode=display">x = (x_1,x_2 ......x_T)^T $$ 是一个向量，其中的 $$ x_i $$ 表示顶点i的位姿， $$ z_{ij} $$ 表示顶点i和j之间的观测值，$$ \Omega_{ij} $$ 表示信息矩阵。 $$ \hat z_{ij} $$ 表示预测值， $$ \hat e_{ij}(x_i, x_j) $$ 表示预测值和观测值之间的差
+<script type="math/tex; mode=display">x = (x_1,x_2 ......x_T)^T$$ 是一个向量，其中的 $$x_i$$ 表示顶点i的位姿， $$ z_{ij} $$ 表示顶点i和j之间的观测值， $$ \Omega_{ij} $$ 表示信息矩阵。 $$ \hat z_{ij} $$ 表示预测值， $$ \hat e_{ij}(x_i, x_j) $$ 表示预测值和观测值之间的差
 
 或者可以这样理解：
 ![](https://i.loli.net/2021/07/14/I3D4l1PNZWRjJA9.png)
