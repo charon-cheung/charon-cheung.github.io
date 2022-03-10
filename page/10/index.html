@@ -144,7 +144,7 @@
 <p><code>MatchingResult</code>里也有一个<code>local_pose</code>，<font color = blue size=4> 和 <code>constant_data</code> 的那个<code>local_pose</code>是相同的，赋值用的都是下一帧位姿的观测值</font>。不过在后端里用的是<code>InsertionResult</code>的<code>local_pose</code>，源码在<code>PoseGraph2D::AddNode</code>。这个是在<code>AddSubmap</code>函数中创建新的submap的时候加入的，是创建submap时的第一个ranges的原点。</p>
 <p><code>constant_data</code>还有一个成员<code>global_pose</code>，这是submap(node)在<code>global map frame</code>的位姿。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/03/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%20%E5%9B%BE%E4%BC%98%E5%8C%96/">非线性最小二乘 图优化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p><img src="https://i.loli.net/2021/07/14/cZX2weE5PBKrnWt.png" alt="Pose Graph"></p>
-<script type="math/tex; mode=display">x = (x_1,x_2 ......x_T)^T $$ 是一个向量，其中的 $$ x_i $$ 表示节点i的位姿， $$ z_{ij} $$ 表示节点i和j之间的观测值，$$ \Omega_{ij} $$ 表示信息矩阵。 $$ \hat z_{ij} $$ 表示预测值， $$ \hat e_{ij}(x_i, x_j) $$ 表示预测值和观测值之间的差
+<script type="math/tex; mode=display">x = (x_1,x_2 ......x_T)^T $$ 是一个向量，其中的 $$ x_i $$ 表示顶点i的位姿， $$ z_{ij} $$ 表示顶点i和j之间的观测值，$$ \Omega_{ij} $$ 表示信息矩阵。 $$ \hat z_{ij} $$ 表示预测值， $$ \hat e_{ij}(x_i, x_j) $$ 表示预测值和观测值之间的差
 
 或者可以这样理解：
 ![](https://i.loli.net/2021/07/14/I3D4l1PNZWRjJA9.png)
@@ -167,9 +167,9 @@ $$\min_{x} \frac{1}{2} {\mid \mid f(x) \mid \mid}^2_{2}</script><p>自变量 <sc
 <p>非线性最小二乘问题就转为寻找 <script type="math/tex">\Delta{x_k}</script> 的问题，直到<strong>满足迭代次数或者目标函数变化非常小</strong>为止。此时认为算法收敛，目标函数达到极小值。</p>
 <p>最小二乘问题的目标函数的变量维度很高，但每个误差项都是简单的，仅与少量变量有关。因此为了直观的展示变量与变量之间的关系，可以把优化问题用图的方式来展现。<strong>其中顶点表示优化变量，边表示误差项。</strong></p>
 <h2 id="图优化的流程"><a href="#图优化的流程" class="headerlink" title="图优化的流程"></a>图优化的流程</h2><ol>
-<li><p>选择你想要的图里的节点与边的类型，确定它们的参数化形式</p>
+<li><p>选择你想要的图里的顶点与边的类型，确定它们的参数化形式</p>
 </li>
-<li><p>往图里加入实际的节点和边</p>
+<li><p>往图里加入实际的顶点和边</p>
 </li>
 <li><p>选择初值，开始迭代</p>
 </li>
@@ -183,7 +183,7 @@ $$\min_{x} \frac{1}{2} {\mid \mid f(x) \mid \mid}^2_{2}</script><p>自变量 <sc
 <p>g2o 能帮你做好第3-6步，自己只做前两步。</p>
 <h2 id="SLAM中的图优化"><a href="#SLAM中的图优化" class="headerlink" title="SLAM中的图优化"></a>SLAM中的图优化</h2><p>滤波类算法最大的问题，是无法处理大尺度场景的建图。由于滤波类算法是基于递归计算的，下一时刻的估计值依赖于上一时刻的估计，因而在大尺度场景下，由于系统参数和传感器观测数据的不准确性，会造成误差慢慢累积，一旦当前时刻的估计出现偏差，无法修正该误差，最终无法获得一致性的地图。</p>
 <p>另外滤波方法对计算量和内存消耗都很大，使用图优化方法则效率较高，这种方法位姿不是实时纠正，而是将数据记录下来，最后进行计算优化。<br><br></p>
-<p>机器人的位姿是一个顶点(vertex)，位姿之间的关系构成边(edge)，边表示两个位姿的空间约束(相对位姿和对应方差)。比如t+1时刻和t时刻之间的里程计关系构成边，或者由视觉计算出来的位姿转换矩阵也可以构成边。图构建完成后，就要调整机器人的位姿去尽量满足这些边构成的约束。<strong>图优化就是构建图并调整各节点的位姿，使预测和观测的误差最小。</strong>每一条边的信息矩阵就是协方差矩阵的逆。协方差越小，说明这次测量越准，信息权重就越大。</p>
+<p>机器人的位姿是一个顶点(vertex)，位姿之间的关系构成边(edge)，边表示两个位姿的空间约束(相对位姿和对应方差)。比如t+1时刻和t时刻之间的里程计关系构成边，或者由视觉计算出来的位姿转换矩阵也可以构成边。图构建完成后，就要调整机器人的位姿去尽量满足这些边构成的约束。<strong>图优化就是构建图并调整各顶点的位姿，使预测和观测的误差最小。</strong>每一条边的信息矩阵就是协方差矩阵的逆。协方差越小，说明这次测量越准，信息权重就越大。</p>
 <p>前端： 从里程计和激光雷达数据中求得位姿，构建图，。机器人位姿当做顶点，位姿间关系当做边，常常是传感器信息的堆积<br>后端： 在图构建好以后，采用回环检测，出现了回环边说明有误差。构造闭环约束，调整机器人位姿，通过最小化观测和估计残差求得优化后的位姿。</p>
 <p><img src="https://i.loli.net/2021/07/03/6TvqHJ2xUNC8lSo.png" alt="pose graph的概念"><br><img src="https://i.loli.net/2021/07/03/x6mHtNDIBi9YuEl.png" alt="帧间边"><br><img src="https://i.loli.net/2021/07/03/h59pAX4urbgdLE7.png" alt="回环边"></p>
 <p><img src="https://i.loli.net/2021/07/03/gPanTdDE8v3frzA.png" alt="简单的回环检测 1"><br>通过帧间匹配得到 X<sub> 8</sub> 和 X<sub> 2</sub>之间的相对位姿，称为观测值</p>
