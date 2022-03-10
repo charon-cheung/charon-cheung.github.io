@@ -28,15 +28,15 @@
 <ul>
 <li>非完整约束运动学</li>
 </ul>
-<p>惩罚违反此约束的二次误差。一个潜在的180方向的变化用一个额外的项来处理<br><img src="https://s2.loli.net/2022/03/07/w2frhJSC61lYjA3.png" alt="2022-03-07_163403.png"><br>非完整约束的权重设置为1000。<br><strong>非完整约束运动学</strong>的目标函数如何推导出来的？</p>
+<p>惩罚违反此约束的二次误差。一个潜在的180方向的变化用一个额外的项来处理<br><img src="https://s2.loli.net/2022/03/07/w2frhJSC61lYjA3.png" alt="2022-03-07_163403"><br>非完整约束的权重设置为1000。<br><strong>非完整约束运动学</strong>的目标函数如何推导出来的？</p>
 <p><strong>约束用到了几个顶点(待优化变量)，对应的就是几元边</strong>。 比如速度约束用到了两个位姿和一个时间差，是三元边。 加速度约束就是五元边。 障碍约束和via-point就是一元边<br><img src="https://i.loli.net/2021/06/24/2Oks5jB93SRpCnU.gif" alt="图的构建过程"></p>
-<h3 id="为什么可以用非线性优化的框架？"><a href="#为什么可以用非线性优化的框架？" class="headerlink" title="为什么可以用非线性优化的框架？"></a>为什么可以用非线性优化的框架？</h3><p>平时所说的图优化的最小二乘形式是这样的：<br><img src="https://s2.loli.net/2022/03/09/3OsKtCNZG7zWxv4.png" alt="图优化的最小二乘形式.png"></p>
-<p>TEB所优化的目标函数是这样的：<br><img src="https://s2.loli.net/2022/03/09/BQpdcfroJht5ZXK.png" alt="TEB的目标函数.png"><br>我们先把上面的<code>F(x)</code>看成 <script type="math/tex">F_k = \Omega_k e^2_k</script>， 其中<script type="math/tex">\Omega_k = \gamma_k \ \ \ \ \ \ \ \ \ \ \  e^2 = f_k</script></p>
+<h3 id="为什么可以用非线性优化的框架？"><a href="#为什么可以用非线性优化的框架？" class="headerlink" title="为什么可以用非线性优化的框架？"></a>为什么可以用非线性优化的框架？</h3><p>平时所说的图优化的最小二乘形式是这样的：<br><img src="https://s2.loli.net/2022/03/09/3OsKtCNZG7zWxv4.png" alt="图优化的最小二乘形式"></p>
+<p>TEB所优化的目标函数是这样的：<br><img src="https://s2.loli.net/2022/03/09/BQpdcfroJht5ZXK.png" alt="TEB的目标函数"><br>我们先把上面的<code>F(x)</code>看成 <script type="math/tex">F_k = \Omega_k e^2_k</script>， 其中<script type="math/tex">\Omega_k = \gamma_k \ \ \ \ \ \ \ \ \ \ \  e^2 = f_k</script></p>
 <p>图优化中，顶点是待估计的参数，观测数据构成了边。 TEB的待估计参数就是 <script type="math/tex">B</script>，也就是位姿和时间差的组合。  边表示目标函数 <script type="math/tex">f_k</script>，并连接多个顶点。</p>
 <p>这个图的顶点<code>vertexs</code>是橡皮筋的状态（机器人姿态+时间），起点和终点当然是固定的，图的边是我们自己定义的优化目标函数。默认使用利文伯格法，优化器是<code>g2o::CSparse</code></p>
-<p>g2o框架在批处理模式下优化了TEB，因此每次迭代都会生成一个新的图。在一个机器人控制周期内对轨迹修改步骤进行多次迭代（四个循环包括5次利文伯格的迭代）。 g2o框架提供了两种基于Cholesky decomposition 的求解器:CHOLMOD和CSparse。默认是<code>CSParse</code></p>
+<p>g2o框架在批处理模式下优化了TEB，因此每次迭代都会生成一个新的图。在一个机器人控制周期内对轨迹修改步骤进行多次迭代（四个循环包括5次利文伯格的迭代）。 g2o框架提供了两种基于Cholesky decomposition 的求解器: <code>CHOLMOD</code> 和 <code>CSparse</code>。默认是<code>CSParse</code></p>
 <p>对优化后的TEB进行验证，检查是否违反了硬约束，如果违反，在这种情况下机器人要么停止，要么重新调用运动规划器。</p>
-<p>TEB每次迭代的平均运行时间依赖于TEB的维数，TEB的维数随位姿数(configurations)线性增长。 对于10000多个states，对应大约2500种configurations。</p>
+<p>TEB每次迭代的平均运行时间依赖于TEB的维数，TEB的维数随位姿数(configurations)线性增长。对于10000多个states，对应大约2500种configurations。</p>
 <h3 id="Homotopy-Planner"><a href="#Homotopy-Planner" class="headerlink" title="Homotopy Planner"></a>Homotopy Planner</h3><p>TEB中实现了两种规划器，一个就是普通的<code>TebOptimalPlanner</code>，另一个是<code>HomotopyClassPlanner</code>，HomotopyClassPlanner是一种同时优化多个轨迹的方法，由于目标函数的非凸性(非凸函数)会生成一系列最优的候选轨迹，最终在备选局部解的集合中寻求总体最佳候选轨迹，对应论文：<code>《Integrated online trajectory planning and optimization in distinctive topologies》</code></p>
 <p>optimizer本身只能找到局部最优轨迹，有时找到的路径invalid，所以一般都是用<code>HomotopyClassPlanner</code>。HomotopyClassPlanner类像是多个TebOptimalPlanner类实例的组合。HomotopyClassPlanner类中也会实例化一个由全局规划器生成的路径作为参考的对象。除此之外，它还会使用probabilistic roadmap (PRM) methods在障碍物周边采样一些keypoints，将这些keypoints连接起来，去除方向没有朝向目标点的连接和与障碍物重叠的连接。这样就形成了一个网络，然后将起始点和终点接入到这个网络。如下图所示：<br><img src="https://i.loli.net/2021/06/11/vH35OI4kqVsrg6t.png" alt=""><br>使用Depth First Search（深度优先方法）搜索所有可行的路径。将这些路径作为参考，实例化多个TebOptimalPlanner类的实例。采用多线程并行优化，得到多条优化后的路径。将这些路径进行可行性分析，选出代价值最小的最优路径。不得不说HomotopyClassPlanner类里的方法是一个鲁棒性和可靠性更高的方法。</p>
 <p><br></p>
