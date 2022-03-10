@@ -42,22 +42,7 @@
 <li>ROS不支持时间同步，多台机器人之间的同步得先使用linux的工具进行同步</li>
 <li>在进行压力测试时，系统连续运行长了，ROS Master莫名宕机，整个系统不再受控，某个节点可能突然失效</li>
 </ol>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></span><div class="content"><h2 id="AMCL的缺陷，需要调整的参数"><a href="#AMCL的缺陷，需要调整的参数" class="headerlink" title="AMCL的缺陷，需要调整的参数"></a>AMCL的缺陷，需要调整的参数</h2><h2 id="AMCL的协方差矩阵"><a href="#AMCL的协方差矩阵" class="headerlink" title="AMCL的协方差矩阵"></a>AMCL的协方差矩阵</h2><h2 id="ceres的使用步骤"><a href="#ceres的使用步骤" class="headerlink" title="ceres的使用步骤"></a>ceres的使用步骤</h2><h2 id="cartographer前端两个scan-matcher的区别"><a href="#cartographer前端两个scan-matcher的区别" class="headerlink" title="cartographer前端两个scan matcher的区别"></a>cartographer前端两个scan matcher的区别</h2><h2 id="图优化的流程"><a href="#图优化的流程" class="headerlink" title="图优化的流程"></a>图优化的流程</h2><ol>
-<li><p>选择你想要的图里的节点与边的类型，确定它们的参数化形式</p>
-</li>
-<li><p>往图里加入实际的节点和边</p>
-</li>
-<li><p>选择初值，开始迭代</p>
-</li>
-<li><p>每一步迭代中，计算对应于当前估计值的雅可比矩阵和海塞矩阵</p>
-</li>
-<li><p>求解稀疏线性方程HkΔx = −bk，得到梯度方向</p>
-</li>
-<li><p>继续用高斯牛顿法(GN)或列文列文伯格-马夸尔特法(LM)进行迭代。如果迭代结束，返回优化值。</p>
-</li>
-</ol>
-<p>g2o 能帮你做好第3-6步，自己只做前两步。</p>
-<h2 id="A星和Dijkstra算法的区别"><a href="#A星和Dijkstra算法的区别" class="headerlink" title="A星和Dijkstra算法的区别"></a>A星和Dijkstra算法的区别</h2><ol>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/12/%E7%AC%94%E8%AF%95%E9%9D%A2%E8%AF%95/%E7%AE%97%E6%B3%95/">算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E9%9D%A2%E8%AF%95%E7%AC%94%E8%AF%95/">面试笔试</a></span><div class="content"><h2 id="AMCL的缺陷，需要调整的参数"><a href="#AMCL的缺陷，需要调整的参数" class="headerlink" title="AMCL的缺陷，需要调整的参数"></a>AMCL的缺陷，需要调整的参数</h2><h2 id="AMCL的协方差矩阵"><a href="#AMCL的协方差矩阵" class="headerlink" title="AMCL的协方差矩阵"></a>AMCL的协方差矩阵</h2><h2 id="ceres的使用步骤"><a href="#ceres的使用步骤" class="headerlink" title="ceres的使用步骤"></a>ceres的使用步骤</h2><h2 id="cartographer前端两个scan-matcher的区别"><a href="#cartographer前端两个scan-matcher的区别" class="headerlink" title="cartographer前端两个scan matcher的区别"></a>cartographer前端两个scan matcher的区别</h2><h2 id="A星和Dijkstra算法的区别"><a href="#A星和Dijkstra算法的区别" class="headerlink" title="A星和Dijkstra算法的区别"></a>A星和Dijkstra算法的区别</h2><ol>
 <li>公式表示为：f(n)=g(n)+h(n)，其中f(n)是节点n从初始点到目标点的代价函数，g(n)表示从初始节点到节点n的代价，h(n)表示从节点n到目标点的启发式代价</li>
 <li>Dijkstra是无目的的扩展。A星是启发式，不但记录其到源点的代价，还计算当前点到目标点的期望代价，选择离目标点最近的方向扩展，但不一定是最短路径</li>
 <li>Dijkstra算法的实质是广度优先搜索，是一种发散式的搜索，所以空间复杂度和时间复杂度都比较高</li>
@@ -158,12 +143,36 @@
 <p><code>InsertionResult</code>中的<code>constant_data</code>是此次range插入submap包含的主要内容，类型为<code>TrajectoryNode::Data</code>的共享指针。 <code>constant_data</code>其中有个成员<code>const transform::Rigid3d  local_pose</code>，表示submap(node)在<code>local map frame</code>中的位姿，用于这两个坐标系之间的变换，<font color = blue size=4> 也就是ceres返回的位姿做了重力对齐，是创建submap时的第一个range的原点</font>，也是MotionFilter的判断依据，判断位姿和上一次插入scan的位姿有一定差别</p>
 <p><code>MatchingResult</code>里也有一个<code>local_pose</code>，<font color = blue size=4> 和 <code>constant_data</code> 的那个<code>local_pose</code>是相同的，赋值用的都是下一帧位姿的观测值</font>。不过在后端里用的是<code>InsertionResult</code>的<code>local_pose</code>，源码在<code>PoseGraph2D::AddNode</code>。这个是在<code>AddSubmap</code>函数中创建新的submap的时候加入的，是创建submap时的第一个ranges的原点。</p>
 <p><code>constant_data</code>还有一个成员<code>global_pose</code>，这是submap(node)在<code>global map frame</code>的位姿。</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/03/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E5%9B%BE%E4%BC%98%E5%8C%96/">图优化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>滤波类算法最大的问题，是无法处理大尺度场景的建图。由于滤波类算法是基于递归计算的，下一时刻的估计值依赖于上一时刻的估计，因而在大尺度场景下，由于系统参数和传感器观测数据的不准确性，会造成误差慢慢累积，一旦当前时刻的估计出现偏差，无法修正该误差， 最终无法获得一致性的地图。</p>
-<p>另外使用滤波方法对计算量和内存消耗都很大，使用图优化方法则效率较高，这种方法位姿不是实时纠正，而是将数据记录下来，最后进行计算优化。<br><br></p>
-<p>图的节点表示机器人的位姿，两个节点之间的边表示两个位姿的空间约束(相对位姿和对应方差)，出现了回环边说明有误差。 图优化就是构建图并调整各节点的位姿，使预测和观测的误差最小。</p>
-<p>如果说滤波类SLAM是属于序惯估计的话，基于图优化则是属于批处理。前端负责从里程计和激光雷达数据中求得位姿，后端采用回环检测，构造闭环约束，通过最小化观测和估计残差求得优化后的位姿。</p>
-<p>前端方面，先从里程计获得初始的位姿，之后通过激光雷达数据连续帧匹配，求得激光约束后的位姿（注意这里使用了一次观测信息）。在连续帧匹配上，有 ICP、NDT、暴力匹配等算法。 Cartographer 采用暴力匹配作为前端方法，即使用激光扫描匹配，在机器人运动中，通过匹配前后两帧的激光变化，求得机器人的相对运动。而其中的一个关键模块是三维窗口遍历寻优。这是一种穷举搜索算法，针对平面运动的机器人，可以将位姿分解为三个维度，即 X 轴， Y 轴，角度轴。通过构建三层循环，分别对 X 方向、Y方向、旋转角度方向进行遍历搜索，寻找到最优的位姿匹配作为估计结果。</p>
-<p>平时说的图优化是针对因子图的优化，因子图是概率图模型的一种，概率图模型除了因子图还有贝叶斯网络、马尔科夫随机场</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/03/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%20%E5%9B%BE%E4%BC%98%E5%8C%96/">非线性最小二乘 图优化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><h2 id="非线性最小二乘"><a href="#非线性最小二乘" class="headerlink" title="非线性最小二乘"></a>非线性最小二乘</h2><p>非线性优化问题就是针对一个非线性函数求最值的问题，但很难通过求导数的方式求解。<br>非线性最小二乘问题的形式如下：</p>
+<script type="math/tex; mode=display">\min_{x} \frac{1}{2} {\mid \mid f(x) \mid \mid}^2_{2}</script><p>自变量 <script type="math/tex">x\in R^n</script>，f 是任意的非线性函数，我们可以假设它有m维： <script type="math/tex">f(x)\in R^m</script></p>
+<p>我们一般用李代数表示机器人的平移和旋转，常常无法对f进行直接求导，所以使用迭代的方式求解，非线性优化的几个解法都是使用迭代</p>
+<ol>
+<li>给定某个初始值<script type="math/tex">x_0</script></li>
+<li>对于第k次迭代，寻找一个增量<script type="math/tex">\Delta{x_k}</script>， 使得 <script type="math/tex">{\mid \mid f(x)+\Delta{x_k} \mid \mid}^2_{2}</script> 达到极小值</li>
+<li>若<script type="math/tex">\Delta{x_k}</script>足够小，则停止</li>
+<li>否则，令 <script type="math/tex">{x_{k+1}} = x_k + \Delta{x_k}</script> ， 返回第2步</li>
+</ol>
+<p>非线性最小二乘问题就转为寻找 <script type="math/tex">\Delta{x_k}</script> 的问题，直到<strong>满足迭代次数或者目标函数变化非常小</strong>为止。此时认为算法收敛，目标函数达到极小值。</p>
+<p>最小二乘问题的目标函数的变量维度很高，但每个误差项都是简单的，仅与少量变量有关。因此为了直观的展示变量与变量之间的关系，可以把优化问题用图的方式来展现。<strong>其中顶点表示优化变量，边表示误差项。</strong></p>
+<h2 id="图优化的流程"><a href="#图优化的流程" class="headerlink" title="图优化的流程"></a>图优化的流程</h2><ol>
+<li><p>选择你想要的图里的节点与边的类型，确定它们的参数化形式</p>
+</li>
+<li><p>往图里加入实际的节点和边</p>
+</li>
+<li><p>选择初值，开始迭代</p>
+</li>
+<li><p>每一步迭代中，计算对应于当前估计值的雅可比矩阵和海塞矩阵</p>
+</li>
+<li><p>求解稀疏线性方程HkΔx = −bk，得到梯度方向</p>
+</li>
+<li><p>继续用高斯牛顿法(GN)或列文列文伯格-马夸尔特法(LM)进行迭代。如果迭代结束，返回优化值。</p>
+</li>
+</ol>
+<p>g2o 能帮你做好第3-6步，自己只做前两步。</p>
+<h2 id="SLAM中的图优化"><a href="#SLAM中的图优化" class="headerlink" title="SLAM中的图优化"></a>SLAM中的图优化</h2><p>滤波类算法最大的问题，是无法处理大尺度场景的建图。由于滤波类算法是基于递归计算的，下一时刻的估计值依赖于上一时刻的估计，因而在大尺度场景下，由于系统参数和传感器观测数据的不准确性，会造成误差慢慢累积，一旦当前时刻的估计出现偏差，无法修正该误差，最终无法获得一致性的地图。</p>
+<p>另外滤波方法对计算量和内存消耗都很大，使用图优化方法则效率较高，这种方法位姿不是实时纠正，而是将数据记录下来，最后进行计算优化。<br><br></p>
+<p>机器人的位姿是一个顶点(vertex)，位姿之间的关系构成边(edge)，边表示两个位姿的空间约束(相对位姿和对应方差)。比如t+1时刻和t时刻之间的里程计关系构成边，或者由视觉计算出来的位姿转换矩阵也可以构成边。图构建完成后，就要调整机器人的位姿去尽量满足这些边构成的约束。<strong>图优化就是构建图并调整各节点的位姿，使预测和观测的误差最小。</strong>每一条边的信息矩阵就是协方差矩阵的逆。协方差越小，说明这次测量越准，信息权重就越大。</p>
+<p>前端： 从里程计和激光雷达数据中求得位姿，构建图，。机器人位姿当做顶点，位姿间关系当做边，常常是传感器信息的堆积<br>后端： 在图构建好以后，采用回环检测，出现了回环边说明有误差。构造闭环约束，调整机器人位姿，通过最小化观测和估计残差求得优化后的位姿。</p>
 <p><img src="https://i.loli.net/2021/07/03/6TvqHJ2xUNC8lSo.png" alt="pose graph的概念"><br><img src="https://i.loli.net/2021/07/03/x6mHtNDIBi9YuEl.png" alt="帧间边"><br><img src="https://i.loli.net/2021/07/03/h59pAX4urbgdLE7.png" alt="回环边"></p>
 <p><img src="https://i.loli.net/2021/07/03/gPanTdDE8v3frzA.png" alt="简单的回环检测 1"><br>通过帧间匹配得到 X<sub> 8</sub> 和 X<sub> 2</sub>之间的相对位姿，称为观测值</p>
 <p><img src="https://i.loli.net/2021/07/03/bZwEdGQm9jYlAHD.png" alt="简单的回环检测 2"></p>
@@ -175,8 +184,6 @@
 </ul>
 <p>同样，它们的具体形式很多样化，这允许我们在讨论slam问题时，不局限于某种特定的传感器或姿态表达方式。</p>
 <p>这个减法只是通用的，在SLAM里可能没有定义减法。</p>
-<p><img src="https://i.loli.net/2021/07/03/fFeCzmBPSX6gN8T.png" alt=""><br><img src="https://i.loli.net/2021/07/03/6URV58qMz4ACa7d.png" alt=""><br><img src="https://i.loli.net/2021/07/03/qrHXDS4IL2Y6exc.png" alt=""><br><img src="https://i.loli.net/2021/07/03/v82YG4TbKWDBnxr.png" alt=""><br><img src="https://i.loli.net/2021/07/03/s9jHGB8mbUPzenE.png" alt=""></p>
-<p>参考《视觉SLAM十四讲》114页</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/02/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/%E5%90%8E%E7%AB%AF%201%20%E6%B7%BB%E5%8A%A0Node/">后端1  AddSensorData的后端部分</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p><code>MapBuilder</code> 在创建<code>GlobalTrajectoryBuilder</code>时中会实例化 <code>PoseGraph</code> 对象, 并作为 <code>GlobalTrajectoryBuilder</code> 的成员。</p>
 <p>接着看<code>GlobalTrajectoryBuilder::AddSensorData</code>的后端部分<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 将前端的输出结果喂给后端进行闭环检测和全局优化  */</span></span><br><span class="line">kLocalSlamMatchingResults-&gt;<span class="built_in">Increment</span>();</span><br><span class="line"> <span class="comment">// 前端匹配的结果，即submap位置和submap</span></span><br><span class="line">std::unique_ptr&lt;InsertionResult&gt;  insertion_result;</span><br><span class="line"><span class="comment">// 判定前端是否将传感器的数据插入到子图中</span></span><br><span class="line"><span class="keyword">if</span> (matching_result-&gt;insertion_result != <span class="literal">nullptr</span>) </span><br><span class="line">&#123;</span><br><span class="line">  kLocalSlamInsertionResults-&gt;<span class="built_in">Increment</span>();</span><br><span class="line">  <span class="comment">// 将匹配后的结果加入图优化节点中</span></span><br><span class="line">  <span class="comment">// 把前端的输出结果喂给后端，即后端增加一个新的节点</span></span><br><span class="line">  <span class="comment">// 后端优化位姿图节点ID，记录在临时对象 node_id</span></span><br><span class="line">  <span class="keyword">auto</span> node_id = pose_graph_-&gt;<span class="built_in">AddNode</span>(</span><br><span class="line">      matching_result-&gt;insertion_result-&gt;constant_data, </span><br><span class="line">      trajectory_id_,</span><br><span class="line">      matching_result-&gt;insertion_result-&gt;insertion_submaps );</span><br><span class="line">  <span class="built_in">CHECK_EQ</span>(node_id.trajectory_id, trajectory_id_);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 重新封装前端传来的 InsertionResult，增加了一个node_id</span></span><br><span class="line">  insertion_result = absl::make_unique&lt;InsertionResult&gt;( InsertionResult&#123;</span><br><span class="line">      node_id, matching_result-&gt;insertion_result-&gt;constant_data,</span><br><span class="line">      std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap&gt;&gt;(</span><br><span class="line">          matching_result-&gt;insertion_result-&gt;insertion_submaps.<span class="built_in">begin</span>(),</span><br><span class="line">          matching_result-&gt;insertion_result-&gt;insertion_submaps.<span class="built_in">end</span>()  )  &#125;  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><img src="https://s2.loli.net/2022/02/27/PQRSOrqZCunWtjc.png" alt="PoseGraph2D__AddNode 流程图.png"></p>
 <p><code>PoseGraph2D</code>类的以<code>FromProto</code>结尾的函数，<font color = blue size=4> 全是在 MapBuilder::LoadState 里调用的，也就是纯定位的用途。</font></p>
