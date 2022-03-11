@@ -13,8 +13,8 @@
 <p>运行结果:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">address a0: 0x7fff768cc180  10</span><br><span class="line">address a1: 0x7fff768cc184  1</span><br><span class="line">address a2: 0x7fff768cc188  15</span><br><span class="line">address a3: 0x7fff768cc18c  8</span><br></pre></td></tr></table></figure><br>可以看出转换后,每个占了4字节,低地址的a0对应的是a的低8位,所以说这里是小端. 如果是大端, 地址和数据的对应关系就要倒过来.</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88(%E4%B8%80)%20unique_ptr/">智能指针(一) unique_ptr</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-02-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">C++ 面向对象</a></span><div class="content"><p>智能指针三个优点:</p>
 <ul>
-<li>明确资源的ownership</li>
-<li>避免忘记delete这种人类容易犯的错误</li>
+<li>明确资源的所有权</li>
+<li>避免忘记delete</li>
 <li>更好地handle exception (Effective C++ 中的条款)</li>
 </ul>
 <p>智能指针类重载了解除引用运算符<code>（*）</code>和成员选择运算符<code>（-&gt;）</code>,同时为了能够在堆中管理各种类型，几乎所有的智能指针都是模板类，包含其功能的泛型实现。</p>
