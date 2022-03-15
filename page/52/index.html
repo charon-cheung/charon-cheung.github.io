@@ -43,7 +43,6 @@
 
 在构造函数中直接运行线程：
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ReadThread* thread = <span class="keyword">new</span> <span class="built_in">ReadThread</span>(<span class="keyword">this</span>);</span><br><span class="line">thread-&gt;<span class="built_in">start</span>();</span><br></pre></td></tr></table></figure>
-
 `QMetaObject::invokeMethod()`中的第三个参数是信号与槽的连接方式，如果目标进程与当前线程相同则用`Qt::DirectConnection`；不同则用`Qt::QueuedConnection`，想对象所在线程发送事件，进入目标线程的事件循环；如果是`Qt::AutoConnection`，则会根据线程的情况自动判断。  显然这里可以用后两者。
 
 这一机制依赖Qt内省机制，所以只有信号、槽、带`Q_INVOKABLE`关键字的成员函数才能使用此方法，本例的appendText为槽函数。
