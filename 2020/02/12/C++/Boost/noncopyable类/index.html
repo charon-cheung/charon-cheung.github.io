@@ -12,7 +12,7 @@
 <p>上面拷贝构造函数和赋值构造函数都声明为private，这样不论什么派生方式，子类对此都是无权访问的，从而达到禁止拷贝的目的。</p>
 <p>构造函数为什么声明成protected呢？ 首先肯定不能为private，不然无法构造子类实例。<br>如果为public，那么外部是可以创建noncopyable这么一个实例的，可是这个实例是完全没有意义的，我们用不到,该类只有在被继承之后才有意义。<br>所以此处声明为protected才是合适的，既保证外部无法直接构造一个无意义的noncopyable实例，又不影响构造子类实例。</p>
 <p><strong>但是如果派生类继承它之后,又定义自己的copy构造和赋值运算符，调用者还是能够通过赋值和copy构造等手段来产生一个新的对象,这种情况干脆不要继承noncopyable类</strong></p>
-</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/02/12/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%B7%B2%E7%BB%8F%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98/"><i class="fa fa-chevron-left">  </i><span>在南京解决的问题</span></a></div><div class="next-post pull-right"><a href="/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/union%E5%92%8C%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF/"><span>union和大端小端</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/02/12/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/%E4%B8%8A%E4%BD%8D%E6%9C%BA-ROS%E9%80%9A%E4%BF%A1/"><i class="fa fa-chevron-left">  </i><span>上位机-ROS通信</span></a></div><div class="next-post pull-right"><a href="/2020/02/12/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/union%E5%92%8C%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF/"><span>union和大端小端</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
   this.page.url = 'https://charon-cheung.github.io/2020/02/12/C++/Boost/noncopyable%E7%B1%BB/';
   this.page.identifier = '2020/02/12/C++/Boost/noncopyable类/';
