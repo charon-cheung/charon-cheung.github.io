@@ -20,6 +20,9 @@
 </li>
 <li><p>tracking_frame: 通常，如果使用IMU，就是<code>imu_link</code>; 如果不用IMU，可以用<code>laser</code>。博物馆的lua写的base_link</p>
 </li>
+</ul>
+<p>有时遇到这样的报错：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Check failed: sensor_to_tracking-&gt;translation().norm() &lt; <span class="number">1e-5</span> The IMU frame must be colocated with the tracking frame. Transforming linear acceleration into the tracking frame will otherwise be imprecise</span><br></pre></td></tr></table></figure><br>这是因为在使用IMU的情况下，<code>tracking frame</code>不是imu的link</p>
+<ul>
 <li><p>published_frame: 位姿子坐标系的ROS坐标系，例如”odom”坐标系，如果一个odom坐标系由系统的不同部分提供，在这种情况下，map_frame中的<code>odom</code>姿势将被发布。 否则，将其设置为<code>base_link</code>可能是合适的</p>
 </li>
 <li><p>provide_odom_frame: true 适用于机器人本身没有odom坐标系的情况，如果启用，将发布局部、非闭环、持续的位姿，也就是odom_frame在map_frame中的坐标</p>
@@ -72,7 +75,7 @@
 </ul>
 <p>如果我们不想使用轮式里程计， cartographer的lua无法屏蔽里程计，只能自己修改机器人的程序，不让它发布odom话题和<code>odom---&gt;base_footprint</code>的tf变换。如果不修改，使用时会发现tf变换一会儿由 cartographer发布，一会儿由机器人程序发布，<strong>千万不能由两个节点发布同一个tf变换，</strong>从rviz看上去，RobotModel和LaserScan摇晃地很厉害。</p>
 <p>这里有一个技巧， <font color = blue size=4> 观察一个tf变换是否由两个节点发布，用rosrun tf view_frame是看不出来的，应该用rosrun rqt_tf_tree rqt_tf_tree，然后用刷新按钮观察。</font></p>
-<font color = blue size=4> 如果不用IMU，Odom + Lidar在局部存在纠偏失败的可能。</font>
+<font color = blue size=4> 如果不用IMU，Odom + Lidar在局部存在纠偏失败的可能。 但是在里程计与imu不准的情况下，使用imu和odom反而建图效果会更差</font>
 
 <h3 id="使用机器人的odom和imu，lua做如下设置"><a href="#使用机器人的odom和imu，lua做如下设置" class="headerlink" title="使用机器人的odom和imu，lua做如下设置:"></a>使用机器人的odom和imu，lua做如下设置:</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">map_frame = <span class="string">&quot;map&quot;</span>,</span><br><span class="line">tracking_frame = <span class="string">&quot;imu&quot;</span>,</span><br><span class="line">published_frame = <span class="string">&quot;odom&quot;</span>,</span><br><span class="line">odom_frame = <span class="string">&quot;odom&quot;</span>,</span><br><span class="line">provide_odom_frame = <span class="literal">false</span>,</span><br><span class="line">publish_frame_projected_to_2d = <span class="literal">false</span>,</span><br><span class="line">use_odometry = <span class="literal">true</span>,</span><br></pre></td></tr></table></figure>
 <p>一开始，我增加了参数<code>TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 10</code>，结果出现了scan一直在转的情况，使用<code>tf_echo</code>  map和laser坐标系的关系，发现y位移一直在增大，但x z基本不变。去掉这个参数后，不再一直转了，但是过了几分钟还是有所偏，地图还出现了重影，这说明是机器人的里程计误差问题，需要校准，这个参数应该是放大了这种现象。</p>
