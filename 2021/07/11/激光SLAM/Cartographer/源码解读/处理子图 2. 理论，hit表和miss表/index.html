@@ -31,7 +31,7 @@
 <p><strong>注意</strong>： lua配置中的 <code>hit_probability = 0.55</code> 和 <code>miss_probability = 0.49</code>指的是 </p>
 <script type="math/tex; mode=display">C_{hit}\ (z)= \frac{p(z=1\ |\ s=1)}{p(z=1\ |\ s=0)}\ \ \</script><script type="math/tex; mode=display">C_{miss}\ (z)= \frac{p(z=0\ |\ s=1)}{p(z=0\ |\ s=0)}</script><p>其他大部分SLAM实现地图更新采用对数加减的方式：<script type="math/tex">lg\ odd_{new}(x) = lg\ odd_{old}(x)+lg\ C</script> </p>
 <p>举例如下</p>
-<script type="math/tex; mode=display">lg\ odds_{hit} = 0.9</script><script type="math/tex; mode=display">lg\ odds_{miss} = -0.7</script><p><img src="https://i.loli.net/2021/08/15/wb2Wli1Q5zjTmIq.png" alt="对数形式的栅格更新过程"></p>
+<script type="math/tex; mode=display">lg\ odds_{hit} = 0.9</script><script type="math/tex; mode=display">lg\ odds_{miss} = -0.7</script><p><img src="https://i.loli.net/2021/08/15/wb2Wli1Q5zjTmIq.png" alt="对数形式的栅格更新过程，大于0的栅格大概率是占用"></p>
 <p>第二次观测会在第一次的基础上累计，其实这里只是个举例，还不太准确，对于图中圈出的栅格，第一次是从栅格中心射过，但第二次是从角落射过，从对角穿过对这个栅格的空闲概率的提升显然作用更大，而只穿过一个小角落显然贡献很小，所以第二次不应该是 -0.7， 0.9的栅格也是同样道理</p>
 <p>如果栅格地图以 odds 的形式表示，那么更新过程就只是一个乘法运算，效率也还可以。但Cartographer还是想要进一步的提高效率，它以内存空间换取时间，构建了hit表和miss表。 实际上是两个 <code>vector&lt;uint16&gt;</code>， <strong>保存的是空闲概率映射后的索引值</strong>。 如果发生了hit事件，就从hit表中查找更新后的数据。发生了miss事件则查找miss表。</p>
 <p><img src="https://s2.loli.net/2022/02/25/R1dxqFp3rNo6kaV.png" alt="表的更新过程"></p>
