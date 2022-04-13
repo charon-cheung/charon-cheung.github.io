@@ -158,7 +158,7 @@
 <h2 id="Real-Time-Correlative-Scan-Matcher"><a href="#Real-Time-Correlative-Scan-Matcher" class="headerlink" title="Real Time Correlative Scan Matcher"></a>Real Time Correlative Scan Matcher</h2><p>我们要找到机器人位姿的后验概率分布<script type="math/tex">p(x_i|x_{i-1}\ ,u,m,z)</script>，使用贝叶斯公式得到</p>
 <script type="math/tex; mode=display">p(x_i\ |x_{i-1}\ ,u,m,z) \propto p(x_i\ |x_{i-1}\ , u)* p(z\ |x_i,m)</script><p>算法只研究观测模型。运动模型是已知的多元高斯分布，观测模型难以计算，一般具有多极值。雷达观测数据 <script type="math/tex">z_t</script> 里包含了很多激光点数据，假设他们是完全独立的</p>
 <script type="math/tex; mode=display">p(z_t\ |x_t,m_{t-1}\ ) = \prod \limits_i p(z_t^i\ |x_t,m_{t-1}\ )  \propto \sum\limits_i log\ p(z_t^i\ |x_t, m_{t-1}\ )</script><p>将一帧观测数据的概率拆分成了当前帧的每一个点的概率，在计算这个概率之前，我们需要对数据帧以及地图进行栅格化。</p>
-<p>位姿估计器传来的预测值不适合做初值，真正初值是在它附近，实时CSM以预测值为中心，在指定范围内枚举出所有候选位姿，并生成每个位姿对应的点云。然后分别计算每个点云中<code>hit点</code>在栅格地图的<code>CellIndex</code>，并计算所有hit点的占据概率之和，最大的就是我们需要的初始位姿。</p>
+<p>位姿估计器传来的预测值不适合做初值，真正初值是在它附近，实时CSM以预测值为中心，在指定范围内枚举出所有候选位姿，并生成每个位姿对应的点云。然后分别计算每个点云中<code>hit点</code>在栅格地图的<code>CellIndex</code>，并计算所有hit点的占据概率之和，最大的就是我们需要的初始位姿。 scan match非常重要，如果结果位姿很差，建图就会失败，后端怎么调整也没用</p>
 <ol>
 <li>暴力搜索</li>
 </ol>
