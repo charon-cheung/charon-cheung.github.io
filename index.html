@@ -16,8 +16,8 @@
 <li>occupied: 占据概率 &gt; 0.5</li>
 </ul>
 <p>论文发现frontiers的方法是借鉴了计算机视觉中的 edge detection and region extraction.  未知cell周围的空闲cell被标记为 <code>frontier edge cell</code>. Adjacent edge cells are grouped into frontier regions.</p>
-<p>任何超出最小值(大致为机器人尺寸)的<code>frontier region</code>都被认为是 <code>frontier</code>，它的centroid(形心)会发布出来。 当机器人达到目标时，这个目标的位姿加入到<strong>已访问frontiers列表</strong>。</p>
-<p>如果机器人无法向目标移动，经过一定时间，机器人会认为目标是无法到达的，这个目标点会加入<strong>不可达到的frontiers列表</strong>。然后向最近的尚未访问的frontier探索。</p>
+<p>任何超出最小值(大致为机器人尺寸)的<code>frontier region</code>才被认为是 <code>frontier</code>，它的centroid(形心，代码上可供选择的模式还有最近点和中点)会发布出来。 当机器人达到目标时，这个目标的位姿加入到<strong>已访问frontiers列表</strong>。</p>
+<p>如果机器人无法向目标移动，经过一定时间，机器人会认为目标是无法到达的，这个目标点会加入<strong>不可达到的frontiers列表</strong>。然后向最近的尚未访问的frontier探索，找最近的边界目标以深度优先的方式进行探索。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/05/03/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/frontier-based%20exploration/2.%20explore.cpp/">(二) explore.cpp</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-05-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/frontier-based-exploration/">frontier-based exploration</a></span><div class="content"><p>使用<code>m-explore</code>包，这是在<code>frontier_exploration</code>包基础上进行的修改。可以用<code>sudo apt install ros-$&#123;ROS_DISTRO&#125;-explore-lite</code>安装。需要同时运行cartographer和move_base</p>
 <p><code>greedy frontier-based exploration</code>. robot will greedily explore its environment until no frontiers could be found. 速度发送到<code>move_base</code></p>
 <p>不创建自己的costmap，节点订阅话题<code>map</code>（<code>nav_msgs/OccupancyGrid</code>类型，可配置），也可以是<code>move_base/global_costmap/costmap</code>。<br>如果是后者， 需要设置 <code>track_unknown_space</code>为 true</p>
