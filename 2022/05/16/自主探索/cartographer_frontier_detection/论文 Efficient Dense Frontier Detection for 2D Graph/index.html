@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="论文 Efficient Dense Frontier Detection for 2D Graph"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>论文 Efficient Dense Frontier Detection for 2D Graph | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text">相关工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#frontier-detection"><span class="toc-number">3.</span> <span class="toc-text">frontier detection</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E5%AD%90%E5%9B%BE%E7%9A%84%E6%9B%B4%E6%96%B0"><span class="toc-number">3.1.</span> <span class="toc-text">处理子图的更新</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">521</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">48</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/02/18/exLTfbM3uFOq5SV.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">论文 Efficient Dense Frontier Detection for 2D Graph</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-05-16</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/">自主探索</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer-frontier-detection/">cartographer_frontier_detection</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2022/05/16/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer_frontier_detection/%E8%AE%BA%E6%96%87%20Efficient%20Dense%20Frontier%20Detection%20for%202D%20Graph/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2022/05/16/自主探索/cartographer_frontier_detection/论文 Efficient Dense Frontier Detection for 2D Graph/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.2k</span><span class="post-meta__separator">|</span><span>Reading time: 4 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p><img src="https://s2.loli.net/2022/05/16/sA3XnlIBq5QHx7g.png" alt="原理图.png"></p>
+<h2 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h2><p>从Yamauchi在1997年的论文开始，后来有了复杂的探索策略用于多个机器人的探索。</p>
+<p>简单的frontier检测是在每次地图更新后，对整个地图进行边缘检测(edge detection)。但是这种方法对大规模地图不实用，而且构成的计算量也太大。</p>
+<p>2014年，Keida 和 Kaminka提出两种方法：Wavefront Frontier Detector(WFD) 和  the Fast Frontier Detector (FFD). 都有一些缺点。FFD提出了<strong>活跃区域</strong>(active area)的概念，在地图上围绕机器人位置的一个边界框，限定了更新地图的最后scan。frontier的update step 由于限定在活跃区域而得到了加快。本论文提出的算法有类似的概念：<strong>活跃子图</strong>(active submaps)</p>
+<p>loop closure对frontier检测的影响：为了返回正确的结果，frontier检测必须能处理loop closure引起的地图变化。这些地图变化不是只限于<strong>活跃区域</strong>，而是遍布整个地图。高效的frontier检测算法应该避免每次遍历时都要处理整个地图，而把算法限定在活跃区域又导致对loop closure不鲁棒。</p>
+<p>Keidar and Kaminka 提出了针对Gmapping算法而实现的WFD-INC算法，本论文的算法则针对cartographer。Quin and Alempijevic提出两种frontier检测算法，一个就是限定在活跃区域的，另一个认为<strong>每个地图栅格的熵(entropy)只会随时间而减小</strong>。对于考虑了loop closure的完整地图来说，这种假设不正确，在loop closure时观察的区域会移动 and leave unexplored space in their wake. 但是对于每个子图来说，熵降低的假设基本正确，本论文正是利用了这一点。</p>
+<p>Umari 提出了RRT算法进行稀疏的frontier检测，方式是在地图的空闲区域创建树，当算法扩展随机树穿越了frontier时，就会检测到单独的frontier点。但是算法在每次遍历时不要求重组全局地图，而且算法对loop closure不鲁棒，因为创建RRT树不是根据pose graph优化的结果，所以不能和cartographer搭配。<strong>RRT的frontier检测算法在窄通道和大地图的情况下出现多种问题。</strong></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>子图栅格的熵可认为是单调递减： 一旦进入<code>observed</code>状态，活跃子图(active submap)的栅格不会成为<code>unobserved</code></p>
+<h2 id="frontier-detection"><a href="#frontier-detection" class="headerlink" title="frontier detection"></a>frontier detection</h2><p><script type="math/tex">S^{si}_{k,j}</script> 是子图<script type="math/tex">si</script>中栅格(k,l)的占据概率</p>
+<ul>
+<li><p>Occupancy classification: 栅格的占据概率不是在frontier detection中直接使用的。</p>
+</li>
+<li><p>局部边界点(Local frontier point): 子图中未观测栅格的中心，这个栅格近邻一个空闲栅格。子图的局部边界(local frontier)是一系列的局部边界点。</p>
+</li>
+<li><p>stabbing query: 对于一个给定的全局点，在给定的子图里寻找相应的栅格。具体说，对于子图 <em>si</em> 和全局点 <script type="math/tex">p^g</script>，寻找子图的栅格索引<em>(k, l)</em>，这个栅格在子图<em>si</em>对应的local坐标系的坐标是最接近 <script type="math/tex">(T^{si}_{g})^{-1} \ p^g</script> 的栅格。<code>stabbing query test</code>的意思是检查栅格<em>(k ,l)</em>是未观测的栅格，如果是，测试通过了。</p>
+</li>
+<li><p>全局边界点(global frontier point): 未观测的全局地图栅格，它近邻一个空闲的全局地图栅格。valid全局边界点必须通过所有子图的stabbing query test。全局边界是给定时间的一系列valid全局边界点。</p>
+</li>
+<li><p>perimeter: 全局或局部边界包含的边界点的个数。</p>
+</li>
+</ul>
+<p><br></p>
+<h3 id="处理子图的更新"><a href="#处理子图的更新" class="headerlink" title="处理子图的更新"></a>处理子图的更新</h3><p>算法1的6-10行，在子图层面使用普通的边界检测方法，而不是其他复杂的方法。原因有两个，(一) 由于子图大小受限制(参数 num_scans)和活跃子图只有2个，局部边界检测的时间复杂度不收全局地图或数据集规模的影响。 (二) 算法的 classification (line 6) and edge detection (lines 7– 9) 可以向量化，这样在CPU上可以有好的表现。论文的实现基于Eigen，使用 Eigen’s matrix block algebra and Hadamard products to vectorize thresholding, classification and Boolean logic for edge detection.</p>
+<p>算法13行的stabbing query test，如果未通过，相应的子图会记录为 <code>hint</code> (Algorithm 2, line 5)，这样在未来的再次测试(算法3)可以运行快一些。</p>
+<ol>
+<li><p>已经完成的子图的栅格不再变化，因此对已完成的子图，没必要再检测<strong>局部边界</strong></p>
+</li>
+<li><p>处理子图更新的算法部分，假设从上次子图更新后没有发生后端优化，这样所有已完成子图的现有全局边界valid</p>
+</li>
+<li><p>活跃子图的占据概率的熵一直下降，所以只有之前未观测的栅格变为已观测，没有反过来的情况。所以，子图的更新可能会遮盖住之前intersecting submaps的全局边界</p>
+</li>
+</ol>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2022/05/13/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer_frontier_detection/%E7%BC%96%E8%AF%91%20cartographer_frontier_detection/"><span>编译 cartographer_frontier_detection</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2022/05/16/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer_frontier_detection/%E8%AE%BA%E6%96%87%20Efficient%20Dense%20Frontier%20Detection%20for%202D%20Graph/';
+  this.page.identifier = '2022/05/16/自主探索/cartographer_frontier_detection/论文 Efficient Dense Frontier Detection for 2D Graph/';
+  this.page.title = '论文 Efficient Dense Frontier Detection for 2D Graph';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/02/18/exLTfbM3uFOq5SV.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2022 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
