@@ -104,6 +104,22 @@
 <p>算法2的第3行，对已更新子图的每个局部边界点，与相交子图进行stabbing query测试的算法复杂度为 <script type="math/tex">O(S_{\cap si})</script>，那么总的就是     <script type="math/tex">O(P(LF_{si}) \ S_{\cap si})</script></p>
 <p>算法1的第11-15行，验证相交子图的全局边界，与他们的周长是线性关系，算法复杂度  <script type="math/tex">O(P(\bigcup_{sj\in {S_{\cap{si}}}} \  GF_{sj}))</script></p>
 <p>所以处理更新子图的总算法复杂度为<br><img src="https://s2.loli.net/2022/05/20/BEtMOCVeiYw4nTh.png" alt=""></p>
+<ol>
+<li>处理后端优化的事件</li>
+</ol>
+<p>算法3的第一步是重建R树(1-3行)，算法复杂度<code>O(|S| log|S|)</code>。这个复杂度包括对每个子图查找相交的子图(第6行)。然后，每个局部边界点被转换到全局坐标系，再对相交的子图执行stabbign query测试。(算法2的1-3行)  坏的情况会对每个局部边界点对其他所有子图进行测试。 所以时间复杂度是<em>O(|S| P(LF))</em>。  如果未通过测试的点数是 <em>P(FF) = P(LF) - P(GF)</em>， 时间复杂度为 <em>O(|S| </em> P(GF) + P(FF) )*</p>
+<p>处理后端优化的时间复杂度取决于子图数量和局部、全局的边界长，因此为<br><strong>O(|S| · (log|S| + P(GF) ) + P(FF))</strong></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>算法在单线程里异步执行， 如果不是最后一个子图更新，会 adaptively 跳过以保证处理速度。</p>
+<p>测试平台是<strong>Intel i7 6800K @ 3600 MHz</strong>。没有进行 <code>frontier grouping</code>，返回的边界范围是 unstructured set of points.</p>
+<p>我们实现的优化：在局部边界检测中，对一小部分<strong>临时关闭</strong>的子图执行stabbing query测试(算法1，第8行，比如针对4个之前的子图)。 This has the result of permanently “baking in” a negative test result against these submaps, since these<br>points are permanently erased from the local frontiers</p>
+<p>算法 3 中，从局部边界中抛弃点的好处是加速全局边界的计算，因为这样会减少重新转换和重新测试的局部边界点。而且，连续子图之间的定位漂移很小，后端优化不会在连续的子图之前产生很大的相对错位。使用未优化的位姿实际上对处理连续的子图更好，因为可以防止检测到错误边界，错误边界是在后端优化时的连续子图之间的微小错位导致的。</p>
+<p>算法的具体两个优化：</p>
+<ol>
+<li><p>拥有非常不确定的“空闲”概率( <script type="math/tex">S^{si}_{k,l} \in [0.5- \epsilon, 0.5]</script> )被当做“未观测”栅格. 这是为了防止因错误的雷达远距离数据而检测到错误边界，这会导致一束错误的“空闲”栅格插入子图。 </p>
+</li>
+<li><p>对局部边界的简易平滑，通过调整局部边界点的定义：未观测栅格的邻近栅格中，至少有2个空闲栅格和至少2个未观测栅格。 算法其他部分未变，这样可以获得平滑(smoothed)局部边界点，进而获得平滑的全局边界点。</p>
+</li>
+</ol>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/05/13/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer_frontier_detection/%E7%BC%96%E8%AF%91%20cartographer_frontier_detection/">编译 cartographer_frontier_detection</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-05-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/">自主探索</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer-frontier-detection/">cartographer_frontier_detection</a></span><div class="content"><p>这个作者是真懒，放到github就不管了，几个人在issue提出编译失败，他也不回复，我给他发邮件，他也不回复</p>
 <p>删除<code>cartographer/cmake/modules/FindAbseil.cmake</code></p>
 <p>我对<code>CMakeLists</code>进行了修改，主要是<code>absl</code>相关，比如<code>cartographer_frontier_detection\cartographer_frontier_detection\cartographer\CMakeLists.txt</code></p>
