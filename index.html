@@ -113,7 +113,7 @@
 
 算法6-10行，栅格的分类和原始查找局部边界点的算法复杂度是 $$ O(A(si)) $$， $$ A(si) $$是子图*si*的区域，也就是栅格个数。
 
-算法2的第3行，对已更新子图的每个局部边界点，与相交子图进行stabbing query测试的算法复杂度为 $$O(S_{\cap si})$$，那么总的就是 $$ O(P(LF_{si}) \ S_{\cap si})</script><p>算法1的第11-15行，验证相交子图的全局边界，与他们的周长是线性关系，算法复杂度 <script type="math/tex">O(P(\bigcup_{sj\in {S_{\cap{si}}}} \  GF_{sj}))</script></p>
+算法2的第3行，对已更新子图的每个局部边界点，与相交子图进行stabbing query测试的算法复杂度为 $$ O(S_{\cap si}) $$，那么总的就是     $$ O(P(LF_{si}) \ S_{\cap si})</script><p>算法1的第11-15行，验证相交子图的全局边界，与他们的周长是线性关系，算法复杂度  <script type="math/tex">O(P(\bigcup_{sj\in {S_{\cap{si}}}} \  GF_{sj}))</script></p>
 <p>所以处理更新子图的总算法复杂度为<br><img src="https://s2.loli.net/2022/05/20/BEtMOCVeiYw4nTh.png" alt=""></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/05/13/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer_frontier_detection/%E7%BC%96%E8%AF%91%20cartographer_frontier_detection/">编译 cartographer_frontier_detection</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-05-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/">自主探索</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%87%AA%E4%B8%BB%E6%8E%A2%E7%B4%A2/cartographer-frontier-detection/">cartographer_frontier_detection</a></span><div class="content"><p>这个作者是真懒，放到github就不管了，几个人在issue提出编译失败，他也不回复，我给他发邮件，他也不回复</p>
 <p>删除<code>cartographer/cmake/modules/FindAbseil.cmake</code></p>
