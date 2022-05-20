@@ -62,7 +62,7 @@
 <p>Keidar and Kaminka 提出了针对Gmapping算法而实现的WFD-INC算法，本论文的算法则针对cartographer。Quin and Alempijevic提出两种frontier检测算法，一个就是限定在活跃区域的，另一个认为<strong>每个地图栅格的熵(entropy)只会随时间而减小</strong>。对于考虑了loop closure的完整地图来说，这种假设不正确，在loop closure时观察的区域会移动 and leave unexplored space in their wake. 但是对于每个子图来说，熵降低的假设基本正确，本论文正是利用了这一点。</p>
 <p>Umari 提出了RRT算法进行稀疏的frontier检测，方式是在地图的空闲区域创建树，当算法扩展随机树穿越了frontier时，就会检测到单独的frontier点。但是算法在每次遍历时不要求重组全局地图，而且算法对loop closure不鲁棒，因为创建RRT树不是根据pose graph优化的结果，所以不能和cartographer搭配。<strong>RRT的frontier检测算法在窄通道和大地图的情况下出现多种问题。</strong></p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>子图栅格的熵可认为是单调递减： 一旦进入<code>observed</code>状态，活跃子图(active submap)的栅格不会成为<code>unobserved</code>  </p>
-<h2 id="frontier-detection"><a href="#frontier-detection" class="headerlink" title="frontier detection"></a>frontier detection</h2><p>$S^{si}_{k,j}$ 是子图<script type="math/tex">si</script>中栅格(k,l)的占据概率</p>
+<h2 id="frontier-detection"><a href="#frontier-detection" class="headerlink" title="frontier detection"></a>frontier detection</h2><p>$S^{si}_{k,j}$ 是子图 <em>si</em> 中栅格(k,l)的占据概率</p>
 <ul>
 <li><p>Occupancy classification: 栅格的占据概率不是在frontier detection中直接使用的。</p>
 </li>
