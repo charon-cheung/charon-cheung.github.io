@@ -66,8 +66,31 @@
 <p>最后，算法利用carrot发现路径的曲率，曲率用于计算机器人的速度。</p>
 <p>纯跟踪算法不关心动态障碍，所以这部分的避障交给全局路径。对于非圆形的机器人，应使用运动学可行的全局路径算法，比如<code>Smac Planner</code>。</p>
 <p><img src="https://s2.loli.net/2022/07/05/NAQlBviZtGhfHTp.png" alt="算法示意图"><br>绿色为全局路径处理后的<code>transformed_plan</code></p>
-<p><img src="https://s2.loli.net/2022/07/05/QUceopuOAXxywCh.png" alt="circleSegmentIntersection函数"><br>图中的红线为机器人要跟踪的路径<code>transformed_plan</code>，A B是相邻的两个路径点，这里画的夸张了，实际间距没这么远。机器人在圆心C，圆半径是<code>lookahead_dist</code>。根据函数的查找A的方式，A必在圆外，B必在圆内。 函数要找一个追踪点<code>W</code>，W要在圆上，这样保证机器人到追踪点的距离是<code>lookahead_dist</code>。这里根据A B可以求出W的闭式解，但这样一来W就很可能不在<code>transformed_plan</code>上了，甚至偏差较大。</p>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>参考:<br><a target="_blank" rel="noopener" href="https://automaticaddison.com/how-to-use-the-regulated-pure-pursuit-plugin-ros-2/">ROS2中如何在仿真环境配置纯跟踪算法</a><br><a target="_blank" rel="noopener" href="https://navigation.ros.org/configuration/packages/configuring-regulated-pp.html">ROS2的官方解释</a><br><a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/Circle-LineIntersection.html">寻找W的闭式解推导</a><br><a target="_blank" rel="noopener" href="https://www.desmos.com/calculator/td5cwbuocd">演示寻找W</a></p>
+<p>代码中获得<code>transformed_plan</code>的逻辑如下：<br><img src="https://s2.loli.net/2022/07/09/eciCtRSKYDMB4JX.png" alt=""></p>
+<p><br><br>再看找lookahead_point的过程<br><img src="https://s2.loli.net/2022/07/05/QUceopuOAXxywCh.png" alt="circleSegmentIntersection函数"></p>
+<p>图中的红线为机器人要跟踪的路径<code>transformed_plan</code>，A B是相邻的两个路径点，这里画的夸张了，实际间距没这么远。机器人在圆心C，圆半径是<code>lookahead_dist</code>。根据函数的查找A的方式，A必在圆外，B必在圆内。 所以说<code>lookahead_distance</code>介于到A  B的距离之间。 函数要找一个追踪点<code>W</code>，W要在圆上，这样保证机器人到追踪点的距离是<code>lookahead_dist</code>。这里根据A B可以求出W的闭式解，但这样一来W就很可能不在<code>transformed_plan</code>上了。 参数<code>use_interpolation_</code>就出现了，设置为false，就会以A作为<code>lookahead_point</code>，实际A和W的偏差很小，可以忽略，也可以减小计算量。</p>
+<p>剩下的逻辑大致比较简单了，就是追着<code>lookahead_point</code>行走，但是速度的计算公式还没完全搞懂。另外也参考了DWA里的latch机制，到目标点附近后只旋转。</p>
+<p>检测碰撞还是用<code>footprintCost</code>函数，避障实际交给了全局路径。重要变量<code>projection_time</code>用来提前判断碰撞的情况。</p>
+<h2 id="重要参数"><a href="#重要参数" class="headerlink" title="重要参数"></a>重要参数</h2><p>只列出部分</p>
+<ul>
+<li><p>lookahead_dist, use_velocity_scaled_lookahead_dist, min_lookahead_dist, max_lookahead_dist</p>
+</li>
+<li><p>lookahead_time</p>
+</li>
+<li><p>max_allowed_time_to_collision_up_to_carrot</p>
+</li>
+<li><p>max_robot_pose_search_dist</p>
+</li>
+<li><p>use_rotate_to_heading</p>
+</li>
+<li><p>rotate_to_heading_min_angle</p>
+</li>
+<li><p>use_interpolation</p>
+</li>
+<li><p>desired_linear_vel</p>
+</li>
+</ul>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://automaticaddison.com/how-to-use-the-regulated-pure-pursuit-plugin-ros-2/">ROS2中如何在仿真环境配置纯跟踪算法</a><br><a target="_blank" rel="noopener" href="https://navigation.ros.org/configuration/packages/configuring-regulated-pp.html">ROS2的官方解释</a><br><a target="_blank" rel="noopener" href="https://mathworld.wolfram.com/Circle-LineIntersection.html">寻找W的闭式解推导</a><br><a target="_blank" rel="noopener" href="https://www.desmos.com/calculator/td5cwbuocd">演示寻找W</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/07/02/ROS/ROS2/ROS2%E7%9A%84%E8%8A%82%E7%82%B9/">ROS2的节点</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-07-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><p>有顺序的的启动节点，暂停节点，关闭节点是ROS1的一个痛点。因为在ROS1中节点启动是无序的。ROS1系统设计时并没有考虑节点启动时可能存在的互相依赖。</p>
 <p>但在实际生产使用环境中，某些节点能正常工作是需要其他一些节点已经启动了的。</p>
 <p>你想从建图功能切到导航功能。在ROS1中，需要先将建图功能的程序杀干净。然后再启动导航程序。在ROS2中，各个节点的状态是可管理的。</p>
