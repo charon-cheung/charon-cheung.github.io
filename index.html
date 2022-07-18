@@ -78,7 +78,15 @@
 <p><code>line_extractor</code>发布:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">camera_line_markers     [visualization_msgs/Marker]</span><br><span class="line">camera_line_segments    [laser_line_extraction/LineSegmentList]</span><br><span class="line">line_markers            [visualization_msgs/Marker]</span><br><span class="line">line_segments           [laser_line_extraction/LineSegmentList]</span><br><span class="line"></span><br><span class="line">taimi/line_center_point       [nav_msgs/Odometry]</span><br><span class="line">taimi/line_wall_position      [geometry_msgs/PoseStamped]</span><br><span class="line">taimi/waste_aruco_position    [geometry_msgs/PoseStamped]</span><br></pre></td></tr></table></figure></p>
 <p>订阅:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">camera1/scan [sensor_msgs/LaserScan]</span><br><span class="line">shelf_lifter/cmd [std_msgs/String]</span><br><span class="line">sick_tim551_scan [sensor_msgs/LaserScan]</span><br><span class="line">tf [tf2_msgs/TFMessage]</span><br><span class="line">tf_static </span><br></pre></td></tr></table></figure></p>
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39266065/article/details/123378245">室内移动机器人二维激光数据线特征提取算法的总结与开源算法分享</a></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/07/02/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/ROS2%E4%B8%AD%E7%9A%84%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">ROS2中的纯跟踪算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-07-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">纯跟踪算法</a></span><div class="content"><p>ROS2改进了纯跟踪算法，在经过blind corners做大转弯时，会有减速。 算法根据路径的曲率调整线速度，减少了在blind corners高速导航的overshoot现象。 算法拥有的启发特性使机器人靠近障碍时可以减速。还实现了自适应的lookahead point特性，也就是调整<code>lookahead_dist</code>，根据速度进行scale，这样在很大的速度时具有稳定的表现。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/07/02/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/ROS2%E4%B8%AD%E7%9A%84%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">ROS2中的纯跟踪算法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-07-02</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">纯跟踪算法</a></span><div class="content"><p>ROS2对纯跟踪算法的改进：</p>
+<ul>
+<li><p>代价函数根据机器人到障碍的距离和路径的曲率，惩罚其速度。这对机器人在窄空间靠近障碍时很有用，还可以减少高速运行时的overshoot现象。在lookahead距离很大时，根据曲率降低速度有助于稳定控制。另外还减少lookahead point / range的 sensitive tuning, 使机器人更好追踪路径。</p>
+</li>
+<li><p>预测碰撞情况，<strong>we project forward in time that duration and check for collisions.</strong> </p>
+</li>
+<li><p>最后的改进是在接近目标时的减速。 <code>lookahead distance</code>记作 <strong>X</strong>, 机器人到carrot的实际距离为<strong>dist</strong>。定义 <code>err = dist - X</code> 为追踪误差。在正常导航时，这个误差值应当很小。<br>接近目标时，carrot到机器人的距离已经无法达到<code>lookahead distance</code>，此时使用目标点做参考，追踪误差会增大。机器人速度应根据<code>err</code>进行线性减小。</p>
+</li>
+</ul>
 <p>话题<code>lookahead_collision_arc</code>是前向模拟，变量<code>projection_time</code>是预测机器人之后的碰撞可能。  增大参数<code>max_allowed_time_to_collision_up_to_carrot_</code>，增大检查前向模拟的碰撞情况的范围。话题<code>lookahead_collision_arc</code>就是模拟的路径点。</p>
 <p>可以根据当前速度改变lookahead距离。</p>
 <p>算法的核心就是找到机器人前方一个点(“carrot”)作为跟踪点，机器人运动过程中，这个点不断更新。</p>
@@ -90,7 +98,9 @@
 <p><br><br>再看找lookahead_point的过程<br><img src="https://s2.loli.net/2022/07/05/QUceopuOAXxywCh.png" alt="circleSegmentIntersection函数"></p>
 <p>图中的红线为机器人要跟踪的路径<code>transformed_plan</code>，A B是相邻的两个路径点，这里画的夸张了，实际间距没这么远。机器人在圆心C，圆半径是<code>lookahead_dist</code>。根据函数的查找A的方式，A必在圆外，B必在圆内。 所以说<code>lookahead_distance</code>介于到A  B的距离之间。 函数要找一个追踪点<code>W</code>，W要在圆上，这样保证机器人到追踪点的距离是<code>lookahead_dist</code>。这里根据A B可以求出W的闭式解，但这样一来W就很可能不在<code>transformed_plan</code>上了。 参数<code>use_interpolation_</code>就出现了，设置为false，就会以A作为<code>lookahead_point</code>，实际A和W的偏差很小，可以忽略，也可以减小计算量。</p>
 <p>剩下的逻辑大致比较简单了，就是追着<code>lookahead_point</code>行走，但是速度的计算公式还没完全搞懂。另外也参考了DWA里的latch机制，到目标点附近后只旋转。</p>
+<p>判断机器人是否撞障碍的关键一句:<br><code>while (i * projection_time &lt; max_allowed_time_to_collision_up_to_carrot_)</code><br>实际运行发现<code>projection_time</code>大部分是0.1或0.2，还有0.14。 而<code>max_allowed_time_to_collision_up_to_carrot_</code>默认为 1</p>
 <p>检测碰撞还是用<code>footprintCost</code>函数，避障实际交给了全局路径。重要变量<code>projection_time</code>用来提前判断碰撞的情况。</p>
+<p>前视距离 <code>lookahead_distance</code>越小跟踪精度越高，但是越容易导致震荡。机器人在运动时，这个局部目标也会更新。如果找到的局部目标落在了无人车的后方，此时意味着无人车需要后退，只需要将速度取负值即可，前轮转角不用变。</p>
 <h2 id="重要参数"><a href="#重要参数" class="headerlink" title="重要参数"></a>重要参数</h2><p>只列出部分</p>
 <ul>
 <li><p>lookahead_dist, use_velocity_scaled_lookahead_dist, min_lookahead_dist, max_lookahead_dist</p>
@@ -100,6 +110,12 @@
 <li><p>max_allowed_time_to_collision_up_to_carrot</p>
 </li>
 <li><p>max_robot_pose_search_dist</p>
+</li>
+<li><p>use_cost_regulated_linear_velocity_scaling  Whether to use the regulated features for proximity to obstacles (e.g. slow in close proximity to obstacles).</p>
+</li>
+<li><p>regulated_linear_scaling_min_radius: 0.9.  the turning radius (m) for which the regulation features are triggered when use_regulated_linear_velocity_scaling is tru. Remember, sharper turns have smaller radii.</p>
+</li>
+<li><p>regulated_linear_scaling_min_speed: 0.25.  The minimum speed (m/s) for which any of the regulated heuristics can send, to ensure process is still achievable even in high cost spaces with high curvature. Must be &gt; 0.1.</p>
 </li>
 <li><p>use_rotate_to_heading</p>
 </li>
