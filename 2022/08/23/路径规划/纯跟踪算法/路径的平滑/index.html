@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="路径的平滑"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>路径的平滑 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">577</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/02/18/exLTfbM3uFOq5SV.png)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">路径的平滑</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-08-23</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">纯跟踪算法</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2022/08/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/%E8%B7%AF%E5%BE%84%E7%9A%84%E5%B9%B3%E6%BB%91/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2022/08/23/路径规划/纯跟踪算法/路径的平滑/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">15</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉, 这个密码错误, 请重新输入" data-whm="抱歉, 这个文章不能被校验, 不过您还是能看看解密后的内容.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="cc89a41e7a2c04242d762455d5aae68b3d494a204f6001d331c2516852a2af7d">67986b591771be37b67b8c6ed11dd4f2b5af908ff4a8d1573397b9ed2f414c1127f48ee3fa614d0ca2ecc0f0c73026704d2a6712c55b885ff7f34877ba4a1519c7c06ab7f89a219b89a4d80b401b71da591b2e58469dbd8240d9519704d4030ed015f7a346c0b7a0822daa2ea98a97e5c64351498e6a5eca855083696207db65a53d03fc7ef1ab88bc8f3129ed75c31499bf21f6ac7c541e414c25e752852c2ef31046a639fed8bbfc045428cd62e94448da5a1be8adb3a712e8be86f6dd46d47d58dcd1b5de883ac3f05976db5772d9a315f5ea632da06f309105e97d58ba4a79b4055d8880ea26364c5ce2a43275b2767d4b1a231314209eed6df088b2e8b8b34299f177f35c66e26eb8eb0f2af1cdb56366d4d0996411c40b97dea3f2b4529d469d9f836ce9e55ba72d1670b4128a7c3be5ab9845da96a099c027b0179be66de6bb0c7acba9dc7421ff88cf6b8a7d8b73b4c684e52d0456e1ad698d9b7af7eb537ee91194e7c608f21573de13a0f0ca949c0e9b5314ba1f0ddd326e48e7799e02862666afe35638485d15a4f1f8f3bad0bf4a7a754e78f8fadf4f9cc7fa84d4379409ef221f0d1880ff9c7ec89689f7634a857610bf79d0351756060ecdf443a62b159686ce16b5352e04d4ff370590e1ad57cf788160c3e92fa1c24422a6dd400bbf9090c7bcd8d9ea5bd7b8281049f51cd856eac59d981f728d701a442d88026c3bec7d511328b4d2355685ac7bc4e36feb8f2cbcd1e13e7604a6bd374a1fe5d480c43c481c60f3c49e211a5a00c481562ebfa558d2f8dfca64b44fe6bed3437c9174ea1adc57bca8c1f815e5a8e97cb6b3c573d616e8b61d845f62822ab36585ae298b6046b6a3ff2c1e2b13609ae38414e2206014d3195cd95dce08871863eb775dbf036f49de49cfe20e04a3251b194caa9c690d1a635c30e0a23263258633e7cfd17394876e4c6f47fd17bc0ec0510d935d3d0079d84740dd7182d58218e3e1c2edf2a074b3d398c0ab1a3102cbe3d708d23cd451564eb06884ec30debf7308c22f8e36c7063e23db6fadf0d6630f57f1ed023b758e9870fe97fa9804c1092a617b8ad981ec4a3a318608bad8f2d5fe14c07edd04fded3faaf705c2de5e3906332bd806c5a5c5a99c3d7bfbbc3ba231164734017bcd33c2cf774cc9bb20853e4775a07367c360db85cbb4e09f6ddc095577624b635c53f908d692055a9e93fbdb4d9c2a1eff96aa0dd7f65923ab09d29bb75c157a97a11369cdc81d155232d0c641e918b9f43ed8dfe6a9170c0f22b4f4534e83d2a4a1238d39bbe34b8951ae3979eeb5fd081579ee90032218bf0e539a96fdf41441b0b4eb15f1b9270550823c8108411990172c91d919a7fa2ee22a92d687f4d638aac1a5b968c70cdf9255919afa8a61513a76e8dd13af9f106a36715c8536b4d69789b03e1414</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">本博客涉及公司内容，请输入密码</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css"></div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2022/08/21/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/%E8%BF%BD%E8%B8%AA%E8%B7%AF%E5%BE%84%E4%B8%8D%E7%B2%BE%E7%A1%AE%E7%9A%84%E9%97%AE%E9%A2%98/"><span>追踪路径不精确的问题</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2022/08/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/%E8%B7%AF%E5%BE%84%E7%9A%84%E5%B9%B3%E6%BB%91/';
+  this.page.identifier = '2022/08/23/路径规划/纯跟踪算法/路径的平滑/';
+  this.page.title = '路径的平滑';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/02/18/exLTfbM3uFOq5SV.png)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2022 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
