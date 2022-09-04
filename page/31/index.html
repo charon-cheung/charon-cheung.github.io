@@ -58,20 +58,24 @@
 <p><br><br><br><code>liblayers.so</code>:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">add_library( layers  </span><br><span class="line"></span><br><span class="line">  plugins/inflation_layer.cpp</span><br><span class="line">  plugins/obstacle_layer.cpp</span><br><span class="line">  plugins/static_layer.cpp</span><br><span class="line">  plugins/voxel_layer.cpp</span><br><span class="line">  src/observation_buffer.cpp</span><br><span class="line">)</span><br></pre></td></tr></table></figure></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE3%20%20%E4%BB%A3%E4%BB%B7%E5%80%BC%E5%92%8C%E6%9C%BA%E5%99%A8%E4%BA%BA%E8%BD%AE%E5%BB%93%E7%9A%84%E5%85%B3%E7%B3%BB/">代价地图(三) 代价值和机器人轮廓的关系</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-11-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></span><div class="content"><p>costmap中，机器人需要避开区域包括3类：</p>
 <ol>
-<li><p>静态地图中的障碍物，适合描述整个静态场景的静止障碍物信息，如墙面、固定不动的桌柜等，gmapping或其他slam方法建图过程中在栅格地图中记录的障碍物信息StaticLayer，一旦在costmap中加入static_map,即使地图中的障碍物后来移走了，该区域在costmap中依然存在，机器人仍然会避开该区域。</p>
+<li><p>静态地图中的障碍物，适合描述整个静态场景的静止障碍物信息，如墙面、固定不动的桌柜等，对应<code>StaticLayer</code>，一旦在costmap中加入static_map,即使地图中的障碍物后来移走了，该区域在costmap中依然存在，机器人仍然会避开该区域。</p>
 </li>
-<li><p>传感器观察到的障碍物，适合描述运动的障碍物，如行人、小车、移动位置的桌椅等。通过传感器激光（或者其他的rgbd摄像头、声纳…）实时扫描到的障碍物信息ObstacleLayer。这一块障碍物信息是不断变化的，对于运动小车的实时避障是很有帮助的。</p>
+<li><p>传感器观察到的障碍物，适合描述运动的障碍物，如行人、小车、移动位置的桌椅等。通过传感器激光实时扫描到的障碍物<code>ObstacleLayer</code>。这一块障碍物信息是不断变化的，对于运动小车的实时避障是很有帮助的。</p>
 </li>
-<li><p>自定义障碍物，禁止行驶区域，如果想在地图中设定一块区域，要求机器人禁止通过，则需要自己定义一个障碍物层</p>
+<li><p>自定义障碍物，禁止行驶区域</p>
 </li>
 </ol>
-<p><code>costmap_2d</code>这个包主要负责根据传感器的信息建立和更新二维或三维的地图。ROS的地图（costmap）采用网格（grid）的形式，每个网格的值从<code>0~255</code>，分为三种状态：占用（有障碍物）、无用（空闲的）、未知。</p>
+<p><code>costmap_2d</code>这个包主要负责根据传感器的信息建立和更新二维或三维的地图。代价地图采用网格（grid）的形式，分为三种状态：占用（有障碍物）、无用（空闲的）、未知。每个网格的值如下：</p>
+<ul>
+<li>NO_INFORMATION = 255;</li>
+<li>LETHAL_OBSTACLE = 254;</li>
+<li>INSCRIBED_INFLATED_OBSTACLE = 253;</li>
+<li>FREE_SPACE = 0;</li>
+</ul>
 <p>代价的计算公式:<br><img src="https://i.loli.net/2019/11/14/ITzx3Yg6As1EmDu.png" alt=""><br>这里的253是<code>costmap_2d::INSCRIBED_INFLATED_OBSTACLE</code>，<code>ROS Wiki</code>说这个宏是254，我反复检查其实是253，Wiki错了</p>
 <p>可以看出增大比例因子反而会降低代价</p>
-<p><br></p>
-<p><img src="https://i.loli.net/2020/11/01/qzrJhU1VK3D7RLI.png" alt=""><br>二维costmap地图示例如图上所示。红色单元表示代价地图中的障碍物，蓝色单元表示由机器人内切半径来计算膨胀的障碍物，红色多边形表示机器人的垂直投影（footprint），浅灰色代表已知且未被占用的区域，深灰色代表未知区域。为了避免机器人与障碍碰撞，机器人的垂直投影（footprint）不能与红色单元相交，机器人的中心不能穿过蓝色单元</p>
-<p><code>Inflation</code> is the process of propagating cost values out from occupied cells that decrease with distance. 定义了5个具体的值衡量机器人的状态</p>
-<p><img src="https://i.loli.net/2020/11/01/I79j3x5FytE8ePY.png" alt=""></p>
+<p><br><br><img src="https://i.loli.net/2020/11/01/qzrJhU1VK3D7RLI.png" alt=""><br>二维costmap地图示例如图上所示。红色单元表示代价地图中的障碍物，蓝色单元表示由机器人内切半径来计算膨胀的障碍物，红色多边形表示机器人的垂直投影（footprint），浅灰色代表已知且未被占用的区域，深灰色代表未知区域。为了避免机器人与障碍碰撞，机器人的垂直投影（footprint）不能与红色单元相交，机器人的中心不能穿过蓝色单元</p>
+<p>定义了5个具体的值衡量机器人的状态<br><img src="https://i.loli.net/2020/11/01/I79j3x5FytE8ePY.png" alt=""></p>
 <p>上图共分为五个部分:（下面的红色框图是机器人的轮廓，旁边的黑框是上图的映射位置）</p>
 <ol>
 <li>Lethal（致命的）:机器人的中心与该网格的中心重合，此时机器人必然与障碍物冲突。枚举值254</li>
@@ -80,7 +84,7 @@
 <li>Freespace（自由空间）：没有障碍物的空间。枚举值0</li>
 <li>Unknown（未知）：未知的空间。 枚举值255</li>
 </ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> NO_INFORMATION = <span class="number">255</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> LETHAL_OBSTACLE = <span class="number">254</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> INSCRIBED_INFLATED_OBSTACLE = <span class="number">253</span>;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> FREE_SPACE = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NO_INFORMATION = <span class="number">255</span>;</span><br><span class="line">LETHAL_OBSTACLE = <span class="number">254</span>;</span><br><span class="line">INSCRIBED_INFLATED_OBSTACLE = <span class="number">253</span>;</span><br><span class="line">FREE_SPACE = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
 <p>注意252和127没有定义</p>
 <p><br></p>
 <ul>
@@ -94,9 +98,11 @@
 <p><strong>possibly</strong>这个词表示不一定真是一个obstacle cell，而是用户自定义一个代价值的情况。比如，如果用户想让机器人应对避开一段特定的区域，应当向那段区域的代价地图插入自定义的代价值，而不考虑任何障碍物。</p>
 <p>尽管128也在上图中，但真实的代价值受内切圆半径和外接圆半径的影响，对于源码在<code>InflationLayer::computeCost</code>:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** @brief  Given a distance, compute a cost.</span></span><br><span class="line"><span class="comment"> * @param  distance The distance from an obstacle in cells</span></span><br><span class="line"><span class="comment"> * @return A cost value for the distance */</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">unsigned</span> <span class="keyword">char</span> <span class="title">computeCost</span><span class="params">(<span class="keyword">double</span> distance)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">char</span> cost = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> (distance == <span class="number">0</span>)</span><br><span class="line">    cost = LETHAL_OBSTACLE;</span><br><span class="line">  <span class="keyword">else</span> <span class="keyword">if</span> (distance * resolution_ &lt;= inscribed_radius_)</span><br><span class="line">    cost = INSCRIBED_INFLATED_OBSTACLE;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// make sure cost falls off by Euclidean distance</span></span><br><span class="line">    <span class="keyword">double</span> euclidean_distance = distance * resolution_;</span><br><span class="line">    <span class="keyword">double</span> factor = <span class="built_in">exp</span>(<span class="number">-1.0</span> * weight_ * (euclidean_distance - inscribed_radius_));</span><br><span class="line">    cost = (<span class="keyword">unsigned</span> <span class="keyword">char</span>)((INSCRIBED_INFLATED_OBSTACLE - <span class="number">1</span>) * factor);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> cost;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="障碍层-膨胀层"><a href="#障碍层-膨胀层" class="headerlink" title="障碍层  膨胀层"></a>障碍层  膨胀层</h2><p>Obstacle Map Layer：障碍层，用于动态的记录传感器感知到的障碍物信息。</p>
-<p>Inflation Layer：膨胀层，在以上两层地图上进行膨胀（向外扩张），以避免机器人的撞上障碍物。膨胀是一个从占用cell向外传播代价的过程，距离cell越远代价越小，膨胀层会把障碍物代价膨胀直到该半径为止</p>
+<p>Inflation Layer：膨胀层，在以上两层地图上进行膨胀（向外扩张），以避免机器人的撞上障碍物。膨胀是一个从占用cell向外传播代价的过程，距离cell越远代价越小，膨胀层会把障碍物代价膨胀直到该半径为止。(propagating cost values out from occupied cells that decrease with distance)</p>
+<p>在内切圆半径到膨胀半径之间的所有cell，可以使用如下公式来计算膨胀代价：</p>
+<script type="math/tex; mode=display">cost = 252\ e^{-cost\_scale\_factor*(dist - inscribed\_radius)}</script><p>所以在上面的图里，代价值从252-127是按这个公式减小。</p>
 <ul>
-<li>cost_scaling_factor: 膨胀过程中应用到代价值的比例因子，代价地图中到实际障碍物距离，默认10  <strong>在内切圆半径到膨胀半径之间的所有cell</strong>  可以使用如下公式来计算膨胀代价：<br><code>exp(-1.0 * cost_scaling_factor * (distance_from_obstacle - inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE - 1)</code><br>所以在上面的图里，代价值从252-127是按这个公式减小。</li>
+<li>cost_scaling_factor: 膨胀过程中应用到代价值的比例因子，代价地图中到实际障碍物距离，默认10  </li>
 </ul>
 <p><img src="https://i.loli.net/2020/11/06/rS6ov8nGOR32iZw.png" alt="内切圆半径0.255，不同代价系数对应的代价曲线"></p>
 <ul>
@@ -108,7 +114,7 @@
 <p><br></p>
 <p>添加了静态层、障碍层、膨胀层的代价地图是这样的：<br><img src="https://i.loli.net/2020/11/01/aGEMh27qtwVm5PB.png" alt="11-01__172228"></p>
 <p>如果代价地图不添加膨胀层，结果是这样：<br><img src="https://i.loli.net/2020/11/01/i3o4MFUwGJhOLZY.png" alt="11-01__172326"></p>
-<p>但是加不加障碍层，看上去没有变化， <strong>目前无法在rviz里直接可视化每一层</strong></p>
+<p>但是加不加障碍层，看上去没有变化， <strong>目前无法在rviz里直接可视化每一层</strong>，只能添加或去除后观察</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/11/15/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/stage%E7%9A%84%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/">stage的使用心得</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-11-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a></span><div class="content"><p>stage的使用心得</p>
 <p>Stage can simulate noisy odometry<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rosrun stage_ros stageros /opt/ros/melodic/share/stage_ros/world/willow-erratic.world </span><br></pre></td></tr></table></figure></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/11/15/Matlab/Matlab%E7%94%BB%E5%9B%BE/">Matlab画图</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-11-15</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Matlab/">Matlab</a></span><div class="content"><p>对于画图函数，如果用plot函数参数没有用符号标记参数的话，会自动把离散的点连接起来，<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">plot(x, y)</span><br><span class="line"><span class="comment"># 指定x y的坐标范围</span></span><br><span class="line">xlim([-<span class="number">15</span> <span class="number">15</span>])</span><br><span class="line">ylim([-<span class="number">12</span> <span class="number">12</span>])</span><br></pre></td></tr></table></figure></p>
