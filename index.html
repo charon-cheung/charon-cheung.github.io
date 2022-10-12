@@ -21,6 +21,15 @@
 <li>一个线程加读锁，此时来了一个占写锁的线程和一个读锁的线程，则二者皆阻塞，解锁后，写锁的线程优先。</li>
 </ol>
 <p>读写锁在使用前要初始化，释放底层内存前要销毁。</p>
+<p>适用场景：读写锁最适用于对数据结构的读操作次数多于写操作次数的场合。</p>
+<p>处理这种问题一般有两种常见的策略：</p>
+<ol>
+<li><p>强读者同步：总是给读者更高的优先权，只要没有写操作，读者就可以获取访问权，比如图书馆查询系统采用强读者同步策略；</p>
+</li>
+<li><p>强写者同步：写者有更高的优先级，读者只能等到写者结束之后才能执行，比如航班订票系统，要求看到最新的信息记录，会使用强写者同步策略；</p>
+</li>
+</ol>
+<p>参考:<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaoshiwang/p/9944593.html">读写锁</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/10/08/%E8%8B%B1%E8%AF%AD/%E6%96%B0%E9%97%BB%E8%8B%B1%E8%AF%AD/">新闻英语</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-10-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a></span><div class="content"><ul>
 <li>beacon  &emsp;&emsp;&emsp;  信标，灯塔。&emsp;&emsp;Queen Elizabeth is a beacon of UK</li>
 <li>watershed &emsp;&emsp;&emsp;  分水岭。&emsp;&emsp; Queen’s death is a watershed</li>
