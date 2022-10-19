@@ -128,7 +128,7 @@
 <li>测量模型</li>
 </ul>
 <p>概率模型是 <script type="math/tex">p(z_t\ | \ x_t)</script>，使用似然域模型，用于更新每一个粒子的权重。  </p>
-<p>似然域测量模型认为测量的结果包含一个高斯分布噪声和随机噪声。<br>激光测量距离（x,y）变换到map坐标系。找到距离激光点最近的障碍，查表获得它们的最近距离dist。 这个dist也是高斯噪声的均值，所以dist越大，打到障碍物的可能性越小，则粒子不可信，权重越小。</p>
+<p>似然域测量模型认为测量的结果包含一个高斯分布噪声和随机噪声。激光测量距离（x,y）变换到map坐标系。找到距离激光点最近的障碍，查表获得它们的最近距离dist。这个dist也是高斯噪声的均值，所以dist越大，打到障碍物的可能性越小，则粒子不可信，权重越小。</p>
 <p><script type="math/tex">\omega = \prod_{i=1}^N \left\{ z_{hit}*prob(dist_i, \sigma_{hit})+\frac{z_{rand}}{z_{max}}  \right\}\ \qquad \qquad</script>   N为一帧激光的点数</p>
 <p>似然域测量模型比较理想，因此在场景有些变化，和动态人存在干扰的情况，估计的pose精度会下降。放大测量方差或许会有效果，最好要是能引入类似非线性优化中的核函数（损失函数）或许不错。</p>
 <ul>
@@ -139,8 +139,10 @@
 <li>重采样</li>
 </ul>
 <p>从缓冲的粒子集中替换所有粒子，抽取粒子的概率取决于粒子的权重，更新后的粒子集有很多粒子是重复的，而抛弃了大多数的低权重的粒子。</p>
-<p>上面的算法还有两个问题： 1. 粒子重采样的退化问题；2. 固定的粒子群导致无用的计算，影响效率。</p>
-<p>具体做法：开始处理每一个粒子，先生成一个(0,1)的随机数rand，如果 <code>rand&lt; w_diff = (1 - w_fast / w_slow)</code>，那么当前粒子的位姿是随机值。如果是 <code>&gt;=</code>，需要从<code>set_a</code>中寻找一个权重比较大的粒子。方法是：c[i]是第<code>1~i</code>个粒子的权重之和，如果第i+1个粒子的权重很大，那么<code>c[i+1] - c[i]</code>很大，i+1就是我们需要的粒子。</p>
+<p>上面的算法还有两个问题： 1. 粒子重采样的退化问题；2. 固定的粒子群导致无用的计算，影响效率。<br>每个粒子集合中包含的粒子数量很大，粒子的权重即使在多次重采样之后还是很小，导致位置上相邻的粒子的权重差值不大，从而最后输出的预测位姿不准确。</p>
+<p>因此AMCL加入了新的结构体 Cluster，表示相邻粒子的集合，具有权重与位姿等属性，与粒子相似。而其位姿是通过该 Cluster中包含的粒子的位姿加权平均得到。开始时 Cluster的数量与粒子数量相等，即每一个 Cluster中只有一个粒子。当粒子在地图上产生聚合后，Cluster的数量就会下降，此时选取权重最大的 Cluster 作为输出结果。</p>
+<p>使用KD树存储粒子信息，并且进行聚类分析。树的叶子节点是每一个粒子，而非叶子节点则保存的是该节点的分叉判断的标准。生成树之后，进行粒子聚类，循环遍历每一个叶子节点，在叶子节点的key值的 ±1 范围内的粒子都归为一类。也就是手，每个粒子周围27个粒子若有相连的，就将它们全部连起来，形成聚类。</p>
+<p>处理每一个粒子，先生成一个(0,1)的随机数rand，如果 <code>rand&lt; w_diff = (1 - w_fast / w_slow)</code>，那么当前粒子的位姿是随机值。</p>
 <p>把上面找出的所有粒子添加到<code>set_b</code>，<code>set_b</code>的粒子个数是M，多数粒子是原来<code>set_a</code>中权重比较大的粒子，而且可能重复。让<code>set_b</code>中的粒子权重全是<code>1 / M</code></p>
 <p>AMCL定位不准的3个依据:</p>
 <ol>
@@ -156,7 +158,6 @@
 <li>Augmented_MCL</li>
 <li>KLD_Sampling_MCL</li>
 </ul>
-<p>还有一些剩余的内容，比如KD树，KLD采样</p>
 </div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/3/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/09/18/hCro9MUd6JjRe1Q.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2022 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
