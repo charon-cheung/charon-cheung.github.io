@@ -7,7 +7,54 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">607</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">55</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/09/18/hCro9MUd6JjRe1Q.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/10/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/%E5%A4%84%E7%90%86%E5%AD%90%E5%9B%BE%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE%E7%9A%84%E6%B5%81%E7%A8%8B/">处理子图 1. 插入子图的流程</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-10</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">// 插入的节点数据，T子图更新时在局部地图中的位姿，以及有传感器原始数据转换之后的点云信息</span></span><br><span class="line">    <span class="comment">// 记录了更新子图的时刻和重力方向</span></span><br><span class="line">    std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt;  constant_data;</span><br><span class="line">    <span class="comment">//已经建立起来的子图列表</span></span><br><span class="line">    std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">608</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">56</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/09/18/hCro9MUd6JjRe1Q.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/11/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/%E5%A4%84%E7%90%86%E5%AD%90%E5%9B%BE%202.%20%E7%90%86%E8%AE%BA%EF%BC%8Chit%E8%A1%A8%E5%92%8Cmiss%E8%A1%A8/">处理子图 2. 理论，hit表和miss表</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><p>接上一篇，把激光雷达的扫描数据插入子图，是通过ActiveSubmaps2D所提供的插入器对象<code>range_data_inserter_</code>完成的，也就是<code>ProbabilityGridRangeDataInserter2D::Insert</code>函数，用到了激光扫描的<strong>RayCasting</strong>模型。这里就涉及到论文的内容了</p>
+<p>三维激光SLAM形成的点云地图不需要自己手动实现点云的数据结构, PCL中有写好的数据类型, 直接调用就行. 视觉SLAM形成的点云地图也可以用PCL来实现。</p>
+<p>但是二维激光SLAM的栅格地图需要自己手动实现, 目前所有的二维激光SLAM的栅格地图都是SLAM作者自己写的，没有通用的数据结构，最后会转成ROS的地图数据结构。cartogrpaher,gmapping,hector皆是如此</p>
+<h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><p>首先明确几个概念：</p>
+<ul>
+<li>Probability： 占据概率，下面用 p 表示</li>
+<li>CorrespondenceCost： 空闲概率（浮点型），对应的Value为线性映射到 [1-32767] 整型范围</li>
+<li>Odds： <script type="math/tex">\frac{p}{1-p}</script></li>
+</ul>
+<p><code>hit_table</code>和<code>miss_table</code>存储的是free概率，但设置和获取均为hit概率，为何中间多一个转换步骤，因为匹配操作时采用类似最小二乘的优化思想。</p>
+<p>在占据栅格地图中，对于一个点，我们用 <script type="math/tex">p(s=0)</script> 来表示它是Free状态的<strong>概率</strong>，用 <script type="math/tex">p(s=1)</script> 来表示它是Occupied状态的<strong>概率</strong>，两者的和为1。</p>
+<p>默认情况下，对于一个cell，无论hit或miss事件，<script type="math/tex">p(s=1)</script> 和 <script type="math/tex">p(s=0)</script> 都是0.5。 scan经过cell后，观测值z会更新cell的状态，这显然是个条件概率的问题，现在要考虑的不是 <script type="math/tex">p(s)</script>了，而是观测的条件概率： <script type="math/tex">p(s=1|z)</script> 和 <script type="math/tex">p(s=0|z)</script><br>所以一个栅格实际为 hit 的概率和 miss 的概率，因此可以用贝叶斯公式进行求取</p>
+<script type="math/tex; mode=display">p(s=1|z) = \frac{p(z|s=1)\ p(s=1)}{p(z)}</script><script type="math/tex; mode=display">p(s=0|z) = \frac{p(z|s=0)\ p(s=0)}{p(z)}</script><p>我们希望一个栅格中仅有一个值，因此引入 <script type="math/tex">Odds</script> 这一概念(两者的比值)来衡量cell的状态：</p>
+<script type="math/tex; mode=display">Odd(s)= \frac{p(s=1)}{p(s=0)} \ \ \ \ \ \ \ (1)</script><p>设置一个概率的最大最小值，防止分母出现0的情况，比如[0.1,0.9]。<br>初始情况下，一个cell的状态没有任何信息，<script type="math/tex">Odds(s) = 1</script>。 </p>
+<p>cell原来的Odd是 <script type="math/tex">Odd(s)</script>，现在就变成了 <script type="math/tex">Odd(s|z)</script>，再使用贝叶斯公式变换得到</p>
+<script type="math/tex; mode=display">\ Odds(s|z) = \frac{p(z\ |\ s=1)}{p(z\ |\ s=0)}odd(s) \ \ \ \ \ \ \ (2)</script><p>也就是说</p>
+<script type="math/tex; mode=display">Odds_k = C(z) * odds_{k-1} \ \ \ \ \ \ \  (3)</script><p>其中<code>k-1</code>为上一时刻的 <script type="math/tex">Odds</script> (cell第一次被scan更新)，而k为经过一次观测后的 <script type="math/tex">Odds</script> (cell再次被更新)，显然仅是相差了 <script type="math/tex">C(z)</script>这个系数。由于栅格表示是否为障碍物，观测采用激光测距是否障碍，地图中点的更新状态有三种：hit、miss、free(不更新)。 </p>
+<p>其中<script type="math/tex">p(z=1 \ |\ s=1)</script>表示的是当cell为障碍时，<strong>传感器认为是障碍的概率，这显然是传感器本身属性决定的</strong>，因此为常数。同样其他3种组合也均为常数，因此系数 <script type="math/tex">C(z)</script> 是根据观测hit和miss决定的两个常数，即 <script type="math/tex">C_{miss}</script> 和 <script type="math/tex">C_{hit}</script> 两个常数。当传感器测到此cell为 hit 时，使用 <script type="math/tex">C_{hit}</script> ，反之是 <script type="math/tex">C_{miss}</script></p>
+<script type="math/tex; mode=display">C_{hit}\ (z)= \frac{p(z=1\ |\ s=1)}{p(z=1\ |\ s=0)}\ \ \</script><script type="math/tex; mode=display">C_{miss}\ (z)= \frac{p(z=0\ |\ s=1)}{p(z=0\ |\ s=0)}</script><p>论文中的栅格 hit 概率更新公式是</p>
+<script type="math/tex; mode=display">M_{new}(x) = clamp(odds^{-1}(odds[M_{old}(x)]  \ * \ odds(p_{hit}))) \ \ \ \ \ \ \  (4)</script><p><code>clamp</code>是c++中的函数：将结果限制在[0, 1]。 <code>odds</code>运算是从占用概率计算odds，逆运算就是反过来。 我理解的是：先不看clamp，两边进行<code>odds</code>运算，公式就变成了这样</p>
+<script type="math/tex; mode=display">odds[M_{new}(x)] = odds[M_{old}(x)]  \ * \ odds(p_{hit})</script><p>与上面的公式(3) 应该是一样的</p>
+<p><strong>注意</strong>： lua配置中的 <code>hit_probability = 0.55</code> 和 <code>miss_probability = 0.49</code>指的是 <script type="math/tex">C_{hit}</script> 和 <script type="math/tex">C_{miss}</script></p>
+<p>其他大部分SLAM实现地图更新采用对数加减的方式：<script type="math/tex">lg\ odd_{new}(x) = lg\ odd_{old}(x)+lg\ C</script> </p>
+<p>举例如下</p>
+<script type="math/tex; mode=display">lg\ odds_{hit} = 0.9</script><script type="math/tex; mode=display">lg\ odds_{miss} = -0.7</script><p><img src="https://i.loli.net/2021/08/15/wb2Wli1Q5zjTmIq.png" alt="对数形式的栅格更新过程，栅格经多次扫描后的概率会累计"><br>同样地，<code>ProbabilityGrid</code>在将点云插入到栅格地图时, 即使这个栅格被之前的点云更新过, 当前帧的点云还是会对这个栅格进行更新</p>
+<p>第二次观测会在第一次的基础上累计，其实这里只是个举例，还不太准确，对于图中圈出的栅格，第一次是从栅格中心射过，但第二次是从角落射过，<font size="4" color="blue"> 从对角穿过对这个栅格的空闲概率的提升显然作用更大，  </font>而只穿过一个小角落显然贡献很小，所以第二次不应该是 -0.7， 0.9的栅格也是同样道理</p>
+<p>如果栅格地图以 odds 的形式表示，那么更新过程就只是一个乘法运算，效率也还可以。但Cartographer还是想要进一步的提高效率，它以内存空间换取时间，构建了hit表和miss表。 实际上是两个 <code>vector&lt;uint16&gt;</code>， <strong>保存的是空闲概率映射后的索引值</strong>。 如果发生了hit事件，就从hit表中查找更新后的数据。发生了miss事件则查找miss表。</p>
+<p><img src="https://s2.loli.net/2022/02/25/R1dxqFp3rNo6kaV.png" alt="表的更新过程"><br><code>ProbabilityGrid</code>在将点云插入到栅格地图时, 新的栅格值是预先通过查找表计算好的, 直接查表就行了, 不用再重新计算.</p>
+<h2 id="ProbabilityGridRangeDataInserter2D-和-两个表的构建"><a href="#ProbabilityGridRangeDataInserter2D-和-两个表的构建" class="headerlink" title="ProbabilityGridRangeDataInserter2D 和 两个表的构建"></a>ProbabilityGridRangeDataInserter2D 和 两个表的构建</h2><p>类<code>ProbabilityGridRangeDataInserter2D</code>值得关注的成员函数只有<code>Insert</code>，只有三个成员变量：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> proto::ProbabilityGridRangeDataInserterOptions2D  options_;</span><br><span class="line"><span class="comment">// 用于更新栅格单元的占用概率的查找表</span></span><br><span class="line"><span class="keyword">const</span> std::vector&lt;uint16&gt;  hit_table_;</span><br><span class="line"><span class="keyword">const</span> std::vector&lt;uint16&gt;  miss_table_;</span><br></pre></td></tr></table></figure></p>
+<p>构造函数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ProbabilityGridRangeDataInserter2D::<span class="built_in">ProbabilityGridRangeDataInserter2D</span>(</span><br><span class="line">    <span class="keyword">const</span> proto::ProbabilityGridRangeDataInserterOptions2D&amp; options)</span><br><span class="line">    : <span class="built_in">options_</span>(options),</span><br><span class="line">      <span class="built_in">hit_table_</span>(<span class="built_in">ComputeLookupTableToApplyCorrespondenceCostOdds</span>(</span><br><span class="line">          <span class="built_in">Odds</span>(options.<span class="built_in">hit_probability</span>()) ) ),</span><br><span class="line">      <span class="built_in">miss_table_</span>(<span class="built_in">ComputeLookupTableToApplyCorrespondenceCostOdds</span>(</span><br><span class="line">          <span class="built_in">Odds</span>(options.<span class="built_in">miss_probability</span>())  ))  &#123;&#125;</span><br></pre></td></tr></table></figure><br>其中调用的名字很长的函数在<code>probability_values.cc</code>文件中，它完成查找表<code>hit_table_</code>和<code>miss_table_</code>的初始化。 </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构建查找表, 处理某一个cell的 CorrespondenceCostValue 已知时  如何更新的情况</span></span><br><span class="line"><span class="function">std::vector&lt;uint16&gt; <span class="title">ComputeLookupTableToApplyCorrespondenceCostOdds</span><span class="params">(<span class="keyword">float</span> odds)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  std::vector&lt;uint16&gt; result;</span><br><span class="line">  result.<span class="built_in">reserve</span>(kValueCount);   <span class="comment">// 32768</span></span><br><span class="line">    <span class="comment">/*  三个函数从里到外依次为： </span></span><br><span class="line"><span class="comment">  对odds转换成占据概率p; </span></span><br><span class="line"><span class="comment">  求空闲概率 1-p;  </span></span><br><span class="line"><span class="comment">  转换为[1, 32767]的存储值*/</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// kUpdateMarker表示此栅格的更新</span></span><br><span class="line">  result.<span class="built_in">push_back</span>(<span class="built_in">CorrespondenceCostToValue</span>(<span class="built_in">ProbabilityToCorrespondenceCost</span>(</span><br><span class="line">                       <span class="built_in">ProbabilityFromOdds</span>(odds) )) +  kUpdateMarker);</span><br><span class="line">  <span class="comment">// 计算存储值从1到32767所对应的更新值并塞进result中</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> cell = <span class="number">1</span>; cell != kValueCount; ++cell)</span><br><span class="line">  &#123;</span><br><span class="line">    result.<span class="built_in">push_back</span>(</span><br><span class="line">        <span class="built_in">CorrespondenceCostToValue</span>(</span><br><span class="line">            <span class="built_in">ProbabilityToCorrespondenceCost</span>(<span class="built_in">ProbabilityFromOdds</span>(</span><br><span class="line">                odds * <span class="built_in">Odds</span>(<span class="built_in">CorrespondenceCostToProbability</span>(</span><br><span class="line">                           (*kValueToCorrespondenceCost)[cell]) )  ) )) +</span><br><span class="line">        kUpdateMarker );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>uint16</code>的范围是<code>[0, 65535]</code>，定义的vector有 32768 个元素，先根据参数 <code>odds</code>插入了一个元素，然后在for循环里又插入了剩下的32767个元素。</p>
+<p>对第一个元素，把参数odds(lua中配置的hit和miss概率)转为空闲概率对应的[1, 32767]的索引值，然后再加上32768，结果的范围是<code>[32768+1, 65535]</code>。 <code>CorrespondenceCostToValue</code>函数极为复杂，不用研究细节了。</p>
+<p>对剩下的元素，所有odds均乘以更新系数（<script type="math/tex">C_{hit}</script> 和 <script type="math/tex">C_{miss}</script>）并放入表格中</p>
+<p>对于参数<code>hit_probability=0.55</code>, <code>hit_table_</code>第一个成员是47104。  对于参数<code>miss_probability=0.49</code>, <code>miss_table_</code>第一个成员是49562。  两个表大不相同。</p>
+<p>变量<code>kValueToCorrespondenceCost</code>的定义：<code>const std::vector&lt;float&gt;* const kValueToCorrespondenceCost =
+    PrecomputeValueToCorrespondenceCost().release();</code>，其实是一系列的浮点数，查看定义会发现相应函数的参数全都写死了。我运行了一下，发现结果是<strong>0和0.1到0.9的32768个数</strong>，其中0.1到0.9之间的一大堆数，间隔大约是0.24。 其实是建立了如下的关系<br><img src="https://s2.loli.net/2022/02/25/tDHj1Alwh8ruRZW.png" alt="PrecomputeValueToCorrespondenceCost.png"></p>
+<font color = blue size=4> 两个表的数据只取决于参数 hit_probability 和 miss_probability </font>
+
+<p>代码里加上了kUpdateMarker，所以Grid2D的成员函数<code>FinishUpdate</code>里会将存储值都减去一个kUpdateMarker</p>
+<p><code>kUpdateMarker</code> 为已更新后的标志量，是为了防止miss和hit重复对地图更新，其值为32768，为uint16的最高位，其操作的方式是，更新时加上，更新完了后减去。</p>
+<font size="4" color="blue">  Submaps2D 和 ProbabilityGrid 都有成员变量 conversion_tables_  </font>
+
+
+<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; <font size="4" color="blue"> 补充  </font>，看函数<code>GetProbability</code>获取占用概率<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">float</span> <span class="title">ProbabilityGrid::GetProbability</span><span class="params">(<span class="keyword">const</span> Eigen::Array2i&amp; cell_index)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!<span class="built_in">limits</span>().<span class="built_in">Contains</span>(cell_index))   <span class="keyword">return</span> kMinProbability;</span><br><span class="line">  <span class="keyword">return</span>    <span class="built_in">CorrespondenceCostToProbability</span>(<span class="built_in">ValueToCorrespondenceCost</span>(</span><br><span class="line">      <span class="built_in">correspondence_cost_cells</span>()[<span class="built_in">ToFlatIndex</span>(cell_index)]) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><code>correspondence_cost_cells</code>就是栅格的索引值，保存的是空闲概率转成uint16后的[0, 32767]的值，0代表未知。</p>
+<p><code>ValueToCorrespondenceCost</code>是索引值转成空闲概率</p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://gaoyichao.com/Xiaotu/?book=Cartographer%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB&amp;title=%E6%9F%A5%E6%89%BE%E8%A1%A8%E4%B8%8E%E5%8D%A0%E7%94%A8%E6%A0%85%E6%A0%BC%E6%9B%B4%E6%96%B0">查找表与占用栅格更新</a></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/10/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/%E5%A4%84%E7%90%86%E5%AD%90%E5%9B%BE%201.%20%E6%8F%92%E5%85%A5%E5%AD%90%E5%9B%BE%E7%9A%84%E6%B5%81%E7%A8%8B/">处理子图 1. 插入子图的流程</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-10</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/">源码解读</a></span><div class="content"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">InsertionResult</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">// 插入的节点数据，T子图更新时在局部地图中的位姿，以及有传感器原始数据转换之后的点云信息</span></span><br><span class="line">    <span class="comment">// 记录了更新子图的时刻和重力方向</span></span><br><span class="line">    std::shared_ptr&lt;<span class="keyword">const</span> TrajectoryNode::Data&gt;  constant_data;</span><br><span class="line">    <span class="comment">//已经建立起来的子图列表</span></span><br><span class="line">    std::vector&lt;std::shared_ptr&lt;<span class="keyword">const</span> Submap2D&gt;&gt; insertion_submaps;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>保存插入Local Slam的一个节点的数据结构，也就是下面这个东西<br><img src="https://s2.loli.net/2022/09/13/BYZ1s9g86cpvWlF.png" alt=""></p>
 <p>在类<code>LocalTrajectoryBuilder2D</code>中，通过对象<code>active_submaps_</code>来维护子图，它是一个<code>ActiveSubmaps2D</code>类型的数据。根据最新版本的代码，<br>除了刚开始构建的时候，没有子图(Submap2D)，其他时候它都维护着两个子图对象。 <font size="4" color="blue">  一个子图用于进行扫描匹配，称为旧图。另一个子图用于插入扫描数据，作为储备，被称为新图。 </font>当新图中插入一定数量的数据完成了初始化操作之后，它就会被当作旧图，用于扫描匹配。 对象<code>active_submaps_</code>将抛弃原来的旧图，并重新构建一个新图。下表中列出了所有成员变量<br><img src="https://i.loli.net/2020/08/22/qO73GVfs1yLxYWv.png" alt="变量"></p>
 <p><code>ActiveSubmaps2D</code>的构造函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// std::unique_ptr&lt;RangeDataInserterInterface&gt;   range_data_inserter_;</span></span><br><span class="line"><span class="comment">// 构建了插入器对象，代码只是根据配置对 ProbabilityGridRangeDataInserter2D 类的赋值</span></span><br><span class="line">ActiveSubmaps2D::<span class="built_in">ActiveSubmaps2D</span>(<span class="keyword">const</span> proto::SubmapsOptions2D&amp; options)</span><br><span class="line">    : <span class="built_in">options_</span>(options), <span class="built_in">range_data_inserter_</span>(<span class="built_in">CreateRangeDataInserter</span>() )</span><br><span class="line">    &#123;&#125;</span><br></pre></td></tr></table></figure><br><code>RangeDataInserterInterface</code>明显是个抽象类，它的派生类就是<code>TSDFRangeDataInserter2D</code>和<code>ProbabilityGridRangeDataInserter2D</code>，根据配置，我们一般用后者。 <code>CreateRangeDataInserter()</code>其实就是<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> absl::make_unique&lt;ProbabilityGridRangeDataInserter2D&gt;(</span><br><span class="line">          options_.<span class="built_in">range_data_inserter_options</span>()</span><br><span class="line">              .<span class="built_in">probability_grid_range_data_inserter_options_2d</span>());</span><br></pre></td></tr></table></figure><br><br></p>
@@ -179,439 +226,6 @@
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/29/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/pugixml%E8%AF%BB%E5%86%99XML/">pugixml读写XML</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></span><div class="content"><p>pugixml对XML的处理效率是常见库里最高的<br><img src="https://i.loli.net/2021/06/29/Q2VukAzT9fDqXEY.png" alt=""></p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pugixml.hpp&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;pugiconfig.hpp&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/time.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> TEST_TIMES 10</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">( <span class="keyword">void</span> )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    pugi::xml_document doc;</span><br><span class="line">    timeval starttime, endtime;</span><br><span class="line">    <span class="keyword">double</span> timeuse = <span class="number">0.</span>;</span><br><span class="line">    <span class="keyword">double</span> timeAverage = <span class="number">0.</span>;</span><br><span class="line">    <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>; i &lt; TEST_TIMES; ++i )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">gettimeofday</span>( &amp;starttime, <span class="number">0</span> );</span><br><span class="line">        <span class="keyword">if</span>( !doc.<span class="built_in">load_file</span>( <span class="string">&quot;/home/liuyc/DriverConfig.xml&quot;</span> ) )</span><br><span class="line">        &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;failed in load xml file! _ &quot;</span> &lt;&lt; i &lt;&lt; endl;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">gettimeofday</span>( &amp;endtime, <span class="number">0</span> );</span><br><span class="line"></span><br><span class="line">        timeuse = <span class="number">1000000.</span> * (endtime.tv_sec - starttime.tv_sec) + endtime.tv_usec - starttime.tv_usec;</span><br><span class="line">        timeuse *= <span class="number">0.001</span> ;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot; reading files costs : &quot;</span> &lt;&lt; timeuse &lt;&lt; <span class="string">&quot;ms&quot;</span> &lt;&lt; endl;</span><br><span class="line">        timeAverage += timeuse;</span><br><span class="line">    &#125;</span><br><span class="line">    timeAverage /= TEST_TIMES;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot; \n** The end *******************\n    the average costs = &quot;</span> &lt;&lt; timeAverage &lt;&lt; <span class="string">&quot;ms&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>参考: <a target="_blank" rel="noopener" href="https://github.com/zeux/pugixml">pugixml的github</a></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/29/%E8%8B%B1%E8%AF%AD/%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D%E6%94%B6%E9%9B%86/">英语单词收集</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a></span><div class="content"><ul>
-<li>culprit  &emsp;&emsp;&emsp;   责任人，罪魁祸首</li>
-<li>stroll     &emsp;&emsp;&emsp;    漫步</li>
-<li>commend &emsp;&emsp;&emsp;    表彰，称赞</li>
-<li>stop and frisk &emsp;&emsp;&emsp; 拦截盘查</li>
-<li>eerie     &emsp;&emsp;&emsp;    怪异的</li>
-<li>fahrenheit  &emsp;&emsp;&emsp; 华氏温度</li>
-<li>voter turnout  &emsp;&emsp;&emsp; 投票人数; 投票率</li>
-<li>conman &emsp;&emsp;&emsp;  骗子</li>
-<li>philanthropist &emsp;&emsp;&emsp;  慈善家</li>
-<li>weigh in &emsp;&emsp;&emsp;  加入比赛或辩论</li>
-<li>toss-up  &emsp;&emsp;&emsp;  焦灼的情况</li>
-<li>disown   &emsp;&emsp;&emsp;     否认，声明同。。。脱离关系</li>
-<li>moderator  &emsp;&emsp;&emsp;   调解人；仲裁人</li>
-<li>jurisdiction  &emsp;&emsp;&emsp;    管辖权；司法权</li>
-<li>jeopardy  &emsp;&emsp;&emsp;       危险境地； 被告在法庭上有被判罪的危险；</li>
-<li>tax code     &emsp;&emsp;&emsp;    税制</li>
-<li>perpetuate     &emsp;&emsp;&emsp;    使永存； 使不朽</li>
-<li>underdog &emsp;&emsp;&emsp;     a loser or predicted loser in a struggle or contest.   a victim of injustice or persecution.</li>
-<li>maverick     &emsp;&emsp;&emsp;    特立独行的人</li>
-<li>give me a break  &emsp;&emsp;&emsp;  (表示不信对方胡诌的感叹语)得了吧!我不会相信的</li>
-<li>trash     &emsp;&emsp;&emsp;   猛烈抨击</li>
-<li>litigate     &emsp;&emsp;&emsp; 提起诉讼</li>
-<li>level at       &emsp;&emsp; 将…的矛头指向（某人）</li>
-<li>add up          &emsp;&emsp; 合乎情理</li>
-<li>cat out of the bag    &emsp;&emsp;在不小心的情况下泻露了秘密</li>
-<li>expunge         &emsp;&emsp; 刪去,抹去</li>
-<li>nostalgia         &emsp;&emsp; 怀旧</li>
-<li>heckler     &emsp;&emsp;用不友好的言辞打断公开演讲或表演的人</li>
-<li>sellout     &emsp;&emsp;背叛,出卖</li>
-<li>takeaway    &emsp;&emsp;结论，推论，要点</li>
-<li>momentum       &emsp;&emsp;势头，动力</li>
-<li>excerpt    &emsp;&emsp;摘录，摘要</li>
-<li>caucus    &emsp;&emsp;党团会议，秘密会议</li>
-<li>mega    &emsp;&emsp;宏大的； 精彩的,百万,兆                 mega-Tuesday</li>
-<li>wrap up : 1.  summarize   2.  do a thing easily or a certainty to happen (has the nomination wrapped up)</li>
-<li>toast: become toasted, meaning doomed or finished</li>
-<li>stump speech : &emsp;&emsp;政治演说     </li>
-<li>campaign trail : 竞选之路，竞选活动          hit the campaign trail : 进行竞选活动</li>
-<li>inner circle   &emsp;&emsp;&emsp;  核心圈</li>
-<li>head to head  &emsp;&emsp;&emsp; 一对一的竞争</li>
-<li>paranormal   &emsp;&emsp;超自然现象</li>
-<li>new low     &emsp;&emsp;刷了新的下限</li>
-<li>trash          &emsp;&emsp;捣毁，破坏</li>
-<li>plaintiff   &emsp;&emsp;原告</li>
-<li>call it in    &emsp;&emsp;To bring everyone in (group form)</li>
-<li>lucid       &emsp;&emsp;清醒的</li>
-<li>tuck in   &emsp;&emsp;掖好被子;把（衣服等）塞好</li>
-<li>on edge   &emsp;&emsp;be nervous or worried</li>
-<li>can’t be too careful   &emsp;&emsp;do everything you can to avoid problems or danger</li>
-<li>hard boiled         &emsp;&emsp;煮得老的,（人）冷酷的，不動感情的</li>
-<li>use the scratch  &emsp;&emsp; 从头开始</li>
-<li>karma   &emsp;&emsp; 因缘，因果报应</li>
-<li>narcissist    &emsp;&emsp;自恋者</li>
-<li>nailed it      &emsp;&emsp;干得好，搞定了</li>
-<li><p>zip it         &emsp;&emsp;闭嘴</p>
-</li>
-<li><p>wet dream: &emsp;&emsp;梦遗，遗精</p>
-</li>
-<li><p>smirk: &emsp;&emsp;假笑</p>
-</li>
-<li><p>unhinged：&emsp;&emsp;精神失常的，神经错乱的</p>
-</li>
-<li><p>out of woods: &emsp;&emsp;脱离危险的处境</p>
-</li>
-<li><p>hush money: &emsp;&emsp;封口费</p>
-</li>
-<li><p>throw someone under the bus: 指为了自私的原因而背叛一个朋友或盟友， 尤其指背弃之前友好的关系</p>
-</li>
-<li><p>toddler   &emsp;&emsp;婴幼儿，尤其是正在学走路的孩子</p>
-</li>
-<li><p>throw a tantrum  &emsp;&emsp;突然发怒，发脾气</p>
-</li>
-<li><p>shut the front door!    &emsp;&emsp;表示很吃惊</p>
-</li>
-<li><p>poster boy     &emsp;&emsp;海报上的儿童，团体中的模范和榜样人物，或作为某一类型的完美典范的人</p>
-</li>
-<li><p>censure  &emsp;&emsp;&emsp;  指责</p>
-</li>
-<li><p>drink the Kool-Aid      &emsp;&emsp;指因潜在的高额回报而相信危险想法的人</p>
-</li>
-<li><p>crack up             &emsp;&emsp; 忍不住大笑。     情绪在压力下崩溃</p>
-</li>
-<li><p>slum                 &emsp;&emsp; 贫民窟</p>
-</li>
-<li><p>What’s the catch?      &emsp;&emsp;&emsp;&emsp;An expression said when someone does something nice to you but you suspect that he or she’s not doing it because he or she wants to help you but he has a secret reason for doing it. And this reason is something good for him/her not for you.</p>
-</li>
-<li><p>nail down &emsp;&emsp;&emsp; 达成协议</p>
-</li>
-<li><p>feel for sb &emsp;&emsp;&emsp; 同情，怜悯 sb</p>
-</li>
-<li><p>reiterate &emsp;&emsp;&emsp;  重申</p>
-</li>
-<li><p>weigh in  &emsp;&emsp;&emsp;  积极参与</p>
-</li>
-<li><p>censure  &emsp;&emsp;&emsp;  强烈反对和批评. In parliamentary procedure, it is a debatable main motion that could be adopted by a majority vote</p>
-</li>
-<li><p>insurrection  &emsp;&emsp;&emsp;  对当局发起的暴力起义</p>
-</li>
-<li><p>litigate    &emsp;&emsp;&emsp;    寻求法律途径解决问题</p>
-</li>
-<li><p>dub   &emsp;&emsp;&emsp;   给…起外号</p>
-</li>
-<li><p>divert &emsp; 使…改变方向，航道  &emsp;&emsp;&emsp;  Belarus to be punished over flight diversion</p>
-</li>
-<li><p>hail    冰雹 &emsp;&emsp;&emsp; 21 dead after rain and hail storms in Gansu China<br>欢呼、致敬；热情赞扬     Hardliner Ebrahim Raisi hailed as Iran’s new president</p>
-</li>
-<li><p>canyon  峡谷</p>
-</li>
-<li><p>stall   停止运行、工作</p>
-</li>
-<li><p>volatile   不稳定的，喜怒无常的</p>
-</li>
-<li><p>disgruntled   不满的  &emsp;&emsp;&emsp;   How disgruntled people talk about you-know-who</p>
-</li>
-<li><p>taboo   （宗教或社会习俗方面的）禁忌，忌讳 &emsp;&emsp;&emsp;  open criticism of the most important man is taboo</p>
-</li>
-<li><p>troll  用挑衅或侮辱性言語挑起骂战並从中获取快感的人。有意破坏网络论坛的人。</p>
-</li>
-</ul>
-<p>Ted Cruz turns up the trolling to fill the Trump Twitter void.<br>AOC uses ‘ogre’ emojis to troll Cruz</p>
-<ul>
-<li><p>it’s grim up north  &emsp;&emsp;&emsp;  谚语，表示英格兰北部的经济状况不如南部</p>
-</li>
-<li><p>goings-on &emsp;&emsp;&emsp; 不寻常或可疑的行为、事件</p>
-</li>
-<li><p>reinstate   让…恢复原来的位置或状态 &emsp;&emsp;  Trump reportedly expects to be “reinstated” by August</p>
-</li>
-<li><p>audit      审计，查账     &emsp;&emsp; Republican-led audits of votes from the 2020 election.</p>
-</li>
-<li><p>indictment   起诉，公诉    &emsp;&emsp;Trump faced the possibility of an indictment from the Manhattan DA</p>
-</li>
-<li><p>sidekick &emsp;&emsp;&emsp; 帮手，而且受帮助的人更重要或更有智慧。 </p>
-</li>
-</ul>
-<p>Batman and his young sidekick Robin<br>Sherlock Holmes and his trusted sidekick Dr. Watson</p>
-<ul>
-<li><p>callous: 冷酷无情的，麻木的   &emsp;&emsp;Kamala Harris’‘Do not come’comment was callous and very Trump-like</p>
-</li>
-<li><p>xenophobia: 仇外心理，排外主义   &emsp;&emsp;Trump let xenophobia toward migrants drive his policy decisions</p>
-</li>
-<li><p>megaphone   扩音器 &emsp;&emsp;&emsp; takes away arguably two of the former president’s biggest political megaphones</p>
-</li>
-<li><p>leftover  &emsp;&emsp;&emsp;  剩余物；残羹剩菜</p>
-</li>
-<li><p>raise eyebrows &emsp;&emsp;&emsp; 表示惊讶、不可思议   </p>
-</li>
-</ul>
-<p>Justice Department has raised eyebrows on the left by backing several Trump-era legal positions</p>
-<ul>
-<li><p>lose your touch &emsp;&emsp;&emsp; 技艺大不如前，做某事的能力下降</p>
-</li>
-<li><p>throw a tantrum    发脾气；胡闹   &emsp;&emsp; Princess Charlotte throws a tantrum in public</p>
-</li>
-<li><p>meltdown  &emsp;&emsp;&emsp; （尤指金融方面的）灾难，  崩溃</p>
-</li>
-<li><p>Juneteenth 六月独立日，于6月19日举行庆祝活动，是美国的一个联邦节日，庆祝被奴役的非裔美国人获得解放</p>
-</li>
-<li><p>villa   别墅     &emsp;&emsp;Putin and Biden hold a meeting in an villa</p>
-</li>
-<li><p>off limit  &emsp;&emsp;&emsp; 禁止的，禁区</p>
-</li>
-<li><p>recast &emsp;&emsp;&emsp;  重塑   </p>
-</li>
-<li><p>in grand terms   大体上   &emsp;&emsp;Biden has recast the US-Russia relationship in grand terms</p>
-</li>
-<li><p>kleptocratic  盗贼统治的  &emsp;&emsp;Putin presides over a kleptocratic regime</p>
-</li>
-<li><p>improvise     &emsp;&emsp;即兴发挥，临时做</p>
-</li>
-<li><p>exodus(名词)   （大批人的）退出，离开     &emsp;&emsp;Venezuela exodus reaches record levels</p>
-</li>
-<li><p>witchcraft     &emsp;&emsp;巫术</p>
-</li>
-<li><p>the buck stops with me   &emsp;&emsp;最终责任在我，意思是我不会推卸责任</p>
-</li>
-<li><p>spice things up     &emsp;&emsp; 调节气氛，增加情调 </p>
-</li>
-<li><p>fiasco &emsp;&emsp;&emsp;&emsp; 惨败，耻辱性的失败</p>
-</li>
-<li>debacle &emsp;&emsp;&emsp;&emsp; 因计划不周而惨败，崩溃</li>
-</ul>
-<p>Afghanistan is Biden’s fiasco, debacle</p>
-<ul>
-<li><p>bleak &emsp;&emsp;  阴冷的，凄凉的，暗淡的&emsp;&emsp;&emsp;&emsp; Kabul bombing is Biden’s bleakest day of his presidency</p>
-</li>
-<li><p>hired gun &emsp;&emsp;  雇佣的保镖，佣兵，杀手</p>
-</li>
-<li><p>go easy on &emsp;&emsp; 对…悠着点；控制或减少对某人的攻击 &emsp;&emsp;  Biden to Kamala: go easy on me, kid</p>
-</li>
-<li><p>call  out  &emsp;&emsp;   (美国) draw critical attention to someone’s unacceptable actions or behaviour</p>
-</li>
-<li><p>detour  &emsp;&emsp;  车辆改道，绕行</p>
-</li>
-<li><p>what’s your angle  &emsp;&emsp;   the speaker is asking the other person what his/her intentions or motives are, often in a cynical manner.</p>
-</li>
-<li><p>fake woke</p>
-</li>
-<li><p>ground zero</p>
-</li>
-<li><p>put cards on the table  &emsp;&emsp;  打开天窗说亮话</p>
-</li>
-<li><p>witch hunt &emsp;&emsp;&emsp;&emsp;  针对某个人或组织的不公正的行动</p>
-</li>
-<li><p>sideline  &emsp;&emsp;&emsp;&emsp; 边缘化</p>
-</li>
-<li><p>take a rain check &emsp;&emsp;&emsp;&emsp;  改天，换个时间</p>
-</li>
-<li><p>M.O  &emsp;&emsp;&emsp;&emsp;  (拉丁语)，行事作风</p>
-</li>
-<li><p>tell me about it  &emsp;&emsp;&emsp;&emsp;  一个人理解另一个人表达的意思，因为他有过类似的体验</p>
-</li>
-<li><p>aide &emsp;&emsp;&emsp;&emsp;  助手,尤指从政者在工作中的助手</p>
-</li>
-<li><p>double cross &emsp;&emsp;&emsp; deceive or betray (a person with whom one is supposedly cooperating).</p>
-</li>
-<li><p>top dog &emsp;&emsp;&emsp; a person who is successful or dominant in their field.</p>
-</li>
-<li><p>I’ll say &emsp;&emsp;&emsp;  当然，的确如此</p>
-</li>
-<li><p>woo: 劝说某人支持你的事业  &emsp;&emsp;&emsp; Holmes also wooed a well-connected board that included Henry Kissinger and the late George Shultz</p>
-</li>
-<li><p>it is working just fine &emsp;&emsp;&emsp; 某事物一切正常，没问题</p>
-</li>
-<li><p>snap out of it &emsp;&emsp;&emsp;  振作起来</p>
-</li>
-<li><p>day job: &emsp;&emsp;&emsp; 指一个人的常规工作，是收入的来源，但不是他爱好的工作</p>
-</li>
-<li><p>get it together &emsp;&emsp;&emsp;  振作起來，打起精神。把生活安排得更好</p>
-</li>
-<li><p>that’s one theory &emsp;&emsp;&emsp; 这是一种说法</p>
-</li>
-<li><p>rocked me to my core &emsp;&emsp;&emsp; 令人感触很深</p>
-</li>
-<li><p>so be it &emsp;&emsp;&emsp; 那就这样吧；接受既定事实</p>
-</li>
-<li><p>round trip flight &emsp;&emsp;&emsp; 美国的双程旅行，买一次双程票就可以坐往返的飞机</p>
-</li>
-<li><p>test waters   试水温，投石问路。&emsp;&emsp;&emsp; Trump tests waters for 2024 run</p>
-</li>
-<li><p>compelling argument &emsp;&emsp;&emsp; 令人信服的论点</p>
-</li>
-<li><p>deter 威慑，使不敢。&emsp;&emsp;&emsp; Biden is thinking about sending U.S troops to Eastern Europe to deter Russia from invading Ukraine.</p>
-</li>
-<li><p>wimp 懦夫 &emsp;&emsp;&emsp; Double face: the guy’s a wimp</p>
-</li>
-<li><p>steal the show &emsp;&emsp;&emsp;  把每个人的注意力从其他地方都吸引了过来</p>
-</li>
-<li><p>all in &emsp;&emsp;&emsp; 全押上，放手一搏。 常和go连用， In poker, to go all in is to bet everything on a hand.</p>
-</li>
-<li><p>second wind &emsp;&emsp;&emsp; 指人在精疲力尽后恢复了精力</p>
-</li>
-<li><p>nail someone &emsp;&emsp;&emsp; 抓住某人</p>
-</li>
-<li><p>If it isn’t &emsp;&emsp;&emsp; 这不是…吗(表达意外地见到了某人)</p>
-</li>
-<li><p>that’s the stuff &emsp;&emsp;&emsp; really great or satisfying; Good job;</p>
-</li>
-<li><p>I wouldn’t go so far</p>
-</li>
-<li><p>spot on &emsp;&emsp;&emsp;  一针见血，说话或表达的观点正中靶心</p>
-</li>
-<li><p>pay the piper &emsp;&emsp;&emsp;  为自我放纵的行为付出代价 &emsp;&emsp; If you stay up late at night to watch TV, in the morning you will have to pay the piper</p>
-</li>
-<li><p>you’re telling me &emsp;&emsp;&emsp; 表示对别人说的话完全同意</p>
-</li>
-<li><p>hands-on &emsp;&emsp;&emsp; 事事过问的，事必躬亲的</p>
-</li>
-<li><p>small-minded &emsp;&emsp;&emsp; 见识狭隘的，格局小的</p>
-</li>
-<li><p>get into sb.’s head &emsp;&emsp;&emsp;   影响、改变某人的想法</p>
-</li>
-<li><p>weather the storm &emsp;&emsp;&emsp; 在不受伤的情况下处理困难</p>
-</li>
-<li><p>you have no jurisdiction here &emsp;&emsp;&emsp; 你在这里没有司法管辖权</p>
-</li>
-<li><p>grab a bite  &emsp;&emsp;&emsp; 吃点东西</p>
-</li>
-<li><p>do sth like a boss &emsp;&emsp;&emsp; 做某事带有气派的信心或权威</p>
-</li>
-<li><p>pinky promise &emsp;&emsp;&emsp; 拉勾约定</p>
-</li>
-<li><p>it makes me wonder &emsp;&emsp;&emsp; 让我越发好奇</p>
-</li>
-<li><p>make the call &emsp;&emsp;&emsp;  做决定</p>
-</li>
-<li><p>call me crazy  &emsp;&emsp;&emsp;  我将说出一些挺起来荒唐的事情</p>
-</li>
-<li><p>one the level &emsp;&emsp;&emsp; 真诚，直截了当</p>
-</li>
-<li><p>To have butterflies in one’s stomach &emsp;&emsp;&emsp; 一种持续不断的恐惧、紧张或忧虑的心情</p>
-</li>
-<li><p>break it up &emsp;&emsp;&emsp; 散开! 别打架了! 别吵架了</p>
-</li>
-<li><p>peanut gallery &emsp;&emsp;&emsp; 剧场最高楼座(票价最低)</p>
-</li>
-<li><p>have a beef with you &emsp;&emsp;&emsp; 跟你意見不合、我對你有所不滿</p>
-</li>
-<li><p>hit the road &emsp;&emsp;&emsp; 上路，出发</p>
-</li>
-<li><p>board up &emsp;&emsp;&emsp; 用栅木板阻断 </p>
-</li>
-<li><p>call in &emsp;&emsp;&emsp; 召集，叫（某人）进来；来访</p>
-</li>
-<li><p>That’s the stuff &emsp;&emsp;&emsp; 这东西真不错！这就对了！好呀！  &emsp;Ah, that’s the stuff. Nothing like a cold beer after a long day’s work</p>
-</li>
-<li><p>in bed with &emsp;&emsp;&emsp; 和人或组织合作</p>
-</li>
-<li>talk is cheap &emsp;&emsp;&emsp; 说话没什么代价；不要看一个人说了什么，要看他做什么</li>
-<li>out of touch &emsp;&emsp;&emsp; 对当前发生的事一无所知</li>
-<li>play-off match &emsp;&emsp;&emsp; 附加赛</li>
-<li>ffs &emsp;&emsp;&emsp; for fuck’s sake</li>
-<li>tears into &emsp;&emsp;&emsp; 猛烈抨击</li>
-<li>rise and shine &emsp;&emsp;&emsp; 起床</li>
-<li>hold your horses &emsp;&emsp;&emsp; 停下来想想，且慢</li>
-<li>got it covered &emsp;&emsp;&emsp; 我包了； 我能搞定</li>
-<li>Keep somebody in line  &emsp;&emsp;&emsp; 使某人守規矩</li>
-<li>show spine &emsp;&emsp;&emsp; 有点骨气</li>
-<li>take the fall for &emsp;&emsp;&emsp;  替 … 承擔責任</li>
-<li>get sb in the mood &emsp;&emsp;&emsp; 让某人进入状态，获得愉悦</li>
-<li>a long shot  &emsp;&emsp;&emsp; 成功概率很小的尝试或猜想</li>
-<li>take the lead  &emsp;&emsp;&emsp;  比别人先走；在比赛中取得领先</li>
-<li>be over sb &emsp;&emsp;&emsp; 不再对某人有感情；跟某人结束来往</li>
-<li>play innocent &emsp;&emsp;&emsp;  假装无辜</li>
-<li>lose count &emsp;&emsp;&emsp; 数目太多，数不清了</li>
-<li>sitting duck &emsp;&emsp;&emsp;   an easy or defenseless target.</li>
-<li>mark my word &emsp;&emsp;&emsp; 记住我的话</li>
-<li>standing ovation &emsp;&emsp;&emsp; 起立鼓掌</li>
-<li>bitch-slap </li>
-<li>punch line &emsp;&emsp;&emsp; 一个笑话或故事的末尾，表达了幽默或其他重要因素</li>
-<li>page-turners &emsp;&emsp;&emsp; an exciting book</li>
-<li>heavy hitter &emsp;&emsp;&emsp; 重要的或有权力的人</li>
-<li>on the line &emsp;&emsp;&emsp; 有风险</li>
-<li>write off &emsp;&emsp;&emsp; 认为someone or something无关紧要</li>
-<li>knight of shining armor &emsp;&emsp;&emsp;  理想化的或骑士般的男性，他会将女性从difficult situation解救出来</li>
-<li>level-headed &emsp;&emsp;&emsp;  冷静理智的</li>
-<li>trip wire  &emsp;&emsp;&emsp;  引爆线</li>
-<li>pick on sb &emsp;&emsp;&emsp;  批评某人，找某人的茬</li>
-<li>is there someone else? &emsp;&emsp;&emsp; 经常用于感情关系，问另一个人是否在和他人交往</li>
-<li>under a cloud  &emsp;&emsp;&emsp;    Under suspicion, in trouble, or out of favor</li>
-<li>easy-peasy   &emsp;&emsp;&emsp;   十分简单</li>
-<li>information loop   </li>
-<li>a victim of circumstance &emsp;&emsp;&emsp; 因一系列其他因素而受影响</li>
-<li>big shot &emsp;&emsp;&emsp; 拥有很大影响力的人或组织</li>
-<li>wake-up call &emsp;&emsp;&emsp;  叫醒电话，有关负面情况或危险行为的后果的警报。</li>
-<li>checks and balances  &emsp;&emsp;&emsp; 制衡</li>
-<li>razor-thin margin &emsp;&emsp;&emsp;  微弱优势</li>
-<li>in tune with the times &emsp;&emsp;&emsp;  与时俱进</li>
-<li>blast  &emsp;&emsp;&emsp;  抨击</li>
-<li>bull’s eye &emsp;&emsp;&emsp;  正中目标</li>
-<li>pack up  &emsp;&emsp;&emsp;  出故障了 </li>
-<li>ouch &emsp;&emsp;&emsp; 擔保，作證</li>
-<li>typical of sb to do sth   &emsp;&emsp;&emsp;  某人经常、通常做某事</li>
-<li>fancy a drink  &emsp;&emsp;&emsp;  (英式英语)想不想喝点什么</li>
-<li>get wind of sth  &emsp;&emsp;&emsp;  聽到…的風聲；得知…秘密消息</li>
-<li>strategic genius</li>
-<li>stick to the script  &emsp;&emsp;&emsp;  按既定计划进行</li>
-<li>tally ho  &emsp;&emsp;&emsp;  冲啊</li>
-<li>high society  &emsp;&emsp;&emsp; 上流社会 </li>
-<li>Am I being unreasonable ?  &emsp;&emsp;&emsp; 是我无理取闹了吗？</li>
-<li>you will do nothing of the sort   &emsp;&emsp;&emsp; 你可别这么做</li>
-<li>It’s dark out &emsp;&emsp;&emsp;   到晚上了</li>
-<li>cover to cover   &emsp;&emsp;&emsp;  从头到尾，一般说 read a book cover to cover</li>
-<li>tamper with &emsp;&emsp;&emsp;  擅自改动；蓄意破坏</li>
-<li>toxicology report  &emsp;&emsp;&emsp;  毒理学报告</li>
-<li>out of blue  &emsp;&emsp;&emsp; 出乎意料地</li>
-<li>gargle  &emsp;&emsp;&emsp;   漱口</li>
-<li>Out of the box &emsp;&emsp;&emsp;   <strong>开箱即用</strong>，指能够满足一定需求的、已经作好了的软件、硬件的形式。  <strong>跳出传统的思维框框。</strong></li>
-<li>alibi  holds up  &emsp;&emsp;&emsp;  不在场证明可靠</li>
-<li>copper  &emsp;&emsp;&emsp;   (英式英语)警察</li>
-<li>a bad apple &emsp;&emsp;&emsp;  害群之马</li>
-<li>pest control  &emsp;&emsp;&emsp;  除害虫</li>
-<li>redact &emsp;&emsp;&emsp;  遮盖，屏蔽。  为了个人隐私，文章中的名字被redacted.   So who redacted files</li>
-<li>whack-a-mole  打地鼠游戏  &emsp;&emsp;&emsp;  中国的封城防疫变成了一个whack-a-mole</li>
-<li>backwater &emsp;&emsp;&emsp;   穷乡僻壤，与世隔绝的地方.   在上海看来，西安就像个backwater</li>
-<li>square one  &emsp;&emsp;&emsp;    起点。 back to square one 回到起点，从零开始</li>
-<li>ripple effect  &emsp;&emsp;&emsp;  连锁反应</li>
-<li>big time  &emsp;&emsp;&emsp;     非常，表示程度强烈</li>
-<li>blow up in someone’s face  &emsp;&emsp;&emsp;   使某人栽跟头或使某人做事失败</li>
-<li>spin story  &emsp;&emsp;&emsp; 编造故事</li>
-<li>bad-mouthing   &emsp;&emsp;&emsp;   背后说人坏话</li>
-<li>scrupulous &emsp;&emsp;&emsp;   极为小心的</li>
-<li>kiss someone’s ring  &emsp;&emsp;&emsp;   向某人表示服从恭顺</li>
-<li>pull it off  &emsp;&emsp;&emsp;   实现目标或解决难题</li>
-<li>crack joke  &emsp;&emsp;&emsp;   开玩笑</li>
-<li>pedestrian &emsp;&emsp;&emsp;  行人，步行者</li>
-<li>madhouse &emsp;&emsp;&emsp;  混乱的地方, 精神病医院</li>
-<li>landline &emsp;&emsp;&emsp;   座机，固定电话</li>
-<li>ultimatum    &emsp;&emsp;&emsp;    最后通牒</li>
-<li>On the Fly &emsp;&emsp;&emsp; 匆忙，无准备</li>
-<li>exhume  &emsp;&emsp;&emsp; （从坟墓中）掘出（尸体）</li>
-<li>kaboom   &emsp;&emsp;&emsp;  嘭的爆炸声</li>
-<li>a tangle of wire  &emsp;&emsp;&emsp;   一卷电线</li>
-<li>futile  &emsp;&emsp;&emsp;  （行动）无作用的, 无效的</li>
-<li>embellishment  &emsp;&emsp;&emsp; 装饰, 修饰, 润色</li>
-<li>dwell on st  &emsp;&emsp;&emsp;  老是想着，一直在说</li>
-<li>decimate  &emsp;&emsp;&emsp; 毁灭，大量杀戮，大幅削減</li>
-<li>crease &emsp;&emsp;&emsp;   皱纹，褶皱</li>
-<li>trail away/off &emsp;&emsp;&emsp; （说话声或类似声响）逐渐减弱到停止，逐渐消失</li>
-<li>mouthpiece  &emsp;&emsp;&emsp;   喉舌</li>
-<li>drop in    &emsp;&emsp;&emsp;    顺便走访, 不预先通知的拜访</li>
-<li>run-off   &emsp;&emsp;&emsp;    比赛、选举等因为平局或结果不明确而进行的再次竞争</li>
-<li>state-of-the-art  &emsp;&emsp;&emsp;    最先进的，顶级的，到了炉火纯青的地步</li>
-<li>simple and plain  &emsp;&emsp;&emsp;   就这么简单，简单明了</li>
-<li>relation sour   &emsp;&emsp;&emsp;  The relationship between the US and North Korea soured again.</li>
-<li>Keep oneself to oneself  &emsp;&emsp;&emsp;   远离其他人，不和其他人来往</li>
-<li>drop dead  &emsp;&emsp;&emsp; 滚开，闭嘴</li>
-<li>square one  &emsp;&emsp;&emsp; 最初状态， 起点</li>
-<li>roll it down  &emsp;&emsp;&emsp;  窗户摇下来</li>
-<li>burn out  &emsp;&emsp;&emsp;  极度劳累，精神疲劳</li>
-<li>fire up   &emsp;&emsp;&emsp;  充满热情和期待</li>
-<li>with a grain of salt  &emsp;&emsp;&emsp;  持怀疑态度</li>
-<li>go south &emsp;&emsp;&emsp;   情况变糟，恶化</li>
-<li>in someone’s pocket   &emsp;&emsp;&emsp; 对某人有金钱依赖，因此受其影响</li>
-<li>sitting duck   &emsp;&emsp;&emsp;    待宰羔羊，容易被击中的目标</li>
-<li>be drafted   &emsp;&emsp;&emsp;  受征召服兵役</li>
-<li>loose end  &emsp;&emsp;&emsp;  残余，后患，扫尾问题</li>
-<li>kangaroo court &emsp;&emsp;&emsp; 不公正的审判 或 无视法律和程序的法庭</li>
-<li>wet, wet about &emsp;&emsp;&emsp;  弄错了，错怪</li>
-<li>on top of sth &emsp;&emsp;&emsp;  除了(令人不快之事)之外还</li>
-<li><p>reckoning  &emsp;&emsp;&emsp;  某人被叫来审视他的行为、还债或完成承诺</p>
-</li>
-<li><p>scut work  &emsp;&emsp;&emsp;  枯燥无聊的工作，机械性重复的工作</p>
-</li>
-<li><p>ladies’ room  &emsp;&emsp;&emsp;   女厕所</p>
-</li>
-<li>seed round   &emsp;&emsp;&emsp;   种子轮。创业的起步阶段，只有初步想法</li>
-<li>sophisticated person &emsp;&emsp;&emsp; 知识渊博的人，理解力强的人</li>
-<li>cultured person  &emsp;&emsp;&emsp; 有教养的人</li>
-<li>tank the deal   &emsp;&emsp;&emsp; 拒绝或取消交易</li>
-<li>dive right in  &emsp;&emsp;&emsp; 投入到， just do it</li>
-<li>suck it up  &emsp;&emsp;&emsp;   accept something unpleasant or difficult</li>
-</ul>
 </div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/20/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/20/">20</a><span class="page-number current">21</span><a class="page-number" href="/page/22/">22</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/22/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/09/18/hCro9MUd6JjRe1Q.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2022 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
