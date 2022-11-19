@@ -296,13 +296,14 @@
 <ul>
 <li>num_subdivisions_per_laser_scan: 将雷达一帧的数据拆分成几次发出来，必须&gt;=1，默认10。在<code>SensorBridge::HandleLaserScan</code>中调用, 对点云points细分。比如雷达scan有200束激光，本参数为10，那么转换成点云后，对点云取很多小段处理：(0,20)、(20,40)……(190,200)。 对于普通雷达来说，此处为1即可</li>
 </ul>
-<h3 id="period组"><a href="#period组" class="headerlink" title="period组"></a>period组</h3><ul>
+<h3 id="period-组"><a href="#period-组" class="headerlink" title="period 组"></a>period 组</h3><p>都在<code>Node</code>的构造函数里，是ROS定时器机制</p>
+<ul>
 <li>lookup_transform_timeout_sec: 使用tf2查找变换的超时秒数</li>
 <li>submap_publish_period_sec: 发布submap的间隔</li>
 <li>pose_publish_period_sec:  cartographer发布tf变换的间隔，例如5e-3，对应tf发布频率为200Hz</li>
 <li>trajectory_publish_period_sec: 发布轨迹标记的时间间隔</li>
 </ul>
-<h3 id="ratio组"><a href="#ratio组" class="headerlink" title="ratio组"></a>ratio组</h3><p>5种观测的权重比</p>
+<h3 id="ratio-组"><a href="#ratio-组" class="headerlink" title="ratio 组"></a>ratio 组</h3><p>5种观测的权重比</p>
 <ul>
 <li><p>rangefinder_sampling_ratio: Fixed ratio sampling for range finders messages.</p>
 </li>
