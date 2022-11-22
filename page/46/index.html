@@ -67,7 +67,7 @@
 </ol>
 <p>一般第一种比较常见，比如说编码器是否存在丢失脉冲的情况、换个比较坚硬的地面跑一跑看看建图效果。第二种比较难排查，最好能够录下数据查看。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/09/30/%E8%84%9A%E6%9C%AC/sed%E5%92%8Cawk/">sed和awk</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-09-30</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></span><div class="content"><h3 id="删除文本第四行"><a href="#删除文本第四行" class="headerlink" title="删除文本第四行"></a>删除文本第四行</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed <span class="string">&#x27;4d&#x27;</span> input.txt &gt; output.txt</span><br></pre></td></tr></table></figure>
-<p>实际上没有修改<code>input.txt</code>，而是修改文件流，然后生成到文件<code>output.txt</code></p>
+<p>实际上没有修改<code>input.txt</code>，而是修改文件流，然后生成到文件<code>output.txt</code>。前后两个文件名称不能相同，否则不能保存</p>
 <h3 id="使用sed处理当前目录-包括子目录-的所有cpp文件-将其中的aaa替换为bbb"><a href="#使用sed处理当前目录-包括子目录-的所有cpp文件-将其中的aaa替换为bbb" class="headerlink" title="使用sed处理当前目录(包括子目录)的所有cpp文件,将其中的aaa替换为bbb"></a>使用sed处理当前目录(包括子目录)的所有cpp文件,将其中的<code>aaa</code>替换为<code>bbb</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -i <span class="string">&quot;s/aaa/bbb/g&quot;</span> `grep aaa -rl . --include=<span class="string">&quot;*.cpp&quot;</span> `</span><br></pre></td></tr></table></figure>
 <p>grep:</p>
 <ul>

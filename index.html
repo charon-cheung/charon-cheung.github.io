@@ -40,7 +40,7 @@
 <p> DDS的容错性优越，因为它能够使用QoS策略保存过去的数据，并且不需要主节点。 DDS保证了公平的延迟，如图18和19所示。此外，DDS能够在多个平台上运行，包括RTOS和交换机DDS实现。在RTPS协议下，任何ROS2节点都相互通信而与其平台无关。 FastRTPS目前是线程和内存中嵌入式系统的最佳DDS实现，但它不适用于小型嵌入式系统。ROS2支持的当前QoS策略提供容错，但它们不足以进行实时处理。 ROS2必须扩展支持的QoS策略的范围。其次，对于小型嵌入式系统，ROS2需要最小的DDS实现和最小的抽象层。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/11/12/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E4%BD%BF%E7%94%A8UDPROS%E8%BF%9B%E8%A1%8C%E9%80%9A%E4%BF%A1/">使用UDPROS进行通信</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></span><div class="content"><p>TCPROS是ROS默认使用的传输方式。另一种通信类型是 UDPROS，这种方式是一种低延迟、非可靠的传输，仅适用于远程操作。</p>
 <p>在发布的消息头中，在发布消息之前将当前时间戳写到timeStamp中，然后在订阅器的回调函数中再计算消息中的timeStamp到当前时间的Duration，这样子能够大概计算这个经过的时间；实际上网络延迟会比这个Duration稍微短一点。</p>
-<p>更换为UDP 通信只需要在 <code>ros::Subscriber</code> 的构造函数最后加上<code>ros::TransportHints().unreliable().maxDatagramSize</code> 即可。</p>
+<p>更换为UDP 通信只需要在 <code>ros::Subscriber</code> 的构造函数最后加上<code>ros::TransportHints().unreliable().maxDatagramSize(1000)</code> 即可。</p>
 <ul>
 <li>随着频率的增加，通信延迟也相应增加</li>
 <li>在UDP通信中，随着<code>maxDatagramSize</code>的增加，通信延迟也随着降低。</li>
