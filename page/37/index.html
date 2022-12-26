@@ -38,10 +38,12 @@
 <p><code>nav_test</code>不需要特别编译，它全是py文件，没有cpp。但是需要从网上下载<code>rbx1</code>工程，这是一本教程里用到的，只把其中的<code>rbx1_nav</code>放到当前工作空间里，编译通过。<strong>nav_squared.py</strong>需要它</p>
 <p>将<code>startup.launch</code>注释掉一部分，比如摄像头节点等等。</p>
 <p><code>robot_pose_ekf</code>包很奇怪，它应当是在<code>/home/xiaoqiang/Documents/ros/src/navigation</code>，但是修改相应源码，执行launch没有效果。最后发现实际使用的是<code>R50_Release</code>中的<code>robot_pose_ekf</code>。删掉后者就报错找不到了，可见xiaoqiang中的那个没有生效，不像个package，但是rospd又能找到，很奇怪。</p>
-<h2 id="运动部分"><a href="#运动部分" class="headerlink" title="运动部分"></a>运动部分</h2><p>小强有时不移动，可能是IMU在重启，因为此时的IMU数据除了四元数的w为1，其他全是0</p>
+<h2 id="运动部分"><a href="#运动部分" class="headerlink" title="运动部分"></a>运动部分</h2><p><code>odom</code>和<code>IMU</code>话题的频率都是50Hz</p>
+<p>小强有时不移动，可能是IMU在重启，因为此时的IMU数据除了四元数的 w 为1，其他全是0</p>
 <p><code>/xqserial_server/Twist</code>疑似无用，只有<code>/motor_driver</code>在一直发布它</p>
 <p><code>xqserial_server/Pose2D</code>的消息是(x,y,theta)，是相对里程计坐标系原点的位姿</p>
 <p>里程计模型也是速度积分的二轮差速，使用编码器读数获得极小时间内的位移，以左右轮的编码器增量的均值计算。</p>
+<p>要开启红外功能，必须使用命令 <code>rostopic pub -r 12 /barDetectFlag std_msgs/Bool &quot;data: true&quot;</code>，但红外检测距离太短了，目前被摄像头挡住了，实际不生效</p>
 <p><code>control.py</code>就是从键盘获取方向键，发布速度命令到<code>cmd_vel</code>话题，订阅了<code>/xqserial_server/Odom</code>话题，但是实际没用到。</p>
 <p><code>xqserial_server</code>命名空间包括<code>StatusPublisher</code>和<code>DiffDriverController</code>两个类</p>
 <p><code>xiaoqiang_log</code>话题对应的<code>LogRecored.msg</code>如下，只有缺少串口设备时才发布，record是json形式<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">string collection_name</span><br><span class="line">time stamp</span><br><span class="line">string record</span><br></pre></td></tr></table></figure></p>
