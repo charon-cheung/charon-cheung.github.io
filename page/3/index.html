@@ -7,7 +7,34 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">604</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">54</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2022/11/12/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E4%BD%BF%E7%94%A8UDPROS%E8%BF%9B%E8%A1%8C%E9%80%9A%E4%BF%A1/">使用UDPROS进行通信</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></span><div class="content"><p>TCPROS是ROS默认使用的传输方式。另一种通信类型是 UDPROS，这种方式是一种低延迟、非可靠的传输，仅适用于远程操作。</p>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">605</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">54</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2022/11/13/ROS/ROS2/%E8%AE%BA%E6%96%87%20Exploring%20the%20Performance%20of%20ROS2/">论文 Exploring the Performance of ROS2 的要点</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>ROS不适用于实时嵌入式系统，占据很多资源(CPU、内存、网络等)而且只能运行在少数操作系统。ROS2使用了DDS，后者具有各种传输性能(例如deadline和容错性, 可扩展性)。</p>
+<p>ROS不满足实时运行要求，只能在少数操作系统上运行。此外，ROS无法保证容错，期限或进程同步。此外，ROS需要大量资源（例如，CPU，内存，网络带宽，线程和核心），并且无法管理这些资源以满足时间限制。因此，ROS不适用于实时嵌入式系统。</p>
+<p>ROS被重建以提高人机交互API并采用新技术，例如DDS, Zeroconf, Protocol Buffers, ZeroMQ, Redis, Websockets. ROS的核心是<strong>匿名发布-订阅的中间件系统</strong>，将被DDS取代，DDS是一种行业标准的实时通信系统和端到端中间件(end to-end middleware)，DDS可以提供类似于ROS1的可靠的发布/订阅传输。DDS满足分布式系统的安全性，弹性，可扩展性，容错性和安全性要求，可以通过减少库大小和内存占用</p>
+<p>我们从多个指标评估了ROS2: 延迟性, 吞吐量, 线程数, 内存占用</p>
+<p><img src="https://s2.loli.net/2022/11/13/yPW1ICaNY5uqJfw.png" alt=""></p>
+<p>ROS2建立在DDS之上并包含DDS抽象层。由于此抽象层，用户无需了解DDS API。该层允许ROS2具有高级配置并优化DDS的利用率。此外，由于使用DDS，ROS2不需要master，这是容错性的一个重要点。</p>
+<p>Optionally, ROS1 提供了 nodelets, 其提供有效的节点组合 for optimized data transport而无需TCPROS和UDPROS。nodelet通过传递指针实现同一进程中节点之间的非序列化数据传输。ROS2继承此选项作为进程内通信，它解决了nodelet的一些基本问题（例如，安全内存访问）。</p>
+<p>DDS的核心是以数据为中心的发布 - 订阅（DCPS）模型，旨在即使在分布式异构平台中也能在进程之间提供高效的数据传输。 DCPS模型创建了一个可由任何独立应用程序访问的 “全局数据空间”(global data space)。DCPS有助于高效的数据分发。在DDS中，发布或订阅数据的每个进程称为<strong>参与者</strong>(participant)，其对应于ROS中的节点。参与者可以使用<strong>类型化界面</strong>(typed interface)  从/向 (from/to) 全局数据空间读取和写入。</p>
+<p><img src="https://s2.loli.net/2022/11/13/m1IWPfgeopcdELY.png" alt="DCPS 模型"></p>
+<p>DCPS模型由DCPS实体构成：DomainParticipant，Publisher，Subscriber，DataWriter，DataReader和Topic。根据服务质量（QoS）策略执行进程之间的每个数据传输。</p>
+<ul>
+<li>DomainParticipant: 用于跟踪其他实体和服务入口点的容器。在DDS中，所有应用程序在域内相互通信，从而促进隔离和通信优化。</li>
+<li>Publisher: 发布是负责数据发布的对象。管理一个或多个DataWriters，发布将数据发送到一个或多个主题。</li>
+<li>Subscriber: 订阅负责接收已发布的数据并使数据可用。订阅代表一个或多个DataReader行事。根据订阅，DomainParticipant可以接收和发送不同指定类型的数据。</li>
+<li>DataWriter: DataWriter是DomainParticipant必须使用的对象，以通过Publisher发布数据。 DataWriter发布给定类型的数据。</li>
+<li>DataReader: 附加到订阅服务器的对象。使用DataReader，DomainParticipant可以接收和访问其类型必须与DataWriter的类型相对应的数据。</li>
+<li>Topic: 主题用于标识DataWriter和DataReader之间的每个数据对象。每个主题由名称和数据类型定义。</li>
+<li>QoS Policy: 所有DCPS实体都有QoS策略，表示其数据传输行为。每个数据事务都可以通过许多QoS策略选项在不同的粒度级别进行配置。</li>
+</ul>
+<p><img src="https://s2.loli.net/2022/11/13/5GMWQpXvlhuYLDV.png" alt=""><br>遵循QoS策略的DDS数据传输示例。目前为止，历史深度和通信可靠性由QoS策略配置。ROS2支持的QoS策略有DEADLINE, HISTORY, RELIABILITY, DURABILITY</p>
+<p>在DCPS模型中，给定类型的数据从一个或多个DataWriters发布到主题（其名称在域中是唯一的）。一个或多个DataReader按主题名称标识数据对象，以便订阅该主题。在此事务之后，DataWriter使用分布式系统中的实时发布/订阅（RTPS）协议[20]连接到DataReader。 RTPS协议（DDS标准协议）允许来自多个供应商的DDS实现通过抽象和优化传输（例如TCP / UDP / IP）来互操作。 RTPS协议是灵活的，并且被定义为利用QoS策略。一些供应商使用UDP和共享内存传输进行通信。但是，在某些情况下，发现和数据交换可能需要TCP协议。</p>
+<p>DataWriter和DataReader之间的数据传输根据QoS策略在RTPS协议中执行。每个DCPS实体根据唯一的用户指定的QoS策略管理数据样本。 DCPS中间件负责基于QoS策略的分布式系统中的数据传输。在不考虑详细的传输实现的情况下，DDS用户将代码生成为DomainParticipant，包括使用DDS API的QoS策略。因此，用户可以仅关注其目的并确定轻松满足实时约束的方法。</p>
+<h2 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h2><p>评估发布/订阅消息传递的端到端延迟。延迟的测量是从单个节点上的调用发布函数开始到另一个节点接到数据进入回调函数为止。</p>
+<p>实验结果<br><img src="https://s2.loli.net/2022/11/13/wysKCMt9Ugo2bDF.png" alt=""><br>在<em>初始丢失</em>列中，ROS1无法在节点首次发送消息时获取初始消息，即使ROS1使用具有256 B等小数据的TCPROS并且在发布节点开始发送之前启动了订阅节点消息。虽然TCPROS对于传递中间消息是可靠的，但它不支持初始消息的可靠传输。</p>
+<p>相比之下，即使使用4MB等大数据，ROS2也不会丢失初始消息。这证明了DDS的可靠性。使用ROS2可靠策略，在发布节点开始发送消息之前不必启动订阅节点。这归因于QoS策略的耐久性中的<code>TRANSIENT_LOCAL</code>。可靠的策略被调整为为后期加入的订户节点提供弹性。在ROS1中，已发布的消息丢失并且从未恢复。因此QoS策略可加速容错。</p>
+<p>但是ROS2在传输大数据时存在许多问题。因此，我们认为DDS不是为处理大数据而设计的。FastRTPS不支持大数据，因为它被设计为嵌入式系统的轻量级实现。即使是256B的字符串也超过了FastRTPS中的最大长度。</p>
+<p> DDS的容错性优越，因为它能够使用QoS策略保存过去的数据，并且不需要主节点。 DDS保证了公平的延迟，如图18和19所示。此外，DDS能够在多个平台上运行，包括RTOS和交换机DDS实现。在RTPS协议下，任何ROS2节点都相互通信而与其平台无关。 FastRTPS目前是线程和内存中嵌入式系统的最佳DDS实现，但它不适用于小型嵌入式系统。ROS2支持的当前QoS策略提供容错，但它们不足以进行实时处理。 ROS2必须扩展支持的QoS策略的范围。其次，对于小型嵌入式系统，ROS2需要最小的DDS实现和最小的抽象层。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/11/12/ROS/ROS%20Kinetic%E7%9F%A5%E8%AF%86/%E4%BD%BF%E7%94%A8UDPROS%E8%BF%9B%E8%A1%8C%E9%80%9A%E4%BF%A1/">使用UDPROS进行通信</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS-Kinetic%E7%9F%A5%E8%AF%86/">ROS Kinetic知识</a></span><div class="content"><p>TCPROS是ROS默认使用的传输方式。另一种通信类型是 UDPROS，这种方式是一种低延迟、非可靠的传输，仅适用于远程操作。</p>
 <p>在发布的消息头中，在发布消息之前将当前时间戳写到timeStamp中，然后在订阅器的回调函数中再计算消息中的timeStamp到当前时间的Duration，这样子能够大概计算这个经过的时间；实际上网络延迟会比这个Duration稍微短一点。</p>
 <p>更换为UDP 通信只需要在 <code>ros::Subscriber</code> 的构造函数最后加上<code>ros::TransportHints().unreliable().maxDatagramSize(1000)</code> 即可。</p>
 <ul>
@@ -158,36 +185,6 @@
 <li></li>
 <li>-</li>
 <li></li>
-</ul>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2022/10/08/%E8%8B%B1%E8%AF%AD/%E8%AE%BA%E6%96%87%E8%8B%B1%E8%AF%AD/">论文英语</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-10-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a></span><div class="content"><ul>
-<li><p>discrepancy  &emsp;&emsp;&emsp;  差异性</p>
-</li>
-<li><p>onboard  &emsp;&emsp;&emsp;  车载计算机</p>
-</li>
-<li><p>off-the-shelf  &emsp;&emsp;&emsp;  现成的，现有的，现货</p>
-</li>
-<li><p>multi-modal &emsp;&emsp;&emsp;   多模态的</p>
-</li>
-<li><p>quasi-static   &emsp;&emsp;&emsp;  准静态</p>
-</li>
-<li><p>conic &emsp;&emsp;&emsp;  圆锥的</p>
-</li>
-<li><p>local minima   &emsp;&emsp;&emsp;   局部极小</p>
-</li>
-<li><p>quadratic &emsp;&emsp;&emsp;    二次方的</p>
-</li>
-<li><p>approx  &emsp;&emsp;&emsp;   大约，逼近</p>
-</li>
-<li><p>numerator  &emsp;&emsp;&emsp; 分子</p>
-</li>
-<li><p>denominator &emsp;&emsp;&emsp;  分母</p>
-</li>
-<li><p>contour &emsp;&emsp;&emsp;   轮廓</p>
-</li>
-<li><p>in the literature &emsp;&emsp;&emsp; 一系列的书、文章</p>
-</li>
-<li><p>throughput  &emsp;&emsp;&emsp;  吞吐量</p>
-</li>
 </ul>
 </div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/2/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/4/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
