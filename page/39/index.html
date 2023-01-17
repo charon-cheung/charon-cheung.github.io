@@ -103,11 +103,11 @@
 <p><img src="https://i.loli.net/2020/03/02/JTq3rFOoXwU4Zlu.png" alt=""></p>
 <h3 id="ICP"><a href="#ICP" class="headerlink" title="ICP"></a>ICP</h3><p>R,t就是相邻两帧激光对应的机器人位置的欧氏变换，以此类推，根据很多帧的点云，就能求出一系列的机器人位姿变换关系。<br>ICP有二维和三维。<br>由于两个点云对应同一个实体，那么理论上配准后的距离应该为0，由于误差的存在，我们要求距离的最小值。</p>
 <p>对于已知对应点的情况(已知R)，我们可以求出闭式解，而不必用迭代方法：<br><img src="https://i.loli.net/2020/03/02/A4yZXVaoPLjkuQT.png" alt=""></p>
-<p>实际中不知道对应点匹配，不能直接算出R和t，要进行迭代计算：寻找对应点，根据对应点计算R,t；对点云转换再计算误差；不断迭代直至误差足够小。</p>
-<p>ICP方法存在以下缺点：</p>
+<p>实际中不知道对应点匹配，不能直接算出R和t，要进行迭代计算：寻找对应点，根据对应点计算R,t；对点云转换再计算误差；不断迭代直至误差足够小。ICP算法里不能有nan的雷达数据</p>
+<p>ICP方法存在以下缺点，所以不在实际SLAM中使用:</p>
 <ol>
 <li>依赖初始值，初始值不好时，迭代次数增加；对于较大的初始误差，可能会出现错误的迭代结果</li>
-<li>ICP是一阶收敛，收敛速度慢。（所以会用kd-tree来加快搜索效率）</li>
+<li>ICP是一阶收敛，收敛速度慢。（所以会用kd-tree来加快搜索效率）例如我使用A2雷达，频率12.7Hz，两帧间隔0.079s。ICP时间在<code>0.01s~0.02s</code>，而超过0.015s的有一部分，这就了两帧scan间隔的%19。甚至有些雷达，ICP计算时间大于两帧间隔，这样算出来的位置始终是延迟的．</li>
 <li>两帧激光点云中的点不可能表示的是空间中相同的位置，所以用点到点的距离作为误差方程势必会引入随机误差。</li>
 <li>会有离群点及噪声</li>
 </ol>
@@ -122,6 +122,8 @@
 <li>PL-ICP的求解精度高于ICP，特别是在结构化环境中，但不适合室外</li>
 <li>PL-ICP对初始值更敏感。不单独使用，其容易陷入局部循环。与里程计、CSM等一起使用，通常用里程计得到一个初始转换矩阵q0给到PL-ICP算法</li>
 </ol>
+<p>经我测试，换成PL-ICP后，配准时间降了一个数量级，耗时比较长的是<code>0.00274035</code>s。但是静止时输出的帧间匹配结果的精度，没有明显提升，可能是雷达问题。</p>
+<p><br></p>
 <p>ros的csm包实现了ICP和PL-ICP算法。作者给出了一个该功能包的操作说明文件（csm_manual.pdf）。里面详细描述了各项配置参数的含义。其中sm/app文件夹中的sm0.c sm1.c sm2.c sm3.c 相当于是几个使用示例。  主要的算法实现是在<code>csm/icp</code>文件夹中的几个文件里。论文中的所有算法步骤完整的体现在了<code>icp_loop.c</code>文件中的icp_loop函数里。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/04/08/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/%E7%BC%BA%E9%99%B7%E5%92%8C%E9%97%AE%E9%A2%98/">AMCL的缺陷和遗留问题</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-04-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/">amcl和粒子滤波</a></span><div class="content"><h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><ol>
 <li><p>如果AMCL算法无法快速解决绑架问题，添加随机位姿的粒子可能会导致粒子集扩散。失效恢复机制有时能重定位成功(可能花十几秒时间)，有时失败</p>
