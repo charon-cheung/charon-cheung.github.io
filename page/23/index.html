@@ -585,7 +585,7 @@
 <li><p>ladies’ room  &emsp;&emsp;&emsp;   女厕所</p>
 </li>
 <li>seed round   &emsp;&emsp;&emsp;   种子轮。创业的起步阶段，只有初步想法</li>
-<li>sophisticated person &emsp;&emsp;&emsp; 知识渊博的人，理解力强的人</li>
+<li>sophisticated person &emsp;&emsp;&emsp;  知识渊博的人，理解力强的人</li>
 <li>cultured person  &emsp;&emsp;&emsp; 有教养的人</li>
 <li>tank the deal   &emsp;&emsp;&emsp; 拒绝或取消交易</li>
 <li>dive right in  &emsp;&emsp;&emsp; 投入到， just do it</li>
@@ -601,6 +601,10 @@
 <li><p>high maintenance woman &emsp;&emsp;&emsp;  需要花很多精力和时间打扮的女人</p>
 </li>
 <li>drama queen &emsp;&emsp;&emsp;  喜欢大惊小怪，作出夸张表情和反应的人</li>
+</ul>
+<ul>
+<li>fam  &emsp;&emsp;&emsp;  俚语，“家庭”的缩写, 可以不仅指家人，还可以包括朋友</li>
+<li>potluck  &emsp;&emsp;&emsp; 一种西方家常聚餐会，主人准备场地和餐具，参加的人必须带一道菜或准备饮料</li>
 </ul>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%88%B0%E9%9A%9C%E7%A2%8D%E7%89%A9%E7%9A%84%E8%B7%9D%E7%A6%BB%20calculateDistance/">机器人到障碍物的距离 calculateDistance</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a></span><div class="content"><p>在<a href="https://charon-cheung.github.io/2021/06/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84footprint/#validateFootprints">TEB中的footprint模型</a> 中提到<code>calculateDistance</code>函数计算机器人到障碍物的 Euclidean 距离，用于图优化环节。</p>
 <p>以最简单的Point类型为例<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">calculateDistance</span><span class="params">(<span class="keyword">const</span> PoseSE2&amp; current_pose, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Obstacle* obstacle)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> obstacle-&gt;<span class="built_in">getMinimumDistance</span>(current_pose.<span class="built_in">position</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><code>Obstacle</code>是个抽象类，它的派生类有<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PointObstacle</span><br><span class="line">CircularObstacle</span><br><span class="line">PillObstacle</span><br><span class="line">LineObstacle</span><br><span class="line">PolygonObstacle</span><br></pre></td></tr></table></figure><br>显然不同的障碍类型对函数有不同实现，这里又涉及到<code>costmap_converter</code>和<code>Homotopy</code>，这就更复杂了</p>
