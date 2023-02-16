@@ -104,6 +104,15 @@
 <li>it’s not falling off a cliff &emsp;&emsp;&emsp;  它没有大幅下降，快速减弱</li>
 <li>economy is on the cusp of reccession  &emsp;&emsp;&emsp; 经济处于衰退的边缘(分界线)</li>
 </ul>
+<p>2.8  《谷歌在搜索领域的20年统治是否处于危险当中》</p>
+<ul>
+<li>result’s accuracy keeps rivals at bay  &emsp;&emsp;&emsp;   谷歌搜索的精确性和对手们拉开了距离</li>
+<li>Google felt no real need to reinvent itself  &emsp;&emsp;&emsp;   谷歌之前觉得没必要重新塑造自己</li>
+<li>Openai has teamed up with Microsoft, which is covetously eyeing Google’s gleaming pool of profits   &emsp;&emsp;&emsp;  Openai已经和微软合作，贪婪地盯上了谷歌闪闪发光的利润池</li>
+<li>pre-emptive counterattack &emsp;&emsp;&emsp;  先发制人的反击</li>
+<li>The battle of the bots is then, brewing  &emsp;&emsp;&emsp;     AI之战正在酝酿</li>
+<li>it may upend the lucrative business of search  &emsp;&emsp;&emsp;  它会颠覆搜索业务</li>
+</ul>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2023/01/08/SLAM%E5%B7%A5%E5%85%B7/ceres%205%20%E6%A0%B8%E5%87%BD%E6%95%B0/">ceres 5 核函数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-01-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/SLAM%E5%B7%A5%E5%85%B7/">SLAM工具</a></span><div class="content"><p>核函数：某个数据点的残差过大的时候，降低其权重。以曲线拟合为例，<br><img src="https://s2.loli.net/2023/01/08/kuwZiFUoPMvIJNp.png" alt=""><br>我们拟合点的时候，显然希望红线而不是黄线，outlier可以抛弃。</p>
 <p>残差大于0.1则降低其权重<br><code>ceres::LossFunction *loss_function = new ceres::HuberLoss(0.1);</code></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2023/01/03/cmake%20qmake/CMake%20%E5%90%84%E7%A7%8D%E6%8A%A5%E9%94%99%E6%8A%A5%E8%AD%A6/">CMake 各种报错报警</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-01-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/cmake-qmake/">cmake/qmake</a></span><div class="content"><ul>
