@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="李群李代数"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>李群李代数 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%8E%E7%BE%A4%E5%92%8C%E6%9D%8E%E4%BB%A3%E6%95%B0"><span class="toc-number">1.</span> <span class="toc-text">李群和李代数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%8E%E4%BB%A3%E6%95%B0%E7%9A%84%E6%B1%82%E5%AF%BC%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">李代数的求导问题</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">609</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">54</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">李群李代数</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2021/07/14/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E6%9D%8E%E7%BE%A4%E6%9D%8E%E4%BB%A3%E6%95%B0/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2021/07/14/算法推导/李群李代数/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.3k</span><span class="post-meta__separator">|</span><span>Reading time: 4 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>在SLAM中最常见的变换是四维变换矩阵T以及三维旋转矩阵R。 它们对加法并不封闭: 两个变换矩阵之和明显不是变换矩阵；而旋转矩阵是正交矩阵，但两个正交矩阵之和不是正交矩阵。</p>
+<p>为什么会出现李群李代数的概念，原因就在于此。SLAM问题会构建一个优化问题，求解最优的R  t，使误差最小化。这必然涉及求导，SLAM的运动过程是连续的，所以一定是可以求导的。但是导数的定义是这样的<br><img src="https://s2.loli.net/2023/02/22/cxfhXabkWZzdlQA.png" alt=""><br>需要把函数f换成旋转矩阵R，但是前面我们说了，旋转矩阵做加减法运算之后就不再满足旋转矩阵的形式了，<strong>没有加减法就意味着不能求导了。</strong></p>
+<p>另一个原因是，旋转矩阵都是正交矩阵且行列式为1，<strong>它们作为优化变量时，会引入额外的约束，</strong>使优化更困难了。</p>
+<p>引入李群和李代数，就可以解决旋转矩阵求导问题，还可把位姿估计转为无约束的优化问题。也就是说李代数se(3)和so(3)对加法封闭，所以用李代数表示机器人的旋转和位移。</p>
+<h2 id="李群和李代数"><a href="#李群和李代数" class="headerlink" title="李群和李代数"></a>李群和李代数</h2><p>具有连续（光滑）性质的群。整数群是离散的，没有连续性质。SO(3)和SE(3)都是连续的，空间中的机器人的姿态是连续变化的，而不是磕磕绊绊地运动，所以都是李群。</p>
+<p>机器人的旋转是一个随时间连续变化的过程，函数是R(t)，根据旋转矩阵的性质</p>
+<script type="math/tex; mode=display">R(t)R(t)^T =  I</script><p>经过一系列推导，发现<script type="math/tex">\dot R(t)R(t)^T</script> 是一个反对称矩阵，因此写做</p>
+<script type="math/tex; mode=display">\dot R(t)R(t)^T =  \phi(t)^\land</script><p>这里的<script type="math/tex">\phi</script> 是一个三维向量。</p>
+<p>假设在很小的时间范围内， <script type="math/tex">\phi(t)</script> 是一个恒定值，因为实际中机器人的姿态并不会突变。再经过一系列推导得到</p>
+<script type="math/tex; mode=display">R  =  exp(\phi^\land)</script><script type="math/tex; mode=display">\phi $$就是对应到 SO(3) 的李代数 $$ \mathfrak{so}(3) $$，李群和李代数直接是指数映射。
+
+李代数包括一个集合，一个数域和一个二元运算符，它们满足四条性质：封闭性、双线性、自反性、雅克比等价。
+
+在不引起歧义的情况下，我们说李代数$$ \mathfrak{so}(3) $$的元素是三维向量或3维反对称矩阵，不做区别。
+
+对于李群SE(3)，对应的李代数 $$ \mathfrak{se}(3) $$ 每个元素是一个6维向量，前三维是平移，后三维是旋转，实际就是 $$ \mathfrak{so}(3) $$ 元素。 此时的 $$ \land $$ 符号是把6维向量转换为四维的变换矩阵 T
+
+
+对于李代数 $$ \mathfrak{so}(3) $$的元素  $$ \phi $$，由于它是3维向量，写成ϕ$$ \boldsymbol\phi=\theta\vec a$$，$$ \vec a$$ 是和ϕ$$ \boldsymbol\phiϕ$$ 方向相同的单位向量，$$\theta$$ 是 $$ \boldsymbol\phi $$ϕ的模长。
+
+经过一连串推导，获得
+![](https://s2.loli.net/2023/02/22/PvMlhCZ3X6WGwUD.png)
+这实际就是罗德里格斯公式 3.14.
+
+旋转矩阵的李代数实际上就是旋转向量组成的空间。指数映射其实就是通过罗德里格斯公式变换的。
+
+## BCH公式
+
+$$ \mathfrak{so}(3) $$ 上做两个李代数的加法时，并不对应SO(3)的两个矩阵的乘积。也就是说
+$$  exp(\phi_1^\land) exp(\phi_2^\land) \ne exp((\phi_1 + \phi_2)^\land)</script><script type="math/tex; mode=display">ln(\ exp(\phi_1^\land) exp(\phi_2^\land) \ ) \ne  \phi_1^\land + \phi_2^\land</script><p>根据BCH公式，第2个公式右边还有一些余项<br><img src="https://s2.loli.net/2023/02/22/DyfATCPEcpebFrx.png" alt=""></p>
+<p>反过来，当我们做李代数的加法时，对应到李群的运算由下式给出</p>
+<h2 id="李代数的求导问题"><a href="#李代数的求导问题" class="headerlink" title="李代数的求导问题"></a>李代数的求导问题</h2><p>对于公式 4.39，需要计算目标函数J关于变换矩阵T的导数。我们经常构建与位姿有关的函数，然后讨论该函数关于位姿的导数，以调整当前的估计值。但是旋转矩阵和变换矩阵，它们对加法都没有良好的定义，所以对姿态有关的函数求导，只能通过李代数进行。关于用李代数解决求导问题，有两种思路：</p>
+<ol>
+<li>用李代数表示姿态，然后根据李代数加法对李代数进行求导</li>
+<li>对李群左乘或者右乘微小扰动，然后对该扰动求导。即左扰动和右扰动模型。</li>
+</ol>
+<p>因为旋转矩阵没有加法，所以我们就对旋转矩阵的李代数就行求导，最终<br><img src="https://s2.loli.net/2023/02/22/jglmI1HnRo4irzY.png" alt=""><br>平时不用这种方法，而是用扰动模型法。</p>
+<p><br></p>
+<p><strong>不管是李代数求导还是扰动模型，都是旋转矩阵对李代数的求导</strong>。对R进行一次扰动 <script type="math/tex">\Delta R</script>，这个扰动可以乘在R左边，也可以是右边。假设 <script type="math/tex">\Delta R</script> 对应的李代数为  <script type="math/tex">\varphi</script></p>
+<ul>
+<li>左扰动模型</li>
+</ul>
+<script type="math/tex; mode=display">\frac{∂(Rp)}{∂\varphi} =−(Rp)^\land</script><ul>
+<li>右扰动模型</li>
+</ul>
+<p><img src="https://s2.loli.net/2023/02/22/i6K92dDfLBkjEtm.png" alt=""></p>
+<p>扰动模型，显然计算量上要少非常多。</p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2021/07/14/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AD%A3%E5%AE%9A%E7%9F%A9%E9%98%B5%20%E5%AF%B9%E7%A7%B0%E7%9F%A9%E9%98%B5/"><i class="fa fa-chevron-left">  </i><span>正定矩阵 对称矩阵</span></a></div><div class="next-post pull-right"><a href="/2021/07/13/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/"><span>高斯牛顿法</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2021/07/14/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E6%9D%8E%E7%BE%A4%E6%9D%8E%E4%BB%A3%E6%95%B0/';
+  this.page.identifier = '2021/07/14/算法推导/李群李代数/';
+  this.page.title = '李群李代数';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
