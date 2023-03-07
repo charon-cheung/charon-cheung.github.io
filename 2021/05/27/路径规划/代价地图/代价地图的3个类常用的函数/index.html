@@ -8,13 +8,9 @@
     noSupport: 'The browser does not support'
   }
 } </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Costmap2DROS"><span class="toc-number">1.</span> <span class="toc-text">Costmap2DROS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Costmap2D"><span class="toc-number">2.</span> <span class="toc-text">Costmap2D</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LayeredCostmap"><span class="toc-number">3.</span> <span class="toc-text">LayeredCostmap</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%BE%97%E6%8C%87%E5%AE%9A%E6%A0%85%E6%A0%BC%E5%91%A8%E5%9B%B4%E7%9A%844%E4%B8%AA%E6%88%968%E4%B8%AA%E6%A0%85%E6%A0%BC"><span class="toc-number">4.</span> <span class="toc-text">获得指定栅格周围的4个或8个栅格</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">620</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">55</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">代价地图的3个类常用的函数</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-27</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE%E7%9A%843%E4%B8%AA%E7%B1%BB%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2021/05/27/路径规划/代价地图/代价地图的3个类常用的函数/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">1.9k</span><span class="post-meta__separator">|</span><span>Reading time: 8 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>三个类都属于命名空间<code>costmap_2d</code>，互相没有继承关系，而且都是独立的类</p>
-<font size=3 color = blue>`Costmap2DROS`类是`2D Costmap`的ROS封装类，处理订阅的话题，这些话题提供了对障碍物的观测，方式为点云或激光扫描消息 </font>  `costmap_2d::Costmap2DROS`给用户提供了纯2D的接口，这意味着查询障碍只能在列上进行。例如，在XY平面上位于同一位置的桌子和鞋，虽然在Z方向上有差异但是它们在costmap_2d::Costmap2DROS对象代价地图中对应的cell上拥有相同的代价值。
-
-<font size=3 color = blue>`Costmap2D` 类中实现了用来存储和访问2D代价地图的的基本数据结构</font> 它的定义在`LayeredCostmap`类的成员列表初始化里面，cell默认值`default_value_`的赋值在`LayerdCostmap`类的构造函数里。
-
-<font size=3 color = blue > 使用`LayeredCostmap` 来跟踪每一层。 每一层在Costmap2DROS中以插件方式被实例化，并被添加到`LayeredCostmap`。</font> 每一层可以独立编译，且可使用C++接口对代价地图随意修改， <font size=3 color = blue> 
-即`LayerdCostmap`为`Costmap2DROS`（用户接口）提供了加载地图层的插件机制，每个插件（即地图层）都是Layer类型的 </font>
-
+<p><code>Costmap2DROS</code>类是<code>2D Costmap</code>的ROS封装类，处理订阅的话题，这些话题提供了对障碍物的观测，方式为点云或激光扫描消息。  <code>costmap_2d::Costmap2DROS</code>给用户提供了纯2D的接口，这意味着查询障碍只能在列上进行。例如，在XY平面上位于同一位置的桌子和鞋，虽然在Z方向上有差异但是它们在costmap_2d::Costmap2DROS对象代价地图中对应的cell上拥有相同的代价值。</p>
+<p><code>Costmap2D</code> 类中实现了用来存储和访问2D代价地图的的基本数据结构. 它的定义在<code>LayeredCostmap</code>类的成员列表初始化里面，cell默认值<code>default_value_</code>的赋值在<code>LayerdCostmap</code>类的构造函数里。</p>
+<p>使用<code>LayeredCostmap</code> 来跟踪每一层。 每一层在Costmap2DROS中以插件方式被实例化，并被添加到<code>LayeredCostmap</code>。每一层可以独立编译，且可使用C++接口对代价地图随意修改，即<code>LayerdCostmap</code>为<code>Costmap2DROS</code>（用户接口）提供了加载地图层的插件机制，每个插件（即地图层）都是Layer类型的</p>
 <p><img src="https://i.loli.net/2021/05/29/KIesGlZtp9PCvaF.png" alt="三个类的关系图"></p>
 <h2 id="Costmap2DROS"><a href="#Costmap2DROS" class="headerlink" title="Costmap2DROS"></a>Costmap2DROS</h2><p>A ROS wrapper for a 2D Costmap. Handles subscribing to topics that provide observations about obstacles in either the form of PointCloud or LaserScan messages.</p>
 <ul>
@@ -62,14 +58,15 @@
 <ul>
 <li>void mapToWorld(unsigned int mx, unsigned int my, double&amp; wx, double&amp; wy) const</li>
 </ul>
-<p>把某个代价地图里的坐标转为世界坐标，一般是把机器人全局代价地图的坐标转为map坐标系的坐标</p>
+<p>把某个代价地图里的坐标转为世界坐标，常用于把机器人全局代价地图的坐标转为map坐标系的坐标</p>
 <p>在<code>TebLocalPlannerROS::updateObstacleContainerWithCostmap()</code>调用过: <code>costmap_-&gt;mapToWorld(0, 0, wx, wy);</code></p>
 <ul>
-<li>unsigned char* getCharMap() const;</li>
-</ul>
-<p>return A pointer to the underlying unsigned char array storing cost values<br>主要在层的代码和<code>ClearCostmapRecovery</code>类中使用</p>
-<ul>
-<li>void     setCost(unsigned int mx, unsigned int my, unsigned char cost)</li>
+<li><p><code>unsigned char  getCost (unsigned int mx, unsigned int my) const</code>  &emsp;&emsp;&emsp;获得costmap中某个栅格的代价值。 mx, my是cell的坐标</p>
+</li>
+<li><p><code>unsigned int   getIndex (unsigned int mx, unsigned int my) const</code> &emsp;&emsp;&emsp;根据地图坐标，求出，对应的索引</p>
+</li>
+<li><p>void     setCost(unsigned int mx, unsigned int my, unsigned char cost)</p>
+</li>
 </ul>
 <p>设置代价地图中某个cell的代价值，在层的代码中使用很多</p>
 <ul>
@@ -77,10 +74,7 @@
 </ul>
 <p>语句只有<code>default_value_ = c;</code>，调用的地方只有<code>LayeredCostmap</code>构造函数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (track_unknown)  <span class="comment">// 默认false</span></span><br><span class="line">  costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">255</span>);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
 <ul>
-<li><p><code>unsigned char     getCost (unsigned int mx, unsigned int my) const</code>       Get the cost of a cell in the costmap. mx, my是cell的坐标</p>
-</li>
-<li><p><code>unsigned int     getIndex (unsigned int mx, unsigned int my) const</code>    Given two map coordinates… compute the associated index</p>
-</li>
+<li>unsigned char* getCharMap() const;  &emsp;&emsp;&emsp; return A pointer to the underlying unsigned char array storing cost values  &emsp;&emsp;&emsp; 主要在层的代码和<code>ClearCostmapRecovery</code>类中使用</li>
 </ul>
 <h2 id="LayeredCostmap"><a href="#LayeredCostmap" class="headerlink" title="LayeredCostmap"></a>LayeredCostmap</h2><p>其实就是那个master costmap， Instantiates different layer plugins and aggregates them into one score</p>
 <p>主要的调用在层的代码, <code>costmap_2d_ros.cpp</code>和<code>Layer::initialize</code>:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Layer::initialize</span><span class="params">(LayeredCostmap* parent, std::string name, tf::TransformListener *tf)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	layered_costmap_ = parent;</span><br><span class="line">	name_ = name;</span><br><span class="line">	tf_ = tf;</span><br><span class="line">	<span class="built_in">onInitialize</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
