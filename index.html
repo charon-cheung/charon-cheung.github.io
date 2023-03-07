@@ -122,10 +122,10 @@
 <p>推导过程还是按我上面讲的更容易理解。</p>
 <p><script type="math/tex">\frac{(Rp_s+t-p_t) * \overrightarrow {n_e}}{||(Rp_s+t-p_t) * \overrightarrow {n_e}\  ||_2 }</script> 的值是-1或者1</p>
 <p><img src="https://s2.loli.net/2023/02/27/sSTwkJKje93btqa.png" alt=" "><br>得到每一个误差的导数，组成一个大的雅克比矩阵(也有可能是向量)，有了雅克比矩阵之后带入高斯牛顿或者LM算法即可以求解最优的R和t。<br>点到线的误差项在优化过程中的贡献比较小，在r3live、fast-lio都只计算点到面的误差。</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2023/02/27/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E8%8C%83%E6%95%B0/">范数及求导</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><script type="math/tex; mode=display">||x|| $$ 是 1 范数
-
-![ ](https://s2.loli.net/2023/02/27/v3zkxDic42Jh1om.png)
-2范数其实就是：列向量 x,  2范数为 $$ \sqrt{x^Tx}</script><p>2范数为 <script type="math/tex">\phi(x) =||Ax- \overrightarrow {b} ||_2</script></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2023/02/27/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E8%8C%83%E6%95%B0/">范数及求导</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><p><code>||x||</code> 是 1 范数</p>
+<p><img src="https://s2.loli.net/2023/02/27/v3zkxDic42Jh1om.png" alt=" "></p>
+<p>2范数其实就是：列向量 x,  2范数为 <script type="math/tex">\sqrt{x^Tx}</script></p>
+<p>2范数为 <script type="math/tex">\phi(x) =||Ax- \overrightarrow {b} ||_2</script></p>
 <p>对 x 求导<br><img src="https://s2.loli.net/2023/02/27/uqj9y2M1ckU37dW.png" alt=" "></p>
 <p>如果是求雅格比，<br><img src="https://s2.loli.net/2023/02/27/IJZ4vVckAtCpFTW.png" alt=" "><br>也就是只需求f(x)的雅格比，再转置。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2023/02/24/%E6%BF%80%E5%85%89SLAM/LOAM%E7%B3%BB%E5%88%97/ALOAM%E7%9A%84%E6%B5%81%E7%A8%8B/">ALOAM的流程</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-02-24</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/LOAM%E7%B3%BB%E5%88%97/">LOAM系列</a></span><div class="content"><p>LOAM是一个激光里程计算法，没有闭环检测，也就没有加入图优化框架，该算法把SLAM问题分为两个算法并行运行：一个odometry算法，10Hz；另一个mapping算法，1Hz，最终将两者输出的pose做整合，实现10Hz的位姿实时输出。</p>
