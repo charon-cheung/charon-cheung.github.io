@@ -102,10 +102,14 @@
 </ul>
 <h2 id="病态矩阵"><a href="#病态矩阵" class="headerlink" title="病态矩阵"></a>病态矩阵</h2><p>求解方程组<code>Ax=b</code>时如果对数据进行较小的扰动，则得出的结果具有很大波动，这样的矩阵称为病态矩阵。<br><img src="https://i.loli.net/2021/07/14/t3JPWIAwaXrqYsf.png" alt=""></p>
 <p>最根本的原因在于矩阵的列之间的相关性过大。<br><img src="https://i.loli.net/2021/07/14/edfVsN54KmI3Oar.png" alt=""></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E6%9D%8E%E7%BE%A4%E6%9D%8E%E4%BB%A3%E6%95%B0/">李群李代数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>在SLAM中最常见的变换是四维变换矩阵T以及三维旋转矩阵R。 它们对加法并不封闭: 两个变换矩阵之和明显不是变换矩阵；而旋转矩阵是正交矩阵，但两个正交矩阵之和不是正交矩阵。</p>
-<p>为什么会出现李群李代数的概念，原因就在于此。SLAM问题会构建一个优化问题，求解最优的R  t，使误差最小化。这必然涉及求导，SLAM的运动过程是连续的，所以一定是可以求导的。但是导数的定义是这样的<br><img src="https://s2.loli.net/2023/02/22/cxfhXabkWZzdlQA.png" alt=""><br>需要把函数f换成旋转矩阵R，对自变量添加一个微小值来进行，但是前面我们说了，旋转矩阵做加减法运算之后就不再满足旋转矩阵的形式了，<strong>没有加减法就意味着不能求导了。</strong></p>
-<p>另一个原因是，旋转矩阵都是正交矩阵且行列式为1，<strong>它们作为优化变量时，会引入额外的约束，</strong>使优化更困难了。</p>
-<p>引入李群和李代数，就可以解决旋转矩阵求导问题，还可把位姿估计转为无约束的优化问题。也就是说李代数se(3)和so(3)对加法封闭，所以用李代数表示机器人的旋转和位移。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/14/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E6%9D%8E%E7%BE%A4%E6%9D%8E%E4%BB%A3%E6%95%B0/">李群李代数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><p>导数的定义是这样的<br><img src="https://s2.loli.net/2023/02/22/cxfhXabkWZzdlQA.png" alt=""><br>SLAM问题会构建一个优化问题，求解最优的R  t，使误差最小化。这必然涉及求导，<strong>SLAM的运动过程是连续的，所以一定是可以求导的。</strong>在SLAM中最常见的变换是四维变换矩阵T以及三维旋转矩阵R。但是它们对加法并不封闭: 两个变换矩阵之和明显不是变换矩阵；而旋转矩阵是正交矩阵，但两个正交矩阵之和不是正交矩阵。需要把函数f换成旋转矩阵R，对自变量添加一个微小值来进行，但是前面我们说了，旋转矩阵做加减法运算之后就不再满足旋转矩阵的形式了，<strong>没有加减法就意味着不能求导了。</strong></p>
+<p>为什么会出现李群李代数的概念，原因就在于此。SLAM应当能求导，只是我们不该用这两种矩阵的形式，而是用李代数。</p>
+<p>另外两个原因：</p>
+<ol>
+<li>旋转矩阵都是正交矩阵且行列式为1，<strong>它们作为优化变量时，会引入额外的约束，</strong>使优化更困难了。</li>
+<li>优化变量的迭代阶段： <script type="math/tex">x = x + \Delta x</script> 不能直接用两种矩阵相加</li>
+</ol>
+<p>引入李群和李代数，就可以解决旋转矩阵求导问题，也就是说李代数se(3)和so(3)对加法封闭，所以用李代数表示机器人的旋转和位移。求导结束后，再对数映射为李群，这个过程都是由优化器完成的，无需我们手动。</p>
 <h2 id="李群和李代数"><a href="#李群和李代数" class="headerlink" title="李群和李代数"></a>李群和李代数</h2><p>具有连续（光滑）性质的群。整数群是离散的，没有连续性质。SO(3)和SE(3)都是连续的，空间中的机器人的姿态是连续变化的，而不是磕磕绊绊地运动，所以都是李群。</p>
 <p>机器人的旋转是一个随时间连续变化的过程，函数是R(t)，根据旋转矩阵的性质</p>
 <script type="math/tex; mode=display">R(t)R(t)^T =  I</script><p>经过一系列推导，发现<script type="math/tex">\dot R(t)R(t)^T</script> 是一个反对称矩阵，因此写做</p>
