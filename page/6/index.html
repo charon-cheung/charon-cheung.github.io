@@ -74,7 +74,7 @@
 </li>
 <li><p>Pose到Landmark的边与机器人的观测模型相关，机器人从 <script type="math/tex">x_{1}</script>观测到 <script type="math/tex">m_{1}</script>，就会形成一条边。同时在观测模型 <script type="math/tex">h_{(measure, Pose)}</script> 的作用下，可以获得机器人在 <script type="math/tex">x_{1}</script> 时对 <script type="math/tex">m_1</script> 的预测 <script type="math/tex">h_{(m_{1}, x_{1})}</script>。该值与此时真正观测到的值 <script type="math/tex">z_{1}</script> 的差，构成了这条边的约束。同样的，取这个差的平方作为约束值。<script type="math/tex">Q</script> 表示为观测模型的协方差。公式 <script type="math/tex">[z_1 - h(m_1,x_1)]^TQ^{-1}[z_1 - h(m_1,x_1)]</script></p>
 </li>
-<li><p>完整的约束为两种约束的和  </p>
+<li><p>完整的约束为两种约束的和  <script type="math/tex">J_{GraghSLAM}</script></p>
 </li>
 </ul>
 <p>SLAM的图优化问题就是寻找合适的 <code>Pose(x)</code>, <code>Landmark(m)</code>，使 <script type="math/tex">J_{GraghSLAM}</script> 最小。</p>
@@ -90,7 +90,7 @@
 </li>
 <li><p>每一步迭代中，计算对应于当前估计值的雅可比矩阵和海塞矩阵</p>
 </li>
-<li><p>求解稀疏线性方程HkΔx = −bk，得到梯度方向</p>
+<li><p>求解稀疏线性方程 <script type="math/tex">H_k \Delta x = -b_k</script> ，得到梯度方向</p>
 </li>
 <li><p>继续用高斯牛顿法(GN)或列文列文伯格-马夸尔特法(LM)进行迭代。如果迭代结束，返回优化值。</p>
 </li>
