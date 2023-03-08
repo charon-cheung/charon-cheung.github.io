@@ -15,14 +15,14 @@
 <p>Quaternion是四元数表示法，Quaternion的构造是标准Eigen格式：数据类型作为模板参数+构造参数，而且重载了多个构造函数，因此可以方便地从角轴、旋转矩阵等数据类型进行构造。</p>
 <p>Eigen提供了Quaternionf和Quaterniond方便使用。Quaterniond的初始化：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Eigen::Quaterniond <span class="title">q1</span><span class="params">(x, y, z, w)</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function">Eigen::Quaterniond <span class="title">q2</span><span class="params">(Vector4d(x, y, z, w))</span></span>;</span><br><span class="line"> </span><br><span class="line"><span class="function">Eigen::Quaterniond <span class="title">q2</span><span class="params">(Matrix3d(R))</span></span>;</span><br></pre></td></tr></table></figure><br>在Quaternion内部的保存中，<strong>虚部在前，实部在后</strong>。 </p>
 <p>如果以第一种方式构造四元数，则实部是x，虚部是<code>[y,z,w]</code>。   对于第二种方式，则实部是w，虚部是[x,y,z]； 对于第三种方式，则是用3x3的旋转矩阵初始化四元数。</p>
-<p>所以平时应当使用的方式是<code>Eigen::Quaterniond q1(w, x, y, z);</code>，四个数的传入顺序是w、x、y、z，对应<code>w+xi+yj+zk</code>。</p>
+<p>所以最常用是 <font size="4" color="blue"> Eigen::Quaterniond q1(w, x, y, z);  </font> ，四个数的传入顺序是w、x、y、z，对应<code>w+xi+yj+zk</code>。</p>
 <p><code>Eigen::Quaterniond</code><font size="4" color="blue">  不能使用cout </font></p>
 <ul>
 <li><p><code>Identity()</code>: 返回一个表示单位旋转的四元数</p>
 </li>
 <li><p>w(): 返回四元数中的w分量。 同理 x(), y(), z()是返回相应的分量。</p>
 </li>
-<li><p>coeffs(): 返回四元数的四个数，可以对其进行索引[]获取值。需要注意的是返回顺序是x、y、z、w，和构造函数的不同</p>
+<li><p><strong>coeffs()</strong>: 返回四元数的四个数，可以对其进行索引[]获取值。<font size="4" color="blue"> 需要注意的是返回顺序是x、y、z、w，和构造函数的不同  </font></p>
 </li>
 <li><p>toRotationMatrix() 将当前Quaternion对象转换为3×3的旋转矩阵。另外，没有fromRotationMatrix()函数，只能用构造函数传入旋转矩阵</p>
 </li>
