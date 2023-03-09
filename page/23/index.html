@@ -130,7 +130,7 @@
 <p>因为旋转矩阵没有加法，所以我们就对旋转矩阵的李代数就行求导，也就是李代数的局部坐标上添加扰动，由于李代数本身对应旋转向量，因此对旋转向量添加扰动相当于同时改变旋转轴和旋转角度。</p>
 <p>对一个空间点<script type="math/tex">p</script>进行旋转，得到<script type="math/tex">Rp</script>，现在计算旋转后的点坐标相对旋转的导数，不严谨地记做 <script type="math/tex">\frac{∂(Rp)}{∂R}</script></p>
 <p>由于<script type="math/tex">SO(3)</script>没有加法，假设<script type="math/tex">R</script>对应的李代数为<script type="math/tex">\phi</script>，于是我们计算出</p>
-<script type="math/tex; mode=display">\frac{∂(exp(\phi^\land)p)}{∂\phi} =−(Rp)^\land</script><p>平时不用这种方法，而是用扰动模型法。</p>
+<script type="math/tex; mode=display">\frac{∂(exp(\phi^\land)p)}{∂\phi} =−(Rp)^\land J_l</script><p>平时不用这种方法，而是用扰动模型法。</p>
 <p><br></p>
 <p><strong>不管是李代数求导还是扰动模型，都是旋转矩阵对李代数的求导</strong>。</p>
 <p>对R进行一次扰动 <script type="math/tex">\Delta R</script>，这个扰动可以乘在 <script type="math/tex">R</script>左边，也可以是右边。假设 <script type="math/tex">\Delta R</script> 对应的李代数为 <script type="math/tex">\varphi</script>，然后对 <script type="math/tex">\varphi</script> 求导</p>
