@@ -128,17 +128,19 @@
 <li>对李群左乘或者右乘微小扰动，然后对该扰动求导。即左扰动和右扰动模型。</li>
 </ol>
 <p>因为旋转矩阵没有加法，所以我们就对旋转矩阵的李代数就行求导，也就是李代数的局部坐标上添加扰动，由于李代数本身对应旋转向量，因此对旋转向量添加扰动相当于同时改变旋转轴和旋转角度。</p>
-<p>最终推导得到<br><img src="https://s2.loli.net/2023/02/22/jglmI1HnRo4irzY.png" alt=""><br>平时不用这种方法，而是用扰动模型法。</p>
+<p>对一个空间点<script type="math/tex">p</script>进行旋转，得到<script type="math/tex">Rp</script>，现在计算旋转后的点坐标相对旋转的导数，不严谨地记做 <script type="math/tex">\frac{∂(Rp)}{∂R}</script></p>
+<p>由于<script type="math/tex">SO(3)</script>没有加法，假设<script type="math/tex">R</script>对应的李代数为<script type="math/tex">\phi</script>，于是我们计算出</p>
+<script type="math/tex; mode=display">\frac{∂(exp(\phi^\land)p)}{∂\phi} =−(Rp)^\land</script><p>平时不用这种方法，而是用扰动模型法。</p>
 <p><br></p>
 <p><strong>不管是李代数求导还是扰动模型，都是旋转矩阵对李代数的求导</strong>。</p>
-<p>对R进行一次扰动 <script type="math/tex">\Delta R</script>，这个扰动可以乘在R左边，也可以是右边。假设 <script type="math/tex">\Delta R</script> 对应的李代数为  <script type="math/tex">\varphi</script></p>
+<p>对R进行一次扰动 <script type="math/tex">\Delta R</script>，这个扰动可以乘在 <script type="math/tex">R</script>左边，也可以是右边。假设 <script type="math/tex">\Delta R</script> 对应的李代数为 <script type="math/tex">\varphi</script>，然后对 <script type="math/tex">\varphi</script> 求导</p>
 <ul>
 <li>左扰动模型</li>
 </ul>
 <script type="math/tex; mode=display">\frac{∂(Rp)}{∂\varphi} =−(Rp)^\land</script><ul>
 <li>右扰动模型</li>
 </ul>
-<p><img src="https://s2.loli.net/2023/02/22/i6K92dDfLBkjEtm.png" alt=""></p>
+<p><img src="https://s2.loli.net/2023/03/09/83Ph17FkAKvyqcX.png" alt=" "></p>
 <p>扰动模型，显然计算量上要少非常多。</p>
 <h2 id="旋转连乘的求导的推导"><a href="#旋转连乘的求导的推导" class="headerlink" title="旋转连乘的求导的推导"></a>旋转连乘的求导的推导</h2><h2 id="逆旋转点的求导"><a href="#逆旋转点的求导" class="headerlink" title="逆旋转点的求导"></a>逆旋转点的求导</h2><h2 id="逆旋转函数的求导"><a href="#逆旋转函数的求导" class="headerlink" title="逆旋转函数的求导"></a>逆旋转函数的求导</h2></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/07/13/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/%E9%AB%98%E6%96%AF%E7%89%9B%E9%A1%BF%E6%B3%95/">高斯牛顿法</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-07-13</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AE%97%E6%B3%95%E6%8E%A8%E5%AF%BC/">算法推导</a></span><div class="content"><h2 id="推导过程"><a href="#推导过程" class="headerlink" title="推导过程"></a>推导过程</h2><p><img src="https://i.loli.net/2021/07/14/NKmOJRVD4hsdjHZ.jpg" alt=""><br>有些人可能产生疑问，为什么通过最小二乘而不是其他方式获得最优函数，比如说最小化误差的绝对值的和？这里的推导使用最大似然估计推导出 <script type="math/tex">X^* = argmin\Sigma e_i^T \Omega e_i</script> 就提供了概率学基础</p>
 <p><img src="https://i.loli.net/2021/07/14/BNEa93lomCu2njP.jpg" alt=""><br><img src="https://i.loli.net/2021/07/14/s8MXzitu7bvUfwr.jpg" alt=""></p>
