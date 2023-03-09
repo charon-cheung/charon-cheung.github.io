@@ -35,7 +35,7 @@
 </ul>
 <p>但是最快和最短路径是例外，显然是因为它们需要全局地依赖于所有的参数。</p>
 <p>TEB同时考虑原始路径的via-point的到达和避免静态或动态的障碍。这两个目标函数相似，不同之处在于via-point吸引橡皮筋，而障碍物排斥它。 </p>
-<p><strong>约束用到了几个顶点(待优化变量)，对应的就是几元边</strong>。 比如速度约束用到了两个位姿和一个时间差，是三元边。 加速度约束就是五元边。 障碍约束和via-point就是一元边<br><img src="https://i.loli.net/2021/06/24/2Oks5jB93SRpCnU.gif" alt="图的构建过程"></p>
+<p><strong>约束用到了几个顶点(待优化变量)，对应的就是几元边</strong>。 比如速度约束用到了两个位姿和一个时间差，是三元边。 加速度约束就是五元边。 障碍约束和via-point就是一元边。非完整运动学约束是二元边。<br><img src="https://i.loli.net/2021/06/24/2Oks5jB93SRpCnU.gif" alt="图的构建过程"></p>
 <h3 id="为什么可以用非线性优化的框架？"><a href="#为什么可以用非线性优化的框架？" class="headerlink" title="为什么可以用非线性优化的框架？"></a>为什么可以用非线性优化的框架？</h3><p>平时所说的图优化的最小二乘形式是这样的：<br><img src="https://s2.loli.net/2022/03/09/3OsKtCNZG7zWxv4.png" alt="图优化的最小二乘形式"></p>
 <p>TEB所优化的目标函数是这样的：<br><img src="https://s2.loli.net/2022/03/09/BQpdcfroJht5ZXK.png" alt="TEB的目标函数"><br>我们先把上面的<code>F(x)</code>看成 <script type="math/tex">F_k = \Omega_k e^2_k</script>， 其中<script type="math/tex">\Omega_k = \gamma_k \ \ \ \ \ \ \ \ \ \ \  e^2 = f_k</script></p>
 <p>图优化中，顶点是待估计的参数，观测数据构成了边。 TEB的待估计参数就是 <script type="math/tex">B</script>，也就是位姿和时间差的组合。  边表示目标函数 <script type="math/tex">f_k</script>，并连接多个顶点。</p>
