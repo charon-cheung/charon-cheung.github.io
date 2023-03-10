@@ -91,7 +91,12 @@
 <h3 id="正定矩阵的几何意义"><a href="#正定矩阵的几何意义" class="headerlink" title="正定矩阵的几何意义"></a>正定矩阵的几何意义</h3><p>定义中的 <script type="math/tex">x^TAx>0</script> 变为 <script type="math/tex">x^TY>0</script> (<script type="math/tex">Y=Ax</script>)</p>
 <p>那么有 <script type="math/tex">cos(\theta)=\frac{x^T Y}{\Vert x^T \Vert \Vert Y \Vert} > 0</script></p>
 <p>也就是说，一个向量 x 经过矩阵A变换后(左乘)，与其转置向量的夹角小于90°</p>
-<h2 id="反对称矩阵"><a href="#反对称矩阵" class="headerlink" title="反对称矩阵"></a>反对称矩阵</h2><p>也就是<script type="math/tex">A^T = -A</script>，或者说元素关系满足 <script type="math/tex">A_{ij} = -A_{ji}</script></p>
+<h2 id="反对称矩阵"><a href="#反对称矩阵" class="headerlink" title="反对称矩阵"></a>反对称矩阵</h2><p>也就是<script type="math/tex">A^T = -A</script>，或者说元素关系满足 <script type="math/tex">A_{ij} = -A_{ji}</script>   主对角线元素皆为0</p>
+<ul>
+<li>斜对称矩阵自身相乘的积是对称矩阵。</li>
+<li>任意矩阵 <script type="math/tex">A</script>，<script type="math/tex">A^T - A</script>是斜对称矩阵。</li>
+<li>若<script type="math/tex">A</script>是斜对称矩阵，<script type="math/tex">x</script>是向量，<script type="math/tex">x^T A x</script> = 0</li>
+</ul>
 <h2 id="稀疏矩阵"><a href="#稀疏矩阵" class="headerlink" title="稀疏矩阵"></a>稀疏矩阵</h2><p>在矩阵中，若数值为0的元素数目远远多于非0元素的数目，并且非0​元素分布没有规律时，则称该矩阵为稀疏矩阵</p>
 <h2 id="奇异矩阵-singular"><a href="#奇异矩阵-singular" class="headerlink" title="奇异矩阵(singular)"></a>奇异矩阵(singular)</h2><p>奇异和非奇异矩阵仅针对n阶方阵。 奇异矩阵就是对应的行列式等于0的矩阵。  若一个n阶矩阵是可逆的，则称它为非奇异矩阵。</p>
 <p>奇异矩阵的判定方法: 行列式|A|是否等于0，若等于0，称矩阵A为奇异矩阵</p>
