@@ -157,32 +157,15 @@
 <h2 id="I-INTRODUCTION"><a href="#I-INTRODUCTION" class="headerlink" title="I. INTRODUCTION"></a>I. INTRODUCTION</h2><p>算法框架包括探索算法<code>TARE</code> (<code>exploration planner</code>)；  路径算法<code>FAR</code> (<code>route planner</code>)</p>
 <p>我们的算法不依赖只有仿真才提供的信息，比如 semantic and terrain segmentation groundtruth. 算法是为了让用户重点开发上层的规划算法。</p>
 <p>在2021 DARPA地下挑战赛中， CMU-OSU Team Explorer 虽然没拿到冠军，但获得”探索最多区域奖“(26 out of 28 sectors).</p>
-<h2 id="II-RELATED-WORK"><a href="#II-RELATED-WORK" class="headerlink" title="II. RELATED WORK"></a>II. RELATED WORK</h2><p>For <font size="4" color="blue">outdoor settings </font>, the most well-known dataset is <code>KITTI Vision Benchmark Dataset</code> [4] collected<br>from a self-driving suite in road driving scenarios. The<br>dataset contains sensor data from stereo cameras, 3D Lidar,<br>and GPS/INS ground truth for benchmarking depth reconstruction, odometry estimation, object segmentation, etc. </p>
-<p>For <font size="4" color="blue">localization purposes, </font> the long-term localization benchmark includes a comprehensive list of datasets :  Aachen Day-Night dataset, Extended CMU Seasons dataset, RobotCar Seasons dataset, and SILDa Weather and Time of Day dataset. </p>
-<font size="4" color="blue">For indoor navigation </font>, iGibson [15], [16], Sapien [17], AI2Thor [18], Virtual Home [19], ThreeDWorld [20], MINOS [21], House3D [22] and CHALET [23] use synthetic scenes, while reconstructed scenes are also available in iGibson, AI Habitatand MINOS. Compared to datasets, simulation environments have the advantage of providing access to ground truth data, e.g. vehicle pose and semantic segmentation to simplify the algorithm development and allowing full navigation system tests in closed control loop。
-
-For <font size="4" color="blue"> indoor scenes</font>, datasets such as NYUDepth dataset [7], TUM SLAM dataset [8], inLoc dataset [9], MIT Stata center dataset, and KTH-INDOL dataset [11], [12] are available. Datasets are useful in developing and
-
-<font size="4" color="blue">Simulation environments </font>: Carla [13] and AirSim [14] are two representative simulation environments for autonomous driving and flying. These simulators support various conditions such as lighting and weather changes, moving objects such as pedestrians, and incident scenes.
-
-
-其他的导航框架:  ROS Navigation Stack 和港科大的 fast_planner ，不过是针对无人机的。
-
-我们的导航框架: 支持photorealistic house models from Matterport3D 以及向AI Habitat提供接口。这两个在机器人学和计算视觉中应用很多。Users are provided with scan data and RGB, depth, and semantic images rendered by AI Habitat. Users have the option of running AI Habitat side by side with our system or in post-processing.
-
-![](https://s2.loli.net/2022/02/09/VnzOjNr5Y7UQcsf.png)
-
-
-参考：
-[阅读笔记 《Matterport3D: Learning from RGB-D Data inIndoor Environments》](https://blog.csdn.net/ShuqiaoS/article/details/88361949)
-[AI Habitat室内仿真平台使用](https://blog.csdn.net/weixin_43823054/article/details/106903128)
-
-## III. DEVELOPMENT ENVIRONMENT
-
-### Local Planner
-
-`local planner`保证了到达目标时的安全，它预计算 a motion primitive library and associates the motion primitives to 车周围的3D locations(这里说的就是`free_paths`对应的曲线簇)。 <font size="4" color="blue"> The motion primitives are modeled as Monte Carlo samples and organized in groups </font>
-
+<h2 id="II-RELATED-WORK"><a href="#II-RELATED-WORK" class="headerlink" title="II. RELATED WORK"></a>II. RELATED WORK</h2><p>For <strong>outdoor settings</strong>, the most well-known dataset is <code>KITTI Vision Benchmark Dataset</code> [4] collected<br>from a self-driving suite in road driving scenarios. The<br>dataset contains sensor data from stereo cameras, 3D Lidar,<br>and GPS/INS ground truth for benchmarking depth reconstruction, odometry estimation, object segmentation, etc. </p>
+<p>For <strong>localization purposes,</strong> the long-term localization benchmark includes a comprehensive list of datasets:  Aachen Day-Night dataset, Extended CMU Seasons dataset, RobotCar Seasons dataset, and SILDa Weather and Time of Day dataset. </p>
+<p><strong>For indoor navigation</strong>, iGibson [15], [16], Sapien [17], AI2Thor [18], Virtual Home [19], ThreeDWorld [20], MINOS [21], House3D [22] and CHALET [23] use synthetic scenes, while reconstructed scenes are also available in iGibson, AI Habitatand MINOS. Compared to datasets, simulation environments have the advantage of providing access to ground truth data, e.g. vehicle pose and semantic segmentation to simplify the algorithm development and allowing full navigation system tests in closed control loop。</p>
+<p>For <strong>indoor scenes</strong>, datasets such as NYUDepth dataset [7], TUM SLAM dataset [8], inLoc dataset [9], MIT Stata center dataset, and KTH-INDOL dataset [11], [12] are available. Datasets are useful in developing and</p>
+<p><strong>Simulation environments</strong>: Carla [13] and AirSim [14] are two representative simulation environments for autonomous driving and flying. These simulators support various conditions such as lighting and weather changes, moving objects such as pedestrians, and incident scenes.</p>
+<p>其他的导航框架:  ROS Navigation Stack 和港科大的 fast_planner ，不过是针对无人机的。</p>
+<p>我们的导航框架: 支持photorealistic house models from Matterport3D 以及向AI Habitat提供接口。这两个在机器人学和计算视觉中应用很多。Users are provided with scan data and RGB, depth, and semantic images rendered by AI Habitat. Users have the option of running AI Habitat side by side with our system or in post-processing<br><img src="https://s2.loli.net/2022/02/09/VnzOjNr5Y7UQcsf.png" alt=""></p>
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/ShuqiaoS/article/details/88361949">阅读笔记 《Matterport3D: Learning from RGB-D Data inIndoor Environments》</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43823054/article/details/106903128">AI Habitat室内仿真平台使用</a></p>
+<h2 id="III-DEVELOPMENT-ENVIRONMENT"><a href="#III-DEVELOPMENT-ENVIRONMENT" class="headerlink" title="III. DEVELOPMENT ENVIRONMENT"></a>III. DEVELOPMENT ENVIRONMENT</h2><h3 id="Local-Planner"><a href="#Local-Planner" class="headerlink" title="Local Planner"></a>Local Planner</h3><p><code>local planner</code>保证了到达目标时的安全，它预计算 a motion primitive library and associates the motion primitives to 车周围的3D locations(这里说的就是<code>free_paths</code>对应的曲线簇)。 <strong> The motion primitives are modeled as Monte Carlo samples and organized in groups </strong></p>
 <p>现实中快遇到障碍物时，<code>local planner</code>可以在几毫秒内判断出哪些 motion primitives 会和障碍相撞，然后从motion primitives中选出最可能朝向目标的一组。</p>
 <p>The module also has interface to take in additional range data for collision avoidance as an extension option</p>
 <h3 id="Terrain-Traversability-Analysis"><a href="#Terrain-Traversability-Analysis" class="headerlink" title="Terrain Traversability Analysis"></a>Terrain Traversability Analysis</h3><p>模块建立了一个代价地图，地图中的每一个点和一个traversal cost相关联. 代价值取决于 local smoothness of the terrain. </p>
@@ -196,7 +179,7 @@ For <font size="4" color="blue"> indoor scenes</font>, datasets such as NYUDepth
 <p>When handling sharp turns (≥ 90 deg), the look-ahead distance needs to be properly set or the waypoint may jump to the back of the vehicle, causing the vehicle to osculate back-and-forth. We recommend to select the waypoint on the starting segment of the path that is in line-of-sight from the vehicle. </p>
 <p><strong>动态障碍</strong>: <code>terrain analysis</code>模块在动态障碍走过之后，通过<code>ray-tracing</code>清除动态障碍。这是在车的附近范围实现的(到车的距离≤5m)， 因为雷达数据在远处比较稀疏，以及难以权衡清除动态障碍和thin structures之间的矛盾。 用户根据自己的情况来清除动态障碍，TARE和FAR都有这一步骤。</p>
 <h2 id="VI-SYSTEM-INTEGRATION"><a href="#VI-SYSTEM-INTEGRATION" class="headerlink" title="VI. SYSTEM INTEGRATION"></a>VI. SYSTEM INTEGRATION</h2><h3 id="用于DARPA挑战赛的平台"><a href="#用于DARPA挑战赛的平台" class="headerlink" title="用于DARPA挑战赛的平台"></a>用于DARPA挑战赛的平台</h3><p><img src="https://s2.loli.net/2022/02/09/EijtMkq5SJKRN6s.png" alt=""><br>The state estimation module can detect and introduce loop closures. The module outputs state estimation in the odometry frame generated by 3D Lidar-based odometry containing accumulated drift. When loop closure is triggered, it outputs loop closure adjustments to globally relax the vehicle trajectory and corresponding maps. Loop closure adjustments are used by the high-level planners since they are in charge of planning at the global scale.</p>
-<p>The local planner and terrain analysis modules are extended to handle complex terrains including negative obstacles such as cliffs, pits, and water puddles <font size="4" color="blue"> with a downward-looking depth sensor</font>. The TARE planner, FAR planner, and other planners (for stuck recovery, etc) are run in parallel for tasks such as exploration, go-to waypoint, and return home.</p>
+<p>The local planner and terrain analysis modules are extended to handle complex terrains including negative obstacles such as cliffs, pits, and water puddles <strong>with a downward-looking depth sensor</strong>. The TARE planner, FAR planner, and other planners (for stuck recovery, etc) are run in parallel for tasks such as exploration, go-to waypoint, and return home.</p>
 <p>On top of these planners, behavior executive and multi-robot coordination modules are built specifically for the challenge. The modules share explored and unexplored areas across multirobots and call TARE and FAR planners cooperatively. In particular, when a long-distance transition is determined due to new areas containing artifacts are discovered or operator waypoints are received, the behavior executive switches to<br>FAR planner for relocating the vehicle. During the relocation, FAR planner uses a sparse roadmap merged from multi-robots for high-level guidance. After the relocation is complete, TARE planner takes place for exploration</p>
 <p>DARPA最后决赛是在<code>Louisville Mega Cavern, KY</code>. 赛道包括隧道、urban、洞穴环境。我们的三台车使用<code>TARE</code> 和 <code>FAR</code>进行探索。<br><img src="https://s2.loli.net/2022/02/09/VmEYJnZG7OhgXzx.png" alt="DARPA Subterranean Challenge Final Competition"><br>红色轨迹：车先使用TARE一直探索到B，然后使用FAR经过C，一到达C，车换成TARE进行剩下的探索。</p>
 <p>绿色轨迹：车只用TARE；蓝色轨迹：车先使用FAR经过A，在换成TARE进行之后的搜索。</p>
