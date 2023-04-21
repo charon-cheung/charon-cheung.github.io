@@ -83,6 +83,10 @@
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/06/25/%E8%84%9A%E6%9C%AC/shell%E5%B0%8F%E6%8A%80%E5%B7%A7/">Shell小技巧</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%84%9A%E6%9C%AC/">脚本</a></span><div class="content"><h2 id="将命令执行的结果写入日志文件"><a href="#将命令执行的结果写入日志文件" class="headerlink" title="将命令执行的结果写入日志文件"></a>将命令执行的结果写入日志文件</h2><p><code>catkin_make &gt; make.log</code>， 注意不要用一直执行的命令，比如<code>ping</code></p>
 <h2 id="head与tail"><a href="#head与tail" class="headerlink" title="head与tail"></a>head与tail</h2><p><code>tail -f showMapInfo.log</code>可以实时显示文件的更新<br><code>tail -n 5 showMapInfo.log</code>显示文件最后５行<br><code>head -n 5 showMapInfo.log</code>显示文件开始５行</p>
 <h2 id="修改指定目录下的所有文件的权限"><a href="#修改指定目录下的所有文件的权限" class="headerlink" title="修改指定目录下的所有文件的权限"></a>修改指定目录下的所有文件的权限</h2><p>全体可读、可修改、可执行: <code>chmod -R 777 dir</code></p>
+<h2 id="检测温度"><a href="#检测温度" class="headerlink" title="检测温度"></a>检测温度</h2><p>开始检测硬件传感器：<code>sudo sensors-detect</code></p>
+<p>要确保已经工作，运行命令：<code>sensors</code>，但只运行一次</p>
+<h2 id="设置终端初始路径"><a href="#设置终端初始路径" class="headerlink" title="设置终端初始路径"></a>设置终端初始路径</h2><p>在<code>bashrc</code>中加一行： <code>cd PATH</code>即可</p>
+<p>有一次发现不管怎么改也没用，按照网上的方法修改<code>bash_profile</code>不奏效。 后来发现是系统环境变量<code>$HOME</code>被改变了，于是在<code>/etc/profile</code>中添加一行  <code>export HOME=/home/user</code>，问题解决</p>
 <h2 id="将几个文件合并为一个文件"><a href="#将几个文件合并为一个文件" class="headerlink" title="将几个文件合并为一个文件"></a>将几个文件合并为一个文件</h2><p><code>cat file1 file2 &gt; file</code></p>
 <h2 id="检查系统中的设备情况"><a href="#检查系统中的设备情况" class="headerlink" title="检查系统中的设备情况"></a>检查系统中的设备情况</h2><p>需要检查日志   <code>/var/log/messages</code></p>
 <h2 id="tar-gz-压缩"><a href="#tar-gz-压缩" class="headerlink" title="tar.gz 压缩"></a>tar.gz 压缩</h2><p>把<code>file.txt</code>文件压缩成<code>file.tar.gz</code>:  <code>tar  -zcvf  myfile.tar.gz  myfile.txt</code></p>
