@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Gazebo使用心得"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>Gazebo使用心得 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#urdf-%E5%92%8C-xacro"><span class="toc-number">1.</span> <span class="toc-text">urdf 和 xacro</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#solidworks%E7%94%9F%E6%88%90urdf"><span class="toc-number">2.</span> <span class="toc-text">solidworks生成urdf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xacro"><span class="toc-number">3.</span> <span class="toc-text">xacro</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">603</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">50</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Gazebo使用心得</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-05-04</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/">ROS机器人</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2023/05/04/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/Gazebo%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2023/05/04/ROS/ROS机器人/Gazebo使用心得/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">533</span><span class="post-meta__separator">|</span><span>Reading time: 2 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p><strong>Gazebo不好上手，费了一番功夫终于熟悉了，内容太多，只记录注意事项。</strong></p>
+<p>Gazebo里用的是<font size="4" color="blue"> 前x 左y 上z的右手坐标系 </font>，gazebo的栅格范围是<code>20mX20m</code></p>
+<p>启动<code>simple_world.launch</code>，然后在Gazebo里添加一个圆柱体，保存覆盖<code>simple.world</code>文件。再次启动时，报错 <font color=orange >  SpawnModel: Failure - model name sunny already exist. [Spawn service failed. Exiting. </font> 和 <font color=orange > [spawn_urdf-6] process has died  </font></p>
+<p>按<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44236630/article/details/124609824">网上说的方法</a>没能解决，也不能重命名<code>model</code>，修改<code>simple.world</code>无效。 最后删除了<code>&lt;node pkg=&quot;gazebo_ros&quot; type=&quot;spawn_model&quot; name=&quot;spawn_urdf&quot;  args=&quot;-urdf -model sunny -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description&quot; /&gt;</code> 解决问题。</p>
+<h2 id="urdf-和-xacro"><a href="#urdf-和-xacro" class="headerlink" title="urdf 和 xacro"></a>urdf 和 xacro</h2><p><code>urdf.xacro</code>文件里，<code>&lt;link name=&quot;base_link&quot;&gt;</code>代表机器人的主体。<code>&lt;geometry&gt; &lt;box size=&quot;0.4 0.39 0.5&quot; /&gt;</code>是尺寸。</p>
+<p>gazebo插件，可以简单理解为就是连接gazebo和ros的一个桥梁，一边插件通过gazebo的api来控制仿真环境的机器人关节等数据，一边通过关节数据通过运动学模型生成里程计、雷达的scan、image等类似的信息</p>
+<h2 id="solidworks生成urdf"><a href="#solidworks生成urdf" class="headerlink" title="solidworks生成urdf"></a>solidworks生成urdf</h2><p><code>solidworks to urdf</code>安装后，如果在solidworks里找不到，就安装最新版的，不用管版本是否对应。</p>
+<p>solidworks只生成的URDF文件，没有xacro文件. URDF文件做一些简单修改可保存为xacro，注意：</p>
+<ol>
+<li><code>joint</code>的 <code>type=&quot;fixed&quot;</code>，应当为<code>continuous</code></li>
+<li><code>joint</code>的某些参数值错误，导致车加载差速模型后，运动错误</li>
+</ol>
+<h2 id="xacro"><a href="#xacro" class="headerlink" title="xacro"></a>xacro</h2><p>xacro里面的模型仍然是urdf模型，有如下变化：</p>
+<ol>
+<li>创建宏定义</li>
+<li>文件包含</li>
+<li>提供可编程接口:常量, 变量, 数学计算, 条件语句</li>
+</ol>
+<p>启动Gazebo时，机器人模型的tf关系不完整，即使<code>xacro</code>文件正确。还需要添加<code>joint_state_publisher</code> 和<code>robot_state_publisher</code></p>
+<p>设置雷达时，看情况决定是否需要可视化<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">sensor</span> <span class="attr">type</span>=<span class="string">&quot;ray&quot;</span> <span class="attr">name</span>=<span class="string">&quot;lds_lfcd_sensor&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pose</span>&gt;</span>0 0 0 0 0 0<span class="tag">&lt;/<span class="name">pose</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">visualize</span>&gt;</span>false<span class="tag">&lt;/<span class="name">visualize</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>Gazebo默认的障碍物质量轻，车撞上之后会把障碍物推开。改变<code>density</code>选项为铁，则不会推动障碍物。</p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2023/05/14/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E6%9B%B4%E6%8D%A2%E7%AE%97%E6%B3%95%E5%87%BA%E7%8E%B0%E7%9A%84%E7%96%91%E9%9A%BEbug/"><i class="fa fa-chevron-left">  </i><span>动态切换算法出现的疑难bug</span></a></div><div class="next-post pull-right"><a href="/2023/04/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base_flex%20%E5%88%86%E6%9E%90/25610/"><span>25610</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2023/05/04/ROS/ROS%E6%9C%BA%E5%99%A8%E4%BA%BA/Gazebo%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/';
+  this.page.identifier = '2023/05/04/ROS/ROS机器人/Gazebo使用心得/';
+  this.page.title = 'Gazebo使用心得';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
