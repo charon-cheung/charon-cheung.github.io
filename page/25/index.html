@@ -42,7 +42,7 @@
 <ul>
 <li><p>LayeredCostmap* getLayeredCostmap()</p>
 </li>
-<li><p><code>std::vector&lt;geometry_msgs::Point&gt; getRobotFootprint()</code>   获取机器人边界（在机器人坐标系下，包含padding）  看另一篇博客的分析</p>
+<li><p><code>std::vector&lt;geometry_msgs::Point&gt; getRobotFootprint()</code>   获取机器人边界（在机器人坐标系下，包含padding），返回的是<code>vector&lt;geometry_msgs::Point&gt;</code>，索引顺序就是yaml中设置的顺序</p>
 </li>
 <li><p><code>std::vector&lt;geometry_msgs::Point&gt;getUnpaddedRobotFootprint()</code>   获取机器人边界（在机器人坐标系下，不包含padding）</p>
 </li>
@@ -52,11 +52,11 @@
 <h2 id="Costmap2D"><a href="#Costmap2D" class="headerlink" title="Costmap2D"></a>Costmap2D</h2><p>A 2D costmap provides a mapping between points in the world and their associated “costs”.</p>
 <p>看全局代价地图的各个参数:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nx = global_costmap-&gt;<span class="built_in">getSizeInCellsX</span>();   <span class="comment">//2200</span></span><br><span class="line"><span class="keyword">int</span> ny = global_costmap-&gt;<span class="built_in">getSizeInCellsY</span>();	  <span class="comment">//1600	</span></span><br><span class="line"><span class="keyword">double</span> global_resolution = global_costmap-&gt;<span class="built_in">getResolution</span>();  <span class="comment">// 0.025</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> origin_x = global_costmap-&gt;<span class="built_in">getOriginX</span>();    <span class="comment">// -1</span></span><br><span class="line"><span class="keyword">double</span> origin_y = global_costmap-&gt;<span class="built_in">getOriginY</span>();    <span class="comment">// -34.6</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> sizeMeterX = global_costmap-&gt;<span class="built_in">getSizeInMetersX</span>();     <span class="comment">// 109.975</span></span><br><span class="line"><span class="keyword">double</span> sizeMeterY = global_costmap-&gt;<span class="built_in">getSizeInMetersY</span>();     <span class="comment">//  79.975</span></span><br></pre></td></tr></table></figure><br>nx, ny就是pgm地图文件的像素尺寸，一共<code>nx X ny</code>个cell</p>
 <p>global_resolution, origin_x, origin_y就是<code>map.yaml</code>中的resolution和origin参数</p>
-<p>sizeMeterX 和 sizeMeterY在rviz上用Measure工具测量一下地图的长宽即可得到</p>
+<p><code>sizeMeterX</code> 和 <code>sizeMeterY</code> 在rviz上用Measure工具测量一下地图的长宽即可得到</p>
 <p><br></p>
 <p>局部代价地图，yaml文件的参数是这样设置的:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">width: 4.0</span><br><span class="line">height: 4.0</span><br><span class="line">resolution: 0.05</span><br></pre></td></tr></table></figure><br>nx, ny都是80，也就是4/0.05, 80x80就是6400个cell</p>
-<p>origin_x: 58, origin_y: 1.5    这里机器人的初值位置为<code>(60, 3.5)</code>，位于动态窗口的中心，计算就能得到这两个参数</p>
-<p>sizeMeterX: 3.975000, sizeMeterY: 3.975000      其实就是4</p>
+<p>origin_x: 58,  origin_y: 1.5    这里机器人的初值位置为<code>(60, 3.5)</code>，位于动态窗口的中心，计算就能得到这两个参数</p>
+<p>sizeMeterX: 3.975000,  sizeMeterY: 3.975000      其实就是4</p>
 <p>这里会发现在全局代价地图的yaml里，没有设置width和height，因为它们是地图文件决定的，无需我们设置。而局部代价地图的动态窗口大小是我们决定的。</p>
 <ul>
 <li>bool saveMap(std::string file_name);  </li>
