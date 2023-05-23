@@ -298,6 +298,7 @@
 <li><p>bool saveMap(std::string file_name);  </p>
 </li>
 </ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输入世界距离（世界坐标的距离，将其转换为单元格），输出均等距离</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">Costmap2D::cellDistance</span><span class="params">(<span class="keyword">double</span> world_dist)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">double</span> cells_dist = <span class="built_in">max</span>(<span class="number">0.0</span>, <span class="built_in">ceil</span>(world_dist / resolution_));</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)cells_dist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>代价地图保存为pgm格式。全局代价地图保存是这样的<br><img src="https://i.loli.net/2021/05/29/nR8LChtIoeKTi72.png" alt="saveMap.png"><br>这里保存的地图图片，其实和OpenCV保存的一样。相当于真实的costmap先逆时针转180°，再对y轴取对称。但是像素值是相反的。局部代价地图打开是一片黑，应该是只有个窗口，看不出来了。</p>
 <ul>
 <li>void mapToWorld(unsigned int mx, unsigned int my, double&amp; wx, double&amp; wy) const</li>
