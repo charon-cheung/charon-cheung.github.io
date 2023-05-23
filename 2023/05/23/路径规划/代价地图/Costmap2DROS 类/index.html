@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Costmap2DROS 类"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>Costmap2DROS 类 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">611</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">50</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Costmap2DROS 类</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-05-23</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2023/05/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/Costmap2DROS%20%E7%B1%BB/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2023/05/23/路径规划/代价地图/Costmap2DROS 类/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">450</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p><code>Costmap2DROS</code>类是<code>2D Costmap</code>的ROS封装类，处理订阅的话题，这些话题提供了对障碍物的观测，方式为点云或激光扫描消息。  <code>costmap_2d::Costmap2DROS</code>给用户提供了纯2D的接口，这意味着查询障碍只能在列上进行。例如，在XY平面上位于同一位置的桌子和鞋，虽然在Z方向上有差异但是它们在<code>costmap_2d::Costmap2DROS</code>对象代价地图中对应的cell上拥有相同的代价值。</p>
+<p>A ROS wrapper for a 2D Costmap. Handles subscribing to topics that provide observations about obstacles in either the form of PointCloud or LaserScan messages.</p>
+<ul>
+<li>Costmap2D * getCostmap ()</li>
+</ul>
+<p>实际是<code>return layered_costmap_-&gt;getCostmap();</code>，跟<code>getLayeredCostmap()-&gt;getCostmap()</code>一样.   Return a pointer to the “master” costmap which receives updates from all the layers.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">costmap_2d::Costmap2D* global_costmap = planner_costmap_ros_-&gt;<span class="built_in">getCostmap</span>();</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>bool getRobotPose(tf::Stamped<tf::Pose>&amp; global_pose) const;</li>
+</ul>
+<p>获取机器人在代价地图的<code>global frame</code>中的位姿，成功获取则返回true<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这个返回类型很不方便</span></span><br><span class="line">tf::Stamped&lt;tf::Pose&gt; pose;</span><br><span class="line"><span class="keyword">if</span>(!costmap-&gt;<span class="built_in">getRobotPose</span>(pose))</span><br><span class="line">&#123;</span><br><span class="line">	<span class="built_in">ROS_ERROR</span>(<span class="string">&quot;Cannot clear map because pose cannot be retrieved&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">double</span> x = pose.<span class="built_in">getOrigin</span>().<span class="built_in">x</span>();</span><br><span class="line"><span class="keyword">double</span> y = pose.<span class="built_in">getOrigin</span>().<span class="built_in">y</span>();</span><br><span class="line"><span class="keyword">double</span> yaw = tf::<span class="built_in">getYaw</span>(pose.<span class="built_in">getRotation</span>());</span><br><span class="line"><span class="keyword">double</span> yaw_norm = angles::<span class="built_in">normalize_angle</span>(tf::<span class="built_in">getYaw</span>(pose.<span class="built_in">getRotation</span>() ) );</span><br></pre></td></tr></table></figure><br>对于全局代价地图，一般是返回在<code>map</code>坐标系下的位姿，对于局部代价地图，一般是在<code>odom</code>或者<code>map</code>下的位姿。<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011608180/article/details/106549423">Costmap2DROS::getRobotPose函数调用分析</a></p>
+<ul>
+<li>std::string getGlobalFrameID()   和   std::string getBaseFrameID()</li>
+</ul>
+<p>这两个返回的就是代价地图yaml里配置的全局和局部坐标系</p>
+<ul>
+<li><p>LayeredCostmap* getLayeredCostmap()</p>
+</li>
+<li><p><code>std::vector&lt;geometry_msgs::Point&gt; getRobotFootprint()</code>   获取机器人边界（在机器人坐标系下，包含padding），返回的是<code>vector&lt;geometry_msgs::Point&gt;</code>，索引顺序就是yaml中设置的顺序</p>
+</li>
+<li><p><code>std::vector&lt;geometry_msgs::Point&gt;getUnpaddedRobotFootprint()</code>   获取机器人边界（在机器人坐标系下，不包含padding）</p>
+</li>
+<li><p><code>geometry_msgs::Polygon  getRobotFootprintPolygon()</code>  获取机器人边界（在机器人坐标系下，包含padding）</p>
+</li>
+</ul>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="next-post pull-right"><a href="/2023/05/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/LayeredCostmap%E7%B1%BB/"><span>LayeredCostmap类</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2023/05/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/Costmap2DROS%20%E7%B1%BB/';
+  this.page.identifier = '2023/05/23/路径规划/代价地图/Costmap2DROS 类/';
+  this.page.title = 'Costmap2DROS 类';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
