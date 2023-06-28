@@ -13,10 +13,12 @@
 </li>
 <li><p><code>size_t  getNumSubscribers (const std::string &amp;_topic)</code> &emsp;&emsp; Return the number of subscribers a node has for a particular topic</p>
 </li>
+<li><p><code>void  getAdvertisedTopics (V_string &amp;topics)</code> &emsp;&emsp;  Get the list of topics advertised by <font size=3 color = blue> this node </font></p>
+</li>
 <li><p><code>void   getSubscribedTopics (V_string &amp;topics)</code> &emsp;&emsp; Get the list of topics subscribed to by <font size=3 color = blue> this node </font></p>
 </li>
 </ul>
-<p>根据说明，对以上三个函数，不能直接传一个话题名做参数，以获知订阅者和发布者的数量，结果往往不是你想要的。</p>
+<p>根据说明，对以上几个函数，不能直接传一个话题名做参数，以获知订阅者和发布者的数量，结果往往不是你想要的。</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;string&gt; topics;</span><br><span class="line">ros::TopicManager::<span class="built_in">instance</span>()-&gt;<span class="built_in">getSubscribedTopics</span>(topics);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt; topics.<span class="built_in">size</span>(); i++)</span><br><span class="line">    std::cout &lt;&lt; topics.<span class="built_in">at</span>(i) &lt;&lt; <span class="string">&quot;  &quot;</span>;</span><br></pre></td></tr></table></figure>
 <p>这里获得的话题只有<code>clock</code>，而不是所有被订阅的节点。</p>
 <ul>
