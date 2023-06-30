@@ -20,6 +20,7 @@
 <ul>
 <li><code>teb_markers</code> (visualization_msgs/Marker)  teb_local_planner通过具有不同名称空间的标记来提供规划场景的其他信息。 Namespaces <code>PointObstacles</code> and <code>PolyObstacles</code>: visualize all point and polygon obstacles that are currently considered during optimization.   Namespace <code>TebContainer</code>: Visualize all found and optimized trajectories that rest in alternative topologies (only if parallel planning is enabled). Some more information is published such as the <strong>optimization footprint model</strong></li>
 </ul>
+<p>话题<code>teb_markers_array</code> 和 <code>eb_markers</code>是绑定的，不过不必关注。</p>
 <p>话题的发布在<code>TebVisualization::publishRobotFootprintModel</code></p>
 <ul>
 <li><code>teb_feedback</code> (teb_local_planner/FeedbackMsg)<br>反馈消息包含计划的轨迹，包括速度轮廓和时间信息以及障碍物列表。主要用于评估和调试。必须启用参数<code>publish_feedback</code></li>

@@ -48,6 +48,7 @@
 <li>计算每个网格的代价值</li>
 <li>对每个包含障碍的cell进行障碍膨胀，从每个占据的cell按一定的膨胀半径向外扩张代价值</li>
 </ol>
+<p><font size="3" color="blue">  两个代价地图的设置中，膨胀层要放到所有层的最后，否则全局路径不是贴着膨胀层，而是障碍层。 </font><br><img src="https://s2.loli.net/2023/06/30/AtWCZ8QGOip47s6.png" alt=""><br>Rviz的map包含3个Color Scheme，<code>costmap</code>, <code>map</code>, <code>raw</code>。若要增加主题，只能写一个Rviz插件或者修改Rviz的源码</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>一次启动move_base时，<code>Costmap2DROS</code>报错：<br><img src="https://i.loli.net/2019/12/13/4dHTaEzrsteuVAS.png" alt=""><br>同时rviz显示是这样的:<br><img src="https://i.loli.net/2019/12/13/MqgwenfZXVk71WJ.png" alt=""><br>这是个tf方面的错误，偶尔会出现，初步判断是系统负载或网络方面的问题，当前时间和global_pose的时间戳相差超过了<strong>全局代价地图规定的最大误差</strong>，也就是<code>global_costmap.yaml</code>中的<code>transform_tolerance</code>，尝试把这个值稍微改大一点。</p>
 <p>参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/jinking01/article/details/79455962">代价地图全面分析总结</a></p>
 </div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/08/28/%E6%BF%80%E5%85%89SLAM/amcl%E5%92%8C%E7%B2%92%E5%AD%90%E6%BB%A4%E6%B3%A2/amcl%E7%9A%84%E8%AF%9D%E9%A2%98%E5%92%8C%E5%8F%82%E6%95%B0/"><i class="fa fa-chevron-left">  </i><span>amcl的话题和参数</span></a></div><div class="next-post pull-right"><a href="/2019/08/26/cmake%20qmake/cmake%E6%95%99%E7%A8%8B%EF%BC%88%E5%9B%9B%EF%BC%89ROS%E4%B8%AD%E7%9A%84catkin_make/"><span>cmake教程（四）ROS中的catkin_make</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
