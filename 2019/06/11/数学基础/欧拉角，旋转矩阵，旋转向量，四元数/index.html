@@ -43,8 +43,7 @@
 <p><img src="https://i.loli.net/2020/03/03/itMb4fy9uzjs6Rl.png" alt="转换"></p>
 <h2 id="欧拉角和旋转矩阵"><a href="#欧拉角和旋转矩阵" class="headerlink" title="欧拉角和旋转矩阵"></a>欧拉角和旋转矩阵</h2><p>《SLAM十四讲》没有讲到这部分。坐标系A旋转到坐标系B，先绕Z轴旋转了<code>yaw</code>，这里遵循右手法则，大拇指朝坐标系方向，四指代表正向。或者说正向旋转是以沿X轴方向看，顺时针旋转为正向，否则为负向。那么相应的旋转矩阵为<br><img src="https://s2.loli.net/2022/12/03/YPXpVmfCQM8ehEg.png" alt="绕坐标轴旋转的轴坐标是不会变化的，所以对应位置是1"><br>之后绕旋转后坐标系的Y轴旋转了<code>pitch</code>，之后绕旋转后坐标系X轴旋转了<code>roll</code>，最终的旋转矩阵如下，即依次左乘相应的矩阵<br><img src="https://s2.loli.net/2022/12/03/f7nZSeHrlozGwic.png" alt=""></p>
 <h2 id="典型举例"><a href="#典型举例" class="headerlink" title="典型举例"></a>典型举例</h2><p>如图，大坐标系是<code>base_link</code>，小的是 <code>camera</code><br><img src="https://s2.loli.net/2023/07/06/tYR1Q7Tf692Ekha.png" alt=""></p>
-<p>我们希望的坐标系关系是这样的<br><img src="https://s2.loli.net/2023/07/06/chvgRXyLFPlbUTw.png" alt=""><br>变化的过程是<code>camera</code>坐标系做内旋方式，也就是绕自身轴按照Z-Y-X的顺序旋转，即先绕自身轴Z，再绕自身轴Y，最后绕自身轴X，可得旋转矩阵(内旋是右乘)</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/144032401">https://zhuanlan.zhihu.com/p/144032401</a></p>
+<p>我们希望的坐标系关系是这样的<br><img src="https://s2.loli.net/2023/07/06/chvgRXyLFPlbUTw.png" alt=""><br>变化的过程是<code>camera</code>坐标系做内旋方式，也就是绕自身轴按照Z-Y-X的顺序旋转，即先绕自身轴Z，再绕自身轴Y，最后绕自身轴X，可得旋转矩阵(内旋是右乘)<br><img src="https://s2.loli.net/2023/07/06/wAg68QvJCH4G5r2.png" alt=""><br><img src="https://s2.loli.net/2023/07/06/3fTsYtUczbnXa65.png" alt=""></p>
 <p>判断欧拉角的正负: 使用右手系，旋转轴正方向面对观察者时，逆时针方向的旋转是正、顺时针方向的旋转是负。这里先绕Z轴转 -90°，再绕X轴转-90°，<code>camera</code>就能变成希望的样子。</p>
 <p>最终的旋转矩阵<br><img src="https://s2.loli.net/2023/07/06/f6DoymCvgOKAbxa.png" alt=""><br>打开网站<a target="_blank" rel="noopener" href="https://www.andre-gaschler.com/rotationconverter/">rotationconverter</a>，在左上角的旋转矩阵输入计算的结果，在右下角出现<code>XYZ</code>对应的结果，而我们需要的是<code>ZYX</code>，即<code>[ x: -90, y: 0, z: -90 ]</code>，这里并不是简单的把<code>XYZ</code>的结果倒序就行了。</p>
 <p>我们要的欧拉角<code>rpy</code>就是 <code>(-1.57,  0,  -1.57)</code></p>
