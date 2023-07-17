@@ -92,7 +92,9 @@
 <li>transform The transform reference to fill.</li>
 </ul>
 <p>可能抛出的异常<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> tf&#123;</span><br><span class="line">  <span class="comment">// Pass through exceptions from tf2</span></span><br><span class="line">  <span class="keyword">typedef</span> tf2::TransformException TransformException;</span><br><span class="line">  <span class="keyword">typedef</span> tf2::LookupException LookupException;</span><br><span class="line">  <span class="keyword">typedef</span> tf2::ConnectivityException ConnectivityException;</span><br><span class="line">  <span class="keyword">typedef</span> tf2::ExtrapolationException ExtrapolationException;</span><br><span class="line">  <span class="keyword">typedef</span> tf2::InvalidArgumentException InvalidArgument; </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="报警-Costmap2DROS-transform-timeout"><a href="#报警-Costmap2DROS-transform-timeout" class="headerlink" title="报警 Costmap2DROS transform timeout"></a>报警 Costmap2DROS transform timeout</h2><p>报警对应的<code>transform_tolerance_</code>是在构造函数里写死的<code>0.3</code>，一开始我以为这个数太小了，于是改为2，结果没有改善。</p>
+<h2 id="报警-Costmap2DROS-transform-timeout"><a href="#报警-Costmap2DROS-transform-timeout" class="headerlink" title="报警 Costmap2DROS transform timeout"></a>报警 Costmap2DROS transform timeout</h2><font size="3" color="blue"> 每次出现这个报警，基本就是网络带宽不足了。  </font>
+
+<p>报警对应的<code>transform_tolerance_</code>是在构造函数里写死的<code>0.3</code>，一开始我以为这个数太小了，于是改为2，结果没有改善。</p>
 <p>以下报警的根源都是<code>Costmap2DROS::getRobotPose</code><br><img src="https://s2.loli.net/2023/06/27/zstZTuh8cO63VvG.png" alt=""><br><img src="https://s2.loli.net/2023/06/27/jnCAr6sdbgxJwBK.png" alt="获取不到开始位姿，无法生成全局路径"></p>
 <p>尝试的改善措施(全都无效):</p>
 <ul>

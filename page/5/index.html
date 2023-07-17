@@ -145,6 +145,10 @@
 </ul>
 <p>编译工程时报错<font size="4" color="orange"> integer_sequence’ is not a member of ‘std’ </font><br>CMake中添加  <code>set(CMAKE_CXX_FLAGS  &quot;-std=c++14&quot;)</code></p>
 <ul>
+<li>std::make_unique的报错</li>
+</ul>
+<p>在CMake<code>3.16</code>版本编译<code>std::make_unique</code>部分的代码，没有报错。在<code>3.10</code>版本上编译却报错了，在<code>CMakeLists.txt</code>加入<code>set(CMAKE_CXX_STANDARD 14)</code>后才成功。</p>
+<ul>
 <li>CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required): Compatibility with CMake &lt; 2.8.12 will be removed from a future version of CMake</li>
 </ul>
 <p>我升级CMake后出现的报警，虽然不影响，但是一旦工程多了以后，这个报警会很烦人。只需要修改<code>cmake_minimum_required (VERSION 3.19.0)</code></p>
