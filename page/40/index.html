@@ -117,7 +117,7 @@
 <p>启动<code>startup</code>, <code>roslaunch laser_scan_matcher rplidar.launch</code>. 现在原来的轮式坐标系odom坐标系换成了<font color = blue size= 3> 激光坐标系 odom </font></p>
 <p>现在tf变换是:  <strong>odom —-&gt; base_link —-&gt; laser</strong></p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p><img src="https://i.loli.net/2020/09/16/BzoxkWPKNimYe3u.png" alt="process scan失败.png"></p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/06/03/%E8%A7%86%E8%A7%89SLAM/Kinect%E6%B7%B1%E5%BA%A6%E5%9B%BE/">Kinect深度图</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-06-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%9B%B8%E6%9C%BA/">相机</a></span><div class="content"><p>深度图不受阴影、光照、色度的影响。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/06/03/%E7%9B%B8%E6%9C%BA/Kinect%E6%B7%B1%E5%BA%A6%E5%9B%BE/">Kinect深度图</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-06-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%9B%B8%E6%9C%BA/">相机</a></span><div class="content"><p>深度图不受阴影、光照、色度的影响。</p>
 <p>深度图的各个像素点和实际中的对应坐标值通过标定矩阵匹配的方法获取环境信息的三维点云。每一帧深度图上的y坐标和z坐标代表深度图中的像素单位，不是实际世界坐标。</p>
 <p>kinect深度在<code>0.5~8</code>米，随着距离的增加而精度下降，推荐深度范围1-4米，所以深度相机只能用于小场景。</p>
 <p>Kinect最显著的缺点就是水平视场角太小。</p>
