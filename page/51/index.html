@@ -80,23 +80,8 @@
 </ul>
 <p>类似msg文件，在程序的action文件（文件名后缀为.action）中定义上述goal、result、feedback等消息，依次用<code>---</code>分隔</p>
 <p>action通信时,如果双方约定的action名称为<code>do_dishes</code>,那么客户端会发布话题 <code>/do_dishes/goal</code>和<code>/do_dishes/cancel</code>；服务端发布话题<code>/do_dishes/feedback</code>, <code>/do_dishes/result</code>, <code>/do_dishes/status</code><br><img src="https://i.loli.net/2019/08/31/viqkO1UhdYpjt56.png" alt=""><br><img src="https://i.loli.net/2019/08/31/LiMjuY9FpSzsK8J.png" alt=""></p>
-<p>client要么发送goal，要么cancel； result和feedback的取值由用户决定，status的取值是固定的：<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PENDING=0</span><br><span class="line">ACTIVE=1</span><br><span class="line">PREEMPTED=2</span><br><span class="line">SUCCEEDED=3</span><br><span class="line">ABORTED=4</span><br><span class="line">REJECTED=5</span><br><span class="line">PREEMPTING=6</span><br><span class="line">RECALLING=7</span><br><span class="line">RECALLED=8</span><br><span class="line">LOST=9</span><br></pre></td></tr></table></figure></p>
+<p>client要么发送goal，要么cancel； result和feedback的取值由用户决定，status的取值是固定的：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">PENDING=0</span><br><span class="line">ACTIVE=1</span><br><span class="line">PREEMPTED=2</span><br><span class="line">SUCCEEDED=3</span><br><span class="line">ABORTED=4</span><br><span class="line">REJECTED=5</span><br><span class="line">PREEMPTING=6</span><br><span class="line">RECALLING=7</span><br><span class="line">RECALLED=8</span><br><span class="line">LOST=9</span><br></pre></td></tr></table></figure></p>
 <h2 id="server状态机"><a href="#server状态机" class="headerlink" title="server状态机"></a>server状态机</h2><p>Goals请求由ActionClient发出，ActionServer接收后会创建一个<strong>有限状态机</strong>来跟踪goal的状态，而不是server的状态，每个goal都有一个状态机。<br><img src="https://i.loli.net/2019/08/31/NyEITeCloWF2Zca.png" alt=""></p>
-<h3 id="所有goal状态"><a href="#所有goal状态" class="headerlink" title="所有goal状态"></a>所有goal状态</h3><p>以下为中间状态：</p>
-<ul>
-<li>PENDING： ACTION Server还没有开始处理goal</li>
-<li>ACTIVE： goal正在被处理</li>
-<li>Recalling： goal还没有处理，client发出取消goal的请求，但server还没有确认</li>
-<li>Preempting: goal正在被处理，client发出取消goal的请求，但server还没有确认</li>
-</ul>
-<p>以下为最终状态：</p>
-<ul>
-<li>Rejected： Action server没有处理就拒绝goal，而且client也没有发出取消的请求</li>
-<li>Succeeded： goal成功处理</li>
-<li>Aborted： client没有发出取消请求，server自己拒绝处理后的状态</li>
-<li>Recalled： goal被另一个goal取消或client发出取消请求，server尚未处理goal</li>
-<li>Preempted： goal被另一个goal取消或client发出取消请求，server正在处理goal</li>
-</ul>
 <h3 id="server状态机的命令（actionlib-SimpleActionServer的函数）"><a href="#server状态机的命令（actionlib-SimpleActionServer的函数）" class="headerlink" title="server状态机的命令（actionlib::SimpleActionServer的函数）"></a>server状态机的命令（actionlib::SimpleActionServer的函数）</h3><ul>
 <li>setAccepted： 收到goal后，准备处理</li>
 <li>setRejected： 收到goal后，拒绝处理</li>
@@ -105,8 +90,10 @@
 <li>setCanceled： server取消对goal的处理，与setRejected不同之处在于发出取消请求的是client</li>
 </ul>
 <p>从客户端也可以异步地触发状态变换，比如<code>cancelGoal</code>函数</p>
-<h2 id="client状态机"><a href="#client状态机" class="headerlink" title="client状态机"></a>client状态机</h2><p>server状态机用于追踪goal的状态，client状态机作为补充，追踪server的状态。一般根据goal的情况分成PENDING，ACTIVE，DONE三部分。</p>
+<h2 id="client状态机"><a href="#client状态机" class="headerlink" title="client状态机"></a>client状态机</h2><p>server状态机用于追踪goal的状态，client状态机作为补充，追踪server的状态。一般根据goal的情况分成 PENDING，ACTIVE，DONE三部分。</p>
 <p>由于可以有多个client连接到一个Action server，有可能第二个client会取消第一个client发的goal</p>
+<h2 id="Goal的状态转变"><a href="#Goal的状态转变" class="headerlink" title="Goal的状态转变"></a>Goal的状态转变</h2><p>两张图片表示得太复杂了。一般这样记忆：对于MoveBase的client，最开始的状态是<code>LOST</code>。 当前<code>sendGoal</code>后，状态为<code>ACTIVE</code>. 调用<code>cancelGoal</code>后，变为 <code>PREEMPTED</code>，而不是<code>Aborted</code>。客户端实际的操作goal的函数只有<code>send</code>和<code>cancel</code>。</p>
+<p>车成功到达目标后，状态为<code>SUCCEEDED</code>。彻底失败，为<code>Aborted</code></p>
 <h3 id="对于多个goal的处理策略"><a href="#对于多个goal的处理策略" class="headerlink" title="对于多个goal的处理策略"></a>对于多个goal的处理策略</h3><p>高层的client和server只考虑goal的处理情况，所以叫<code>SimpleActionServer</code>和<code>SimpleActionClient</code></p>
 <p><code>Simple Action Client</code>一次只追踪一个goal，它发出goal之后，会<strong>disables</strong>之前的goal的所有回调函数，<strong>也不再追踪之前goal的状态，但是并不cancel之前的 goal</strong></p>
 <p><code>SimpleActionServer</code>在ActionServer类上实现了单一目标策略，就是在某一时刻只能有一个goal是处于active状态，并且新的goal可以抢占先前的goal：</p>
