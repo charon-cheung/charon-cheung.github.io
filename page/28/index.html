@@ -7,7 +7,513 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">645</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">53</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap%20converter/2.%20costmap%20converter%E5%9F%BA%E6%9C%AC%E6%9C%BA%E5%88%B6/">(二) costmap converter基本机制</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></span><div class="content"><p>配置使用的是<code>costmap_converter::CostmapToLinesDBSRANSAC</code>，类继承关系:</p>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">649</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">53</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/29/%E8%8B%B1%E8%AF%AD/%E8%8B%B1%E8%AF%AD%E5%8D%95%E8%AF%8D%E6%94%B6%E9%9B%86/">英语单词收集</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-29</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a></span><div class="content"><ul>
+<li>culprit  &emsp;&emsp;&emsp;   责任人，罪魁祸首</li>
+<li>stroll     &emsp;&emsp;&emsp;    漫步</li>
+<li>commend &emsp;&emsp;&emsp;    表彰，称赞</li>
+<li>stop and frisk &emsp;&emsp;&emsp; 拦截盘查</li>
+<li>eerie     &emsp;&emsp;&emsp;    怪异的</li>
+<li>fahrenheit  &emsp;&emsp;&emsp; 华氏温度</li>
+<li>voter turnout  &emsp;&emsp;&emsp; 投票人数; 投票率</li>
+<li>conman &emsp;&emsp;&emsp;  骗子</li>
+<li>philanthropist &emsp;&emsp;&emsp;  慈善家</li>
+<li>weigh in &emsp;&emsp;&emsp;  加入比赛或辩论</li>
+<li>toss-up  &emsp;&emsp;&emsp;  焦灼的情况</li>
+<li>disown   &emsp;&emsp;&emsp;     否认，声明同。。。脱离关系</li>
+<li>moderator  &emsp;&emsp;&emsp;   调解人；仲裁人</li>
+<li>jurisdiction  &emsp;&emsp;&emsp;    管辖权；司法权</li>
+<li>jeopardy  &emsp;&emsp;&emsp;       危险境地； 被告在法庭上有被判罪的危险；</li>
+<li>tax code     &emsp;&emsp;&emsp;    税制</li>
+<li>perpetuate     &emsp;&emsp;&emsp;    使永存； 使不朽</li>
+<li>underdog &emsp;&emsp;&emsp;     a loser or predicted loser in a struggle or contest.   a victim of injustice or persecution.</li>
+<li>maverick     &emsp;&emsp;&emsp;    特立独行的人</li>
+<li>give me a break  &emsp;&emsp;&emsp;  (表示不信对方胡诌的感叹语)得了吧!我不会相信的</li>
+<li>trash     &emsp;&emsp;&emsp;   猛烈抨击</li>
+<li>litigate     &emsp;&emsp;&emsp; 提起诉讼</li>
+<li>level at       &emsp;&emsp; 将…的矛头指向（某人）</li>
+<li>add up          &emsp;&emsp; 合乎情理</li>
+<li>cat out of the bag    &emsp;&emsp;在不小心的情况下泻露了秘密</li>
+<li>expunge         &emsp;&emsp; 刪去,抹去</li>
+<li>nostalgia         &emsp;&emsp; 怀旧</li>
+<li>heckler     &emsp;&emsp;用不友好的言辞打断公开演讲或表演的人</li>
+<li>sellout     &emsp;&emsp;背叛,出卖</li>
+<li>takeaway    &emsp;&emsp;结论，推论，要点</li>
+<li>momentum       &emsp;&emsp;势头，动力</li>
+<li>excerpt    &emsp;&emsp;摘录，摘要</li>
+<li>caucus    &emsp;&emsp;党团会议，秘密会议</li>
+<li>mega    &emsp;&emsp;宏大的； 精彩的,百万,兆                 mega-Tuesday</li>
+<li>wrap up : 1.  summarize   2.  do a thing easily or a certainty to happen (has the nomination wrapped up)</li>
+<li>toast: become toasted, meaning doomed or finished</li>
+<li>stump speech : &emsp;&emsp;政治演说     </li>
+<li>campaign trail : 竞选之路，竞选活动          hit the campaign trail : 进行竞选活动</li>
+<li>inner circle   &emsp;&emsp;&emsp;  核心圈</li>
+<li>head to head  &emsp;&emsp;&emsp; 一对一的竞争</li>
+<li>paranormal   &emsp;&emsp;超自然现象</li>
+<li>new low     &emsp;&emsp;刷了新的下限</li>
+<li>trash          &emsp;&emsp;捣毁，破坏</li>
+<li>plaintiff   &emsp;&emsp;原告</li>
+<li>call it in    &emsp;&emsp;To bring everyone in (group form)</li>
+<li>lucid       &emsp;&emsp;清醒的</li>
+<li>tuck in   &emsp;&emsp;掖好被子;把（衣服等）塞好</li>
+<li>on edge   &emsp;&emsp;be nervous or worried</li>
+<li>can’t be too careful   &emsp;&emsp;do everything you can to avoid problems or danger</li>
+<li>hard boiled         &emsp;&emsp;煮得老的,（人）冷酷的，不動感情的</li>
+<li>use the scratch  &emsp;&emsp; 从头开始</li>
+<li>karma   &emsp;&emsp; 因缘，因果报应</li>
+<li>narcissist    &emsp;&emsp;自恋者</li>
+<li>nailed it      &emsp;&emsp;干得好，搞定了</li>
+<li><p>zip it         &emsp;&emsp;闭嘴</p>
+</li>
+<li><p>wet dream: &emsp;&emsp;梦遗，遗精</p>
+</li>
+<li><p>smirk: &emsp;&emsp;假笑</p>
+</li>
+<li><p>unhinged：&emsp;&emsp;精神失常的，神经错乱的</p>
+</li>
+<li><p>out of woods: &emsp;&emsp;脱离危险的处境</p>
+</li>
+<li><p>hush money: &emsp;&emsp;封口费</p>
+</li>
+<li><p>throw someone under the bus: 指为了自私的原因而背叛一个朋友或盟友， 尤其指背弃之前友好的关系</p>
+</li>
+<li><p>toddler   &emsp;&emsp;婴幼儿，尤其是正在学走路的孩子</p>
+</li>
+<li><p>throw a tantrum  &emsp;&emsp;突然发怒，发脾气</p>
+</li>
+<li><p>shut the front door!    &emsp;&emsp;表示很吃惊</p>
+</li>
+<li><p>poster boy     &emsp;&emsp;海报上的儿童，团体中的模范和榜样人物，或作为某一类型的完美典范的人</p>
+</li>
+<li><p>censure  &emsp;&emsp;&emsp;  指责</p>
+</li>
+<li><p>drink the Kool-Aid      &emsp;&emsp;指因潜在的高额回报而相信危险想法的人</p>
+</li>
+<li><p>crack up             &emsp;&emsp; 忍不住大笑。     情绪在压力下崩溃</p>
+</li>
+<li><p>slum                 &emsp;&emsp; 贫民窟</p>
+</li>
+<li><p>What’s the catch?      &emsp;&emsp;&emsp;&emsp;An expression said when someone does something nice to you but you suspect that he or she’s not doing it because he or she wants to help you but he has a secret reason for doing it. And this reason is something good for him/her not for you.</p>
+</li>
+<li><p>nail down &emsp;&emsp;&emsp; 达成协议</p>
+</li>
+<li><p>feel for sb &emsp;&emsp;&emsp; 同情，怜悯 sb</p>
+</li>
+<li><p>reiterate &emsp;&emsp;&emsp;  重申</p>
+</li>
+<li><p>weigh in  &emsp;&emsp;&emsp;  积极参与</p>
+</li>
+<li><p>censure  &emsp;&emsp;&emsp;  强烈反对和批评. In parliamentary procedure, it is a debatable main motion that could be adopted by a majority vote</p>
+</li>
+<li><p>insurrection  &emsp;&emsp;&emsp;  对当局发起的暴力起义</p>
+</li>
+<li><p>litigate    &emsp;&emsp;&emsp;    寻求法律途径解决问题</p>
+</li>
+<li><p>dub   &emsp;&emsp;&emsp;   给…起外号</p>
+</li>
+<li><p>divert &emsp; 使…改变方向，航道  &emsp;&emsp;&emsp;  Belarus to be punished over flight diversion</p>
+</li>
+<li><p>hail    冰雹 &emsp;&emsp;&emsp; 21 dead after rain and hail storms in Gansu China<br>欢呼、致敬；热情赞扬     Hardliner Ebrahim Raisi hailed as Iran’s new president</p>
+</li>
+<li><p>canyon  峡谷</p>
+</li>
+<li><p>stall   停止运行、工作</p>
+</li>
+<li><p>volatile   不稳定的，喜怒无常的</p>
+</li>
+<li><p>disgruntled   不满的  &emsp;&emsp;&emsp;   How disgruntled people talk about you-know-who</p>
+</li>
+<li><p>taboo   （宗教或社会习俗方面的）禁忌，忌讳 &emsp;&emsp;&emsp;  open criticism of the most important man is taboo</p>
+</li>
+<li><p>troll  用挑衅或侮辱性言語挑起骂战並从中获取快感的人。有意破坏网络论坛的人。</p>
+</li>
+</ul>
+<p>Ted Cruz turns up the trolling to fill the Trump Twitter void.<br>AOC uses ‘ogre’ emojis to troll Cruz</p>
+<ul>
+<li><p>it’s grim up north  &emsp;&emsp;&emsp;  谚语，表示英格兰北部的经济状况不如南部</p>
+</li>
+<li><p>goings-on &emsp;&emsp;&emsp; 不寻常或可疑的行为、事件</p>
+</li>
+<li><p>reinstate   让…恢复原来的位置或状态 &emsp;&emsp;  Trump reportedly expects to be “reinstated” by August</p>
+</li>
+<li><p>audit      审计，查账     &emsp;&emsp; Republican-led audits of votes from the 2020 election.</p>
+</li>
+<li><p>indictment   起诉，公诉    &emsp;&emsp;Trump faced the possibility of an indictment from the Manhattan DA</p>
+</li>
+<li><p>sidekick &emsp;&emsp;&emsp; 帮手，而且受帮助的人更重要或更有智慧。 </p>
+</li>
+</ul>
+<p>Batman and his young sidekick Robin<br>Sherlock Holmes and his trusted sidekick Dr. Watson</p>
+<ul>
+<li><p>callous: 冷酷无情的，麻木的   &emsp;&emsp;Kamala Harris’‘Do not come’comment was callous and very Trump-like</p>
+</li>
+<li><p>xenophobia: 仇外心理，排外主义   &emsp;&emsp;Trump let xenophobia toward migrants drive his policy decisions</p>
+</li>
+<li><p>megaphone   扩音器 &emsp;&emsp;&emsp; takes away arguably two of the former president’s biggest political megaphones</p>
+</li>
+<li><p>leftover  &emsp;&emsp;&emsp;  剩余物；残羹剩菜</p>
+</li>
+<li><p>raise eyebrows &emsp;&emsp;&emsp; 表示惊讶、不可思议   </p>
+</li>
+</ul>
+<p>Justice Department has raised eyebrows on the left by backing several Trump-era legal positions</p>
+<ul>
+<li><p>lose your touch &emsp;&emsp;&emsp; 技艺大不如前，做某事的能力下降</p>
+</li>
+<li><p>throw a tantrum    发脾气；胡闹   &emsp;&emsp; Princess Charlotte throws a tantrum in public</p>
+</li>
+<li><p>meltdown  &emsp;&emsp;&emsp; （尤指金融方面的）灾难，  崩溃</p>
+</li>
+<li><p>Juneteenth 六月独立日，于6月19日举行庆祝活动，是美国的一个联邦节日，庆祝被奴役的非裔美国人获得解放</p>
+</li>
+<li><p>villa   别墅     &emsp;&emsp;Putin and Biden hold a meeting in an villa</p>
+</li>
+<li><p>off limit  &emsp;&emsp;&emsp; 禁止的，禁区</p>
+</li>
+<li><p>recast &emsp;&emsp;&emsp;  重塑   </p>
+</li>
+<li><p>in grand terms   大体上   &emsp;&emsp;Biden has recast the US-Russia relationship in grand terms</p>
+</li>
+<li><p>kleptocratic  盗贼统治的  &emsp;&emsp;Putin presides over a kleptocratic regime</p>
+</li>
+<li><p>improvise     &emsp;&emsp;即兴发挥，临时做</p>
+</li>
+<li><p>exodus(名词)   （大批人的）退出，离开     &emsp;&emsp;Venezuela exodus reaches record levels</p>
+</li>
+<li><p>witchcraft     &emsp;&emsp;巫术</p>
+</li>
+<li><p>the buck stops with me   &emsp;&emsp;最终责任在我，意思是我不会推卸责任</p>
+</li>
+<li><p>spice things up     &emsp;&emsp; 调节气氛，增加情调 </p>
+</li>
+<li><p>fiasco &emsp;&emsp;&emsp;&emsp; 惨败，耻辱性的失败</p>
+</li>
+<li>debacle &emsp;&emsp;&emsp;&emsp; 因计划不周而惨败，崩溃</li>
+</ul>
+<p>Afghanistan is Biden’s fiasco, debacle</p>
+<ul>
+<li><p>bleak &emsp;&emsp;  阴冷的，凄凉的，暗淡的&emsp;&emsp;&emsp;&emsp; Kabul bombing is Biden’s bleakest day of his presidency</p>
+</li>
+<li><p>hired gun &emsp;&emsp;  雇佣的保镖，佣兵，杀手</p>
+</li>
+<li><p>go easy on &emsp;&emsp; 对…悠着点；控制或减少对某人的攻击 &emsp;&emsp;  Biden to Kamala: go easy on me, kid</p>
+</li>
+<li><p>call  out  &emsp;&emsp;   (美国) draw critical attention to someone’s unacceptable actions or behaviour</p>
+</li>
+<li><p>detour  &emsp;&emsp;  车辆改道，绕行</p>
+</li>
+<li><p>what’s your angle  &emsp;&emsp;   the speaker is asking the other person what his/her intentions or motives are, often in a cynical manner.</p>
+</li>
+<li><p>fake woke</p>
+</li>
+<li><p>ground zero</p>
+</li>
+<li><p>put cards on the table  &emsp;&emsp;  打开天窗说亮话</p>
+</li>
+<li><p>witch hunt &emsp;&emsp;&emsp;&emsp;  针对某个人或组织的不公正的行动</p>
+</li>
+<li><p>sideline  &emsp;&emsp;&emsp;&emsp; 边缘化</p>
+</li>
+<li><p>take a rain check &emsp;&emsp;&emsp;&emsp;  改天，换个时间</p>
+</li>
+<li><p>M.O  &emsp;&emsp;&emsp;&emsp;  (拉丁语)，行事作风</p>
+</li>
+<li><p>tell me about it  &emsp;&emsp;&emsp;&emsp;  一个人理解另一个人表达的意思，因为他有过类似的体验</p>
+</li>
+<li><p>aide &emsp;&emsp;&emsp;&emsp;  助手,尤指从政者在工作中的助手</p>
+</li>
+<li><p>double cross &emsp;&emsp;&emsp; deceive or betray (a person with whom one is supposedly cooperating).</p>
+</li>
+<li><p>top dog &emsp;&emsp;&emsp; a person who is successful or dominant in their field.</p>
+</li>
+<li><p>I’ll say &emsp;&emsp;&emsp;  当然，的确如此</p>
+</li>
+<li><p>woo: 劝说某人支持你的事业  &emsp;&emsp;&emsp; Holmes also wooed a well-connected board that included Henry Kissinger and the late George Shultz</p>
+</li>
+<li><p>it is working just fine &emsp;&emsp;&emsp; 某事物一切正常，没问题</p>
+</li>
+<li><p>snap out of it &emsp;&emsp;&emsp;  振作起来</p>
+</li>
+<li><p>day job: &emsp;&emsp;&emsp; 指一个人的常规工作，是收入的来源，但不是他爱好的工作</p>
+</li>
+<li><p>get it together &emsp;&emsp;&emsp;  振作起來，打起精神。把生活安排得更好</p>
+</li>
+<li><p>that’s one theory &emsp;&emsp;&emsp; 这是一种说法</p>
+</li>
+<li><p>rocked me to my core &emsp;&emsp;&emsp; 令人感触很深</p>
+</li>
+<li><p>so be it &emsp;&emsp;&emsp; 那就这样吧；接受既定事实</p>
+</li>
+<li><p>round trip flight &emsp;&emsp;&emsp; 美国的双程旅行，买一次双程票就可以坐往返的飞机</p>
+</li>
+<li><p>test waters   试水温，投石问路。&emsp;&emsp;&emsp; Trump tests waters for 2024 run</p>
+</li>
+<li><p>compelling argument &emsp;&emsp;&emsp; 令人信服的论点</p>
+</li>
+<li><p>deter 威慑，使不敢。&emsp;&emsp;&emsp; Biden is thinking about sending U.S troops to Eastern Europe to deter Russia from invading Ukraine.</p>
+</li>
+<li><p>wimp 懦夫 &emsp;&emsp;&emsp; Double face: the guy’s a wimp</p>
+</li>
+<li><p>steal the show &emsp;&emsp;&emsp;  把每个人的注意力从其他地方都吸引了过来</p>
+</li>
+<li><p>all in &emsp;&emsp;&emsp; 全押上，放手一搏。 常和go连用， In poker, to go all in is to bet everything on a hand.</p>
+</li>
+<li><p>second wind &emsp;&emsp;&emsp; 指人在精疲力尽后恢复了精力</p>
+</li>
+<li><p>nail someone &emsp;&emsp;&emsp; 抓住某人</p>
+</li>
+<li><p>If it isn’t &emsp;&emsp;&emsp; 这不是…吗(表达意外地见到了某人)</p>
+</li>
+<li><p>that’s the stuff &emsp;&emsp;&emsp; really great or satisfying; Good job;</p>
+</li>
+<li><p>I wouldn’t go so far</p>
+</li>
+<li><p>spot on &emsp;&emsp;&emsp;  一针见血，说话或表达的观点正中靶心</p>
+</li>
+<li><p>pay the piper &emsp;&emsp;&emsp;  为自我放纵的行为付出代价 &emsp;&emsp; If you stay up late at night to watch TV, in the morning you will have to pay the piper</p>
+</li>
+<li><p>you’re telling me &emsp;&emsp;&emsp; 表示对别人说的话完全同意</p>
+</li>
+<li><p>hands-on &emsp;&emsp;&emsp; 事事过问的，事必躬亲的</p>
+</li>
+<li><p>small-minded &emsp;&emsp;&emsp; 见识狭隘的，格局小的</p>
+</li>
+<li><p>get into sb.’s head &emsp;&emsp;&emsp;   影响、改变某人的想法</p>
+</li>
+<li><p>weather the storm &emsp;&emsp;&emsp; 在不受伤的情况下处理困难</p>
+</li>
+<li><p>you have no jurisdiction here &emsp;&emsp;&emsp; 你在这里没有司法管辖权</p>
+</li>
+<li><p>grab a bite  &emsp;&emsp;&emsp; 吃点东西</p>
+</li>
+<li><p>do sth like a boss &emsp;&emsp;&emsp; 做某事带有气派的信心或权威</p>
+</li>
+<li><p>pinky promise &emsp;&emsp;&emsp; 拉勾约定</p>
+</li>
+<li><p>it makes me wonder &emsp;&emsp;&emsp; 让我越发好奇</p>
+</li>
+<li><p>make the call &emsp;&emsp;&emsp;  做决定</p>
+</li>
+<li><p>call me crazy  &emsp;&emsp;&emsp;  我将说出一些挺起来荒唐的事情</p>
+</li>
+<li><p>one the level &emsp;&emsp;&emsp; 真诚，直截了当</p>
+</li>
+<li><p>To have butterflies in one’s stomach &emsp;&emsp;&emsp; 一种持续不断的恐惧、紧张或忧虑的心情</p>
+</li>
+<li><p>break it up &emsp;&emsp;&emsp; 散开! 别打架了! 别吵架了</p>
+</li>
+<li><p>peanut gallery &emsp;&emsp;&emsp; 剧场最高楼座(票价最低)</p>
+</li>
+<li><p>have a beef with you &emsp;&emsp;&emsp; 跟你意見不合、我對你有所不滿</p>
+</li>
+<li><p>hit the road &emsp;&emsp;&emsp; 上路，出发</p>
+</li>
+<li><p>board up &emsp;&emsp;&emsp; 用栅木板阻断 </p>
+</li>
+<li><p>call in &emsp;&emsp;&emsp; 召集，叫（某人）进来；来访</p>
+</li>
+<li><p>That’s the stuff &emsp;&emsp;&emsp; 这东西真不错！这就对了！好呀！  &emsp;Ah, that’s the stuff. Nothing like a cold beer after a long day’s work</p>
+</li>
+<li><p>in bed with &emsp;&emsp;&emsp; 和人或组织合作</p>
+</li>
+<li>talk is cheap &emsp;&emsp;&emsp; 说话没什么代价；不要看一个人说了什么，要看他做什么</li>
+<li>out of touch &emsp;&emsp;&emsp; 对当前发生的事一无所知</li>
+<li>play-off match &emsp;&emsp;&emsp; 附加赛</li>
+<li>ffs &emsp;&emsp;&emsp; for fuck’s sake</li>
+<li>tears into &emsp;&emsp;&emsp; 猛烈抨击</li>
+<li>rise and shine &emsp;&emsp;&emsp; 起床</li>
+<li>hold your horses &emsp;&emsp;&emsp; 停下来想想，且慢</li>
+<li>got it covered &emsp;&emsp;&emsp; 我包了； 我能搞定</li>
+<li>Keep somebody in line  &emsp;&emsp;&emsp; 使某人守規矩</li>
+<li>show spine &emsp;&emsp;&emsp; 有点骨气</li>
+<li>take the fall for &emsp;&emsp;&emsp;  替 … 承擔責任</li>
+<li>get sb in the mood &emsp;&emsp;&emsp; 让某人进入状态，获得愉悦</li>
+<li>a long shot  &emsp;&emsp;&emsp; 成功概率很小的尝试或猜想</li>
+<li>take the lead  &emsp;&emsp;&emsp;  比别人先走；在比赛中取得领先</li>
+<li>be over sb &emsp;&emsp;&emsp; 不再对某人有感情；跟某人结束来往</li>
+<li>play innocent &emsp;&emsp;&emsp;  假装无辜</li>
+<li>lose count &emsp;&emsp;&emsp; 数目太多，数不清了</li>
+<li>sitting duck &emsp;&emsp;&emsp;   an easy or defenseless target.</li>
+<li>mark my word &emsp;&emsp;&emsp; 记住我的话</li>
+<li>standing ovation &emsp;&emsp;&emsp; 起立鼓掌</li>
+<li>bitch-slap </li>
+<li>punch line &emsp;&emsp;&emsp; 一个笑话或故事的末尾，表达了幽默或其他重要因素</li>
+<li>page-turners &emsp;&emsp;&emsp; an exciting book</li>
+<li>heavy hitter &emsp;&emsp;&emsp; 重要的或有权力的人</li>
+<li>on the line &emsp;&emsp;&emsp; 有风险</li>
+<li>write off &emsp;&emsp;&emsp; 认为someone or something无关紧要</li>
+<li>knight of shining armor &emsp;&emsp;&emsp;  理想化的或骑士般的男性，他会将女性从difficult situation解救出来</li>
+<li>level-headed &emsp;&emsp;&emsp;  冷静理智的</li>
+<li>trip wire  &emsp;&emsp;&emsp;  引爆线</li>
+<li>pick on sb &emsp;&emsp;&emsp;  批评某人，找某人的茬</li>
+<li>is there someone else? &emsp;&emsp;&emsp; 经常用于感情关系，问另一个人是否在和他人交往</li>
+<li>under a cloud  &emsp;&emsp;&emsp;    Under suspicion, in trouble, or out of favor</li>
+<li>easy-peasy   &emsp;&emsp;&emsp;   十分简单</li>
+<li>information loop   </li>
+<li>a victim of circumstance &emsp;&emsp;&emsp; 因一系列其他因素而受影响</li>
+<li>big shot &emsp;&emsp;&emsp; 拥有很大影响力的人或组织</li>
+<li>wake-up call &emsp;&emsp;&emsp;  叫醒电话，有关负面情况或危险行为的后果的警报。</li>
+<li>checks and balances  &emsp;&emsp;&emsp; 制衡</li>
+<li>razor-thin margin &emsp;&emsp;&emsp;  微弱优势</li>
+<li>in tune with the times &emsp;&emsp;&emsp;  与时俱进</li>
+<li>blast  &emsp;&emsp;&emsp;  抨击</li>
+<li>bull’s eye &emsp;&emsp;&emsp;  正中目标</li>
+<li>pack up  &emsp;&emsp;&emsp;  出故障了 </li>
+<li>ouch &emsp;&emsp;&emsp; 擔保，作證</li>
+<li>typical of sb to do sth   &emsp;&emsp;&emsp;  某人经常、通常做某事</li>
+<li>fancy a drink  &emsp;&emsp;&emsp;  (英式英语)想不想喝点什么</li>
+<li>get wind of sth  &emsp;&emsp;&emsp;  聽到…的風聲；得知…秘密消息</li>
+<li>strategic genius</li>
+<li>stick to the script  &emsp;&emsp;&emsp;  按既定计划进行</li>
+<li>tally ho  &emsp;&emsp;&emsp;  冲啊</li>
+<li>high society  &emsp;&emsp;&emsp; 上流社会 </li>
+<li>Am I being unreasonable ?  &emsp;&emsp;&emsp; 是我无理取闹了吗？</li>
+<li>you will do nothing of the sort   &emsp;&emsp;&emsp; 你可别这么做</li>
+<li>It’s dark out &emsp;&emsp;&emsp;   到晚上了</li>
+<li>cover to cover   &emsp;&emsp;&emsp;  从头到尾，一般说 read a book cover to cover</li>
+<li>tamper with &emsp;&emsp;&emsp;  擅自改动；蓄意破坏</li>
+<li>toxicology report  &emsp;&emsp;&emsp;  毒理学报告</li>
+<li>out of blue  &emsp;&emsp;&emsp; 出乎意料地</li>
+<li>gargle  &emsp;&emsp;&emsp;   漱口</li>
+<li>Out of the box &emsp;&emsp;&emsp;   <strong>开箱即用</strong>，指能够满足一定需求的、已经作好了的软件、硬件的形式。  <strong>跳出传统的思维框框。</strong></li>
+<li>alibi  holds up  &emsp;&emsp;&emsp;  不在场证明可靠</li>
+<li>copper  &emsp;&emsp;&emsp;   (英式英语)警察</li>
+<li>a bad apple &emsp;&emsp;&emsp;  害群之马</li>
+<li>pest control  &emsp;&emsp;&emsp;  除害虫</li>
+<li>redact &emsp;&emsp;&emsp;  遮盖，屏蔽。  为了个人隐私，文章中的名字被redacted.   So who redacted files</li>
+<li>whack-a-mole  打地鼠游戏  &emsp;&emsp;&emsp;  中国的封城防疫变成了一个whack-a-mole</li>
+<li>backwater &emsp;&emsp;&emsp;   穷乡僻壤，与世隔绝的地方.   在上海看来，西安就像个backwater</li>
+<li>square one  &emsp;&emsp;&emsp;    起点。 back to square one 回到起点，从零开始</li>
+<li>ripple effect  &emsp;&emsp;&emsp;  连锁反应</li>
+<li>big time  &emsp;&emsp;&emsp;     非常，表示程度强烈</li>
+<li>blow up in someone’s face  &emsp;&emsp;&emsp;   使某人栽跟头或使某人做事失败</li>
+<li>spin story  &emsp;&emsp;&emsp; 编造故事</li>
+<li>bad-mouthing   &emsp;&emsp;&emsp;   背后说人坏话</li>
+<li>scrupulous &emsp;&emsp;&emsp;   极为小心的</li>
+<li>kiss someone’s ring  &emsp;&emsp;&emsp;   向某人表示服从恭顺</li>
+<li>pull it off  &emsp;&emsp;&emsp;   实现目标或解决难题</li>
+<li>crack joke  &emsp;&emsp;&emsp;   开玩笑</li>
+<li>pedestrian &emsp;&emsp;&emsp;  行人，步行者</li>
+<li>madhouse &emsp;&emsp;&emsp;  混乱的地方, 精神病医院</li>
+<li>landline &emsp;&emsp;&emsp;   座机，固定电话</li>
+<li>ultimatum    &emsp;&emsp;&emsp;    最后通牒</li>
+<li>On the Fly &emsp;&emsp;&emsp; 匆忙，无准备</li>
+<li>exhume  &emsp;&emsp;&emsp; （从坟墓中）掘出（尸体）</li>
+<li>kaboom   &emsp;&emsp;&emsp;  嘭的爆炸声</li>
+<li>a tangle of wire  &emsp;&emsp;&emsp;   一卷电线</li>
+<li>futile  &emsp;&emsp;&emsp;  （行动）无作用的, 无效的</li>
+<li>embellishment  &emsp;&emsp;&emsp; 装饰, 修饰, 润色</li>
+<li>dwell on st  &emsp;&emsp;&emsp;  老是想着，一直在说</li>
+<li>decimate  &emsp;&emsp;&emsp; 毁灭，大量杀戮，大幅削減</li>
+<li>crease &emsp;&emsp;&emsp;   皱纹，褶皱</li>
+<li>trail away/off &emsp;&emsp;&emsp; （说话声或类似声响）逐渐减弱到停止，逐渐消失</li>
+<li>mouthpiece  &emsp;&emsp;&emsp;   喉舌</li>
+<li>drop in    &emsp;&emsp;&emsp;    顺便走访, 不预先通知的拜访</li>
+<li>run-off   &emsp;&emsp;&emsp;    比赛、选举等因为平局或结果不明确而进行的再次竞争</li>
+<li>state-of-the-art  &emsp;&emsp;&emsp;    最先进的，顶级的，到了炉火纯青的地步</li>
+<li>simple and plain  &emsp;&emsp;&emsp;   就这么简单，简单明了</li>
+<li>relation sour   &emsp;&emsp;&emsp;  The relationship between the US and North Korea soured again.</li>
+<li>Keep oneself to oneself  &emsp;&emsp;&emsp;   远离其他人，不和其他人来往</li>
+<li>drop dead  &emsp;&emsp;&emsp; 滚开，闭嘴</li>
+<li>square one  &emsp;&emsp;&emsp; 最初状态， 起点</li>
+<li>roll it down  &emsp;&emsp;&emsp;  窗户摇下来</li>
+<li>burn out  &emsp;&emsp;&emsp;  极度劳累，精神疲劳</li>
+<li>fire up   &emsp;&emsp;&emsp;  充满热情和期待</li>
+<li>with a grain of salt  &emsp;&emsp;&emsp;  持怀疑态度</li>
+<li>go south &emsp;&emsp;&emsp;   情况变糟，恶化</li>
+<li>in someone’s pocket   &emsp;&emsp;&emsp; 对某人有金钱依赖，因此受其影响</li>
+<li>sitting duck   &emsp;&emsp;&emsp;    待宰羔羊，容易被击中的目标</li>
+<li>be drafted   &emsp;&emsp;&emsp;  受征召服兵役</li>
+<li>loose end  &emsp;&emsp;&emsp;  残余，后患，扫尾问题</li>
+<li>kangaroo court &emsp;&emsp;&emsp; 不公正的审判 或 无视法律和程序的法庭</li>
+<li>wet, wet about &emsp;&emsp;&emsp;  弄错了，错怪</li>
+<li>on top of sth &emsp;&emsp;&emsp;  除了(令人不快之事)之外还</li>
+<li><p>reckoning  &emsp;&emsp;&emsp;  某人被叫来审视他的行为、还债或完成承诺</p>
+</li>
+<li><p>scut work  &emsp;&emsp;&emsp;  枯燥无聊的工作，机械性重复的工作</p>
+</li>
+<li><p>ladies’ room  &emsp;&emsp;&emsp;   女厕所</p>
+</li>
+<li>seed round   &emsp;&emsp;&emsp;   种子轮。创业的起步阶段，只有初步想法</li>
+<li>sophisticated person &emsp;&emsp;&emsp;  知识渊博的人，理解力强的人</li>
+<li>cultured person  &emsp;&emsp;&emsp; 有教养的人</li>
+<li>tank the deal   &emsp;&emsp;&emsp; 拒绝或取消交易</li>
+<li>dive right in  &emsp;&emsp;&emsp; 投入到， just do it</li>
+<li>suck it up  &emsp;&emsp;&emsp;   accept something unpleasant or difficult</li>
+<li>later gator  &emsp;&emsp;&emsp;   (口语)暂时再见了</li>
+<li>salon &emsp;&emsp;&emsp;   美容院，美发店</li>
+<li>thumb nose at  &emsp;&emsp;&emsp;  表示轻蔑，不理会</li>
+<li>born into &emsp;&emsp;&emsp;  生在某家族、群体等等</li>
+<li>trickle out &emsp;&emsp;&emsp;   逐渐离开</li>
+<li>good for you  &emsp;&emsp;&emsp;  (1) 你真棒，给你点赞  (2) 表示嘲讽冷漠，关我何事</li>
+<li><p>pacifist &emsp;&emsp;&emsp;   和平主义者</p>
+</li>
+<li><p>high maintenance woman &emsp;&emsp;&emsp;  需要花很多精力和时间打扮的女人</p>
+</li>
+<li>drama queen &emsp;&emsp;&emsp;  喜欢大惊小怪，作出夸张表情和反应的人</li>
+</ul>
+<ul>
+<li>fam  &emsp;&emsp;&emsp;  俚语，“家庭”的缩写, 可以不仅指家人，还可以包括朋友</li>
+<li>potluck  &emsp;&emsp;&emsp; 一种西方家常聚餐会，主人准备场地和餐具，参加的人必须带一道菜或准备饮料</li>
+<li>something’s off  &emsp;&emsp;&emsp;  情况不对劲，不太正常</li>
+<li>lash out  &emsp;&emsp;&emsp;  击打某人或某物</li>
+<li>hot dog &emsp;&emsp;&emsp;   (不是热狗)表示很高兴</li>
+<li>fall guy  &emsp;&emsp;&emsp;  替罪羊(口语)，scapegoat比较正式</li>
+<li><p>hawkish &emsp;&emsp;&emsp;  鹰派的</p>
+</li>
+<li><p>prostate &emsp;&emsp;&emsp; 前列腺</p>
+</li>
+<li>self-soothing  &emsp;&emsp;&emsp; 自我安慰</li>
+<li>double bluff &emsp;&emsp;&emsp; 一种bluff，看上去是bluff，其实是真的</li>
+<li>mark my words &emsp;&emsp;&emsp;  记住我的话</li>
+<li>uncalled for &emsp;&emsp;&emsp;   表示不必要的、不恰当，多用于表示对方不礼貌</li>
+<li>close in &emsp;&emsp;&emsp;   逼近，慢慢包围</li>
+<li>call out &emsp;&emsp;&emsp;   抨击</li>
+<li>play sb off against sb  &emsp;&emsp;&emsp; 挑拨一人和另一人争斗</li>
+<li>I have a record  &emsp;&emsp;&emsp; 我有前科</li>
+<li>shake sth up &emsp;&emsp;&emsp; 对…进行大改组（或大调整）</li>
+<li>natural calls  &emsp;&emsp;&emsp;  想上厕所了</li>
+<li>torn between……  &emsp;&emsp;&emsp;   在……之间左右为难. 之间徘徊.</li>
+<li>built a career &emsp;&emsp;&emsp; </li>
+<li>blast  &emsp;&emsp;&emsp;  见鬼，该死的</li>
+<li>irreconcilable difference  &emsp;&emsp;&emsp;  无法调和的分歧</li>
+<li>she’s  loaded  &emsp;&emsp;&emsp;  非常有钱</li>
+<li>number two  &emsp;&emsp;&emsp;  拉屎</li>
+</ul>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/28/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%88%B0%E9%9A%9C%E7%A2%8D%E7%89%A9%E7%9A%84%E8%B7%9D%E7%A6%BB%20calculateDistance/">机器人到障碍物的距离 calculateDistance</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a></span><div class="content"><p>在<a href="https://charon-cheung.github.io/2021/06/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84footprint/#validateFootprints">TEB中的footprint模型</a> 中提到<code>calculateDistance</code>函数计算机器人到障碍物的 Euclidean 距离，用于图优化环节。</p>
+<p>以最简单的Point类型为例<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">calculateDistance</span><span class="params">(<span class="keyword">const</span> PoseSE2&amp; current_pose, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Obstacle* obstacle)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> obstacle-&gt;<span class="built_in">getMinimumDistance</span>(current_pose.<span class="built_in">position</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><code>Obstacle</code>是个抽象类，它的派生类有<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PointObstacle</span><br><span class="line">CircularObstacle</span><br><span class="line">PillObstacle</span><br><span class="line">LineObstacle</span><br><span class="line">PolygonObstacle</span><br></pre></td></tr></table></figure><br>显然不同的障碍类型对函数有不同实现，这里又涉及到<code>costmap_converter</code>和<code>Homotopy</code>，这就更复杂了</p>
+<p>createGraph() —— PointObstacle::checkLineIntersection —— PointObstacle::checkCollision</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/20/%E8%8B%B1%E8%AF%AD/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E5%BF%83%E5%BE%97/">英语学习心得</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-20</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%8B%B1%E8%AF%AD/">英语</a></span><div class="content"><p><code>POLITICO</code>和<code>Five Thirty Eight</code>的文章整体都很简单，单词也很简单，看起来没什么压力。由于是免费媒体，所以文章深度有限。</p>
+<p><code>TIME</code>和<code>Economist</code>是付费杂志，文章明显有深度，难度明显加大，生僻单词多了不少，经常看一段就需要查单词，最好是查英英解释。<code>New York Times</code>, <code>Los Angles Times</code>, <code>Wall Street Journal</code>等等都类似。</p>
+<p><code>Guardian</code>和<code>Independent</code>属于大众媒体，五花八门各种主题，文章难度在于上面二者之间。</p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/17/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/TEB%E4%B8%AD%E7%9A%84footprint/">TEB中的footprint模型</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-17</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a></span><div class="content"><p>TEB算法中的footprint模型是单独构建的，而没有直接调用通用代价地图中的 footprint，二者footprint模型不同，但在TEB中二者都有使用。</p>
+<font size="3" color="blue"> TEB的footprint用于图优化，costmap的 footprint用于 `feasibility check`环节  </font>
+
+<p><code>LayeredCostmap</code>类的成员函数： <code>double getInscribedRadius() &#123; return inscribed_radius_; &#125;</code></p>
+<p><strong>对于polygon轮廓，两种footprint模型的内接半径相同</strong>， TEB的模型没有返回外接半径的函数</p>
+<p>在<code>TebLocalPlannerROS::initialize</code>中定义: <code>RobotFootprintModelPtr robot_model = getRobotFootprintFromParamServer(nh);</code>，然后进行模型验证<code>validateFootprints</code></p>
+<p>在planner初始化时，也就是在<code>TebOptimalPlanner::initialize</code>中赋值给<code>robot_model_</code>.<br><br></p>
+<table><tr><td bgcolor=yellow> RobotFootprintModelPtr 其实就是 BaseRobotFootprintModel类型的 boost::shared_ptr  </td></tr></table>
+
+<p>很显然<code>BaseRobotFootprintModel</code>是个抽象类，定义了机器人footprint/contour models的接口，根据yaml设置的类型而定义相应的类，<font color = blue size=4>这个类只用于optimization，代价地图的footprint只用于检查路径的可行性 </font></p>
+<ul>
+<li><p>Point 和 circular模型的footprints要求算力最少。</p>
+</li>
+<li><p><code>two-circles</code>模型要求的是两次 distance calculations</p>
+</li>
+<li><p><code>line</code>模型增加了一些 simple case checking, 但是算力在大多数情况仍要求不高。</p>
+</li>
+<li><p><code>polygon</code>模型对每一个edge都要求 distance check，所以计算时间主要取决于 edges和vertices 的数量</p>
+</li>
+</ul>
+<p>也就是说这几种模型的算力要求依次增大。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">RobotFootprintModelPtr <span class="title">TebLocalPlannerROS::getRobotFootprintFromParamServer</span><span class="params">(<span class="keyword">const</span> ros::NodeHandle&amp; nh)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  std::string model_name; </span><br><span class="line">  <span class="keyword">if</span> (!nh.<span class="built_in">getParam</span>(<span class="string">&quot;footprint_model/type&quot;</span>, model_name))</span><br><span class="line">  &#123;</span><br><span class="line">	<span class="comment">// 如果未指定类型，则使用点类型</span></span><br><span class="line">    <span class="keyword">return</span> boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// point  </span></span><br><span class="line">  <span class="keyword">if</span> (model_name.<span class="built_in">compare</span>(<span class="string">&quot;point&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">      <span class="built_in">ROS_INFO</span>(<span class="string">&quot;Footprint model &#x27;point&#x27; loaded for trajectory optimization.&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span>  boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// circular   省略</span></span><br><span class="line">  <span class="keyword">if</span> (model_name.<span class="built_in">compare</span>(<span class="string">&quot;circular&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">  <span class="comment">// line  省略</span></span><br><span class="line">  <span class="keyword">if</span> (model_name.<span class="built_in">compare</span>(<span class="string">&quot;line&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">  <span class="comment">// two circles 省略</span></span><br><span class="line">  <span class="keyword">if</span> (model_name.<span class="built_in">compare</span>(<span class="string">&quot;two_circles&quot;</span>) == <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// polygon  只对 Point2dContainer vertices_; 赋值</span></span><br><span class="line">  <span class="keyword">if</span> (model_name.<span class="built_in">compare</span>(<span class="string">&quot;polygon&quot;</span>) == <span class="number">0</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// check parameters</span></span><br><span class="line">    XmlRpc::XmlRpcValue footprint_xmlrpc;</span><br><span class="line">    <span class="keyword">if</span> (!nh.<span class="built_in">getParam</span>(<span class="string">&quot;footprint_model/vertices&quot;</span>, footprint_xmlrpc) )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">ROS_ERROR_STREAM</span>(<span class="string">&quot;Footprint model &#x27;polygon&#x27; cannot be loaded for </span></span><br><span class="line"><span class="string">      	trajectory optimization, since param &#x27;&quot;</span> &lt;&lt; nh.<span class="built_in">getNamespace</span>() &lt;&lt; </span><br><span class="line">      	<span class="string">&quot;/footprint_model/vertices&#x27; does not exist. Using point-model instead&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// get vertices</span></span><br><span class="line">    <span class="keyword">if</span> (footprint_xmlrpc.<span class="built_in">getType</span>() == XmlRpc::XmlRpcValue::TypeArray)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">try</span></span><br><span class="line">      &#123;</span><br><span class="line">        Point2dContainer polygon = <span class="built_in">makeFootprintFromXMLRPC</span>(footprint_xmlrpc, </span><br><span class="line">        	<span class="string">&quot;/footprint_model/vertices&quot;</span>);</span><br><span class="line">        <span class="built_in">ROS_INFO_STREAM</span>(<span class="string">&quot;Footprint model &#x27;polygon&#x27; loaded for trajectory optimization.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> boost::make_shared&lt;PolygonRobotFootprint&gt;(polygon);</span><br><span class="line">      &#125; </span><br><span class="line">      <span class="built_in"><span class="keyword">catch</span></span>(<span class="keyword">const</span> std::exception&amp; ex)</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="built_in">ROS_ERROR_STREAM</span>(<span class="string">&quot;Footprint model &#x27;polygon&#x27; cannot be loaded for trajectory optimization: &quot;</span></span><br><span class="line">        	&lt;&lt; ex.<span class="built_in">what</span>() &lt;&lt; <span class="string">&quot;. Using point-model instead.&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="built_in">ROS_ERROR_STREAM</span>(<span class="string">&quot;Footprint model &#x27;polygon&#x27; cannot be loaded for trajectory optimization, </span></span><br><span class="line"><span class="string">      	since param &#x27;&quot;</span> &lt;&lt; nh.<span class="built_in">getNamespace</span>() &lt;&lt; <span class="string">&quot;/footprint_model/vertices&#x27; does not </span></span><br><span class="line"><span class="string">      	define an array of coordinates. Using point-model instead.&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> boost::make_shared&lt;PointRobotFootprint&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="validateFootprints"><a href="#validateFootprints" class="headerlink" title="validateFootprints"></a>validateFootprints</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// TebLocalPlannerROS::initialize中的调用</span></span><br><span class="line"><span class="built_in">validateFootprints</span>(robot_model-&gt;<span class="built_in">getInscribedRadius</span>(), robot_inscribed_radius_, </span><br><span class="line">          cfg_.obstacles.min_obstacle_dist);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">TebLocalPlannerROS::validateFootprints</span><span class="params">(<span class="keyword">double</span> opt_inscribed_radius, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">double</span> costmap_inscribed_radius, <span class="keyword">double</span> min_obst_dist)</span></span></span><br><span class="line"><span class="function"></span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>函数就一句<code>ROS_WARN_COND</code>，要求 <font color = blue size=4>TEB优化所用的机器人内接半径 + 参数 min_obstacle_dist &gt; costmap中的内接半径(包括footprint_padding) </font>，否则Infeasible optimziation results会频繁出现</p>
+<p>这里就是设置为点类型的缺陷之处，第1参数个会是0，但是如果<code>min_obstacle_dist</code>超过costmap中的内接半径，会无法走窄通道。</p>
+<p><br></p>
+<p><code>BaseRobotFootprintModel</code>的派生类实现了<code>calculateDistance</code>函数，计算机器人到障碍物的 Euclidean距离，用于图优化环节。以最简单的Point类型为例<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">calculateDistance</span><span class="params">(<span class="keyword">const</span> PoseSE2&amp; current_pose, </span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">const</span> Obstacle* obstacle)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> obstacle-&gt;<span class="built_in">getMinimumDistance</span>(current_pose.<span class="built_in">position</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>至于细节，需要单独一篇文章分析</p>
+<p>变量<code>robot_model_</code>在之后用于图优化时的一系列函数：<br><code>AddEdgesObstacles</code><br><code>AddEdgesObstaclesLegacy</code><br><code>AddEdgesDynamicObstacles</code><br><code>AddEdgesVelocityObstacleRatio</code>，也就是<strong>所有和障碍相关的约束</strong></p>
+<p>以及可视化中的<code>publishInfeasibleRobotPose</code></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap%20converter/2.%20costmap%20converter%E5%9F%BA%E6%9C%AC%E6%9C%BA%E5%88%B6/">(二) costmap converter基本机制</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></span><div class="content"><p>配置使用的是<code>costmap_converter::CostmapToLinesDBSRANSAC</code>，类继承关系:</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CostmapToLinesDBSRANSAC</span> :</span> <span class="keyword">public</span> CostmapToPolygonsDBSMCCH : <span class="keyword">public</span> BaseCostmapToPolygons</span><br></pre></td></tr></table></figure>
 <p>这个机制太复杂了，还没有搞清楚<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">workerCallback</span><span class="params">(<span class="keyword">const</span> ros::TimerEvent&amp;)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">updateCostmap2D</span>();</span><br><span class="line">  <span class="built_in">compute</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CostmapToPolygonsDBSMCCH::updateCostmap2D</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	occupied_cells_.<span class="built_in">clear</span>();</span><br><span class="line">	<span class="keyword">if</span> (!costmap_-&gt;<span class="built_in">getMutex</span>())</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">ROS_ERROR</span>(<span class="string">&quot;Cannot update costmap since the mutex pointer is null&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">int</span> idx = <span class="number">0</span>;</span><br><span class="line">	costmap_2d::Costmap2D::<span class="function"><span class="keyword">mutex_t</span>::scoped_lock <span class="title">lock</span><span class="params">(*costmap_-&gt;getMutex())</span></span>;</span><br><span class="line">	    </span><br><span class="line">	<span class="comment">// get indices of obstacle cells</span></span><br><span class="line">	<span class="keyword">for</span>(std::<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; costmap_-&gt;<span class="built_in">getSizeInCellsX</span>(); i++)</span><br><span class="line">	&#123;</span><br><span class="line">	<span class="keyword">for</span>(std::<span class="keyword">size_t</span> j = <span class="number">0</span>; j &lt; costmap_-&gt;<span class="built_in">getSizeInCellsY</span>(); j++)</span><br><span class="line">	&#123;</span><br><span class="line">	  <span class="keyword">int</span> value = costmap_-&gt;<span class="built_in">getCost</span>(i,j);</span><br><span class="line">	  <span class="keyword">if</span>(value &gt;= costmap_2d::LETHAL_OBSTACLE)</span><br><span class="line">	  &#123;</span><br><span class="line">	    <span class="keyword">double</span> x, y;</span><br><span class="line">	    costmap_-&gt;<span class="built_in">mapToWorld</span>((<span class="keyword">unsigned</span> <span class="keyword">int</span>)i, (<span class="keyword">unsigned</span> <span class="keyword">int</span>)j, x, y);</span><br><span class="line">	    occupied_cells_.<span class="built_in">push_back</span>( <span class="built_in">KeyPoint</span>( x, y ) );</span><br><span class="line">	  &#125;</span><br><span class="line">	  ++idx;</span><br><span class="line">	&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/06/16/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap%20converter/1.%20TEB%E4%B8%AD%E7%9A%84costmap%20converter%E6%BA%90%E7%A0%81%E9%83%A8%E5%88%86/">(一) TEB中的costmap converter源码部分</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-06-16</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/">TEB算法</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/TEB%E7%AE%97%E6%B3%95/costmap-converter/">costmap converter</a></span><div class="content"><p>TEB默认情况下不使用Costmap Converter。事实上，此插件可以在复杂场景下极大提高运算效率，尤其是处理激光雷达分散的测量数据时，因为将障碍物视为系列孤立点效率极低。</p>
@@ -282,67 +788,7 @@
 <p><code>UpdateMap</code>首先调用类内getRobotPose函数，通过tf转换，将机器人底盘系的坐标转换到global系，得到机器人的位姿。然后通过<code>layered_costmap_</code>调用LayeredCostmap类的updateMap函数，更新地图。</p>
 <p>流程如下<br><img src="https://i.loli.net/2020/05/13/4R5iKrCghHZ7cwd.png" alt="costmap的初始化流程.png"></p>
 <p>整个costmap初始化，最关键和复杂的就是各层的加载和更新地图</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/Costmap2D%20%E7%B1%BB/">Costmap2D 类</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%A3%E4%BB%B7%E5%9C%B0%E5%9B%BE/">代价地图</a></span><div class="content"><p><code>Costmap2DROS</code>, <code>Costmap2D</code>, <code>LayeredCostmap</code>三个类都属于命名空间<code>costmap_2d</code>，互相没有继承关系，而且都是独立的类</p>
-<p><code>Costmap2D</code> 类中实现了用来存储和访问2D代价地图的的基本数据结构. 它的定义在<code>LayeredCostmap</code>类的成员列表初始化里面，cell默认值<code>default_value_</code>的赋值在<code>LayerdCostmap</code>类的构造函数里。</p>
-<p><img src="https://i.loli.net/2021/05/29/KIesGlZtp9PCvaF.png" alt="三个类的关系图"></p>
-<p>地图图像原点在左下角，缺点是会增加理解难度，好处是在生成图像时，y可以 +1 增，符合真实世界中y向北表示增加。要画出图像时，须要上下颠倒，y往往要换成<code>(map.info.height - y - 1)</code></p>
-<p><img src="https://s2.loli.net/2023/05/24/1tNrqoHBAFyCpSX.png" alt="代价地图的坐标系和索引"></p>
-<font size="3" color="blue"> A 2D costmap class provides a mapping between points in the world and their associated "costs"  </font>
-
-<p>map坐标系原点在该区域左下角坐标<code>(origin_x_, origin_y_)</code>附近。具体是在<code>(origin_x_ + resolution/2, origin_x_ + resolution/2)</code></p>
-<p>在一次导航过程中，world坐标系只有一个，原点固定。map坐标则随着区域出现而出现。由于一个栅格表示一个<code>resolutin X resolution</code>面积的真实区域，栅格坐标对应的world坐标是在该栅格的中心点坐标。</p>
-<p><br></p>
-<p>看全局代价地图的各个参数:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> nx = global_costmap-&gt;<span class="built_in">getSizeInCellsX</span>();   <span class="comment">//2200</span></span><br><span class="line"><span class="keyword">int</span> ny = global_costmap-&gt;<span class="built_in">getSizeInCellsY</span>();	  <span class="comment">//1600	</span></span><br><span class="line"><span class="keyword">double</span> global_resolution = global_costmap-&gt;<span class="built_in">getResolution</span>();  <span class="comment">// 0.025</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> origin_x = global_costmap-&gt;<span class="built_in">getOriginX</span>();    <span class="comment">// -1</span></span><br><span class="line"><span class="keyword">double</span> origin_y = global_costmap-&gt;<span class="built_in">getOriginY</span>();    <span class="comment">// -34.6</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> sizeMeterX = global_costmap-&gt;<span class="built_in">getSizeInMetersX</span>();     <span class="comment">// 109.975</span></span><br><span class="line"><span class="keyword">double</span> sizeMeterY = global_costmap-&gt;<span class="built_in">getSizeInMetersY</span>();     <span class="comment">//  79.975</span></span><br></pre></td></tr></table></figure><br>nx, ny就是pgm地图文件的像素尺寸，一共<code>nx X ny</code>个cell</p>
-<p>global_resolution, origin_x, origin_y就是<code>map.yaml</code>中的resolution和origin参数</p>
-<p><code>sizeMeterX</code> 和 <code>sizeMeterY</code> 在rviz上用Measure工具测量一下地图的长宽即可得到</p>
-<p><br></p>
-<p>局部代价地图，yaml文件的参数是这样设置的:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">width: 4.0</span><br><span class="line">height: 4.0</span><br><span class="line">resolution: 0.05</span><br></pre></td></tr></table></figure><br>nx, ny都是80，也就是4/0.05, 80x80就是6400个cell</p>
-<p>origin_x: 58,  origin_y: 1.5    这里机器人的初值位置为<code>(60, 3.5)</code>，位于动态窗口的中心，计算就能得到这两个参数</p>
-<p>sizeMeterX: 3.975000,  sizeMeterY: 3.975000      其实就是4</p>
-<p>这里会发现在全局代价地图的yaml里，没有设置width和height，因为它们是地图文件决定的，无需我们设置。而局部代价地图的动态窗口大小是我们决定的。</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 就是为 costmap_ 分配内存</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Costmap2D::initMaps</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> size_x, <span class="keyword">unsigned</span> <span class="keyword">int</span> size_y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">boost::unique_lock&lt;<span class="keyword">mutex_t</span>&gt; <span class="title">lock</span><span class="params">(*access_)</span></span>;</span><br><span class="line">    <span class="keyword">delete</span>[] costmap_;</span><br><span class="line">    costmap_ = <span class="keyword">new</span> <span class="keyword">unsigned</span> <span class="keyword">char</span>[size_x * size_y];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Costmap2D::resizeMap</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> size_x, <span class="keyword">unsigned</span> <span class="keyword">int</span> size_y, </span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">double</span> resolution,</span></span></span><br><span class="line"><span class="params"><span class="function">                          <span class="keyword">double</span> origin_x, <span class="keyword">double</span> origin_y)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    size_x_ = size_x;</span><br><span class="line">    size_y_ = size_y;</span><br><span class="line">    resolution_ = resolution;</span><br><span class="line">    origin_x_ = origin_x;</span><br><span class="line">    origin_y_ = origin_y;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">initMaps</span>(size_x, size_y);</span><br><span class="line">    <span class="comment">// reset our maps to have no information</span></span><br><span class="line">    <span class="built_in">resetMaps</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将 costmap_ 赋值为默认值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Costmap2D::resetMaps</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">boost::unique_lock&lt;<span class="keyword">mutex_t</span>&gt; <span class="title">lock</span><span class="params">(*access_)</span></span>;</span><br><span class="line">    <span class="built_in">memset</span>(costmap_, default_value_, size_x_ * size_y_ * <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">unsigned</span> <span class="keyword">char</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Costmap2D::resetMap</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> x0, <span class="keyword">unsigned</span> <span class="keyword">int</span> y0, <span class="keyword">unsigned</span> <span class="keyword">int</span> xn, <span class="keyword">unsigned</span> <span class="keyword">int</span> yn)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">boost::unique_lock&lt;<span class="keyword">mutex_t</span>&gt; <span class="title">lock</span><span class="params">(*(access_))</span></span>;</span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> len = xn - x0;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span> y = y0 * size_x_ + x0; y &lt; yn * size_x_ + x0; y += size_x_)</span><br><span class="line">      <span class="built_in">memset</span>(costmap_ + y, default_value_, len * <span class="built_in"><span class="keyword">sizeof</span></span>(<span class="keyword">unsigned</span> <span class="keyword">char</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 根据像素坐标，获得 costmap_ 数组的索引</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">getIndex</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> mx, <span class="keyword">unsigned</span> <span class="keyword">int</span> my)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> my * size_x_ + mx;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 根据 costmap_ 数组的索引，获得像素坐标</span></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">indexToCells</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> index, <span class="keyword">unsigned</span> <span class="keyword">int</span>&amp; mx, <span class="keyword">unsigned</span> <span class="keyword">int</span>&amp; my)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    my = index / size_x_;</span><br><span class="line">    mx = index - (my * size_x_);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>void Costmap2D::deleteMaps():   释放 costmap_ </p>
-</li>
-<li><p>bool saveMap(std::string file_name);  </p>
-</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 输入世界距离（世界坐标的距离，将其转换为单元格），输出均等距离</span></span><br><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="title">Costmap2D::cellDistance</span><span class="params">(<span class="keyword">double</span> world_dist)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">double</span> cells_dist = <span class="built_in">max</span>(<span class="number">0.0</span>, <span class="built_in">ceil</span>(world_dist / resolution_));</span><br><span class="line">  <span class="keyword">return</span> (<span class="keyword">unsigned</span> <span class="keyword">int</span>)cells_dist;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>代价地图保存为pgm格式。全局代价地图保存是这样的<br><img src="https://i.loli.net/2021/05/29/nR8LChtIoeKTi72.png" alt="saveMap.png"><br>这里保存的地图图片，其实和OpenCV保存的一样。相当于真实的costmap先逆时针转180°，再对y轴取对称。但是像素值是相反的。局部代价地图打开是一片黑，应该是只有个窗口，看不出来了。</p>
-<ul>
-<li>void mapToWorld(unsigned int mx, unsigned int my, double&amp; wx, double&amp; wy) const</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Costmap2D::mapToWorld</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> mx, <span class="keyword">unsigned</span> <span class="keyword">int</span> my, <span class="keyword">double</span>&amp; wx, <span class="keyword">double</span>&amp; wy)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  wx = origin_x_ + (mx + <span class="number">0.5</span>) * resolution_;</span><br><span class="line">  wy = origin_y_ + (my + <span class="number">0.5</span>) * resolution_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>把某个代价地图里的坐标转为世界坐标，常用于把机器人全局代价地图的坐标转为map坐标系的坐标。 在<code>TebLocalPlannerROS::updateObstacleContainerWithCostmap()</code>调用过: <code>costmap_-&gt;mapToWorld(0, 0, wx, wy);</code></p>
-<ul>
-<li>void worldToMap(double robot_x, double robot_y, int mx, int my) const</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Convert from world coordinates to map coordinates</span></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">Costmap2D::worldToMap</span><span class="params">(<span class="keyword">double</span> wx, <span class="keyword">double</span> wy, <span class="keyword">unsigned</span> <span class="keyword">int</span>&amp; mx, <span class="keyword">unsigned</span> <span class="keyword">int</span>&amp; my)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 这里有时会出现，为什么 ???</span></span><br><span class="line">    <span class="keyword">if</span> (wx &lt; origin_x_ || wy &lt; origin_y_)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    mx = (<span class="keyword">int</span>) ((wx - origin_x_) / resolution_);</span><br><span class="line">    my = (<span class="keyword">int</span>) ((wy - origin_y_) / resolution_);</span><br><span class="line">    <span class="comment">// 出了代价地图的范围</span></span><br><span class="line">    <span class="keyword">if</span> (mx &lt; size_x_ &amp;&amp; my &lt; size_y_)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>把世界坐标转为某个代价地图里的坐标，最常用的是把机器人在map坐标系的坐标转为全局代价地图里的坐标，注意是转为<strong>像素坐标</strong>，不是<code>base_link</code>或常说的坐标系。 <font size="4" color="blue"> 像素坐标系的原点是左下方的点 </font>，所以是跟<code>size_x_</code>和<code>size_y_</code>比较，这两个是地图的长宽，这样才能判断点是否出了代价地图的范围<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tf::Stamped&lt;tf::Pose&gt; robot_pose;</span><br><span class="line">costmap_ros_-&gt;<span class="built_in">getRobotPose</span>(robot_pose);</span><br><span class="line">robot_pose_ = <span class="built_in">PoseSE2</span>(robot_pose);</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> mx, my;</span><br><span class="line">costmap_ros_-&gt;<span class="built_in">getCostmap</span>()-&gt;<span class="built_in">worldToMap</span>(robot_pose-&gt;<span class="built_in">x</span>(), robot_pose-&gt;<span class="built_in">y</span>(), mx, my);</span><br></pre></td></tr></table></figure><br>如果是局部代价地图，窗口边长4，分辨率0.05，那么窗口的像素边长就是80，这里的机器人的坐标 mx   my 就在(40, 40)左右，因为它总在局部代价地图中心</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!costmap_-&gt;<span class="built_in">worldToMap</span>(x, y, mx, my)) &#123;</span><br><span class="line">    <span class="built_in">ROS_FATAL</span>(<span class="string">&quot;The dimensions of costmap is too small to fully include robot&#x27;s footprint&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> cost = costmap_-&gt;<span class="built_in">getCost</span>(mx, my);</span><br></pre></td></tr></table></figure>
-<p>如果<code>worldToMap</code>返回false，那么是mx或my太大了，超出了代价地图的大小。如果不return，继续执行<code>getCost</code>会导致程序退出。还可以<code>return -1</code>，因为代价值是<code>0~255</code>。<font size="4" color="orange"> 有时返回false是因为 wx &lt; origin<em>x</em> || wy &lt; origin<em>y</em>  </font> 不明白原因</p>
-<p>map坐标系坐标单元是栅格，只有整数才有意义。一般来说，只有在区域内的才有意义，即x范围是<code>[0, size_x_-1]</code>，y范围是<code>[0, size_y_-1]</code>。 这就涉及到<code>worldToMapEnforceBounds</code> 和 <code>worldToMapNoBounds</code> </p>
-<p><br></p>
-<ul>
-<li><p><code>unsigned char  getCost (unsigned int mx, unsigned int my) const</code>  &emsp;&emsp;&emsp;获得costmap中某个栅格的代价值。 mx, my是cell的坐标</p>
-</li>
-<li><p>void     setCost(unsigned int mx, unsigned int my, unsigned char cost)</p>
-</li>
-</ul>
-<p>设置代价地图中某个cell的代价值，在层的代码中使用很多</p>
-<ul>
-<li>void setDefaultValue(unsigned char c)</li>
-</ul>
-<p>语句只有<code>default_value_ = c;</code>，调用的地方只有<code>LayeredCostmap</code>构造函数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (track_unknown)  <span class="comment">// 默认false</span></span><br><span class="line">  costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">255</span>);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">  costmap_.<span class="built_in">setDefaultValue</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>unsigned char* getCharMap() const;  &emsp;&emsp;&emsp; return A pointer to the underlying unsigned char array storing cost values  &emsp;&emsp;&emsp; 获取到这个地图中存储代价地图的指针，通过指针找到地图信息。主要在层的代码和<code>ClearCostmapRecovery</code>类中使用</li>
-</ul>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">unsigned</span> <span class="keyword">char</span>* <span class="title">Costmap2D::getCharMap</span><span class="params">()</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> costmap_;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="获得指定栅格周围的4个或8个栅格"><a href="#获得指定栅格周围的4个或8个栅格" class="headerlink" title="获得指定栅格周围的4个或8个栅格"></a>获得指定栅格周围的4个或8个栅格</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Determine 4-connected neighbourhood of an input cell, checking for map edges</span></span><br><span class="line"><span class="comment"> * @param idx input cell index</span></span><br><span class="line"><span class="comment"> * @param costmap Reference to map data</span></span><br><span class="line"><span class="comment"> * @return neighbour cell indexes</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; <span class="title">nhood4</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> idx,</span></span></span><br><span class="line"><span class="params"><span class="function">                                 <span class="keyword">const</span> costmap_2d::Costmap2D&amp; costmap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// get 4-connected neighbourhood indexes, check for edge of map</span></span><br><span class="line">  std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; out;</span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> size_x_ = costmap.<span class="built_in">getSizeInCellsX</span>(),</span><br><span class="line">               size_y_ = costmap.<span class="built_in">getSizeInCellsY</span>();</span><br><span class="line">  <span class="keyword">if</span> (idx &gt; size_x_ * size_y_ - <span class="number">1</span>)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">ROS_WARN</span>(<span class="string">&quot;Evaluating nhood for offmap point&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> out;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx - <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &lt; size_x_ - <span class="number">1</span>) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx + <span class="number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx &gt;= size_x_) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx - size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx &lt; size_x_ * (size_y_ - <span class="number">1</span>)) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx + size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @brief Determine 8-connected neighbourhood of an input cell, checking for map edges</span></span><br><span class="line"><span class="comment"> * @param idx input cell index</span></span><br><span class="line"><span class="comment"> * @param costmap Reference to map data</span></span><br><span class="line"><span class="comment"> * @return neighbour cell indexes</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; <span class="title">nhood8</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> idx,</span></span></span><br><span class="line"><span class="params"><span class="function">                                 <span class="keyword">const</span> costmap_2d::Costmap2D&amp; costmap)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// get 8-connected neighbourhood indexes, check for edge of map</span></span><br><span class="line">  std::vector&lt;<span class="keyword">unsigned</span> <span class="keyword">int</span>&gt; out = <span class="built_in">nhood4</span>(idx, costmap);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">unsigned</span> <span class="keyword">int</span> size_x_ = costmap.<span class="built_in">getSizeInCellsX</span>(),</span><br><span class="line">               size_y_ = costmap.<span class="built_in">getSizeInCellsY</span>();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (idx &gt; size_x_ * size_y_ - <span class="number">1</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> out;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &gt; <span class="number">0</span> &amp;&amp; idx &gt;= size_x_) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx - <span class="number">1</span> - size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &gt; <span class="number">0</span> &amp;&amp; idx &lt; size_x_ * (size_y_ - <span class="number">1</span>)) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx - <span class="number">1</span> + size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &lt; size_x_ - <span class="number">1</span> &amp;&amp; idx &gt;= size_x_) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx + <span class="number">1</span> - size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (idx % size_x_ &lt; size_x_ - <span class="number">1</span> &amp;&amp; idx &lt; size_x_ * (size_y_ - <span class="number">1</span>)) &#123;</span><br><span class="line">    out.<span class="built_in">push_back</span>(idx + <span class="number">1</span> + size_x_);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> out;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/05/27/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E4%BB%BF%E7%9C%9F%E7%9A%84%E8%BD%A6%E6%80%BB%E4%B8%8D%E8%83%BD%E5%88%B0%E8%BE%BE%E7%BB%88%E7%82%B9%E7%9A%84bug/">仿真的车总不能到达终点的bug</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-05-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E5%85%B6%E4%BB%96/">其他</a></span><div class="content"><p>在仿真环境中运行导航，发现车总到不了终点，在终点附近来回旋转，就是到不了，日志如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">11</span>:<span class="number">04</span>:<span class="number">13.884</span> - INFO] (): <span class="function">Received move_base <span class="title">goal</span> <span class="params">(x: <span class="number">57.355</span>, y: <span class="number">3.318</span>, yaw deg: -<span class="number">163</span>, yaw rad: -<span class="number">2.85</span>)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[ WARN][/move_base] [TebLocalPlannerROS::configureBackupModes] line_1190  TebLocalPlannerROS: possible <span class="title">oscillation</span> <span class="params">(of the robot or its local plan)</span> detected. Activating recovery <span class="title">strategy</span> <span class="params">(prefer current turning direction during optimization)</span>.</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[11:04:42.532 - WARN] <span class="params">()</span>: oscillate in a small area <span class="keyword">for</span> a <span class="keyword">long</span> time !</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[11:04:42.686 - INFO] <span class="params">()</span>: move_base_recovery,state machine is CLEARING, Executing behavior 0 of 2</span></span><br><span class="line"><span class="function">[ WARN][/move_base] [ClearCostmapRecovery::runBehavior] line_90  Clearing costmap to unstuck <span class="title">robot</span> <span class="params">(<span class="number">0.</span>000000m)</span>.</span></span><br><span class="line"><span class="function">[ INFO][/move_base] [TebLocalPlannerROS::configureBackupModes] line_1199  TebLocalPlannerROS: oscillation recovery disabled/expired.</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">[11:04:53.100 - WARN] <span class="params">()</span>: Robot in CONTROLLING, but can not get new global plan</span></span><br></pre></td></tr></table></figure><br>因为在终点来回旋转，TEB和move_base都认为是振荡，最后连全局路径都无法获得了。</p>
-<p>最后查到的原因在<code>TEB</code>里:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">  tf::Stamped&lt;tf::Pose&gt; global_goal;</span><br><span class="line">  <span class="comment">// 原kinetic所用</span></span><br><span class="line">  tf::<span class="built_in">poseStampedMsgToTF</span>(global_plan_.<span class="built_in">back</span>(), global_goal);</span><br><span class="line">  <span class="comment">// 公司所用 实际plan_goal_没有赋值</span></span><br><span class="line">  <span class="comment">// tf::poseStampedMsgToTF(plan_goal_, global_goal);</span></span><br><span class="line">  global_goal.<span class="built_in">setData</span>( tf_plan_to_global * global_goal );</span><br><span class="line">  <span class="keyword">double</span> dx = global_goal.<span class="built_in">getOrigin</span>().<span class="built_in">getX</span>() - robot_pose_.<span class="built_in">x</span>();</span><br><span class="line">  <span class="keyword">double</span> dy = global_goal.<span class="built_in">getOrigin</span>().<span class="built_in">getY</span>() - robot_pose_.<span class="built_in">y</span>();</span><br><span class="line">  <span class="keyword">if</span>(<span class="built_in">fabs</span>(std::<span class="built_in">sqrt</span>(dx*dx+dy*dy)) &lt; cfg_.goal_tolerance.xy_goal_tolerance)</span><br><span class="line">  &#123;</span><br><span class="line">    position_reanched_ = <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">TebLocalPlannerROS::setGoal</span><span class="params">(<span class="keyword">const</span> geometry_msgs::PoseStamped&amp; goal)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  plan_goal_ = goal;</span><br><span class="line">  std::cout &lt;&lt; <span class="string">&quot;Teb goal received (&quot;</span> &lt;&lt; goal.pose.position.x </span><br><span class="line">                &lt;&lt; <span class="string">&quot;, &quot;</span> &lt;&lt; goal.pose.position.y &lt;&lt; <span class="string">&quot;)&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>的赋值在函数<code>setGoal</code>，但setGoal一直没有调用，导致<code>global_goal</code>为0，后面的dx,dy就不对了，判断是否到目标点也就错误了。</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/04/28/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/%E5%B0%8F%E5%B7%A5%E5%85%B7/">小工具</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-04-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></span><div class="content"><h2 id="代码统计-cloc"><a href="#代码统计-cloc" class="headerlink" title="代码统计 cloc"></a>代码统计 cloc</h2><p>到github上下载cloc.exe，然后设置环境变量。到目录中打开命令窗口，执行<code>cloc src</code>就会统计src文件夹中的所有代码行数</p>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2021/04/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E6%89%A9%E5%B1%95%E5%BB%BA%E5%9B%BE%20(%E4%BA%8C)/">扩展建图 (二)</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-04-27</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/">激光SLAM</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/">Cartographer</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/">原理和配置</a></span><div class="content">abstract Welcome to my blog, enter password to read.</div><a class="more" href="/2021/04/27/%E6%BF%80%E5%85%89SLAM/Cartographer/%E5%8E%9F%E7%90%86%E5%92%8C%E9%85%8D%E7%BD%AE/%E6%89%A9%E5%B1%95%E5%BB%BA%E5%9B%BE%20(%E4%BA%8C)/#more">Read more</a><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/27/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><span class="page-number current">28</span><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><a class="extend next" rel="next" href="/page/29/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+</div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/27/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/27/">27</a><span class="page-number current">28</span><a class="page-number" href="/page/29/">29</a><span class="space">&hellip;</span><a class="page-number" href="/page/65/">65</a><a class="extend next" rel="next" href="/page/29/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2023 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
     processEscapes: true,
