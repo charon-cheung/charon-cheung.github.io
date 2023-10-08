@@ -102,6 +102,8 @@
 <h2 id="设置终端初始路径"><a href="#设置终端初始路径" class="headerlink" title="设置终端初始路径"></a>设置终端初始路径</h2><p>在<code>bashrc</code>中加一行： <code>cd PATH</code>即可</p>
 <p>有一次发现不管怎么改也没用，按照网上的方法修改<code>bash_profile</code>不奏效。 后来发现是系统环境变量<code>$HOME</code>被改变了，于是在<code>/etc/profile</code>中添加一行  <code>export HOME=/home/user</code>，问题解决</p>
 <h2 id="反向删除"><a href="#反向删除" class="headerlink" title="反向删除"></a>反向删除</h2><p>文件夹下，删除<code>abc</code>文件以外的所有文件<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls | grep -v ^abc$ | xargs -i rm -rf &#123;&#125;</span><br></pre></td></tr></table></figure><br>如果<code>abc</code>不加正则表达式，会保留文件名包含<code>abc</code>的文件，比如<code>abcd</code>。</p>
+<h2 id="对当前目录下的所有文件排序"><a href="#对当前目录下的所有文件排序" class="headerlink" title="对当前目录下的所有文件排序"></a>对当前目录下的所有文件排序</h2><p><code>du -s  *. | sort -nr</code></p>
+<h2 id="显示当前目录的最大的文件"><a href="#显示当前目录的最大的文件" class="headerlink" title="显示当前目录的最大的文件"></a>显示当前目录的最大的文件</h2><p><code>du -s  *. | sort -nr | head -1</code></p>
 <h2 id="将几个文件合并为一个文件"><a href="#将几个文件合并为一个文件" class="headerlink" title="将几个文件合并为一个文件"></a>将几个文件合并为一个文件</h2><p><code>cat file1 file2 &gt; file</code></p>
 <h2 id="检查系统中的设备情况"><a href="#检查系统中的设备情况" class="headerlink" title="检查系统中的设备情况"></a>检查系统中的设备情况</h2><p>需要检查日志   <code>/var/log/messages</code></p>
 <h2 id="只显示文件名和大小"><a href="#只显示文件名和大小" class="headerlink" title="只显示文件名和大小"></a>只显示文件名和大小</h2><ul>
