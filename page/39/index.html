@@ -12,9 +12,9 @@
 <font color = blue size=4>在编译期，编译器完成了虚表的创建，而虚指针在构造函数期间被初始化 </font>
 
 <p><strong>因为派生类会继承基类的虚函数表，</strong>所以通过虚函数表，我们就可以知道该类对象的父类，在转换的时候就可以用来判断对象有无继承关系。派生类中增加的虚函数，如果覆盖了基类的虚函数，虚函数表中会替换相应的基类虚函数，地址换成派生类的；如果没有覆盖基类的虚函数，就添加到原虚函数表后面，以空指针结尾． 所以说派生类的虚函数表中的函数地址不是连续的，基类的是连续的。</p>
-<p>虚指针地址是否与this指针相同</p>
-<p>类Base的虚表如下图：<br><img src="https://i.loli.net/2020/09/08/gjM4aP5xL8YQGDd.png" alt="Base.png"><br>如果派生类Derived没有覆盖基类的虚函数，它的虚函数表如下图：<br><img src="https://i.loli.net/2020/09/08/KUrxlAep59sbkqy.png" alt="2020-09-08_171319.png"></p>
+<p>类Base的虚表如下图：<br><img src="https://i.loli.net/2020/09/08/gjM4aP5xL8YQGDd.png" alt="Base.png"><br>如果派生类Derived没有覆盖基类的虚函数，它的虚函数表如下图：<br><img src="https://i.loli.net/2020/09/08/KUrxlAep59sbkqy.png" alt=""></p>
 <p>如果覆盖vFunc1，则替换Base的vFunc1；如果还定义了一个虚函数vFunc3，那么继续往虚函数表之后填，最后一个数组成员还是空指针</p>
+<p><img src="https://s2.loli.net/2024/03/29/Yf5OgIjv6sxaXqN.png" alt="更详细的说明"></p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://blog.dzwspace.com/article/cpp-vtbl/">C++ 虚函数表</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/LF_2016/article/details/52311227">深入C++对象模型&amp;虚函数表</a></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2020/09/03/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/%E5%8F%91%E5%B8%83%E8%80%85%E7%9A%84latch%E6%9C%BA%E5%88%B6/">发布者的latch机制</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2020-09-03</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS%E7%A8%8B%E5%BA%8F%E5%92%8C%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/">ROS程序和源码分析</a></span><div class="content"><p>这个就是最常用的advertise函数的最后一个参数，原型： <code>advertise (const std::string &amp;topic, uint32_t queue_size, bool latch=false)</code></p>
 <p>是否锁存。某些话题并不是会以某个频率发布，比如<code>/map</code>这个topic，只有在初次订阅或者地图更新这两种情况下，才会向<code>/map</code>发布消息，这里就用到了锁存。</p>
