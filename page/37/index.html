@@ -95,14 +95,14 @@
 <h2 id="障碍层-膨胀层"><a href="#障碍层-膨胀层" class="headerlink" title="障碍层  膨胀层"></a>障碍层  膨胀层</h2><p>Obstacle Map Layer：障碍层，用于动态的记录传感器感知到的障碍物信息。</p>
 <p>Inflation Layer：膨胀层，在以上两层地图上进行膨胀（向外扩张），以避免机器人的撞上障碍物。膨胀是一个从占用cell代价值从内切障碍过渡到FREE的过程，距离cell越远代价越小，膨胀层会把障碍物代价膨胀直到该半径为止。</p>
 <p>到实际障碍物距离<code>dist</code>，<script type="math/tex">内切半径 < dist < 内切半径+膨胀半径</script>. 在内切圆半径到膨胀半径之间的所有cell，可以使用如下公式来计算膨胀代价：</p>
-<script type="math/tex; mode=display">cost = 253\ e^{-cost\_scale\_factor*(dist - inscribed\_radius)}</script><p>所以在上面的图里，代价值从253-127是按这个公式减小。</p>
+<script type="math/tex; mode=display">cost = 253\ e^{-cost\_scale\_factor*(dist - inscribed\_radius)}</script><p>如果<code>cost_scaling_factor</code>默认10，膨胀半径默认0.55，那么cost最小约为1</p>
 <p><img src="https://s2.loli.net/2023/08/28/bPz7JWw8VSZi6mI.png" alt=" "></p>
 <ul>
 <li>cost_scaling_factor: 膨胀过程中应用到代价值的比例因子，默认10。从上面公式可以看出，增大比例因子会降低代价。10对应的代价值降低速度很快</li>
 </ul>
 <p><img src="https://i.loli.net/2020/11/06/rS6ov8nGOR32iZw.png" alt="内切圆半径0.255，不同代价系数对应的代价曲线"></p>
 <ul>
-<li>inflation_radius:膨胀半径，膨胀层会把障碍物代价膨胀直到该半径为止，一般将该值设置为机器人底盘的直径大小。如果太小，车就会贴着障碍走，或者说容易撞到障碍物就需要增大该值，若经常无法通过狭窄地方就减小该值。</li>
+<li>inflation_radius:膨胀半径，默认0.55. 膨胀层会把障碍物代价膨胀直到该半径为止，一般将该值设置为机器人底盘的直径大小。如果太小，车就会贴着障碍走，或者说容易撞到障碍物就需要增大该值，若经常无法通过狭窄地方就减小该值。</li>
 </ul>
 <p><img src="https://i.loli.net/2020/11/03/bygjtSlNdmzBYqJ.png" alt="增大膨胀半径，cost_scaling_factor=0.7"><br><img src="https://i.loli.net/2020/11/03/g1pjA7ioTEcwlZG.png" alt="cost_scaling_factor=65"><br><img src="https://i.loli.net/2020/11/03/CJtobcx9YniNFRK.png" alt="cost_scaling_factor=1"><br><img src="https://i.loli.net/2020/11/03/jpzMG6ZHhNxvQEd.png" alt="cost_scaling_factor=25"><br><img src="https://i.loli.net/2020/11/03/9IDVZ5aY1WPOFjE.png" alt="默认cost_scaling_factor=10"></p>
 <p>减小<code>cost_scaling_factor</code>，使代价值增大，rviz里的膨胀层变为粉色。如果这个参数很大很大，代价值趋近于0，也就是FREE。如果很小，代价值趋近于253，相当于放大了内切障碍值。<code>cost_scaling_factor</code>越小，膨胀层越趋近粉色，反之趋近蓝色。</p>
