@@ -26,7 +26,7 @@
 <li>Freespace（自由空间）：没有障碍物的空间。枚举值0</li>
 <li>Unknown（未知）：未知的空间。 枚举值255</li>
 </ol>
-<p>代价地图采用网格的形式，分为三种状态：占用（有障碍物）、无用（空闲的）、未知。每个网格的值如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NO_INFORMATION = <span class="number">255</span>;</span><br><span class="line">LETHAL_OBSTACLE = <span class="number">254</span>;</span><br><span class="line">INSCRIBED_INFLATED_OBSTACLE = <span class="number">253</span>;</span><br><span class="line">FREE_SPACE = <span class="number">0</span>;</span><br></pre></td></tr></table></figure><br>注意252和127没有定义</p>
+<p>代价地图采用网格的形式，分为三种状态：占用（有障碍物）、无用（空闲的）、未知。每个网格的值如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NO_INFORMATION = <span class="number">255</span>;</span><br><span class="line">LETHAL_OBSTACLE = <span class="number">254</span>;</span><br><span class="line">INSCRIBED_INFLATED_OBSTACLE = <span class="number">253</span>;</span><br><span class="line">FREE_SPACE = <span class="number">0</span>;</span><br></pre></td></tr></table></figure><br><strong>注意252和127没有定义</strong></p>
 <p><br></p>
 <ul>
 <li><p><code>cost_lethal</code> 代价值254，机器人中心在一个cell里，这肯定发生碰撞</p>
@@ -50,13 +50,13 @@
 <ul>
 <li>inflation_radius:膨胀半径，膨胀层会把障碍物代价膨胀直到该半径为止，一般将该值设置为机器人底盘的直径大小。如果太小，车就会贴着障碍走，或者说容易撞到障碍物就需要增大该值，若经常无法通过狭窄地方就减小该值。</li>
 </ul>
-<p><img src="https://i.loli.net/2020/11/03/bygjtSlNdmzBYqJ.png" alt="增大膨胀半径 cost_scaling_factor=0.7"><br><img src="https://i.loli.net/2020/11/03/g1pjA7ioTEcwlZG.png" alt="cost_scaling_factor=65"><br><img src="https://i.loli.net/2020/11/03/CJtobcx9YniNFRK.png" alt="cost_scaling_factor=1"><br><img src="https://i.loli.net/2020/11/03/jpzMG6ZHhNxvQEd.png" alt="cost_scaling_factor=25"><br><img src="https://i.loli.net/2020/11/03/9IDVZ5aY1WPOFjE.png" alt="默认cost_scaling_factor=10"></p>
-<p>减小<code>cost_scaling_factor</code>，使代价值增大，rviz里的膨胀层变为红色。如果这个参数很大很大，代价值趋近于0，也就是FREE。如果很小，代价值趋近于253，相当于放大了内切障碍值。从两种障碍的颜色可以区分</p>
+<p><img src="https://i.loli.net/2020/11/03/bygjtSlNdmzBYqJ.png" alt="增大膨胀半径，cost_scaling_factor=0.7"><br><img src="https://i.loli.net/2020/11/03/g1pjA7ioTEcwlZG.png" alt="cost_scaling_factor=65"><br><img src="https://i.loli.net/2020/11/03/CJtobcx9YniNFRK.png" alt="cost_scaling_factor=1"><br><img src="https://i.loli.net/2020/11/03/jpzMG6ZHhNxvQEd.png" alt="cost_scaling_factor=25"><br><img src="https://i.loli.net/2020/11/03/9IDVZ5aY1WPOFjE.png" alt="默认cost_scaling_factor=10"></p>
+<p>减小<code>cost_scaling_factor</code>，使代价值增大，rviz里的膨胀层变为粉色。如果这个参数很大很大，代价值趋近于0，也就是FREE。如果很小，代价值趋近于253，相当于放大了内切障碍值。<code>cost_scaling_factor</code>越小，膨胀层越趋近粉色，反之趋近蓝色。</p>
 <p>查看话题<code>/move_base/local_costmap/costmap_updates</code>，会发现一些数值变大</p>
 <p><strong>全局代价地图一般膨胀较多，使机器人转弯顺利。</strong> 但是局部代价可以不用膨胀层，这是因为TEB已有障碍物膨胀功能。  <font color = blue size=4>增大<code>cost_scaling_factor</code>和减小膨胀半径可以使机器人容易进窄通道，但一般是调整TEB，这两个参数不修改。</font></p>
 <p><br></p>
-<p>添加了静态层、障碍层、膨胀层的代价地图是这样的：<br><img src="https://i.loli.net/2020/11/01/aGEMh27qtwVm5PB.png" alt="11-01__172228"></p>
-<p>如果代价地图不添加膨胀层，结果是这样：<br><img src="https://i.loli.net/2020/11/01/i3o4MFUwGJhOLZY.png" alt="11-01__172326"></p>
+<p>添加了静态层、障碍层、膨胀层的代价地图是这样的：<br><img src="https://i.loli.net/2020/11/01/aGEMh27qtwVm5PB.png" alt=""></p>
+<p>如果代价地图不添加膨胀层，结果是这样：<br><img src="https://i.loli.net/2020/11/01/i3o4MFUwGJhOLZY.png" alt=""></p>
 <p>但是加不加障碍层，看上去没有变化， <strong>目前无法在rviz里直接可视化每一层</strong>，只能添加或去除后观察</p>
 </div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/11/15/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%AF%BC%E8%88%AA%E7%9B%B8%E5%85%B3%E7%9A%84%E8%8A%82%E7%82%B9%E5%92%8C%E5%8A%A8%E6%80%81%E5%BA%93%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB/"><i class="fa fa-chevron-left">  </i><span>导航相关的节点和动态库之间的关系</span></a></div><div class="next-post pull-right"><a href="/2020/11/15/Matlab/Matlab%E7%94%BB%E5%9B%BE/"><span>Matlab画图</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
