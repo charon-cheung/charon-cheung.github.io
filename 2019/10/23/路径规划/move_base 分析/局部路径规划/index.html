@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="局部路径规划"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>局部路径规划 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#local-planner"><span class="toc-number">1.</span> <span class="toc-text">local planner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%9D%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">话题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%AE%97%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">常用算法</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">648</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">局部路径规划</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-10-23</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move-base%E5%88%86%E6%9E%90/">move_base分析</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2019/10/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%B1%80%E9%83%A8%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2019/10/23/路径规划/move_base 分析/局部路径规划/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">714</span><span class="post-meta__separator">|</span><span>Reading time: 2 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private_nh.<span class="built_in">param</span>(<span class="string">&quot;base_local_planner&quot;</span>, local_planner, std::<span class="built_in">string</span>(<span class="string">&quot;base_local_planner/TrajectoryPlannerROS&quot;</span>));</span><br></pre></td></tr></table></figure>
+<h3 id="local-planner"><a href="#local-planner" class="headerlink" title="local planner"></a>local planner</h3><p>根据附近的障碍物进行躲避路线规划,只处理局部代价地图中的数据. 是利用<code>base_local_planner</code>包实现的。该包使用<strong>Trajectory Rollout</strong>和<strong>Dynamic Window approaches</strong>算法计算机器人每个周期内应该行驶的速度和角度。</p>
+<p>对于全向机器人来说，也就是存在x方向的速度，y方向的速度，和角速度。<code>DWAlocalplanner</code>确实效率高一点。但是如果是非全向机器人，比如说只存在角速度和线速度，<code>trajectorylocalplanner</code>会更适用一点。</p>
+<p><code>base_local_planner</code>这个包通过地图数据，通过算法搜索到达目标的多条路经，利用一些评价标准（是否会撞击障碍物，所需要的时间等等）选取最优的路径，并且计算所需要的实时速度和角度。<br>其中，Trajectory Rollout 和Dynamic Window approaches算法的主要思路如下：</p>
+<ol>
+<li>采样机器人当前的状态（dx,dy,dtheta）；</li>
+<li>针对每个采样的速度，计算机器人以该速度行驶一段时间后的状态，得出一条行驶的路线。</li>
+<li>利用一些评价标准为多条路线打分。</li>
+<li>根据打分，选择最优路径。</li>
+<li>重复上面过程。</li>
+</ol>
+<p><br><br>发送导航目标点后，首先在rviz上出现一个绿色全局路径，机器人开始行走，同时还有一个蓝色的本地路径，只是很小，不容易观察到，示意图如下：<br><img src="https://i.loli.net/2019/08/28/KUl2iNXyg9uPme7.png" alt=""></p>
+<p>现在机器人正在按照规划的全局路径行走,地图中突然增加了一个障碍物,它不会进入全局代价地图,但会在局部代价地图中创建.所以全局路径开始没有改变,当它快接近障碍物时,局部路径检测到了它,进而会重新规划一个全局路径,这样避开了障碍物. 局部规划器把全局路径分成几部分，再执行每一部分，生成控制命令。</p>
+<h3 id="话题"><a href="#话题" class="headerlink" title="话题"></a>话题</h3><p>机器人行走时，在rviz上显示全局路径的相关话题是<code>/move_base/DWAPlannerROS/global_plan</code>，属于<strong>Global Map</strong>。局部规划器把全局路径的一部分发布到这个话题，代码是在<code>DWAPlannerROS::computeVelocityCommands</code>——<code>DWAPlannerROS::publishGlobalPlan</code></p>
+<p>rviz中显示局部路径的相关话题是<code>/move_base/DWAPlannerROS/local_plan</code>，属于<strong>Local Map</strong>。一旦局部路径计算出来，它就会发布到这个话题，代码是在<code>DWAPlannerROS::computeVelocityCommands</code>——<code>DWAPlannerROS::publishLocalPlan</code><br><br></p>
+<h3 id="常用算法"><a href="#常用算法" class="headerlink" title="常用算法"></a>常用算法</h3><p>ROS的局部规划器的接口plugin类为<code>nav_core::BaseLocalPlanner</code>，常用的包有4种：</p>
+<ul>
+<li>base_local_planner - 提供了 Dynamic Window Approach(DWA)和Trajectory Rollout方法来局部控制；</li>
+<li>dwa_local_planner - 模块化DWA方法应用，相比base_local_planner具有更多的恢复机制、更便于理解的接口和针对全向运动机器人更灵活的Y轴变量控制；</li>
+<li>teb_local_planner</li>
+</ul>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://wiki.ros.org/dwa_local_planner">dwa_local_planner</a></p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2019/10/24/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/move_base%E5%88%86%E6%9E%90%EF%BC%88%E4%B8%89%EF%BC%89%E6%BA%90%E7%A0%81%E5%92%8C%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B/"><i class="fa fa-chevron-left">  </i><span>move_base分析（三）源码和调用流程</span></a></div><div class="next-post pull-right"><a href="/2019/10/17/%E6%BF%80%E5%85%89SLAM/%E4%BD%BF%E7%94%A8%E6%9C%BA%E5%99%A8%E4%BA%BA%E5%BB%BA%E5%9B%BE%E7%9A%84%E6%8A%80%E5%B7%A7/"><span>使用机器人建图的技巧</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2019/10/23/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/move_base%20%E5%88%86%E6%9E%90/%E5%B1%80%E9%83%A8%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/';
+  this.page.identifier = '2019/10/23/路径规划/move_base 分析/局部路径规划/';
+  this.page.title = '局部路径规划';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2024 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
