@@ -150,7 +150,8 @@
 <p><br></p>
 <p><img src="https://s2.loli.net/2022/05/25/79kDEXV3IHbnjpJ.png" alt=""><br>文件使用了<code>OBJ meshes</code>，这是从Gazebo 7.4.0才可支持，使用<code>gazebo -v</code>发现我的gazebo版本是 7.0</p>
 <p><br></p>
-<p>报错 <font size="3" color="orange"> [joint_state_publisher-3] process has died  </font><br>去掉urdf、xacro、launch文件中的中文注释，或者改为英文，而且第一行不能有中文。</p>
+<p>报错 <font size="3" color="orange"> [joint_state_publisher-3] process has died  </font> 或者 <code>UnicodeEncodeError: ‘ascii’ codec can’t encode characters in position xxx ordinal</code></p>
+<p>去掉urdf、xacro、launch文件中的中文注释，或者改为英文，而且第一行不能有中文。</p>
 <p><br></p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span> <span class="attr">name</span>=<span class="string">&#x27;front_right_middle_sonar_sensor&#x27;</span> <span class="attr">filename</span>=<span class="string">&#x27;libgazebo_ros_range.so&#x27;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">topicName</span>&gt;</span>/prius/front_sonar/right_middle_range<span class="tag">&lt;/<span class="name">topicName</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">frameName</span>&gt;</span>front_right_middle_sonar_link<span class="tag">&lt;/<span class="name">frameName</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <plugin name='keyboard' filename='libKeyboardGUIPlugin.so'/>
