@@ -7,8 +7,49 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">652</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">51</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2024/05/08/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A1%8C%E4%B8%BA%E6%A0%91%201/">行为树 1</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-05-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></span><div class="content"><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/linxigjs/article/details/122696010">行为树的各种调试工具</a></p>
-<p>Groot1的日志工具很不好用，在<code>fbl</code>文件比较大的时候，很容易卡死。如果总的行为树很大，需要放大才能观看流程，十分不方便。</p>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">652</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">6</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">51</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2022/11/17/QOR8cePIS5NdDrK.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2024/05/08/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/%E8%A1%8C%E4%B8%BA%E6%A0%91%201/">行为树 1</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-05-08</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/">第三方库</a></span><div class="content"><p>Navigation2中引入了行为树来组织机器人的工作流程和动作执行。</p>
+<p>行为树本身并不具体实现机器人的执行内容，它只负责将执行内容进行编排。以Navigation2为例，具体的执行内容实现是放在各个server中的。行为树上的节点与server进行通信，请求具体的执行内容，然后获得反馈。根据反馈结果又可以请求另外的执行内容。这些不同执行内容间的跳转就是由行为树控制的。</p>
+<p>另一种比较常见的组织机器人行为的方式是状态机。ROS1中的move_base就是基于状态机的。它与行为树最显著的区别是状态与执行内容是绑定在一起的。当执行内容需要在多个状态中执行时，各个状态下都需要放置执行内容的逻辑。当业务逻辑代码分散在各处时就不太好维护了</p>
+<p>ROS2行为树动态库默认安装在<code>/opt/ros/galactic/lib/libbehaviortree_cpp_v3.so</code>，头文件在<code>/opt/ros/foxy/include/behaviortree_cpp_v3</code></p>
+<p>行为树并不执行特定的功能代码，它只是把各个业务逻辑代码组织起来。通过不同的组织方式和少量代码的修改可以实现截然不同的功能</p>
+<h3 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h3><p>Sequence树节点的特点是它的children必须全部返回SUCCESS才认为执行成功，有一个child返回FAILURE就导致这个树节点执行失败。</p>
+<ul>
+<li>Before ticking the first child, the node status becomes RUNNING.</li>
+<li>If a child returns SUCCESS, it ticks the next child.</li>
+</ul>
+<ul>
+<li>action</li>
+</ul>
+<p>动作节点通常实现服务客户端和动作客户端，也可以是一些简单的执行程序。他们通过向Planner server，Controller server，Recovery server发送请求来启动相应的功能程序。action通常作为行为树中的叶子节点，负责具体行为和功能的实现。但这些具体的功能代码并没有在叶子节点中而是在对应的服务端。</p>
+<ul>
+<li>condition</li>
+</ul>
+<p>这是条件控制节点。比如判断电池电量，某一开关信号等等。</p>
+<ul>
+<li>control</li>
+</ul>
+<p>这是行为树中的控制流。类似c++语言中的if else，switch等等。它负责构建行为树的逻辑结构。sequeence，fallback等等就属于这个范畴。</p>
+<ul>
+<li>decorator</li>
+</ul>
+<p>decorator是节点装饰器。它只能有一个子节点。负责将子节点的结果进行修饰。比如将子节点的结果进行反向，约束子节点的执行次数等等。</p>
+<p><code>ControlNode</code>至少有1个子节点，<code>DecoratorNode</code>只有1个子节点，<code>Subtree</code>没有子节点</p>
+<h2 id="黑板"><a href="#黑板" class="headerlink" title="黑板"></a>黑板</h2><p>行为树中的共有数据是存放在Blackboard中的。Blackboard是以<code>键值对</code>的形式存储数据的。各个行为树的叶子节点均可以通过key访问到需要的数据。节点的输入端口可以从黑板读取数据，节点的输出端口可以写入黑板。</p>
+<p>Ports是用于在节点间交换数据而存在的。一个行为树叶子节点可以定义输入的Ports和输出的Ports。<strong>当不同叶子节点的Port有相同的key名称时，可以认为它们是相通的。</strong>当在行为树叶子节点中声明了这些Ports时，也需要同时在xml文件中描述这些Ports。</p>
+<p>注意设置子树的<code>__shared_blackboard</code>属性为true，否则C++程序可能报错</p>
+<h2 id="xml-文件"><a href="#xml-文件" class="headerlink" title="xml 文件"></a>xml 文件</h2><p>xml格式有以下几个要点</p>
+<ul>
+<li>root这个tag是必须的，而且它需要有<code>main_tree_to_execute</code>的属性，表示执行哪颗树</li>
+<li>root的子元素必须有BehaviorTree，BehaviorTree必须有ID属性</li>
+<li>如果root拥有多个BehaviorTree，那么<code>BehaviorTree</code>的ID的属性值必须是不同的，此时必须指定<code>main_tree_to_execute</code>标签</li>
+<li>如果root只有一个BehaviorTree，那么<code>main_tree_to_execute</code>属性可有可无</li>
+<li>BehaviorTree的子元素就是树节点（tree nodes）</li>
+<li><code>TreeNodesModel</code>标签，主要用于Groot可视化。对于C++程序来说，可以没有。</li>
+</ul>
+<p><code>createTreeFromFile</code>的文件路径错误时，会报错 <code>what():  Internal error in realpath(): No such file or directory</code></p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/linxigjs/article/details/122696010">行为树的各种调试工具</a></p>
+<p>Groot1的日志工具很不好用，在<code>fbl</code>文件比较大的时候，很容易卡死。如果总的行为树很大，需要放大才能观看流程，十分不方便。Groot2的日志工具据说很好用，但是收费。</p>
+<p>拆分行为树后，在Groot里不方便直接打开子树，只能再开一个Groot打开子树的xml文件. 后来Groot2解决了这个问题，在设置的Editor标签里还可设置是否每次都加载<code>&lt;include&gt;</code>标签对应的文件。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/05/06/cmake%20qmake/CMake%20%E5%B8%B8%E7%94%A8%E5%AE%8F%E5%92%8C%E6%8A%80%E5%B7%A7/">CMake 常用宏和技巧</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-05-06</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/cmake-qmake/">cmake/qmake</a></span><div class="content"><p><code>$&#123;CMAKE_CURRENT_LIST_DIR&#125;</code> 和 <code>$&#123;CMAKE_CURRENT_SOURCE_DIR&#125;</code> 一般都是当前<code>CMakeLists.txt</code>所在的目录。</p>
 <p><code>file (GLOB_RECURSE SOURCE_FILES $&#123;CMAKE_CURRENT_LIST_DIR&#125;/*.cpp)</code>  把路径下的所有cpp文件名都加入变量<code>SOURCE_FILES</code></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/05/06/C++/C++%20%20%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97priority_queue/">优先队列 std::priority_queue</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-05-06</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E6%A8%A1%E6%9D%BF%E4%B8%8ESTL/">C++ 模板与STL</a></span><div class="content"><p>C++中的优先队列（priority queue）是一种特殊的队列，它允许在队列中添加元素时自动根据元素的优先级进行排序，<br>以便能够快速访问具有最高优先级的元素。优先队列可以用来解决很多算法问题，例如Dijkstra算法、Prim算法等。</p>
