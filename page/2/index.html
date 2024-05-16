@@ -22,11 +22,25 @@
 </li>
 <li><p>colcon build —cmake-args -DCMAKE_BUILD_TYPE=Release  &emsp;&emsp;&emsp;</p>
 </li>
+<li><p>不编译测试单元</p>
+</li>
+</ul>
+<p><code>colcon test--packages-select YOUR_PKG_NAME--cmake-args -DBUILD_TESTING=0</code></p>
+<ul>
+<li>运行编译的包的测试</li>
+</ul>
+<p><code>colcon test</code></p>
+<ul>
+<li>允许通过更改src下的部分文件改变install，这样每次修改Python脚本时不必重新 build</li>
+</ul>
+<p><code>colcon  build --symlink-install</code></p>
+<ul>
 <li><p>colcon build —symlink-install  pkg&emsp;&emsp;&emsp;</p>
 </li>
 <li><p>colcon build —symlink-install —packages-ignore  pkg &emsp;&emsp;&emsp; </p>
 </li>
 </ul>
+<p>ROS2的build没有了ROS1中的devel概念</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/04/28/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/visual%20studio%20code%E7%9A%84%E9%85%8D%E7%BD%AE/">visual studio code的配置</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-04-28</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></span><div class="content"><h2 id="不搜索指定的文件夹"><a href="#不搜索指定的文件夹" class="headerlink" title="不搜索指定的文件夹"></a>不搜索指定的文件夹</h2><p>可以使用以下JSON格式的示例进行配置：<br><figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">&quot;search.exclude&quot;</span>: &#123;</span><br><span class="line">    <span class="string">&quot;**/node_modules&quot;</span>: true,</span><br><span class="line">    <span class="string">&quot;**/build&quot;</span>: true,</span><br><span class="line">    <span class="string">&quot;**/dist&quot;</span>: true,</span><br><span class="line">    <span class="string">&quot;**/.git&quot;</span>: true,</span><br><span class="line">    <span class="string">&quot;**/.vscode&quot;</span>: true</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>上面的示例中，我们配置了五个排除规则：</p>
 <p><code>&quot;**/node_modules&quot;</code>: true - 这将排除项目中的node_modules文件夹，通常包含依赖库。</p>
 <p><code>&quot;**/build&quot;: true</code> - 这将排除build文件夹，如果您的项目使用构建工具生成构建文件，可以排除它。</p>
@@ -34,14 +48,15 @@
 <p><code>&quot;**/.git&quot;: true</code> - 这将排除.git文件夹，以防止搜索Git版本控制文件。</p>
 <p><code>&quot;**/.vscode&quot;: true</code> - 这将排除.vscode文件夹，以防止搜索Visual Studio Code配置文件。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/04/25/ROS/ROS2/ROS2%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/">ROS2常用的命令</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-04-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><p>只记录ROS2 和 ROS1 不同的命令</p>
-<ul>
+<h2 id="pkg"><a href="#pkg" class="headerlink" title="pkg"></a>pkg</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出某个包的所有可执行文件</span></span><br><span class="line">ros2 pkg executables pkg_name</span><br><span class="line"><span class="comment"># 列出所有的包</span></span><br><span class="line">ros2 pkg list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 某个包所在路径的前缀</span></span><br><span class="line">ros2 pkg prefix pkg_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看包对应的 package.xml 文件</span></span><br><span class="line">ros2 pkg xml pkg_name</span><br></pre></td></tr></table></figure>
+<h2 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h2><ul>
 <li>ros2 topic info topic_name</li>
 </ul>
 <p>现在必须加<code>/</code>了<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 topic info imu</span><br><span class="line">Unknown topic <span class="string">&#x27;imu&#x27;</span></span><br><span class="line"></span><br><span class="line">user<span class="meta">@robot</span>:~$ ros2 topic info /imu</span><br><span class="line">Type: sensor_msgs/msg/Imu</span><br><span class="line">Publisher count: <span class="number">1</span></span><br><span class="line">Subscription count: <span class="number">1</span></span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>输出话题的详细信息，包括发布订阅者:  ros2 topic info /odom -v</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Type: nav_msgs/msg/Odometry</span><br><span class="line"></span><br><span class="line">Publisher count: <span class="number">1</span></span><br><span class="line"></span><br><span class="line">Node name: turtlebot3_diff_drive</span><br><span class="line">Node namespace: /</span><br><span class="line">Topic type: nav_msgs/msg/Odometry</span><br><span class="line">Endpoint type: PUBLISHER</span><br><span class="line">GID: <span class="number">01.0f</span>.ea<span class="number">.0f</span><span class="number">.41</span>.6a.0c<span class="number">.34</span><span class="number">.01</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span>.a5<span class="number">.03</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span></span><br><span class="line">QoS profile:</span><br><span class="line">  Reliability: RMW_QOS_POLICY_RELIABILITY_RELIABLE</span><br><span class="line">  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE</span><br><span class="line">  Lifespan: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Deadline: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC</span><br><span class="line">  Liveliness lease duration: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line"></span><br><span class="line">Subscription count: <span class="number">1</span></span><br><span class="line"></span><br><span class="line">Node name: steppe_sim</span><br><span class="line">Node namespace: /</span><br><span class="line">Topic type: nav_msgs/msg/Odometry</span><br><span class="line">Endpoint type: SUBSCRIPTION</span><br><span class="line">GID: <span class="number">01.0f</span>.ea<span class="number">.0f</span><span class="number">.0d</span>.6a<span class="number">.5d</span>.f0<span class="number">.01</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.13</span><span class="number">.04</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span></span><br><span class="line">QoS profile:</span><br><span class="line">  Reliability: RMW_QOS_POLICY_RELIABILITY_RELIABLE</span><br><span class="line">  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE</span><br><span class="line">  Lifespan: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Deadline: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC</span><br><span class="line">  Liveliness lease duration: <span class="number">2147483651294967295</span> nanoseconds</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Type: nav_msgs/msg/Odometry</span><br><span class="line"></span><br><span class="line">Publisher count: <span class="number">1</span></span><br><span class="line"></span><br><span class="line">Node name: turtlebot3_diff_drive</span><br><span class="line">Node namespace: /</span><br><span class="line">Topic type: nav_msgs/msg/Odometry</span><br><span class="line">Endpoint type: PUBLISHER</span><br><span class="line">GID: <span class="number">01.0f</span>.ea<span class="number">.0f</span><span class="number">.41</span>.6a.0c<span class="number">.34</span><span class="number">.01</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span>.a5<span class="number">.03</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span></span><br><span class="line">QoS profile:</span><br><span class="line">  Reliability: RMW_QOS_POLICY_RELIABILITY_RELIABLE</span><br><span class="line">  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE</span><br><span class="line">  Lifespan: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Deadline: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC</span><br><span class="line">  Liveliness lease duration: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line"></span><br><span class="line">Subscription count: <span class="number">1</span></span><br><span class="line"></span><br><span class="line">Node name: my_node</span><br><span class="line">Node namespace: /</span><br><span class="line">Topic type: nav_msgs/msg/Odometry</span><br><span class="line">Endpoint type: SUBSCRIPTION</span><br><span class="line">GID: <span class="number">01.0f</span>.ea<span class="number">.0f</span><span class="number">.0d</span>.6a<span class="number">.5d</span>.f0<span class="number">.01</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.13</span><span class="number">.04</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span><span class="number">.00</span></span><br><span class="line">QoS profile:</span><br><span class="line">  Reliability: RMW_QOS_POLICY_RELIABILITY_RELIABLE</span><br><span class="line">  Durability: RMW_QOS_POLICY_DURABILITY_VOLATILE</span><br><span class="line">  Lifespan: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Deadline: <span class="number">2147483651294967295</span> nanoseconds</span><br><span class="line">  Liveliness: RMW_QOS_POLICY_LIVELINESS_AUTOMATIC</span><br><span class="line">  Liveliness lease duration: <span class="number">2147483651294967295</span> nanoseconds</span><br></pre></td></tr></table></figure>
 <ul>
 <li>ros2 interface show msg_name</li>
 </ul>
@@ -51,6 +66,10 @@
 </ul>
 <p>获知某个消息类型是谁在用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 topic find sensor_msgs/msg/Imu</span><br><span class="line">/imu</span><br></pre></td></tr></table></figure></p>
 <ul>
+<li>手动发消息到话题</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ros2 topic pub /chatter std_msgs/msg/String <span class="string">&#x27;data:&quot;123&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="interface"><a href="#interface" class="headerlink" title="interface"></a>interface</h2><ul>
 <li>ros2 interface list</li>
 </ul>
 <p>分类显示消息、动作、服务的所有类型</p>
@@ -63,7 +82,7 @@
 <li>显示消息的成员</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 <span class="class"><span class="keyword">interface</span> <span class="title">proto</span> <span class="title">std_msgs</span>/<span class="title">msg</span>/<span class="title">String</span></span></span><br><span class="line"><span class="class">&quot;<span class="title">data</span>: &#x27;&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
-<ul>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><ul>
 <li>ros2 service type</li>
 </ul>
 <p>可以看到服务的定义。</p>
@@ -78,14 +97,25 @@
 </li>
 </ul>
 <p>显示服务的定义</p>
+<h2 id="param"><a href="#param" class="headerlink" title="param"></a>param</h2><ul>
+<li>ros2 param list</li>
+<li>ros2 param describe</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ros2 param describe /turtlesim background_r</span><br><span class="line">Parameter name: background_r</span><br><span class="line">  Type: <span class="built_in">integer</span></span><br><span class="line">  Description: Red channel of the background color</span><br><span class="line">  Constraints:</span><br><span class="line">    Min value: 0</span><br><span class="line">    Max value: 255</span><br><span class="line">    Step: 1</span><br></pre></td></tr></table></figure>
 <ul>
+<li>ros2 param get</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ros2 param get /turtlesim background_r</span><br><span class="line">Integer value is: 69</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>ros2 param set (省略)</p>
+</li>
 <li><p>ros2 run + param</p>
 </li>
 <li><p>ros2 run <package_name> <executable_name> —ros-args —params-file <file_name></p>
 </li>
 </ul>
 <p><code>rqt_graph</code> 能够可视化节点和主题之间的连接。这个命令和ROS1一样，也是ROS2为数不多的GUI可视界面</p>
-<ul>
+<h2 id="tf"><a href="#tf" class="headerlink" title="tf"></a>tf</h2><ul>
 <li>可视化ROS2的tf树</li>
 </ul>
 <p><code>ros2 run tf2_tools view_frames.py</code></p>
