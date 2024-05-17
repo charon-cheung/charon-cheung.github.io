@@ -47,6 +47,12 @@
 <p><code>&quot;**/dist&quot;: true</code> - 这将排除dist文件夹，如果您的项目包含编译后的分发文件，可以排除它。</p>
 <p><code>&quot;**/.git&quot;: true</code> - 这将排除.git文件夹，以防止搜索Git版本控制文件。</p>
 <p><code>&quot;**/.vscode&quot;: true</code> - 这将排除.vscode文件夹，以防止搜索Visual Studio Code配置文件。</p>
+<ul>
+<li><p>VS Code 按快捷键 <code>ctrl+p</code> 可以弹出一个小窗，在上面的 输入框输入文件名，下拉框点击一个文件</p>
+</li>
+<li><p>设置VsCode 多文件分行(栏)排列显示，打开vscode的设置，搜索wrap tabs，勾选上就可以了</p>
+</li>
+</ul>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/04/25/ROS/ROS2/ROS2%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/">ROS2常用的命令</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-04-25</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><p>只记录ROS2 和 ROS1 不同的命令</p>
 <h2 id="pkg"><a href="#pkg" class="headerlink" title="pkg"></a>pkg</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 列出某个包的所有可执行文件</span></span><br><span class="line">ros2 pkg executables pkg_name</span><br><span class="line"><span class="comment"># 列出所有的包</span></span><br><span class="line">ros2 pkg list</span><br><span class="line"></span><br><span class="line"><span class="comment"># 某个包所在路径的前缀</span></span><br><span class="line">ros2 pkg prefix pkg_name</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看包对应的 package.xml 文件</span></span><br><span class="line">ros2 pkg xml pkg_name</span><br></pre></td></tr></table></figure>
 <h2 id="topic"><a href="#topic" class="headerlink" title="topic"></a>topic</h2><ul>
@@ -119,6 +125,13 @@
 <li>可视化ROS2的tf树</li>
 </ul>
 <p><code>ros2 run tf2_tools view_frames.py</code></p>
+<ul>
+<li><p>ros2 run tf2_ros static_transform_publisher 1 2 3 0.5 0.1 -1.0 foo bar</p>
+</li>
+<li><p>ros2 run tf2_ros tf2_echo foo bar</p>
+</li>
+</ul>
+<p>运行结果:<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">At time 197.27000000</span><br><span class="line">- Translation: [0.008, -0.000, 0.064]</span><br><span class="line">- Rotation: <span class="keyword">in</span> Quaternion [-0.000, -0.001, -0.010, 1.000]</span><br><span class="line">- Rotation: <span class="keyword">in</span> RPY (radian) [-0.000, -0.002, -0.020]</span><br><span class="line">- Rotation: <span class="keyword">in</span> RPY (degree) [-0.001, -0.092, -1.160]</span><br><span class="line">- Matrix:</span><br><span class="line">  1.000  0.020 -0.002  0.008</span><br><span class="line"> -0.020  1.000  0.000 -0.000</span><br><span class="line">  0.002 -0.000  1.000  0.064</span><br><span class="line">  0.000  0.000  0.000  1.000</span><br></pre></td></tr></table></figure></p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/04/19/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/ros_map_editor/">ros_map_editor</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-04-19</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a></span><div class="content"><p>用GIMP等工具来进行地图的常规清理和编辑是一项费时费力的任务，为了解决这种情况，项目<a target="_blank" rel="noopener" href="https://github.com/TheOnceAndFutureSmalltalker/ros_map_editor">ros_map_editor</a>提供一个强大而灵活的工具，使机器人领域的从业者和研究人员能够更轻松地编辑导航地图，以满足他们的特定碧求。</p>
 <p>特点:</p>
 <ol>
