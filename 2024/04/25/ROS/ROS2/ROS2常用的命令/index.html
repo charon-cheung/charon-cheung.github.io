@@ -93,6 +93,7 @@
 <p>只有<code>ROS_DOMAIN_ID</code>相同的主机才能通信，两个ROS2可以通信，是因为他们的<code>ROS_DOMAIN_ID</code>有默认值0. 但是不同的<code>ROS_DOMAIN_ID</code>可以进行组播通信。</p>
 <p>ROS 2用于通讯的默认中间件是DDS。在DDS中，不同逻辑网络共享物理网络的主要机制称为域(Domain) ID。同一域上的ROS 2节点可以自由地相互发现并发送消息，而不同域上的ROS 2节点则不能。所有ROS 2节点默认使用域ID为0。为了避免在同一网络上运行ROS 2的不同计算机组之间互相干扰，应为每组设置不同的域ID，ID介于0和101</p>
 <p>因为组播只是发送出去一个广播，并不会对接收方进行过滤，接收方也只是接收，不会对发送者进行过滤。简单的理解就是，multicast只是测试物理上通不通，不对<code>ROS_DOMAIN_ID</code>进行检查。</p>
+<p>报错: <font size="3" color="orange"> [RTPS Error] Calculated port number is too high. Probably the domainId is over 232 or portBase is too high. -&gt; Function getMulticastPort  </font>   环境变量<code>ROS_DOMAIN_ID</code>不能超过 232</p>
 </div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2024/04/28/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/visual%20studio%20code%E7%9A%84%E9%85%8D%E7%BD%AE/"><i class="fa fa-chevron-left">  </i><span>visual studio code的配置</span></a></div><div class="next-post pull-right"><a href="/2024/04/19/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/ros_map_editor/"><span>ros_map_editor</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
   this.page.url = 'https://charon-cheung.github.io/2024/04/25/ROS/ROS2/ROS2%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/';
