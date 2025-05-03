@@ -27,7 +27,7 @@
 <script type="math/tex; mode=display">p(x_i\ |x_{i-1}\ ,u,m,z) \propto p(x_i\ |x_{i-1}\ , u)* p(z\ |x_i,m)</script><p>运动模型是已知的多元高斯分布，<font size="4" color="blue"> 算法只研究观测模型。观测模型难以计算，一般具有多极值。  </font>雷达观测数据 <script type="math/tex">z_t</script> 里包含了很多激光点数据，假设他们是完全独立的</p>
 <script type="math/tex; mode=display">p(z_t\ |x_t,m_{t-1}\ ) = \prod \limits_i p(z_t^i\ |x_t,m_{t-1}\ )  \propto \sum\limits_i log\ p(z_t^i\ |x_t, m_{t-1}\ )</script><p>将一帧观测数据的概率拆分成了当前帧的每一个点的概率，在计算这个概率之前，我们需要对数据帧以及地图进行栅格化。</p>
 <p>位姿估计器传来的预测值不适合做初值，真正初值是在它附近。</p>
-<p>实时相关性scan match 以预测值为中心，在搜索窗口内枚举出所有候选位姿，并生成每个位姿对应的点云，也就是说按照 <script type="math/tex">x_i</script> 把当前观测 <script type="math/tex">z_i</script> 投影到栅格地图 m ( t 时刻的激光数据与 t-1 时刻的地图匹配， scan to map)，然后分别计算每个点云中<code>hit</code>点在栅格地图的<code>CellIndex</code>，并计算所有hit点的占据概率之和，概率最大值对应的位姿就是我们需要的。<strong>代表着在这个位姿下，激光点得映射到占据栅格中的可能性最大，当前观测与已知环境最为一致，前后帧匹配成功</strong>。  scan match非常重要，<strong>如果结果位姿很差，建图就会失败，后端怎么调整也没用</strong></p>
+<p>实时相关性scan match 以预测值为中心，在搜索窗口内枚举出所有候选位姿，并生成每个位姿对应的点云，也就是说按照 <script type="math/tex">x_i</script> 把当前观测 <script type="math/tex">z_i</script> 投影到栅格地图 m (t 时刻的激光数据与 t-1 时刻的地图匹配， scan to map)，然后分别计算每个点云中<code>hit</code>点在栅格地图的<code>CellIndex</code>，并计算所有hit点的占据概率之和，概率最大值对应的位姿就是我们需要的。<strong>代表着在这个位姿下，激光点得映射到占据栅格中的可能性最大，当前观测与已知环境最为一致，前后帧匹配成功</strong>。  scan match非常重要，<strong>如果结果位姿很差，建图就会失败，后端怎么调整也没用</strong></p>
 <p>搜索的精度是栅格地图的分辨率</p>
 <p><img src="https://s2.loli.net/2022/04/20/7gBab2UqEVwmkuL.png" alt=""></p>
 <font size="4" color="blue"> 这个scan matcher可以修改做重定位，不过搜索窗口扩大很多  </font>
