@@ -7,55 +7,7 @@
     error: 'Copy error',
     noSupport: 'The browser does not support'
   }
-} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">603</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/06/11/C++/C++%20%20%E5%9F%BA%E7%A1%80/cout,%20%E7%B1%BB%E5%9E%8B%E7%9A%84%E6%A0%BC%E5%BC%8F%E8%BE%93%E5%87%BA/">cout, 类型的格式输出</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/">C++</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/C/C-%E5%9F%BA%E7%A1%80/">C++ 基础</a></span><div class="content"><h3 id="std-endl的含义"><a href="#std-endl的含义" class="headerlink" title="std::endl的含义"></a>std::endl的含义</h3><p>常常有 <code>std::cout&lt;&lt;&quot;test&quot;&lt;&lt;std::endl</code>，这是把<code>test</code>先放到标准输出流，cout会对内容进行缓冲，不会立即输出到显示器．有两种方法立即显示：加flush或endl，后者还要换行，这是在缓冲区不满时刷新．有时不加这两个关键字也能显示，是因为缓冲区满了或者长时间未输入．</p>
-<h3 id="precision"><a href="#precision" class="headerlink" title="precision"></a>precision</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cout.<span class="built_in">precision</span>(<span class="number">3</span>);</span><br><span class="line">cout&lt;&lt; <span class="number">123.567890</span> &lt;&lt;endl;　　<span class="comment">// 124</span></span><br><span class="line">cout&lt;&lt; scientific &lt;&lt; <span class="number">123.567890</span> &lt;&lt;endl;         <span class="comment">// 1.236e+02</span></span><br></pre></td></tr></table></figure>
-<p><code>precision</code>是控制输出浮点数的精度，3表示四舍五入后得到3个有效数字．精度数字超出数字个数时，还按原来数字．</p>
-<p>scientific表示科学计数法表示，此时精度数字是小数点位数</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th style="text-align:center">类型</th>
-<th style="text-align:center">标志</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">unit16_t</td>
-<td style="text-align:center">%hu</td>
-</tr>
-<tr>
-<td style="text-align:center">unit32_t</td>
-<td style="text-align:center">%u</td>
-</tr>
-<tr>
-<td style="text-align:center">unit64_t</td>
-<td style="text-align:center">%llu</td>
-</tr>
-<tr>
-<td style="text-align:center">unit32_t</td>
-<td style="text-align:center">%zu</td>
-</tr>
-<tr>
-<td style="text-align:center">unsigned int</td>
-<td style="text-align:center">%u</td>
-</tr>
-<tr>
-<td style="text-align:center">long long int</td>
-<td style="text-align:center">%lld</td>
-</tr>
-<tr>
-<td style="text-align:center">unit32_t</td>
-<td style="text-align:center">%u</td>
-</tr>
-<tr>
-<td style="text-align:center">unit32_t</td>
-<td style="text-align:center">%u</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/06/11/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%EF%BC%8C%E6%97%8B%E8%BD%AC%E5%90%91%E9%87%8F%EF%BC%8C%E5%9B%9B%E5%85%83%E6%95%B0/">欧拉角，旋转矩阵，旋转向量，四元数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="欧拉角"><a href="#欧拉角" class="headerlink" title="欧拉角"></a>欧拉角</h2><p>参考<a target="_blank" rel="noopener" href="https://www.guyuehome.com/33200">欧拉角的理解</a></p>
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="author-info"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">602</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">51</span></a></div></div></div><nav id="nav" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="site-info"><div id="site-title">沉默杀手</div><div id="site-sub-title">If you wish for peace, prepare for war</div></div></nav><div id="content-outer"><div class="layout" id="content-inner"><div class="recent-post-item article-container"><a class="article-title" href="/2019/06/11/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/%E6%AC%A7%E6%8B%89%E8%A7%92%EF%BC%8C%E6%97%8B%E8%BD%AC%E7%9F%A9%E9%98%B5%EF%BC%8C%E6%97%8B%E8%BD%AC%E5%90%91%E9%87%8F%EF%BC%8C%E5%9B%9B%E5%85%83%E6%95%B0/">欧拉角，旋转矩阵，旋转向量，四元数</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-11</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/">数学基础</a></span><div class="content"><h2 id="欧拉角"><a href="#欧拉角" class="headerlink" title="欧拉角"></a>欧拉角</h2><p>参考<a target="_blank" rel="noopener" href="https://www.guyuehome.com/33200">欧拉角的理解</a></p>
 <p>对于在三维空间里的一个参考系，任何坐标系的取向，都可以用三个欧拉角来表现。参考系又称为实验室参考系，是静止不动的，而刚体坐标系则固定于刚体，随着刚体的旋转而旋转。</p>
 <p>规定：XYZ坐标轴是旋转的刚体坐标轴；而xyz坐标轴是静止不动的实验室参考轴。</p>
 <p>坐标系XYZ原与参考系xyz重合，旋转后，称xy平面与XY平面的交线为交点线，用英文字母N代表。zXZ顺规的欧拉角可以静态地定义如下：</p>
@@ -242,6 +194,75 @@
 <h2 id="搜索-——"><a href="#搜索-——" class="headerlink" title="搜索 ——"></a>搜索 ——</h2><p><code>-</code>符号比较特殊，这样是错误的，不会有结果<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep <span class="string">&quot;-----&quot;</span> test.cc    <span class="comment"># 无论加不加 -rn</span></span><br><span class="line">grep -e <span class="string">&quot;-----&quot;</span> .</span><br></pre></td></tr></table></figure></p>
 <p>正确的<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep -e <span class="string">&quot;-----&quot;</span> test.cc</span><br><span class="line">grep -- <span class="string">&quot;-----&quot;</span> *.cc</span><br></pre></td></tr></table></figure></p>
 <p>参考：<br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000015708401">grep命令的使用 &amp;&amp; 正则表达式</a></p>
+</div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2019/05/14/Linux%E5%9F%BA%E7%A1%80/Ubuntu%E7%B3%BB%E7%BB%9F%E5%88%9D%E5%A7%8B%E5%8C%96/">Ubuntu系统装机和初始化</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-05-14</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/Linux%E5%9F%BA%E7%A1%80/">Linux基础</a></span><div class="content"><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>必须用U盘启动方式进入系统，否则会报错：<br><img src="https://live.staticflickr.com/65535/32904538347_084d3b4154_z.jpg" alt="Alt text"><br>步骤：</p>
+<ol>
+<li>使用PowerISO和Ubuntu的ISO压缩包制作启动U盘</li>
+<li>先选择”try me without install”模式，进入系统后看看有什么问题，比如无线网能不能连接，没什么问题后，退出重启，按流程装好Ubuntu系统</li>
+<li>插上U盘重新启动Ubuntu，选择”try me without install”模式。如果没有从U盘启动，按住F2进入BIOS，到<code>BOOT</code>标签，修改启动的优先顺序为U盘启动为第一优先</li>
+<li>从”try me”模式进入系统后，打开<strong>GParted</strong></li>
+<li>先<strong>umount</strong>硬盘，然后按提示进行<strong>Resize partition</strong></li>
+<li>每次分盘要等待一段时间，完成后拔出U盘重启电脑</li>
+<li>更改各磁盘的 label<br>输入 <code>sudo fdisk -l</code>，然后按照<code>sudo e2label /dev/sda1 &quot;diskname&quot;</code>的格式修改</li>
+</ol>
+<hr>
+<h2 id="安装-Qt"><a href="#安装-Qt" class="headerlink" title="安装 Qt"></a>安装 Qt</h2><p>安装Qt必须根据系统是32位还是64位，从官网下载对应版本的Qt安装包，然后<code>./qt-***</code>，在安装完成后缺少编译器和调试器。从软件安装程序里安装CMake，然后安装gcc和GDB:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install gcc &amp;&amp; gdb</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;，完成后运行程序可能报错：<code>cannot find -lGL</code> <code>collect2:error:ld returned 1 exit status</code> 因为缺少opengl库<br>在联网状态下：<code>sudo apt-get libgl1-mesa-dev</code></p>
+<h2 id="解决没声音问题-amp-安装PulseAudio"><a href="#解决没声音问题-amp-安装PulseAudio" class="headerlink" title="解决没声音问题 &amp; 安装PulseAudio"></a>解决没声音问题 &amp; 安装PulseAudio</h2><p>在终端运行<code>sudo alsamixer</code>，按M键把关闭的都大开（关闭的都显示的是MM），然后调节到合适的位置.<br><img src="https://live.staticflickr.com/65535/32904538147_e10c762f69_b.jpg" alt="Alt text"></p>
+<p>如果耳机还是没声音，可是试着运行<code>sudo gedit /etc/modprobe.d/alsa-base.conf</code><br>然后在最后一行加入<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#enable headphoneoptions snd-hda-intel power_save=10 power_save_controller=N model=6stack-dig</span><br></pre></td></tr></table></figure><br>然后运行 <code>sudo apt-get remove alsa-base</code></p>
+<p>重启电脑后运行 <code>sudo apt-get install alsa-base</code></p>
+<p>另外可以安装PulseAudio音量控制软件，性能更好<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install pavucontrol</span><br></pre></td></tr></table></figure></p>
+<h2 id="禁止窗口-System-program-problem-detected-弹出"><a href="#禁止窗口-System-program-problem-detected-弹出" class="headerlink" title="禁止窗口 System program problem detected 弹出"></a>禁止窗口 System program problem detected 弹出</h2><p><code>sudo gedit /etc/default/apport</code>，将参数1改为0</p>
+<h2 id="Ubuntu-18-的最大最小关闭布局"><a href="#Ubuntu-18-的最大最小关闭布局" class="headerlink" title="Ubuntu 18 的最大最小关闭布局"></a>Ubuntu 18 的最大最小关闭布局</h2><p>Ubuntu是关闭在左侧，结果Ubuntu18又弄到了右侧。于是想要调整，需要安装dconf-editor<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install dconf-editor</span><br></pre></td></tr></table></figure><br>进入<code>/org/gnome/desktop/wm/preferences/button-layout</code>，改为 <code>close,maximize,minimize:</code></p>
+<h2 id="放大标题栏"><a href="#放大标题栏" class="headerlink" title="放大标题栏"></a>放大标题栏</h2><p>font的放大只适用于字体，窗口的标题栏还是太小，尤其最大最小按钮。可以做如下设置<br><img src="https://i.loli.net/2021/09/15/dTQyqxWRv7ZCiNe.png" alt=""><br>但是<font color = orange size=4>ubuntu 18.04里没有这个选项了，只能在19.10版本之后 </font></p>
+<h2 id="安装字体"><a href="#安装字体" class="headerlink" title="安装字体"></a>安装字体</h2><p>从Windows复制或从网上下载后，放到 <code>/usr/share/fonts</code>即可</p>
+<h2 id="安装中文输入法"><a href="#安装中文输入法" class="headerlink" title="安装中文输入法"></a>安装中文输入法</h2><ol>
+<li><p>安装Chinese语言包<br>鼠标依次点击System Settings–&gt;Language Support–&gt;Install/Remove Languages<br>选中Chinese，点击Apply应用即可，等待下载安装完成。</p>
+</li>
+<li><p>这里完成的只是中文语言包的安装，还并不能使用中文输入法。所谓iBus pinyin输入法，这个pinyin输入法是基于iBus框架。<br>安装ibus框架：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ibus ibus-clutter ibus-gtk ibus-gtk3 ibus-qt4</span><br></pre></td></tr></table></figure>
+<p>启动ibus框架：<code>im-config -s ibus</code><br>安装ibus拼音：<code>sudo apt-get install ibus-pinyin</code></p>
+</li>
+<li><p>重启电脑后到<code>Language Support</code>选择fcitx框架，到<code>Text Entry</code>添加输入法</p>
+</li>
+</ol>
+<p>参考：<br><a target="_blank" rel="noopener" href="http://blog.csdn.net/ljheee/article/details/52966048">Ubuntu安装Ibus拼音</a><br><a target="_blank" rel="noopener" href="http://wiki.ubuntu.org.cn/IBus">ibus官方主页</a></p>
+<h2 id="trash-cli-不直接删除文件"><a href="#trash-cli-不直接删除文件" class="headerlink" title="trash-cli 不直接删除文件"></a>trash-cli 不直接删除文件</h2><p>这个工具是把文件放到了回收站，不是永久删除</p>
+<p><code>sudo apt install -y trash-cli</code></p>
+<ul>
+<li>trash-put           把文件或目录移动到回收站</li>
+<li>trash-empty         清空回收站</li>
+<li>trash-list          列出回收站文件</li>
+<li>trash-restore       恢复回收站文件</li>
+<li>trash-rm            删除回收站文件</li>
+</ul>
+<h2 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh-my-zsh"></a>安装oh-my-zsh</h2><ol>
+<li>运行<code>cat /ect/shells</code>可知目前安装的shell，一般默认是bash</li>
+<li>运行<code>sudo apt-get install -y zsh</code>安装zsh，再运行上面的命令发现多了一个：<code>/bin/bash</code></li>
+<li>安装oh-my-zsh: <code>git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh</code></li>
+<li>用<code>zsh --version</code>查看zsh的版本，用<code>chsh -s (which zsh)</code> 切换shell至zsh，重启电脑</li>
+<li>修改主题，<code>vim ~/.zshrc</code>修改配置文件，修改<code>ZSH_THEME=&quot;ys&quot;</code>，重启终端</li>
+<li>安装插件。这个插件会记录你常去的那些目录，然后做一下权重记录，可以用这个命令看到你的习惯：<code>j --stat</code>，如果这个里面有你的记录，那你就只要敲最后一个文件夹名字即可进入，比如program：<code>j program</code>，就可以直接到：<code>/usr/program</code></li>
+<li>安装zsh-syntax-highlighting, 编辑配置文件，<code>plugins=(zsh-syntax-highlighting)</code><br>刷新下配置：<code>source ~/.zshrc</code></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/powerline/fonts">安装powerline</a></li>
+</ol>
+<p>使用时发现一个终端会记录其他终端的命令历史，这样使用向上箭头时，得到的不是希望的命令，这是因为zsh默认共享了命令历史，在<code>~/.zshrc</code>里添加 <code>setopt no_share_history</code> 即可解决</p>
+<p>参考：<a target="_blank" rel="noopener" href="https://github.com/judasn/Linux-Tutorial/blob/master/Zsh.md">安装oh-my-zsh</a></p>
+<h2 id="安装-unity-tweak-tool"><a href="#安装-unity-tweak-tool" class="headerlink" title="安装 unity tweak tool"></a>安装 unity tweak tool</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install unity-tweak-tool</span><br></pre></td></tr></table></figure>
+<p>启动：<code>unity-tweak-tool</code></p>
+<p>安装缺失文件：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install notify-osd</span><br><span class="line"></span><br><span class="line">sudo apt-get install overlay-scrollbar</span><br></pre></td></tr></table></figure></p>
+<h2 id="添加桌面程序的启动"><a href="#添加桌面程序的启动" class="headerlink" title="添加桌面程序的启动"></a>添加桌面程序的启动</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[Desktop Entry]</span><br><span class="line">Version=1.0</span><br><span class="line">Name=Groot</span><br><span class="line">Exec=/usr/<span class="built_in">local</span>/lib/groot/Groot</span><br><span class="line">Icon=/home/user/Pictures/groot.ico</span><br><span class="line">Type=Application</span><br><span class="line">Terminal=<span class="literal">false</span></span><br></pre></td></tr></table></figure>
+<p>如果运行后没有打开，很可能是执行有问题，单独运行<code>Exec</code>部分试试</p>
+<h2 id="开机启动"><a href="#开机启动" class="headerlink" title="开机启动"></a>开机启动</h2><p>在<code>Utilities-Tweaks-Startup Applications</code>里设置</p>
+<h2 id="设置系统快捷键"><a href="#设置系统快捷键" class="headerlink" title="设置系统快捷键"></a>设置系统快捷键</h2><p>打开系统设置-Keyboard 键盘设置，以shutter的截图为例：<br><img src="https://i.loli.net/2019/08/22/wXlS3pcCQIiF1B8.png" alt=""><br>单击右侧 Disabled，然后快速按下 Ctrl+Alt+A就成功了</p>
+<h2 id="安装cairo-dock"><a href="#安装cairo-dock" class="headerlink" title="安装cairo-dock"></a>安装cairo-dock</h2><p>实现类似Mac的效果<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo add-apt-repository ppa:cairo-dock-team/ppa </span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install cairo-dock cairo-dock-plug-ins</span><br></pre></td></tr></table></figure><br>启动：<code>cairo-dock</code></p>
+<h2 id="剪贴板命令"><a href="#剪贴板命令" class="headerlink" title="剪贴板命令"></a>剪贴板命令</h2><p><code>sudo apt-get install xclip</code><br>xclip可以将内容输出到‘X’的剪切板中, 命令<code>echo &quot;Hello, world&quot; | xclip -selection clipboard</code>，可以做成alias，这样很实用</p>
+<h2 id="更改鼠标风格"><a href="#更改鼠标风格" class="headerlink" title="更改鼠标风格"></a>更改鼠标风格</h2><p>下载鼠标风格文件后，将整个文件夹放到<code>/usr/share/icons</code>，然后到<code>Tweak Tool</code>中就能选择了。</p>
+<h2 id="解决Ubuntu双显示器屏幕边缘鼠标粘滞问题"><a href="#解决Ubuntu双显示器屏幕边缘鼠标粘滞问题" class="headerlink" title="解决Ubuntu双显示器屏幕边缘鼠标粘滞问题"></a>解决Ubuntu双显示器屏幕边缘鼠标粘滞问题</h2><p>笔记本在ubuntu下使用了扩展屏幕，使得两个显示屏可以协同工作，但是每次鼠标在两个屏幕直接移动的时候，总是被屏幕边缘粘住，不让移到另一个屏幕上，除非以很快的速度移动才能把鼠标从一个屏幕移动到另一个屏幕上。</p>
+<p>在桌面点击屏幕右上角账户名旁边的关机按钮，在弹出的菜单里选择”显示“，打开显示配置窗口，你会发现里面有一个选项叫做<strong>粘滞边缘</strong>，只要把这个选项关闭就可以了。</p>
+<p><img src="https://i.loli.net/2019/08/26/mNj87ShTtZVdogI.png" alt=""></p>
+<h2 id="定制窗口侧边栏的默认书签"><a href="#定制窗口侧边栏的默认书签" class="headerlink" title="定制窗口侧边栏的默认书签"></a>定制窗口侧边栏的默认书签</h2><p>打开文件<code>~/.config/user-dirs.dirs</code>，然后修改如下：<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">XDG_DESKTOP_DIR=<span class="string">&quot;$HOME/桌面&quot;</span></span><br><span class="line">XDG_TEMPLATES_DIR=<span class="string">&quot;$HOME/&quot;</span></span><br><span class="line">XDG_PUBLICSHARE_DIR=<span class="string">&quot;$HOME/&quot;</span></span><br></pre></td></tr></table></figure><br><code>桌面</code>最好不要修改，否则HOME下的文件都会显示在桌面上．再执行<code>xdg-user-dirs-gtk-update</code>，重启．</p>
+<p>效果如下：<br><img src="https://live.staticflickr.com/65535/33971223228_110daaa252.jpg" alt=""></p>
+<h2 id="CPU跑满测试"><a href="#CPU跑满测试" class="headerlink" title="CPU跑满测试"></a>CPU跑满测试</h2><p>安装stress<code>sudo apt-get install stress</code></p>
+<p>运行下面命令，可以使得6核CPU跑满，-c是指CPU，6是指6核，具体几核可以打开jtop查看。如用于其他jetson板卡，根据具体CPU核数更改下面命令即可。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">stress -c 6</span><br></pre></td></tr></table></figure></p>
 </div><hr></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/53/">&lt;&lt; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/53/">53</a><span class="page-number current">54</span><a class="page-number" href="/page/55/">55</a><span class="space">&hellip;</span><a class="page-number" href="/page/61/">61</a><a class="extend next" rel="next" href="/page/55/">Next &gt;&gt;</a></div></nav></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2025 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv"><i class="fa fa-user"></i><span id="busuanzi_value_site_uv"></span><span></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i><span id="busuanzi_value_site_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
