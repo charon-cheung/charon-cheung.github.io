@@ -36,14 +36,17 @@
 </ul>
 <p>对double/float数据，一定要使用fabs函数。如果用了abs，就会出现bug，因为返回是int</p>
 <ul>
-<li>反正切函数atan2</li>
+<li>反正切函数 atan2</li>
 </ul>
-<p><code>atan2</code>返回给定的 X 及 Y 坐标值的反正切值。反正切的角度值等于 X 轴与通过原点和给定坐标点 (Y坐标, X坐标) 的直线之间的夹角。结果以弧度表示并介于<code>-pi</code>到<code>pi</code>之间（不包括<code>-pi</code>）。 </p>
-<p>而<code>atan(a/b)</code>的取值范围介于<code>-pi/2</code>到<code>pi/2</code>之间，不包括±pi/2</p>
+<p><code>atan2</code>返回给定的 X 及 Y 坐标值的反正切值。反正切的角度值等于 X 轴与通过原点和给定坐标点 (Y坐标, X坐标) 的直线之间的夹角。结果以弧度表示并介于<code>-pi</code>到<code>pi</code>之间（不包括<code>-pi</code>）。 而<code>atan(a/b)</code>的取值范围介于<code>-pi/2</code>到<code>pi/2</code>之间，不包括±pi/2</p>
 <ul>
-<li>std::acos</li>
+<li>std::sin 等三角函数</li>
 </ul>
-<h3 id="std-setw"><a href="#std-setw" class="headerlink" title="std::setw"></a>std::setw</h3><h3 id="std-fmod"><a href="#std-fmod" class="headerlink" title="std::fmod"></a>std::fmod</h3><p>C++11中，std::numeric_limits为模板类，在库编译平台提供基础算术类型的极值等属性信息，取代传统C语言，所采用的预处理常数。比较常用的使用是对于给定的基础类型用来判断在当前系统上的最大值、最小值。需包含<limits>头文件。</p>
+<ul>
+<li>std::fmod</li>
+</ul>
+<p>计算两个浮点数相除的余数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> x = <span class="number">7.5</span>, y = <span class="number">2.1</span>;</span><br><span class="line"><span class="keyword">double</span> result = std::<span class="built_in">fmod</span>(x, y);    <span class="comment">// 1.2</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="numeric-limits"><a href="#numeric-limits" class="headerlink" title="numeric_limits"></a>numeric_limits</h2><p>C++11中，<code>std::numeric_limits</code>为模板类，比较常用的使用是对于给定的基础类型用来判断在当前系统上的最大值、最小值。需包含<limits>头文件。</p>
 <p><code>std::numeric_limits&lt;double&gt;::max();</code>的结果是一个很大的数字</p>
 <p>std::numeric_limits<double>::infinity()</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2024/04/07/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%9A%84%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%95%88%E6%9E%9C/">纯跟踪的实现的效果</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2024-04-07</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/">路径规划</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/%E8%B7%AF%E5%BE%84%E8%A7%84%E5%88%92/%E7%BA%AF%E8%B7%9F%E8%B8%AA%E7%AE%97%E6%B3%95/">纯跟踪算法</a></span><div class="content"><p>纯跟踪被我改的只适合走折线了<br><img src="https://s2.loli.net/2024/04/07/LPbAV8qMN4YWJcm.gif" alt=""></p>
