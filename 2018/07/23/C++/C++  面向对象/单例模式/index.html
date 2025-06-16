@@ -11,7 +11,7 @@
 <p>一个单例模式应具备以下特征：</p>
 <ol>
 <li>只能实例化同一个对象</li>
-<li>可以全局访问</li>
+<li>全局访问</li>
 <li>禁止拷贝</li>
 <li>线程安全</li>
 </ol>
@@ -35,7 +35,8 @@
 <p>这种方式所用到的特性是在C++11标准中的<strong>Magic Static</strong>特性。如果当变量在初始化的时候，并发同时进入声明语句，并发线程将会阻塞等待初始化结束。这样保证了并发线程在获取静态局部变量的时候一定是初始化过的，所以具有线程安全性。</p>
 <p>C++静态变量的生存期 是从声明到程序结束，这也是一种懒汉式。</p>
 <p>在 MeyersInstance() 函数内定义局部静态变量的好处是,构造函数只会在第一次调用MeyersInstance() 时被初始化, 保证了成员变量和 Singleton 本身的初始化顺序。<br>它还有一个潜在的安全措施, MeyersInstance() 返回的是对局部静态变量的引用, 如果返回的是指针, MeyersInstance() 的调用者很可能会误认为他要检查指针的有效性, 并负责销毁。</p>
-</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%202/"><i class="fa fa-chevron-left">  </i><span>单例模式的多种形态 (一)</span></a></div><div class="next-post pull-right"><a href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/"><span>五大cast转型</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+<p>参考：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/crayondeng/article/details/24853471">探究 C++ Singleton（单例模式）</a></p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%202/"><i class="fa fa-chevron-left">  </i><span>单例模式的多种形态 (二)</span></a></div><div class="next-post pull-right"><a href="/2018/07/22/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E4%BA%94%E5%A4%A7cast%E8%BD%AC%E5%9E%8B/"><span>五大cast转型</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
 var disqus_config = function () {
   this.page.url = 'https://charon-cheung.github.io/2018/07/23/C++/C++%20%20%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/';
   this.page.identifier = '2018/07/23/C++/C++  面向对象/单例模式/';
