@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Gazebo Harmonic 安装和常用命令"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>Gazebo Harmonic 安装和常用命令 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="toc-number">2.</span> <span class="toc-text">基础命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%9D%E9%A2%98%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-number">3.</span> <span class="toc-text">话题相关命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number"></span> <span class="toc-text">问题</span></a></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">601</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Gazebo Harmonic 安装和常用命令</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-07-12</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Gazebo/">Gazebo</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Gazebo/Gazebo-Harmonic/">Gazebo Harmonic</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2025/07/12/Gazebo/Gazebo%20Harmonic/Gazebo%20Harmonic%20%E5%AE%89%E8%A3%85%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2025/07/12/Gazebo/Gazebo Harmonic/Gazebo Harmonic 安装和常用命令/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">507</span><span class="post-meta__separator">|</span><span>Reading time: 2 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>ubuntu 24.04安装jazzy后，对应的gazebo和以前不太一样了。我们需要安装的是 <strong>gazebo Harmonic</strong></p>
+<p><img src="https://s2.loli.net/2025/07/04/X6SEByYwqnpl9TR.png" alt="image.png"></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>安装过程参考 <a target="_blank" rel="noopener" href="https://blog.csdn.net/ZhangRelay/article/details/141426370">Gazebo Harmonic 和 ROS2 jazzy 安装和测试</a></p>
+<p>最后还要安装<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y ros-jazzy-ros-gz </span><br><span class="line">sudo apt-get install -y ros-jazzy-ros-gz-sim-demos </span><br><span class="line">sudo apt-get install -y ros-jazzy-ros-gz-bridge</span><br><span class="line">sudo apt-get install -y ros-jazzy-ros-gz-image</span><br><span class="line">sudo apt-get install -y ros-jazzy-ros-gz-interfaces</span><br><span class="line">sudo apt-get install -y ros-jazzy-ros-gz-sim</span><br><span class="line">sudo apt-get install -y ros-jazzy-joint-state-publisher</span><br><span class="line">sudo apt-get install -y ros-jazzy-xacro</span><br><span class="line">sudo apt-get install -y ros-jazzy-teleop-twist-keyboard</span><br><span class="line">sudo apt-get install -y ros-jazzy-teleop-twist-joy</span><br></pre></td></tr></table></figure></p>
+<h3 id="基础命令"><a href="#基础命令" class="headerlink" title="基础命令"></a>基础命令</h3><ul>
+<li><p>启动命令: <code>gz sim</code> 或者 <code>gz sim -v 4</code>.  <code>-v</code>:  指定日志详细级别，4 表示最高详细程度。</p>
+</li>
+<li><p>可以使用<code>-s</code>（仅服务器）或<code>-g</code>（仅GUI）参数来分别运行服务器或GUI</p>
+</li>
+</ul>
+<p>插件的加载方式已被更改，需要在模型文件（<code>SDF/URDF</code>）或 Gazebo 的配置中添加。</p>
+<ul>
+<li>启动制定的sdf文件:  <code>gz sim shapes.sdf</code></li>
+</ul>
+<p>启动之后，有3个进程:  <code>gz sim</code>,  <code>gz sim server</code>,  <code>gz sim gui</code></p>
+<ul>
+<li><p>ROS2的方式启动:  <code>ros2 launch ros_gz_sim gz_sim.launch.py gz_args:=empty.sdf</code></p>
+</li>
+<li><p>启动图像管道:  <code>ros2 launch ros_gz_sim_demos image_bridge.launch.py</code></p>
+</li>
+</ul>
+<p>重要的sdf文件:  <code>diff_drive_skid.sdf</code>, <code>actor.sdf</code></p>
+<p>从ROS 2 Jazzy开始，Gazebo通过vendor包的形式在ROS包仓库中可用。如果您的包直接依赖于Gazebo库，而不是仅依赖于<code>ros_gz</code>，请参考相关文档学习如何使用Gazebo vendor包。</p>
+<h3 id="话题相关命令"><a href="#话题相关命令" class="headerlink" title="话题相关命令"></a>话题相关命令</h3><p>gazebo的相关命令从ROS2里独立出来了</p>
+<ul>
+<li><p>gz topic -l     显示所有话题</p>
+</li>
+<li><p><code>gz topic -it /model/tugbot/pose</code>   显示话题信息，结果如下</p>
+</li>
+</ul>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Publishers [Address, Message Type]:</span><br><span class="line">  tcp:<span class="regexp">//</span><span class="number">172.27</span>.<span class="number">36.158</span>:<span class="number">38969</span>, gz.msgs.Pose</span><br><span class="line">No subscribers on topic [<span class="regexp">/model/</span>tugbot/pose]</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-et</code>     echo 话题</li>
+<li><code>-ft</code>     显示话题频率</li>
+<li><code>-pt</code>     发布话题</li>
+</ul>
+<p><code>gz topic -h</code>可显示其他命令</p>
+<p>在新的架构中，Gazebo Sim 与ROS 2的集成通过<code>ros_gz</code>桥接包实现。该桥接包允许 ROS 2 和 Gazebo Sim 之间的消息传递</p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>docker里运行<code>gazebo</code>报错:  <font color = orange> libGL error: MESA-LOADER: failed to retrieve device information </font>，这是本机的显卡没装好</p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2025/07/12/Gazebo/Gazebo%20Harmonic/Gazebo%20Harmonic%20%E9%85%8D%E7%BD%AE%E4%BB%BF%E7%9C%9F%E7%8E%AF%E5%A2%83/"><i class="fa fa-chevron-left">  </i><span>Gazebo Harmonic 配置仿真环境</span></a></div><div class="next-post pull-right"><a href="/2025/07/12/Docker/31007/"><span>31007</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2025/07/12/Gazebo/Gazebo%20Harmonic/Gazebo%20Harmonic%20%E5%AE%89%E8%A3%85%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/';
+  this.page.identifier = '2025/07/12/Gazebo/Gazebo Harmonic/Gazebo Harmonic 安装和常用命令/';
+  this.page.title = 'Gazebo Harmonic 安装和常用命令';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2025 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>

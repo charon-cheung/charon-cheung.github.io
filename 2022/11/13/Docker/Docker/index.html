@@ -1,0 +1,84 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Docker的使用"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>Docker的使用 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">常用操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3Docker%E8%BF%90%E8%A1%8C%E5%91%BD%E4%BB%A4%E6%97%B6%E6%8F%90%E7%A4%BA-Got-permission-denied-while-trying-to-connect-to-the-Docker-daemon-socket"><span class="toc-number">3.1.</span> <span class="toc-text">解决Docker运行命令时提示 Got permission denied while trying to connect to the Docker daemon socket</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8EDocker%E9%95%9C%E5%83%8F%E4%B8%AD%E5%AF%BC%E5%87%BA%E6%96%87%E4%BB%B6"><span class="toc-number">3.2.</span> <span class="toc-text">从Docker镜像中导出文件</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">601</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Docker的使用</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-11-13</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/">常用工具</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2022/11/13/Docker/Docker/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2022/11/13/Docker/Docker/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">635</span><span class="post-meta__separator">|</span><span>Reading time: 2 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加docker的GPG公匙</span></span><br><span class="line">curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu/gpg | sudo apt-key add -    </span><br><span class="line"><span class="comment"># 添加中科大源</span></span><br><span class="line">sudo add-apt-repository <span class="string">&quot;deb [arch=amd64] https://mirrors.ustc.edu.cn/docker-ce/linux/ubuntu <span class="subst">$(lsb_release -cs)</span> stable&quot;</span></span><br><span class="line">sudo apt-get update </span><br><span class="line">apt-cache policy docker-ce</span><br><span class="line">sudo apt-get install -y docker-ce</span><br><span class="line">docker version   <span class="comment">#查看版本</span></span><br></pre></td></tr></table></figure>
+<h2 id="常用操作"><a href="#常用操作" class="headerlink" title="常用操作"></a>常用操作</h2><ul>
+<li><p><code>docker load -i 本地文件名</code>  &emsp;&emsp;&emsp;把本地文件做成image</p>
+</li>
+<li><p><code>docker run --name ubuntu -p 3306:3306 -p 22000:22 -it django_lesson:1.0</code>  &emsp;&emsp;&emsp;  <code>-it</code> 表示以交互模式运行容器，通常用于进入容器内部进行操作</p>
+</li>
+<li><p>进入容器: <code>docker run -it a4c6cd090ec3 bash</code>，但是如果在另一个终端再次运行这个命令，进入的不是同一个容器</p>
+</li>
+<li><p>如果要在另一个终端进同一个容器，使用 <code>docker exec -it CONTAINER_ID  /bin/bash</code></p>
+</li>
+<li><p><code>docker images</code></p>
+</li>
+<li><p><code>docker ps -a</code>  &emsp;&emsp;&emsp; 查看所有容器，对不需要的可以删除</p>
+</li>
+<li><p>删除容器: <code>docker  rm  NAME/CONTAINER ID</code></p>
+</li>
+<li><p><code>docker start ed86d97c09bd</code>   &emsp;&emsp;&emsp;    启动已经停止的容器</p>
+</li>
+<li><p><code>docker stop  ed86d97c09bd</code>    &emsp;&emsp;&emsp;   停止容器  </p>
+</li>
+</ul>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><h3 id="解决Docker运行命令时提示-Got-permission-denied-while-trying-to-connect-to-the-Docker-daemon-socket"><a href="#解决Docker运行命令时提示-Got-permission-denied-while-trying-to-connect-to-the-Docker-daemon-socket" class="headerlink" title="解决Docker运行命令时提示 Got permission denied while trying to connect to the Docker daemon socket"></a>解决Docker运行命令时提示 <code>Got permission denied while trying to connect to the Docker daemon socket</code></h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo groupadd docker     <span class="comment">#添加docker用户组</span></span><br><span class="line">sudo gpasswd -a <span class="variable">$USER</span> docker     <span class="comment">#将登陆用户加入到docker用户组中</span></span><br><span class="line">newgrp docker     <span class="comment">#更新用户组</span></span><br><span class="line">docker ps    <span class="comment">#测试docker命令是否可以使用sudo正常使用</span></span><br></pre></td></tr></table></figure>
+<h3 id="从Docker镜像中导出文件"><a href="#从Docker镜像中导出文件" class="headerlink" title="从Docker镜像中导出文件"></a>从Docker镜像中导出文件</h3><ol>
+<li>从运行的容器中复制</li>
+</ol>
+<p>先把镜像跑起来，然后从运行起来的容器中复制文件出来，复制命令如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 从容器复制文件或目录到宿主机器</span></span><br><span class="line">docker cp 6619ff360cce:/opt/h2-data/pkslow ./</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>解压镜像tar文件</li>
+</ol>
+<p>首先，第一种方法并不是万能的，因为有些镜像过于简单，少了许多基础命令，以至于无法复制文件，也无法进入shell环境。其次，要运行起来再操作，也有点占用资源，比较麻烦。</p>
+<p>以<code>ghcr.io/kedacore/keda:2.2.0</code>为例演示如下从该镜像中提取文件：</p>
+<p>（1）将镜像保存为tar文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o keda.tar ghcr.io/kedacore/keda:2.2.0</span><br></pre></td></tr></table></figure>
+<p>（2）解压tar文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">tar xvf keda.tar</span><br><span class="line"></span><br><span class="line">x 42b88f0429143256463a478dda36b5e6d63f6dc43e033c3415414149c8c3257b.json</span><br><span class="line">x 82a2e23fb9f1f5ac86b6c60196bff58e163601e5f37f1bc2bb1bd1781e8f6906/</span><br><span class="line">x 82a2e23fb9f1f5ac86b6c60196bff58e163601e5f37f1bc2bb1bd1781e8f6906/VERSION</span><br><span class="line">x 82a2e23fb9f1f5ac86b6c60196bff58e163601e5f37f1bc2bb1bd1781e8f6906/json</span><br><span class="line">x 82a2e23fb9f1f5ac86b6c60196bff58e163601e5f37f1bc2bb1bd1781e8f6906/layer.tar</span><br><span class="line">x ec12616cdd736751f41ba8d32cb9e9553ec33fc9d0bd1df92d4d8995b3dbc8ea/</span><br><span class="line">x ec12616cdd736751f41ba8d32cb9e9553ec33fc9d0bd1df92d4d8995b3dbc8ea/VERSION</span><br><span class="line">x ec12616cdd736751f41ba8d32cb9e9553ec33fc9d0bd1df92d4d8995b3dbc8ea/json</span><br><span class="line">x ec12616cdd736751f41ba8d32cb9e9553ec33fc9d0bd1df92d4d8995b3dbc8ea/layer.tar</span><br><span class="line">x manifest.json</span><br><span class="line">x repositories</span><br></pre></td></tr></table></figure>
+<p>可以看到每个分层的信息，我们查看<code>manifest.json</code>可以看到具体哪个layer是最新的。</p>
+<p>（3）找其中一个layer再解压</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tar xvf ec12616cdd736751f41ba8d32cb9e9553ec33fc9d0bd1df92d4d8995b3dbc8ea/layer.tar</span><br><span class="line">x keda</span><br></pre></td></tr></table></figure>
+<p>这样，我们就获取到了<code>keda</code>这个可执行文件。每层的打包内容不一样，需要看所需的文件在哪个Layer。</p>
+<hr>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2022/11/13/%E6%BF%80%E5%85%89SLAM/Cartographer/%E4%BC%98%E5%8C%96/%E6%97%AD%E6%97%A5x3%E4%B8%AD%E8%BF%90%E8%A1%8Ccartographer/"><i class="fa fa-chevron-left">  </i><span>旭日x3中运行cartographer</span></a></div><div class="next-post pull-right"><a href="/2022/10/17/%E6%BF%80%E5%85%89SLAM/Cartographer/%E6%BA%90%E7%A0%81%E8%A7%A3%E8%AF%BB/%E7%BA%AF%E5%AE%9A%E4%BD%8D%E6%9C%BA%E5%88%B6%E7%9A%84%E6%B5%81%E7%A8%8B/"><span>纯定位机制的流程</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2022/11/13/Docker/Docker/';
+  this.page.identifier = '2022/11/13/Docker/Docker/';
+  this.page.title = 'Docker的使用';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2025 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>

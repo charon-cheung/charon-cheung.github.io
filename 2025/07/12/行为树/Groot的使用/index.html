@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="Groot的使用"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>Groot的使用 | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Real-Time-Monitor-Mode"><span class="toc-number">2.</span> <span class="toc-text">Real Time Monitor Mode</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">601</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">52</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">Groot的使用</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-07-12</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%A1%8C%E4%B8%BA%E6%A0%91/">行为树</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2025/07/12/%E8%A1%8C%E4%B8%BA%E6%A0%91/Groot%E7%9A%84%E4%BD%BF%E7%94%A8/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2025/07/12/行为树/Groot的使用/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">271</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><ol>
+<li>对一个控制节点，用<code>Create Subtree</code>创建子树后，无法恢复不是子树的状态。在左侧的树列表里，千万不要删除任何树，否则无法恢复</li>
+<li>有的人在groot里添加<code>SetBlackboard</code>设置黑板变量，有的人是在C++里设置，而平时看行为树逻辑一般都在groot里，会不知道C++里做了什么</li>
+<li>如果当前行为树设计有错，比如有多余节点，groot无法使用保存按钮</li>
+</ol>
+<p><img src="https://s2.loli.net/2025/07/04/CHiRG29Q6FqSzZs.png" alt="黑板变量的设置"></p>
+<h3 id="Real-Time-Monitor-Mode"><a href="#Real-Time-Monitor-Mode" class="headerlink" title="Real Time Monitor Mode"></a>Real Time Monitor Mode</h3><p>目前只有<code>Groot2 Pro</code>版本可以使用</p>
+<p>在版本4里，<code>BT::PublisherZMQ</code>已经消失了。取而代之的是<code>BT::Groot2Publisher</code>，可以这样用</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">factory.<span class="built_in">registerBehaviorTreeFromFile</span>(<span class="string">&quot;/home/user/test.xml&quot;</span>);</span><br><span class="line"><span class="keyword">auto</span> tree = factory.<span class="built_in">createTree</span>(<span class="string">&quot;test&quot;</span>, maintree_bb);</span><br><span class="line"><span class="comment">// createTree之后，tick之前</span></span><br><span class="line"><span class="function">BT::Groot2Publisher <span class="title">publisher</span><span class="params">(tree)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">&#123;</span><br><span class="line">	tree.<span class="built_in">tickOnce</span>();</span><br><span class="line">	tree.<span class="built_in">sleep</span>(std::chrono::<span class="built_in">milliseconds</span>(<span class="number">100</span>) );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打开groot之后，点击<code>Connect</code>毫无反应，官方说明没有帮助，读源码发现构造函数里有默认端口号：<code>Groot2Publisher(const BT::Tree&amp; tree, unsigned server_port = 1667);</code></p>
+<p>使用<code>1667</code>后就成功了。<code>Host</code>需要看情况作修改</p>
+<p><img src="https://s2.loli.net/2025/07/05/g3t4Yf7AEPIpiav.png" alt="截图 2025-07-05 16-40-03.png"><br>参考:   <a target="_blank" rel="noopener" href="https://docs.ros.org/en/noetic/api/behaviortree_cpp/html/classBT_1_1Groot2Publisher.html">BT::Groot2Publisher Class Reference</a></p>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2025/07/12/C++/C++%E8%B0%83%E8%AF%95/AddressSanitizer(ASan)%E7%9A%84%E4%BD%BF%E7%94%A8/"><i class="fa fa-chevron-left">  </i><span>AddressSanitizer(ASan)的使用</span></a></div><div class="next-post pull-right"><a href="/2025/07/12/%E8%A1%8C%E4%B8%BA%E6%A0%91/%E8%A1%8C%E4%B8%BA%E6%A0%91%E7%9A%84%E8%8A%82%E7%82%B9/"><span>行为树的节点</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2025/07/12/%E8%A1%8C%E4%B8%BA%E6%A0%91/Groot%E7%9A%84%E4%BD%BF%E7%94%A8/';
+  this.page.identifier = '2025/07/12/行为树/Groot的使用/';
+  this.page.title = 'Groot的使用';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2025 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
