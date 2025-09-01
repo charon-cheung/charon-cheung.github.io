@@ -1,0 +1,101 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="ROS2中的Action和Service"><meta name="keywords" content=""><meta name="author" content="Charon Cheung"><meta name="copyright" content="Charon Cheung"><title>ROS2中的Action和Service | 沉默杀手</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1"><link rel="dns-prefetch" href="https://cdn.staticfile.org"><link rel="dns-prefetch" href="https://cdn.bootcss.com"><link rel="dns-prefetch" href="https://creativecommons.org"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  }
+} </script><meta name="generator" content="Hexo 5.4.0"></head><body><canvas class="fireworks"></canvas><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar"><div class="toggle-sidebar-info text-center"><span data-toggle="Toggle article">Toggle site</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">Catalog</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#action"><span class="toc-number">1.</span> <span class="toc-text">action</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#interface"><span class="toc-number"></span> <span class="toc-text">interface</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#service"><span class="toc-number"></span> <span class="toc-text">service</span></a></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://s2.loli.net/2022/02/17/HQaCXUBn64zsMIL.png"></div><div class="author-info__name text-center">Charon Cheung</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">Articles</span><span class="pull-right">559</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">Tags</span><span class="pull-right">5</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">Categories</span><span class="pull-right">49</span></a></div></div></div><div id="content-outer"><div id="top-container" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">沉默杀手</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page" href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div><div id="post-info"><div id="post-title">ROS2中的Action和Service</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-09-01</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/ROS/ROS2/">ROS2</a><span class="post-meta__separator">|</span><i class="fa fa-comment-o post-meta__icon" aria-hidden="true"></i><a href="/2025/09/01/ROS/ROS2/ROS2%E4%B8%AD%E7%9A%84Action%E5%92%8CService/#disqus_thread"><span class="disqus-comment-count" data-disqus-identifier="2025/09/01/ROS/ROS2/ROS2中的Action和Service/"></span></a><div class="post-meta-wordcount"><span>Word count: </span><span class="word-count">383</span><span class="post-meta__separator">|</span><span>Reading time: 1 min</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h3 id="action"><a href="#action" class="headerlink" title="action"></a>action</h3><ul>
+<li><p>ros2  action  list  -t</p>
+</li>
+<li><p>ros2 action info /compute_path_to_pose</p>
+</li>
+</ul>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Action: <span class="regexp">/compute_path_to_pose</span></span><br><span class="line"><span class="regexp">Action clients: 0</span></span><br><span class="line"><span class="regexp">Action servers: 1</span></span><br><span class="line"><span class="regexp">    /plann</span>er_server</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>ros2 action type  /compute_path_to_pose<br>结果是 <code>nav2_msgs/action/ComputePathToPose</code></p>
+</li>
+<li><p>ros2 interface show nav2_msgs/action/ComputePathToPose</p>
+</li>
+</ul>
+<p>结果是 action 文件的详细信息</p>
+<ul>
+<li>ros2 action send_goal</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">nvidia<span class="meta">@ubuntu</span>:~$ ros2 <span class="class"><span class="keyword">interface</span> <span class="title">show</span> <span class="title">turtlesim</span>/<span class="title">action</span>/<span class="title">RotateAbsolute</span>.<span class="title">action</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"># <span class="title">The</span> <span class="title">desired</span> <span class="title">heading</span> <span class="title">in</span> <span class="title">radians</span></span></span><br><span class="line"><span class="class"><span class="title">float32</span> <span class="title">theta</span></span></span><br><span class="line"><span class="class">---</span></span><br><span class="line"><span class="class"># <span class="title">The</span> <span class="title">angular</span> <span class="title">displacement</span> <span class="title">in</span> <span class="title">radians</span> <span class="title">to</span> <span class="title">the</span> <span class="title">starting</span> <span class="title">position</span></span></span><br><span class="line"><span class="class"><span class="title">float32</span> <span class="title">delta</span></span></span><br><span class="line"><span class="class">---</span></span><br><span class="line"><span class="class"># <span class="title">The</span> <span class="title">remaining</span> <span class="title">rotation</span> <span class="title">in</span> <span class="title">radians</span></span></span><br><span class="line"><span class="class"><span class="title">float32</span> <span class="title">remaining</span></span></span><br></pre></td></tr></table></figure>
+<p>这三项依次是目标，结果，反馈</p>
+<ul>
+<li>发送操作目标:  <code>ros2 action send_goal &lt;action_name&gt; &lt;action_type&gt; &lt;values&gt;</code></li>
+</ul>
+<p>比如 <code>ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute &quot;&#123;theta: 1.57&#125;&quot;</code></p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">nvidia@ubuntu:~$ ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute <span class="string">&quot;&#123;theta: 1.57&#125;&quot;</span></span><br><span class="line">Waiting <span class="keyword">for</span> an action server to become available...</span><br><span class="line">Sending goal:</span><br><span class="line">theta: <span class="number">1.57</span></span><br><span class="line">Goal accepted with ID: <span class="number">5</span>cd8eb561348477abbb532fc816ce792</span><br><span class="line"></span><br><span class="line">Result:</span><br><span class="line">delta: <span class="number">1.5680029392242432</span></span><br><span class="line"></span><br><span class="line">Goal finished with status: SUCCEEDED</span><br></pre></td></tr></table></figure>
+<p>当然结果与目标有一定误差</p>
+<p>要查看此目标的反馈，请在上次运行的命令中添加 <code>--feedback</code>，会看到连续的打印输出，将继续收到反馈，直到目标完成。</p>
+<h2 id="interface"><a href="#interface" class="headerlink" title="interface"></a>interface</h2><ul>
+<li>ros2 interface list</li>
+</ul>
+<p>分类显示消息、动作、服务的所有类型</p>
+<ul>
+<li>ros2 interface package pkg_name</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 <span class="class"><span class="keyword">interface</span> <span class="title">package</span> <span class="title">action_msgs</span></span></span><br><span class="line"><span class="class"><span class="title">action_msgs</span>/<span class="title">srv</span>/<span class="title">CancelGoal</span></span></span><br><span class="line"><span class="class"><span class="title">action_msgs</span>/<span class="title">msg</span>/<span class="title">GoalInfo</span></span></span><br><span class="line"><span class="class"><span class="title">action_msgs</span>/<span class="title">msg</span>/<span class="title">GoalStatus</span></span></span><br><span class="line"><span class="class"><span class="title">action_msgs</span>/<span class="title">msg</span>/<span class="title">GoalStatusArray</span></span></span><br></pre></td></tr></table></figure>
+<p>获知某个消息类型是谁在用，可以这样查<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 <span class="class"><span class="keyword">interface</span> <span class="title">packages</span> | <span class="title">grep</span> <span class="title">pendulum_msgs</span></span></span><br><span class="line"><span class="class"><span class="title">pendulum_msgs</span></span></span><br><span class="line"><span class="class"><span class="title">user</span>@<span class="title">robot</span>:~$ <span class="title">ros2</span> <span class="title">interface</span> <span class="title">package</span> <span class="title">pendulum_msgs</span></span></span><br><span class="line"><span class="class"><span class="title">pendulum_msgs</span>/<span class="title">msg</span>/<span class="title">RttestResults</span></span></span><br><span class="line"><span class="class"><span class="title">pendulum_msgs</span>/<span class="title">msg</span>/<span class="title">JointState</span></span></span><br><span class="line"><span class="class"><span class="title">pendulum_msgs</span>/<span class="title">msg</span>/<span class="title">JointCommand</span></span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">user</span>@<span class="title">robot</span>:~$ <span class="title">ros2</span> <span class="title">topic</span> <span class="title">find</span> <span class="title">pendulum_msgs</span>/<span class="title">msg</span>/<span class="title">RttestResults</span></span></span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>显示消息的成员</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">user<span class="meta">@robot</span>:~$ ros2 <span class="class"><span class="keyword">interface</span> <span class="title">proto</span> <span class="title">std_msgs</span>/<span class="title">msg</span>/<span class="title">String</span></span></span><br><span class="line"><span class="class">&quot;<span class="title">data</span>: &#x27;&#x27;&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="service"><a href="#service" class="headerlink" title="service"></a>service</h2><ul>
+<li>ros2 service type</li>
+</ul>
+<p>可以看到服务的定义。</p>
+<ul>
+<li>ros2 service find</li>
+</ul>
+<p>找出指定类型的所有服务</p>
+<ul>
+<li><p>ros2 service find std_srvs/srv/Empty</p>
+</li>
+<li><p>ros2 interface show</p>
+</li>
+</ul>
+<p>显示服务的定义</p>
+<ul>
+<li>call命令比ROS1复杂了，需要指明service类型:  <code>ros2 service call service_name service_type</code></li>
+</ul>
+</div></article><div class="post-meta__tag-list"></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2025/09/01/ROS/ROS2/ROS2%E7%9A%84%E5%87%A0%E4%B8%AA%E5%B8%B8%E8%A7%81%E5%9F%BA%E6%9C%AC%E9%97%AE%E9%A2%98/"><i class="fa fa-chevron-left">  </i><span>ROS2的几个常见基本问题</span></a></div><div class="next-post pull-right"><a href="/2025/08/24/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7/Git%E4%B8%8D%E5%B8%B8%E7%94%A8%E7%9A%84%E5%91%BD%E4%BB%A4/"><span>Git不常用的命令</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="disqus_thread"></div><script>var unused = null;
+var disqus_config = function () {
+  this.page.url = 'https://charon-cheung.github.io/2025/09/01/ROS/ROS2/ROS2%E4%B8%AD%E7%9A%84Action%E5%92%8CService/';
+  this.page.identifier = '2025/09/01/ROS/ROS2/ROS2中的Action和Service/';
+  this.page.title = 'ROS2中的Action和Service';
+}
+var d = document, s = d.createElement('script');
+s.src = "https://" + '沉默杀手' +".disqus.com/embed.js";
+s.setAttribute('data-timestamp', '' + +new Date());
+(d.head || d.body).appendChild(s);</script><script id="dsq-count-scr" src="https://沉默杀手.disqus.com/count.js" async></script></div></div><footer class="footer-bg" style="background-image: url(https://s2.loli.net/2024/11/12/x1aqcwUG3XDiskN.jpg)"><div class="layout" id="footer"><div class="copyright">&copy;2018 - 2025 By Charon Cheung</div><div class="framework-info"><span>Driven - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>Theme - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file-o"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.6.1"></script><script src="/js/fancybox.js?version=1.6.1"></script><script src="/js/sidebar.js?version=1.6.1"></script><script src="/js/copy.js?version=1.6.1"></script><script src="/js/fireworks.js?version=1.6.1"></script><script src="/js/transition.js?version=1.6.1"></script><script src="/js/scroll.js?version=1.6.1"></script><script src="/js/head.js?version=1.6.1"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+    processEscapes: true,
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  },
+  CommonHTML: {
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "HTML-CSS": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  },
+  "SVG": { 
+    linebreaks: { automatic: true, width: "90% container" }
+  }
+});
+</script><script type="text/x-mathjax-config">MathJax.Hub.Queue(function() {
+  var all = MathJax.Hub.getAllJax(), i;
+  for (i=0; i < all.length; i += 1) {
+    all[i].SourceElement().parentNode.className += ' has-jax';
+  }
+});
+</script><script src="https://cdn.bootcss.com/mathjax/2.7.2/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script>if(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+}</script></body></html>
