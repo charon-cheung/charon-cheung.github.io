@@ -89,6 +89,7 @@
 <h2 id="condition"><a href="#condition" class="headerlink" title="condition"></a>condition</h2><p>这是条件控制节点。比如判断电池电量，某一开关信号等等。</p>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2025/07/12/ROS/ROS2/Nav2%E6%A1%86%E6%9E%B6/">Nav2框架</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-07-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>依赖项<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install -y ros-jazzy-tf2*</span><br><span class="line">rm ~/.config/ros.org/rqt_gui.ini</span><br><span class="line"><span class="comment"># 重启rqt，然后再rqt中plugin-&gt;visualization中可以看到到 tf tree</span></span><br><span class="line"></span><br><span class="line">sudo apt-get install gazebo-ros-pkgs</span><br><span class="line"></span><br><span class="line">sudo apt install -y ros-jazzy-navigation2</span><br><span class="line">sudo apt install -y ros-jazzy-nav2-bringups</span><br><span class="line">sudo apt install -y ros-jazzy-turtlebot3*</span><br><span class="line">sudo apt install -y ros-jazzy-test-msgs  ros-jazzy-geographic-msgs</span><br></pre></td></tr></table></figure><br>下载jazzy分支的<code>Navigation2</code>，一般能正常编译。</p>
 <p>在Nav2存储库的根目录中运行<code>doxygen</code>。它将生成一个包含文档的<code>/doc/*</code>目录。文档的入口点在浏览器中是index.html。</p>
+<p>注意 <code>nav_msgs</code>的安装路径比较特殊： <code>/opt/ros/jazzy/include/nav_msgs/nav_msgs</code>，不要去修改</p>
 <h3 id="运行-Nav2-框架"><a href="#运行-Nav2-框架" class="headerlink" title="运行 Nav2 框架"></a>运行 Nav2 框架</h3><p>使用 turtlebot3:  <code>ros2 launch turtlebot3_gazebo  turtlebot3_world.launch.py</code></p>
 <p>不需要设置 <code>export GZ_SIM_RESOURCE_PATH</code></p>
 <ul>
@@ -108,19 +109,51 @@
 </ul>
 <h3 id="节点和话题"><a href="#节点和话题" class="headerlink" title="节点和话题"></a>节点和话题</h3><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">/amcl</span><br><span class="line"></span><br><span class="line">/behavior_server</span><br><span class="line">/bt_navigator</span><br><span class="line">/bt_navigator_navigate_through_poses_rclcpp_node</span><br><span class="line">/bt_navigator_navigate_to_pose_rclcpp_node</span><br><span class="line"></span><br><span class="line">/collision_monitor</span><br><span class="line">/controller_server</span><br><span class="line">/docking_server</span><br><span class="line">/global_costmap/global_costmap</span><br><span class="line">/local_costmap/local_costmap</span><br><span class="line"></span><br><span class="line">/launch_ros_3856071</span><br><span class="line">/lifecycle_manager_localization</span><br><span class="line">/lifecycle_manager_navigation</span><br><span class="line">/map_server</span><br><span class="line">/nav2_container</span><br><span class="line">/planner_server</span><br><span class="line">/robot_state_publisher</span><br><span class="line">/ros_gz_bridge</span><br><span class="line">/ros_gz_image</span><br><span class="line">/rviz2</span><br><span class="line">/rviz_navigation_dialog_action_client</span><br><span class="line"></span><br><span class="line">/smoother_server</span><br><span class="line">/velocity_smoother</span><br><span class="line">/waypoint_follower</span><br></pre></td></tr></table></figure>
 <p>速度输出是  <code>/cmd_vel_smoothed</code></p>
+<ul>
+<li>发布目标</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ros2 action send_goal /action_a2b_move  plan_ctrl_msgs/action/ActionA2BMove <span class="string">&#x27;&#123;start_pose: &#123;header: &#123;stamp: &#123;sec: 0, nanosec: 0&#125;, frame_id: &quot;map&quot;&#125;, pose: &#123;position: &#123;x: 0, y: 0, z: 0&#125;, orientation: &#123;x: 0.0, y: 0.0, z: 0.0, w: 1.0&#125;&#125;&#125;,    goal_pose: &#123;header: &#123;stamp: &#123;sec: 0, nanosec: 0&#125;, frame_id: &quot;map&quot;&#125;, pose: &#123;position: &#123;x: 1, y: 1, z: 0&#125;, orientation: &#123;x: 0.0, y: 0.0, z: 0.0, w: 1.0&#125;&#125;&#125;,  map_path: &quot;/home/zzp/j36_project/map.yaml&quot;  &#125;&#x27;</span></span><br></pre></td></tr></table></figure>
 <h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><ol>
 <li>因为显卡的驱动问题，有时加载不出机器人的模型</li>
 </ol>
 </div><hr></div><div class="recent-post-item article-container"><a class="article-title" href="/2025/07/12/ROS/ROS2/ROS2%E4%B8%AD%E7%9A%84%E6%97%A5%E5%BF%97%EF%BC%8Crosbag%E5%92%8C%E5%85%B6%E4%BB%96%E5%B7%A5%E5%85%B7/">ROS2中的日志，rosbag和其他工具</a><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2025-07-12</time><span class="article-meta"><span class="article-meta__separator">|</span><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/">ROS</a><i class="fa fa-angle-right" aria-hidden="true"></i><i class="fa fa-inbox article-meta__icon" aria-hidden="true"></i><a class="article-meta__categories" href="/categories/ROS/ROS2/">ROS2</a></span><div class="content"><h2 id="日志"><a href="#日志" class="headerlink" title="日志"></a>日志</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RCLCPP_DEBUG</span>(<span class="built_in">get_logger</span>(), <span class="string">&quot;我是DEBUG级别的日志，我被打印出来了!&quot;</span>);</span><br><span class="line"><span class="built_in">RCLCPP_INFO</span>(<span class="built_in">get_logger</span>(), <span class="string">&quot;我是INFO级别的日志，我被打印出来了!&quot;</span>);</span><br><span class="line"><span class="built_in">RCLCPP_WARN</span>(<span class="built_in">get_logger</span>(), <span class="string">&quot;我是WARN级别的日志，我被打印出来了!&quot;</span>);</span><br><span class="line"><span class="built_in">RCLCPP_ERROR</span>(<span class="built_in">get_logger</span>(), <span class="string">&quot;我是ERROR级别的日志，我被打印出来了!&quot;</span>);</span><br><span class="line"><span class="built_in">RCLCPP_FATAL</span>(<span class="built_in">get_logger</span>(), <span class="string">&quot;我是FATAL级别的日志，我被打印出来了!&quot;</span>);</span><br></pre></td></tr></table></figure>
 <p>运行节点时，可以指定日志的最低等级: <code>ros2 run lpackage_name executable_name  --ros-args --log-level info</code>。 可选等级: debug,   warn,   fatal</p>
 <p>日志默认都没有颜色，要加颜色需要  <code>export RCUTILS_COLORIZED_OUTPUT=1</code></p>
+<p><br></p>
 <p>设置日志的格式：  <code>export RCUTILS_CONSOLE_OUTPUT_FORMAT=&quot;[&#123;severity&#125; &#123;date_time_with_ms&#125;] [&#123;name&#125;]: &#123;message&#125;&quot;</code></p>
+<p>RCUTILS_CONSOLE_OUTPUT_FORMAT - 控制每条日志消息输出的字段。可用字段有：</p>
+<ul>
+<li><p>{severity} - 严重级别。</p>
+</li>
+<li><p>{name} - 日志记录器的名称（可能为空）。</p>
+</li>
+<li><p>{message} - 日志消息（可能为空）。</p>
+</li>
+<li><p>{function_name} - 调用此函数的函数名称（可能为空）。</p>
+</li>
+<li><p>{file_name} - 调用此函数的文件名（可能为空）。</p>
+</li>
+<li><p>{time} - 自纪元以来的秒数。</p>
+</li>
+<li><p>{time_as_nanoseconds} - 自纪元以来的纳秒数。</p>
+</li>
+<li><p>{line_number} - 调用此函数的行号（可能为空）。</p>
+</li>
+</ul>
+<p>如果未提供格式，则使用默认格式 <code>[&#123;severity&#125;] [&#123;time&#125;] [&#123;name&#125;]: &#123;message&#125;</code></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://fishros.org/doc/ros2/humble/Concepts/Intermediate/About-Logging.html">ROS2 日志</a></p>
 <hr>
 <ul>
-<li>ros2 bag record -o bag_name   topic_1  topic_2</li>
-<li>ros2 bag info subset</li>
+<li><p>ros2 bag record -o bag_name   topic_1  topic_2</p>
+</li>
+<li><p>ros2 bag info subset</p>
+</li>
+</ul>
+<p>结果类似这样<br><figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Files:             test_<span class="number">0</span>.db3</span><br><span class="line">Bag size:          <span class="number">424.5</span> KiB</span><br><span class="line">Storage id:        sqlite3</span><br><span class="line">ROS Distro:        unknown</span><br><span class="line">Duration:          <span class="number">11.497778868</span>s</span><br><span class="line">Start:             Sep <span class="number">16</span> <span class="number">2025</span> <span class="number">18</span>:<span class="number">03</span>:<span class="number">07</span>.<span class="number">911158571</span> (<span class="number">1758016987.911158571</span>)</span><br><span class="line">End:               Sep <span class="number">16</span> <span class="number">2025</span> <span class="number">18</span>:<span class="number">03</span>:<span class="number">19.408937439</span> (<span class="number">1758016999.408937439</span>)</span><br><span class="line">Messages:          <span class="number">57</span></span><br><span class="line">Topic information: Topic: <span class="regexp">/global_path | Type: nav_msgs/msg</span>/Path | Count: <span class="number">57</span> | Serialization Format: cdr</span><br><span class="line">Service:           <span class="number">0</span></span><br><span class="line">Service information: </span><br></pre></td></tr></table></figure></p>
+<ul>
 <li>ros2 bag play subset</li>
 </ul>
+<p><code>-r</code>可以指定播放速度，<code>-l</code>是无限循环播放</p>
 <hr>
 <p><code>ros2doctor</code>可以检测大概的ros2整体配置，<code>ros2doctor</code>并不是一个调错的工具，对你的代码调试没有帮助． 它一般查找你系统中警告部分，只有<code>UserWarning: ERROR:</code>开头的可能是错误。另外可以检查<strong>发布者没有订阅者</strong>的问题。</p>
 <p>运行 <code>ros2 doctor</code> 或者 <code>ros2 doctor --report</code></p>
