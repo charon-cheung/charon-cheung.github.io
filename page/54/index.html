@@ -147,6 +147,27 @@
 <h3 id="取字符串的某一段"><a href="#取字符串的某一段" class="headerlink" title="取字符串的某一段"></a>取字符串的某一段</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#/bin/bash -e</span></span><br><span class="line"></span><br><span class="line">ip=<span class="string">&quot;192.168.0.123&quot;</span></span><br><span class="line">net=$(cut -d<span class="string">&#x27;.&#x27;</span> -f3&lt;&lt;&lt;<span class="string">&quot;192.162.0.123&quot;</span>)	  <span class="comment"># 3个&lt;</span></span><br><span class="line">sub=$(<span class="built_in">echo</span> <span class="variable">$ip</span> | cut -c1-7)		<span class="comment"># -c 一般用于文件，比如 cut -c1-4 test.txt</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$net</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$sub</span></span><br></pre></td></tr></table></figure>
 <p>结果是:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0</span><br><span class="line">192.168</span><br></pre></td></tr></table></figure><br>cut命令一般用于处理表内容，例如只取某一列<br>-c：仅显示行中指定范围的字符；<br>-d：指定字段的分隔符，默认的字段分隔符为”TAB”；<br>-f：显示指定字段的内容；</p>
 <p>使用awk的内建函数：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hostname -I | awk <span class="string">&#x27;&#123;split($0,a,&quot;.&quot;);print a[1],a[2],a[3],a[4]&#125;&#x27;</span>   <span class="comment"># 192 168 0 123</span></span><br><span class="line"></span><br><span class="line">hostname -I | awk <span class="string">&#x27;&#123;print substr($0,0,4)&#125;&#x27;</span>		<span class="comment"># 192.</span></span><br></pre></td></tr></table></figure><br>所以如果想获得ip的网段，可以使用<code>net=$(hostname -I | awk &#39;&#123;split($0,a,&quot;.&quot;);print a[3]&#125;&#39;)</code></p>
+<h3 id="另一种截取字符串的方法"><a href="#另一种截取字符串的方法" class="headerlink" title="另一种截取字符串的方法"></a>另一种截取字符串的方法</h3><ul>
+<li>从左边第几个字符开始，及字符的个数</li>
+</ul>
+<p>echo ${var:0:5}</p>
+<p>其中的 0 表示左边第一个字符开始，5 表示字符的总个数。</p>
+<ul>
+<li>从左边第几个字符开始，一直到结束。</li>
+</ul>
+<p>echo ${var:7}</p>
+<p>其中的 7 表示左边第8个字符开始，一直到结束。</p>
+<ul>
+<li>从右边第几个字符开始，及字符的个数</li>
+</ul>
+<p>echo ${var:0-7:3}</p>
+<p>其中的 0-7 表示右边算起第七个字符开始，3 表示字符的个数。<br>结果是：123</p>
+<ul>
+<li>从右边第几个字符开始，一直到结束</li>
+</ul>
+<p>echo ${var:0-7}</p>
+<p>表示从右边第七个字符开始，一直到结束。</p>
+<p><strong>左边的第一个字符是用 0 表示，右边的第一个字符用 0-1 表示</strong></p>
 <h3 id="列出当前目录下，最大的10个文件"><a href="#列出当前目录下，最大的10个文件" class="headerlink" title="列出当前目录下，最大的10个文件"></a>列出当前目录下，最大的10个文件</h3><p><code>ls -Slh | head</code>   </p>
 <h3 id="连接字符串"><a href="#连接字符串" class="headerlink" title="连接字符串"></a>连接字符串</h3><p>如果想要在变量后面添加字符，可以用以下方法：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$value1</span>=home</span><br><span class="line"></span><br><span class="line"><span class="variable">$value2</span>=<span class="variable">$&#123;value1&#125;</span><span class="string">&quot;=&quot;</span>    　<span class="comment"># 用单引号也行</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$value2</span></span><br></pre></td></tr></table></figure><br>把要添加的字符串变量添加{}，并且需要把$放到外面。这样输出的结果是<code>home=</code>，连接成功。</p>
 <h2 id="echo"><a href="#echo" class="headerlink" title="echo"></a>echo</h2><h3 id="echo换行"><a href="#echo换行" class="headerlink" title="echo换行"></a>echo换行</h3><p>echo要支持同C语言一样的\转义功能，只需要加上参数-e</p>

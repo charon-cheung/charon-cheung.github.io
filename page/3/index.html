@@ -154,6 +154,11 @@
 <li>ros2 bag play subset</li>
 </ul>
 <p><code>-r</code>可以指定播放速度，<code>-l</code>是无限循环播放</p>
+<ul>
+<li>ros2 bag play  —start-offset 450  bag_file</li>
+</ul>
+<p>这个命令很有用，从 450 秒处开始播放</p>
+<p>ros2的bag直到25年5月的<strong>Kilted</strong>版本才能使用<code>--progress-bar</code>命令显示播放进度，而这个版本不是一个LTS版本，所以想用这个功能，只能从rosbag2的源码编译</p>
 <hr>
 <p><code>ros2doctor</code>可以检测大概的ros2整体配置，<code>ros2doctor</code>并不是一个调错的工具，对你的代码调试没有帮助． 它一般查找你系统中警告部分，只有<code>UserWarning: ERROR:</code>开头的可能是错误。另外可以检查<strong>发布者没有订阅者</strong>的问题。</p>
 <p>运行 <code>ros2 doctor</code> 或者 <code>ros2 doctor --report</code></p>
