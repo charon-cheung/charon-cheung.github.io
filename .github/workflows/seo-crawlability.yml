@@ -1,0 +1,115 @@
+name: One-time SEO crawlability update
+
+on:
+  push:
+    branches:
+      - chatgpt/seo-crawlability
+
+permissions:
+  contents: write
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set document language
+        shell: bash
+        run: |
+          find . -type f -name '*.html' -print0 | xargs -0 sed -i 's/<html lang="en">/<html lang="zh-CN">/g'
+
+      - name: Generate robots.txt and sitemap.xml
+        shell: bash
+        run: |
+          cat > robots.txt <<'EOF'
+          User-agent: OAI-SearchBot
+          Allow: /
+
+          User-agent: *
+          Allow: /
+
+          Sitemap: https://charon-cheung.github.io/sitemap.xml
+          EOF
+
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.parse import quote
+          from xml.etree.ElementTree import Element, SubElement, ElementTree, indent
+
+          base = "https://charon-cheung.github.io"
+          root = Element("urlset", {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"})
+
+          def include(path: str) -> bool:
+              if path == "index.html":
+                  return True
+              if "/page/" in path or path.startswith("page/"):
+                  return False
+              if path in {"archives/index.html", "categories/index.html", "tags/index.html"}:
+                  return True
+              if path.startswith(("archives/", "categories/", "tags/")) and path.endswith("/index.html"):
+                  return True
+              parts = path.split("/")
+              return len(parts) >= 5 and parts[0].isdigit() and len(parts[0]) == 4 and parts[1].isdigit() and parts[2].isdigit() and path.endswith("/index.html")
+
+          paths = sorted(
+              p.as_posix()
+              for p in Path(".").rglob("index.html")
+              if include(p.as_posix().removeprefix("./"))
+          )
+
+          for path in paths:
+              rel = path.removeprefix("./")
+              if rel == "index.html":
+                  url = base + "/"
+              else:
+                  url_path = rel[:-len("index.html")]
+                  url = base + "/" + quote(url_path, safe="/:")
+              node = SubElement(root, "url")
+              SubElement(node, "loc").text = url
+
+          indent(root, space="  ")
+          ElementTree(root).write("sitemap.xml", encoding="utf-8", xml_declaration=True)
+          print(f"Generated sitemap.xml with {len(paths)} URLs")
+          PY
+
+      - name: Verify generated site metadata
+        shell: bash
+        run: |
+          if grep -RIl --include='*.html' '<html lang="en">' .; then
+            echo 'Found HTML files still declaring lang=en'
+            exit 1
+          fi
+          grep -q '<html lang="zh-CN">' index.html
+          grep -q '^User-agent: OAI-SearchBot$' robots.txt
+          grep -q '^Sitemap: https://charon-cheung.github.io/sitemap.xml$' robots.txt
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          root = ET.parse("sitemap.xml").getroot()
+          ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+          urls = root.findall("s:url", ns)
+          assert len(urls) >= 400, f"Expected at least 400 sitemap URLs, got {len(urls)}"
+          locs = [u.find("s:loc", ns).text for u in urls]
+          assert "https://charon-cheung.github.io/" in locs
+          assert "https://charon-cheung.github.io/categories/" in locs
+          assert all("/page/" not in u for u in locs)
+          print(f"Verified sitemap.xml with {len(urls)} URLs")
+          PY
+          git diff --check
+
+      - name: Commit one-time generated changes
+        shell: bash
+        run: |
+          git rm .github/workflows/seo-crawlability.yml
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+            exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'seo: improve crawlability metadata'
+          git push origin HEAD:chatgpt/seo-crawlability
