@@ -76,7 +76,7 @@ jobs:
           print(f"Generated sitemap.xml with {len(paths)} URLs")
           PY
 
-      - name: Verify generated site metadata
+      - name: Verify HTML language
         shell: bash
         run: |
           if grep -RIl --include='*.html' '<html lang="en">' .; then
@@ -84,21 +84,33 @@ jobs:
             exit 1
           fi
           grep -q '<html lang="zh-CN">' index.html
+
+      - name: Verify robots.txt
+        shell: bash
+        run: |
           grep -q '^User-agent: OAI-SearchBot$' robots.txt
+          grep -q '^Allow: /$' robots.txt
           grep -q '^Sitemap: https://charon-cheung.github.io/sitemap.xml$' robots.txt
+
+      - name: Verify sitemap.xml
+        shell: bash
+        run: |
           python3 - <<'PY'
           import xml.etree.ElementTree as ET
           root = ET.parse("sitemap.xml").getroot()
           ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
           urls = root.findall("s:url", ns)
-          assert len(urls) >= 400, f"Expected at least 400 sitemap URLs, got {len(urls)}"
           locs = [u.find("s:loc", ns).text for u in urls]
+          print(f"Sitemap URL count: {len(urls)}")
+          assert len(urls) >= 400, f"Expected at least 400 sitemap URLs, got {len(urls)}"
           assert "https://charon-cheung.github.io/" in locs
           assert "https://charon-cheung.github.io/categories/" in locs
           assert all("/page/" not in u for u in locs)
-          print(f"Verified sitemap.xml with {len(urls)} URLs")
           PY
-          git diff --check
+
+      - name: Verify clean patch
+        shell: bash
+        run: git diff --check
 
       - name: Commit one-time generated changes
         shell: bash
